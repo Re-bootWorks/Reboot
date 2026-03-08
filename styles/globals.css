@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+
+    /* ─── Gray ─── */
+    --color-gray-50: #f6f7f9;
+    --color-gray-100: #edeff1;
+    --color-gray-200: #dddddd;
+    --color-gray-300: #cccccc;
+    --color-gray-400: #bbbbbb;
+    --color-gray-500: #a4a4a4;
+    --color-gray-600: #737373;
+    --color-gray-700: #4a4a4a;
+    --color-gray-800: #333333;
+    --color-gray-900: #191919;
+
+    /* ─── Purple (Primary) ─── */
+    --color-purple-50: #f0effc;
+    --color-purple-100: #dcdaf9;
+    --color-purple-200: #bebaf4;
+    --color-purple-300: #a49cef;
+    --color-purple-400: #8c81eb;
+    --color-purple-500: #7566e5;
+    --color-purple-600: #604cde;
+    --color-purple-700: #452cc0;
+    --color-purple-800: #2a197d;
+    --color-purple-900: #0f073a;
+
+    /* ─── Orange (Secondary) ─── */
+    --color-orange-50: #fff4ed;
+    --color-orange-100: #ffe6d5;
+    --color-orange-200: #ffc9a8;
+    --color-orange-300: #ffa873;
+    --color-orange-400: #ff8742;
+    --color-orange-500: #ff6b2c;
+    --color-orange-600: #e65217;
+    --color-orange-700: #b83e12;
+    --color-orange-800: #7a280c;
+    --color-orange-900: #3d1405;
+
+    /* ─── Green (Tertiary) ─── */
+    --color-green-50: #e6f7f1;
+    --color-green-100: #cff0e4;
+    --color-green-200: #a6e5d1;
+    --color-green-300: #86d9c2;
+    --color-green-400: #5fc8a6;
+    --color-green-500: #00a876;
+    --color-green-600: #0b7955;
+    --color-green-700: #06583d;
+    --color-green-800: #023725;
+    --color-green-900: #00160c;
+
+    /* ─── Error ─── */
+    --color-error: #e91616;
+
+    /*─── Mono ─── */
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-black-70: rgba(0, 0, 0, 0.7);
+    --color-black-50: rgba(0, 0, 0, 0.5);
+
+    /* ─── Gradients ─── */
+    --gradient-purple-100-lr: linear-gradient(to right, #f0effc, #dcdaf9);
+    --gradient-purple-100-td: linear-gradient(to bottom, #f0effc, #dcdaf9);
+    --gradient-purple-200-lr: linear-gradient(to right, #8c81eb, #452cc0);
+    --gradient-purple-200-rl: linear-gradient(to left, #8c81eb, #452cc0);
+    --gradient-purple-500: linear-gradient(to right, #8c81eb, #452cc0);
+
+    /* ─── Box Shadow ─── */
+    --shadow-base: 0px 4px 16px 0px #0000000a;
+    --shadow-xl: 0px 0px 50px 0px #00000014;
+
+    --breakpoint-sm: 744px;
+    --breakpoint-md: 1279px;
+    --breakpoint-lg: 2560px;
+}
