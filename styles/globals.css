@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "./font.css";
 
-@theme {
+@theme static {
 	/* ─── Gray ─── */
 	--color-gray-50: #f6f7f9;
 	--color-gray-100: #edeff1;
@@ -131,39 +131,42 @@
 
 @layer base {
 	.text-xs {
-		@apply text-(--text-xs) leading-(--text-xs--leading) tracking-(--text-xs--tracking);
+		@apply leading-(--text-xs--leading) tracking-(--text-xs--tracking) text-(--text-xs);
 	}
 	.text-sm {
-		@apply text-(--text-sm) leading-(--text-sm--leading) tracking-(--text-sm--tracking);
+		@apply leading-(--text-sm--leading) tracking-(--text-sm--tracking) text-(--text-sm);
 	}
 	.text-base {
-		@apply text-(--text-base) leading-(--text-base--leading) tracking-(--text-base--tracking);
+		@apply leading-(--text-base--leading) tracking-(--text-base--tracking) text-(--text-base);
 	}
 	.text-lg {
-		@apply text-(--text-lg) leading-(--text-lg--leading) tracking-(--text-lg--tracking);
+		@apply leading-(--text-lg--leading) tracking-(--text-lg--tracking) text-(--text-lg);
 	}
 	.text-xl {
-		@apply text-(--text-xl) leading-(--text-xl--leading) tracking-(--text-xl--tracking);
+		@apply leading-(--text-xl--leading) tracking-(--text-xl--tracking) text-(--text-xl);
 	}
 	.text-2xl {
-		@apply text-(--text-2xl) leading-(--text-2xl--leading) tracking-(--text-2xl--tracking);
+		@apply leading-(--text-2xl--leading) tracking-(--text-2xl--tracking) text-(--text-2xl);
 	}
 	.text-3xl {
-		@apply text-(--text-3xl) leading-(--text-3xl--leading) tracking-(--text-3xl--tracking);
+		@apply leading-(--text-3xl--leading) tracking-(--text-3xl--tracking) text-(--text-3xl);
 	}
 	.text-4xl {
-		@apply text-(--text-4xl) leading-(--text-4xl--leading) tracking-(--text-4xl--tracking);
+		@apply leading-(--text-4xl--leading) tracking-(--text-4xl--tracking) text-(--text-4xl);
 	}
 	.text-5xl {
-		@apply text-(--text-5xl) leading-(--text-5xl--leading) tracking-(--text-5xl--tracking);
+		@apply leading-(--text-5xl--leading) tracking-(--text-5xl--tracking) text-(--text-5xl);
 	}
 	.text-headline-md {
-		@apply text-(--text-headline-md) leading-(--text-headline-md--leading) tracking-(--text-headline-md--tracking);
+		@apply leading-(--text-headline-md--leading) tracking-(--text-headline-md--tracking) text-(--text-headline-md);
 	}
 	.text-headline-lg {
-		@apply text-(--text-headline-lg) leading-(--text-headline-lg--leading) tracking-(--text-headline-lg--tracking);
+		@apply leading-(--text-headline-lg--leading) tracking-(--text-headline-lg--tracking) text-(--text-headline-lg);
 	}
 	.text-headline-xl {
-		@apply text-(--text-headline-xl) leading-(--text-headline-xl--leading) tracking-(--text-headline-xl--tracking);
+		@apply leading-(--text-headline-xl--leading) tracking-(--text-headline-xl--tracking) text-(--text-headline-xl);
+	}
+	body {
+		@apply bg-gray-50;
 	}
 }
