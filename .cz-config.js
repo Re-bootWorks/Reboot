@@ -20,5 +20,5 @@ module.exports = {
 	allowCustomScopes: true,
 	skipQuestions: ["breaking"],
 	subjectLimit: 40,
-	footerPrefix: "Resolves:",
+	footerPrefix: "",
 };
