@@ -1,6 +1,7 @@
 @import "tailwindcss";
+@import "./font.css";
 
-@theme {
+@theme static {
 	/* ─── Gray ─── */
 	--color-gray-50: #f6f7f9;
 	--color-gray-100: #edeff1;
@@ -69,7 +70,103 @@
 	--shadow-base: 0px 4px 16px 0px #0000000a;
 	--shadow-xl: 0px 0px 50px 0px #00000014;
 
-	--breakpoint-sm: 744px;
-	--breakpoint-md: 1279px;
-	--breakpoint-lg: 2560px;
+	/* ─── breakpoint ─── */
+	--breakpoint-sm: 640px;
+	--breakpoint-md: 744px; /* tablet */
+	--breakpoint-lg: 1280px; /* desktop */
+
+	/* ─── font family ─── */
+	--font-pretendard: "Pretendard";
+	--font-taenada: "Taenada";
+
+	/* ─── font ─── */
+	--text-xs: 0.75rem;
+	--text-xs--line-height: 1rem;
+	--text-xs--letter-spacing: -0.02em;
+
+	--text-sm: 0.875rem;
+	--text-sm--line-height: 1.25rem;
+	--text-sm--letter-spacing: -0.02em;
+
+	--text-base: 1rem;
+	--text-base--line-height: 1.5rem;
+	--text-base--letter-spacing: -0.02em;
+
+	--text-lg: 1.125rem;
+	--text-lg--line-height: 1.75rem;
+	--text-lg--letter-spacing: -0.02em;
+
+	--text-xl: 1.25rem;
+	--text-xl--line-height: 1.875rem;
+	--text-xl--letter-spacing: -0.02em;
+
+	--text-2xl: 1.5rem;
+	--text-2xl--line-height: 2rem;
+	--text-2xl--letter-spacing: -0.02em;
+
+	--text-3xl: 1.75rem;
+	--text-3xl--line-height: 2rem;
+	--text-3xl--letter-spacing: -0.03em;
+
+	--text-4xl: 1.875rem;
+	--text-4xl--line-height: 2.25rem;
+	--text-4xl--letter-spacing: -0.02em;
+
+	--text-5xl: 2rem;
+	--text-5xl--line-height: 2.25rem;
+	--text-5xl--letter-spacing: -0.02em;
+
+	--text-headline-md: 2.5rem;
+	--text-headline-md--line-height: 3.5rem;
+	--text-headline-md--letter-spacing: -0.02em;
+
+	--text-headline-lg: 3rem;
+	--text-headline-lg--line-height: 3.75rem;
+	--text-headline-lg--letter-spacing: -0.02em;
+
+	--text-headline-xl: 3.5rem;
+	--text-headline-xl--line-height: 4.25rem;
+	--text-headline-xl--letter-spacing: -0.02em;
+}
+
+@layer base {
+	.text-xs {
+		@apply leading-(--text-xs--leading) tracking-(--text-xs--tracking) text-(--text-xs);
+	}
+	.text-sm {
+		@apply leading-(--text-sm--leading) tracking-(--text-sm--tracking) text-(--text-sm);
+	}
+	.text-base {
+		@apply leading-(--text-base--leading) tracking-(--text-base--tracking) text-(--text-base);
+	}
+	.text-lg {
+		@apply leading-(--text-lg--leading) tracking-(--text-lg--tracking) text-(--text-lg);
+	}
+	.text-xl {
+		@apply leading-(--text-xl--leading) tracking-(--text-xl--tracking) text-(--text-xl);
+	}
+	.text-2xl {
+		@apply leading-(--text-2xl--leading) tracking-(--text-2xl--tracking) text-(--text-2xl);
+	}
+	.text-3xl {
+		@apply leading-(--text-3xl--leading) tracking-(--text-3xl--tracking) text-(--text-3xl);
+	}
+	.text-4xl {
+		@apply leading-(--text-4xl--leading) tracking-(--text-4xl--tracking) text-(--text-4xl);
+	}
+	.text-5xl {
+		@apply leading-(--text-5xl--leading) tracking-(--text-5xl--tracking) text-(--text-5xl);
+	}
+	.text-headline-md {
+		@apply leading-(--text-headline-md--leading) tracking-(--text-headline-md--tracking) text-(--text-headline-md);
+	}
+	.text-headline-lg {
+		@apply leading-(--text-headline-lg--leading) tracking-(--text-headline-lg--tracking) text-(--text-headline-lg);
+	}
+	.text-headline-xl {
+		@apply leading-(--text-headline-xl--leading) tracking-(--text-headline-xl--tracking) text-(--text-headline-xl);
+	}
+	body {
+		@apply bg-gray-50;
+	}
 }
