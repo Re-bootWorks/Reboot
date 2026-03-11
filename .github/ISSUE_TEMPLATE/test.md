@@ -3,7 +3,7 @@ name: 테스트 이슈 (Test)
 about: 기능/시나리오에 대한 테스트 이슈를 작성합니다.
 title: "[TEST] 테스트 항목을 간단히 작성하세요."
 labels: test
-assignees: ''
+assignees: ""
 ---
 
 ## 🔍 테스트 대상

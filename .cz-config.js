@@ -12,11 +12,13 @@ module.exports = {
 	messages: {
 		type: "커밋 유형을 선택하세요:",
 		customScope: "변경 범위 (scope)를 입력하세요 (선택사항):",
-		subject: "짧은 변경 설명을 입력하세요:\n",
-		body: "자세한 변경 설명을 입력하세요 (선택사항):\n",
+		subject: "짧은 변경 설명을 입력하세요 (40자 이내):\n",
+		body: "자세한 변경 설명을 입력하세요 (선택사항, 72자 이내 줄 바꿈):\n",
+		footer: "Resolves / See also 를 입력하세요:\n예) Resolves: #1\n See also: #2 또는 None\n",
 		confirmCommit: "위 내용으로 커밋하시겠습니까?",
 	},
 	allowCustomScopes: true,
-	skipQuestions: ["footer", "breaking"],
-	subjectLimit: 100,
+	skipQuestions: ["breaking"],
+	subjectLimit: 40,
+	footerPrefix: "",
 };
