@@ -5,13 +5,15 @@
 	"scripts": {
 		"dev": "next dev --turbopack",
 		"build": "next build --turbopack",
+		"test": "jest --passWithNoTests",
 		"start": "next start",
 		"lint": "eslint",
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build",
 		"prepare": "husky",
 		"commit": "cz",
-		"format": "prettier . --check"
+		"format": "prettier . --write",
+		"format:check": "prettier . --check"
 	},
 	"dependencies": {
 		"@headlessui/react": "^2.2.9",
@@ -24,6 +26,7 @@
 		"next": "15.5.12",
 		"react": "19.1.0",
 		"react-dom": "19.1.0",
+		"react-loading-skeleton": "^3.5.0",
 		"tailwind-merge": "^3.5.0",
 		"zustand": "^5.0.11"
 	},
@@ -55,9 +58,12 @@
 		"eslint-plugin-storybook": "^10.2.16",
 		"husky": "^9.1.7",
 		"jest": "^30.2.0",
+		"lint-staged": "^16.3.3",
 		"msw": "^2.12.10",
 		"playwright": "^1.58.2",
 		"prettier": "^3.8.1",
+		"prettier-plugin-tailwindcss": "^0.7.2",
+		"react-star-ratings": "^2.3.0",
 		"storybook": "^10.2.16",
 		"tailwindcss": "^4",
 		"typescript": "^5",

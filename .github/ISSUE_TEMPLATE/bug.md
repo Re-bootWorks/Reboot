@@ -3,7 +3,7 @@ name: 버그 리포트 (Bug Report)
 about: 발생한 버그를 보고합니다.
 title: "[BUG] 간단한 버그 설명을 작성하세요."
 labels: bug
-assignees: ''
+assignees: ""
 ---
 
 ## 🐞 버그 설명 (Description)

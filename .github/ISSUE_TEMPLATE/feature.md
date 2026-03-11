@@ -3,7 +3,7 @@ name: 기능 요청 (Feature Request)
 about: 새로운 기능 추가나 개선을 요청합니다.
 title: "[FEATURE] 간단한 제목을 입력하세요."
 labels: feature
-assignees: ''
+assignees: ""
 ---
 
 ## 📌 문제 제기 (Problem Statement)

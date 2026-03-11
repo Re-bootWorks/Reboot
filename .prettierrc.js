@@ -32,6 +32,9 @@ const config = {
 
 	// 파일 줄 끝에 사용하는 줄바꿈 문자 관리 설정 - EoF 방식
 	endOfLine: "auto",
+
+	// tailwind 자동 정렬
+	plugins: ["prettier-plugin-tailwindcss"],
 };
 
 export default config;
