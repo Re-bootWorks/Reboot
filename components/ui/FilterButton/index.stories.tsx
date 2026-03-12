@@ -3,7 +3,7 @@ import { FilterButton } from "@/components/ui/FilterButton";
 
 const meta = {
 	// Storybook 사이트의 사이드바에 표시되는 제목
-	title: "UI/FilterButton",
+	title: "Buttons/FilterButton",
 	// 스토리북에서 사용할 컴포넌트
 	component: FilterButton,
 	// 컴포넌트가 표시되는 위치
