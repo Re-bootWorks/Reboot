@@ -32,10 +32,5 @@ export default meta;
 type Story = StoryObj<typeof StatusLabel>;
 
 export const Default: Story = {
-	render: () => (
-		<StatusLabel>
-			<IcCheckCircle />
-			<span>개설 확정</span>
-		</StatusLabel>
-	),
+	render: () => <StatusLabel>개설 확정</StatusLabel>,
 };

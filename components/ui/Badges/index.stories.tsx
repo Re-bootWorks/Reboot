@@ -17,10 +17,7 @@ const meta: Meta<typeof Badge> = {
 		if (variant === "confirmed") {
 			return (
 				<Badge variant={variant}>
-					<StatusLabel>
-						<IcCheckCircle />
-						<span>개설 확정</span>
-					</StatusLabel>
+					<StatusLabel>개설 확정</StatusLabel>
 				</Badge>
 			);
 		}
@@ -67,10 +64,7 @@ export const AllVariants: Story = {
 			<Badge variant="pending">개설 대기</Badge>
 			<Badge variant="completed">이용 완료</Badge>
 			<Badge variant="confirmed">
-				<StatusLabel>
-					<IcCheckCircle />
-					<span>개설확정</span>
-				</StatusLabel>
+				<StatusLabel>개설확정</StatusLabel>
 			</Badge>
 			<Badge variant="completedAlt">이용 완료</Badge>
 		</div>

@@ -32,10 +32,5 @@ export default meta;
 type Story = StoryObj<typeof DeadlineTag>;
 
 export const Default: Story = {
-	render: () => (
-		<DeadlineTag>
-			<IcAlarm color="orange-500" className="shrink-0" />
-			<span>오늘 21시 마감</span>
-		</DeadlineTag>
-	),
+	render: () => <DeadlineTag>오늘 21시 마감</DeadlineTag>,
 };
