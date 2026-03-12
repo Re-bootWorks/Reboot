@@ -3,9 +3,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import LoaderDots from "../../LoaderDots";
 
-const DISABLED_BUTTON_CLASS =
-	"disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed";
-
 const buttonVariants = cva(
 	"flex justify-center items-center w-full text-center whitespace-nowrap cursor-pointer",
 	{
@@ -18,8 +15,8 @@ const buttonVariants = cva(
 				large: "h-[3.75rem] rounded-2xl px-[1.875rem] text-xl font-semibold", // 60px
 			},
 			colors: {
-				purple: `bg-purple-500 text-white hover:bg-purple-600 hover:text-purple-200 ${DISABLED_BUTTON_CLASS}`,
-				purpleBorder: `bg-white border border-purple-500 text-purple-600 hover:text-purple-700 ${DISABLED_BUTTON_CLASS} disabled:border-0`,
+				purple: "bg-purple-500 text-white hover:bg-purple-600 hover:text-purple-200",
+				purpleBorder: "bg-white border border-purple-500 text-purple-600 hover:text-purple-700",
 				grayBorder: "bg-white border border-gray-200 text-gray-600",
 			},
 		},
@@ -55,16 +52,28 @@ export default function Button({
 	className,
 	isPending = false,
 	disabled = false,
+	type,
 	...props
 }: ButtonProps) {
+	const disabledButtonClass =
+		"disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed disabled:border-0";
 	const loaderSize = LOADER_SIZE_MAP[sizes as NonNullable<ButtonSizes>];
 
 	return (
 		<button
-			className={cn(buttonVariants({ sizes, colors }), className)}
+			type={type ?? "button"}
+			className={cn(buttonVariants({ sizes, colors }), disabledButtonClass, className)}
 			disabled={isPending || disabled}
+			aria-busy={isPending}
 			{...props}>
-			{isPending ? <LoaderDots size={loaderSize} /> : children}
+			{isPending ? (
+				<>
+					<LoaderDots size={loaderSize} className="fill-gray-600" />
+					<span className="sr-only">요청 처리 중</span>
+				</>
+			) : (
+				children
+			)}
 		</button>
 	);
 }
