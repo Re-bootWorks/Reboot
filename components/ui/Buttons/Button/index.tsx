@@ -1,11 +1,11 @@
 import { cn } from "@/utils/cn";
 import { cva, type VariantProps } from "class-variance-authority";
-import type { ButtonHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 const DISABLED_BUTTON_CLASS =
 	"disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed";
 
-const ButtonVariants = cva(`w-full text-center whitespace-nowrap cursor-pointer`, {
+const buttonVariants = cva("w-full text-center whitespace-nowrap cursor-pointer", {
 	variants: {
 		sizes: {
 			small: "h-10 rounded-[0.625rem] px-4 text-sm font-semibold", // 40px
@@ -26,17 +26,17 @@ const ButtonVariants = cva(`w-full text-center whitespace-nowrap cursor-pointer`
 	},
 });
 
-export type ButtonSizes = VariantProps<typeof ButtonVariants>["sizes"];
-export type ButtonColors = VariantProps<typeof ButtonVariants>["colors"];
+export type ButtonSizes = VariantProps<typeof buttonVariants>["sizes"];
+export type ButtonColors = VariantProps<typeof buttonVariants>["colors"];
 
 interface ButtonProps
-	extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof ButtonVariants> {
-	children: React.ReactNode;
+	extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+	children: ReactNode;
 	isPending?: boolean;
 	disabled?: boolean;
 }
 
-const Button = ({
+export default function Button({
 	children,
 	sizes = "medium",
 	colors = "purple",
@@ -44,16 +44,14 @@ const Button = ({
 	isPending = false,
 	disabled = false,
 	...props
-}: ButtonProps) => {
+}: ButtonProps) {
 	return (
 		<button
-			className={cn(ButtonVariants({ sizes, colors }), className)}
+			className={cn(buttonVariants({ sizes, colors }), className)}
 			disabled={isPending || disabled}
 			{...props}>
 			{/* {isPending ? <Spinner /> : <>{children}</>} */}
 			{children}
 		</button>
 	);
-};
-
-export default Button;
+}
