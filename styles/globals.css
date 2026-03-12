@@ -186,7 +186,7 @@
 	.border-gradient-purple {
 		border: 1px solid transparent;
 		background:
-				linear-gradient(#fff, #fff) padding-box,
-				linear-gradient(to right, #8c81eb, #452cc0) border-box;
+			linear-gradient(#fff, #fff) padding-box,
+			linear-gradient(to right, #8c81eb, #452cc0) border-box;
 	}
 }

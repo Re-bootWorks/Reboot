@@ -20,7 +20,7 @@ export function Badge({ children, variant = "scheduled", className }: BadgeProps
 	return (
 		<div
 			className={cn(
-				"inline-flex h-8 items-center rounded-3xl py-1.5 text-sm",
+				"inline-flex h-8 shrink-0 items-center rounded-3xl py-1.5 text-sm whitespace-nowrap",
 				variant === "confirmed" ? "" : "gap-2.5 px-3",
 				variantStyles[variant],
 				className,
