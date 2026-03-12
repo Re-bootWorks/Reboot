@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import SocialButton from "./index";
 
 const meta: Meta<typeof SocialButton> = {
-	title: "Button/SocialButton",
+	title: "Buttons/SocialButton",
 	component: SocialButton,
 	tags: ["autodocs"],
 	parameters: {

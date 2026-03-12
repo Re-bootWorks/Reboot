@@ -9,7 +9,7 @@ const createButtonVariants = cva(
 		variants: {
 			size: {
 				Small: "h-12 w-12",
-				Large: "h-16 min-w-47",
+				Large: "h-16 min-w-47 px-7 py-4",
 			},
 		},
 		defaultVariants: {

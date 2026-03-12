@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import EditButton from "./index";
+import DeleteButton from "./index";
 
-const meta: Meta<typeof EditButton> = {
-	title: "Button/EditButton",
-	component: EditButton,
+const meta: Meta<typeof DeleteButton> = {
+	title: "Buttons/DeleteButton",
+	component: DeleteButton,
 	tags: ["autodocs"],
 	parameters: {
 		layout: "centered",
@@ -12,6 +12,6 @@ const meta: Meta<typeof EditButton> = {
 
 export default meta;
 
-type Story = StoryObj<typeof EditButton>;
+type Story = StoryObj<typeof DeleteButton>;
 
 export const Default: Story = {};

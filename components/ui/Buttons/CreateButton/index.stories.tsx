@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import CreateButton from "./index";
 
 const meta: Meta<typeof CreateButton> = {
-	title: "Button/CreateButton",
+	title: "Buttons/CreateButton",
 	component: CreateButton,
 	tags: ["autodocs"],
 };
@@ -22,7 +22,6 @@ export const LargeWide: Story = {
 	args: {
 		size: "Large",
 		children: "게시물 등록하기",
-		className: "w-[221px]",
 	},
 };
 
