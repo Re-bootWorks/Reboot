@@ -10,7 +10,7 @@ const meta: Meta<typeof TimeTag> = {
 			viewports: {
 				sm: {
 					name: "sm (mobile)",
-					styles: { width: "375px", height: "812px" },
+					styles: { width: "640px", height: "812px" },
 				},
 				md: {
 					name: "md (tablet)",
