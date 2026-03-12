@@ -60,11 +60,31 @@
 	--color-black-50: rgba(0, 0, 0, 0.5);
 
 	/* ─── Gradients ─── */
-	--gradient-purple-100-lr: linear-gradient(to right, #f0effc, #dcdaf9);
-	--gradient-purple-100-td: linear-gradient(to bottom, #f0effc, #dcdaf9);
-	--gradient-purple-200-lr: linear-gradient(to right, #8c81eb, #452cc0);
-	--gradient-purple-200-rl: linear-gradient(to left, #8c81eb, #452cc0);
-	--gradient-purple-500: linear-gradient(to right, #8c81eb, #452cc0);
+	--gradient-purple-100-lr: linear-gradient(
+		to right,
+		var(--color-purple-50),
+		var(--color-purple-100)
+	);
+	--gradient-purple-100-td: linear-gradient(
+		to bottom,
+		var(--color-purple-50),
+		var(--color-purple-100)
+	);
+	--gradient-purple-200-lr: linear-gradient(
+		to right,
+		var(--color-purple-100),
+		var(--color-purple-200)
+	);
+	--gradient-purple-200-rl: linear-gradient(
+		to left,
+		var(--color-purple-200),
+		var(--color-purple-100)
+	);
+	--gradient-purple-500: linear-gradient(
+		to right,
+		var(--color-purple-400),
+		var(--color-purple-700)
+	);
 
 	/* ─── Box Shadow ─── */
 	--shadow-base: 0px 4px 16px 0px #0000000a;
@@ -131,40 +151,40 @@
 
 @layer base {
 	.text-xs {
-		@apply leading-(--text-xs--leading) tracking-(--text-xs--tracking) text-(--text-xs);
+		@apply leading-(--text-xs--line-height) tracking-(--text-xs--letter-spacing) text-(--text-xs);
 	}
 	.text-sm {
-		@apply leading-(--text-sm--leading) tracking-(--text-sm--tracking) text-(--text-sm);
+		@apply leading-(--text-sm--line-height) tracking-(--text-sm--letter-spacing) text-(--text-sm);
 	}
 	.text-base {
-		@apply leading-(--text-base--leading) tracking-(--text-base--tracking) text-(--text-base);
+		@apply leading-(--text-base--line-height) tracking-(--text-base--letter-spacing) text-(--text-base);
 	}
 	.text-lg {
-		@apply leading-(--text-lg--leading) tracking-(--text-lg--tracking) text-(--text-lg);
+		@apply leading-(--text-lg--line-height) tracking-(--text-lg--letter-spacing) text-(--text-lg);
 	}
 	.text-xl {
-		@apply leading-(--text-xl--leading) tracking-(--text-xl--tracking) text-(--text-xl);
+		@apply leading-(--text-xl--line-height) tracking-(--text-xl--letter-spacing) text-(--text-xl);
 	}
 	.text-2xl {
-		@apply leading-(--text-2xl--leading) tracking-(--text-2xl--tracking) text-(--text-2xl);
+		@apply leading-(--text-2xl--line-height) tracking-(--text-2xl--letter-spacing) text-(--text-2xl);
 	}
 	.text-3xl {
-		@apply leading-(--text-3xl--leading) tracking-(--text-3xl--tracking) text-(--text-3xl);
+		@apply leading-(--text-3xl--line-height) tracking-(--text-3xl--letter-spacing) text-(--text-3xl);
 	}
 	.text-4xl {
-		@apply leading-(--text-4xl--leading) tracking-(--text-4xl--tracking) text-(--text-4xl);
+		@apply leading-(--text-4xl--line-height) tracking-(--text-4xl--letter-spacing) text-(--text-4xl);
 	}
 	.text-5xl {
-		@apply leading-(--text-5xl--leading) tracking-(--text-5xl--tracking) text-(--text-5xl);
+		@apply leading-(--text-5xl--line-height) tracking-(--text-5xl--letter-spacing) text-(--text-5xl);
 	}
 	.text-headline-md {
-		@apply leading-(--text-headline-md--leading) tracking-(--text-headline-md--tracking) text-(--text-headline-md);
+		@apply leading-(--text-headline-md--line-height) tracking-(--text-headline-md--letter-spacing) text-(--text-headline-md);
 	}
 	.text-headline-lg {
-		@apply leading-(--text-headline-lg--leading) tracking-(--text-headline-lg--tracking) text-(--text-headline-lg);
+		@apply leading-(--text-headline-lg--line-height) tracking-(--text-headline-lg--letter-spacing) text-(--text-headline-lg);
 	}
 	.text-headline-xl {
-		@apply leading-(--text-headline-xl--leading) tracking-(--text-headline-xl--tracking) text-(--text-headline-xl);
+		@apply leading-(--text-headline-xl--line-height) tracking-(--text-headline-xl--letter-spacing) text-(--text-headline-xl);
 	}
 	body {
 		@apply bg-gray-50;
