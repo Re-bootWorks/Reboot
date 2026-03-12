@@ -4,7 +4,7 @@ import { cn } from "@/utils/cn";
 import { IcKakao, IcGoogle } from "../../icons";
 
 const socialButtonVariants = cva(
-	"font-pretendard flex w-[222px] cursor-pointer items-center justify-center gap-2.5 rounded-xl px-3 py-4 text-base font-semibold text-gray-800",
+	"font-pretendard flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-3 py-4 text-base font-semibold text-gray-800",
 	{
 		variants: {
 			social: {
@@ -28,7 +28,9 @@ const SOCIAL_ICON = {
 
 export default function SocialButton({ children, social, className, ...props }: ButtonProps) {
 	return (
-		<Button className={cn(socialButtonVariants({ social }), className)} {...props}>
+		<Button
+			className={cn(socialButtonVariants({ social }), "w-full md:w-55.5", className)}
+			{...props}>
 			{SOCIAL_ICON[social]}
 			{children}
 		</Button>
