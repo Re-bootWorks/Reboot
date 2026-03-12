@@ -1,0 +1,18 @@
+import { cn } from "@/utils/cn";
+
+interface DeadlineTagProps {
+	children: React.ReactNode;
+	className?: string;
+}
+
+export function DeadlineTag({ children, className }: DeadlineTagProps) {
+	return (
+		<div
+			className={cn(
+				"inline-flex h-5 items-center gap-1 rounded-md bg-orange-100 pr-2 pl-1 text-xs font-semibold text-orange-500 md:h-6 md:rounded-lg md:text-sm",
+				className,
+			)}>
+			{children}
+		</div>
+	);
+}
