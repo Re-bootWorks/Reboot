@@ -46,15 +46,13 @@ const Button = ({
 	...props
 }: ButtonProps) => {
 	return (
-		<>
-			<button
-				className={cn(ButtonVariants({ sizes, colors }), className)}
-				disabled={isPending || disabled}
-				{...props}>
-				{/* {isPending ? <Spinner /> : <>{children}</>} */}
-				{children}
-			</button>
-		</>
+		<button
+			className={cn(ButtonVariants({ sizes, colors }), className)}
+			disabled={isPending || disabled}
+			{...props}>
+			{/* {isPending ? <Spinner /> : <>{children}</>} */}
+			{children}
+		</button>
 	);
 };
 
