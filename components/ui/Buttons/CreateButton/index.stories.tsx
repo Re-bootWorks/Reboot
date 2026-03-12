@@ -5,28 +5,17 @@ const meta: Meta<typeof CreateButton> = {
 	title: "Buttons/CreateButton",
 	component: CreateButton,
 	tags: ["autodocs"],
+	parameters: {
+		layout: "centered",
+	},
 };
 
 export default meta;
 
 type Story = StoryObj<typeof CreateButton>;
 
-export const Large: Story = {
+export const Default: Story = {
 	args: {
-		size: "Large",
 		children: "모임 만들기",
-	},
-};
-
-export const LargeWide: Story = {
-	args: {
-		size: "Large",
-		children: "게시물 등록하기",
-	},
-};
-
-export const Small: Story = {
-	args: {
-		size: "Small",
 	},
 };
