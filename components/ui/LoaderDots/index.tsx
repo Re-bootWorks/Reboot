@@ -1,3 +1,13 @@
+export const SIZE_MAP = {
+	xxs: 20,
+	xs: 40,
+	sm: 60,
+	md: 80,
+	lg: 100,
+	xl: 120,
+	xxl: 140,
+} as const;
+
 interface LoaderDotsProps {
 	size?: keyof typeof SIZE_MAP | number | `${number}px` | `${number}%`;
 	className?: string;
@@ -81,13 +91,3 @@ export default function LoaderDots({
 		</svg>
 	);
 }
-
-const SIZE_MAP = {
-	xxs: 20,
-	xs: 40,
-	sm: 60,
-	md: 80,
-	lg: 100,
-	xl: 120,
-	xxl: 140,
-} as const;

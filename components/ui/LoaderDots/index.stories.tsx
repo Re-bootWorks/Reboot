@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/nextjs-vite";
-import LoaderDots from ".";
+import LoaderDots, { SIZE_MAP } from ".";
 
 const meta: Meta<typeof LoaderDots> = {
 	title: "UI/LoaderDots",
@@ -17,7 +17,7 @@ const meta: Meta<typeof LoaderDots> = {
 	argTypes: {
 		size: {
 			control: { type: "radio" },
-			options: ["xxs", "xs", "sm", "md", "lg", "xl", "xxl"],
+			options: Object.keys(SIZE_MAP),
 			description: "지정 사이즈 또는 숫자, px, % 단위",
 		},
 		className: {
