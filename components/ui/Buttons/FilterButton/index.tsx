@@ -21,3 +21,5 @@ export function FilterButton({ label, isActive = false, onClick }: FilterButtonP
 		</button>
 	);
 }
+
+export default FilterButton;

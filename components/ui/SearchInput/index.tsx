@@ -20,15 +20,10 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 					ref={ref}
 					type="search"
 					className={cn(
-						// 기본 input 스타일
 						"w-full rounded-full pr-12 transition-all outline-none",
-						// 기본 사이즈
-						"h-11 px-10 text-base",
-						// placeholder 스타일
+						"h-11 px-8 text-base",
 						"placeholder:text-gray-500",
-						// variant
 						variantStyles[variant],
-						// 외부 스타일
 						className,
 					)}
 					{...props}

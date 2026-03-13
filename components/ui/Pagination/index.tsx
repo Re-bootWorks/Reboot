@@ -1,4 +1,5 @@
 import PaginationItem from "./PaginationItem";
+import IcMeetBalls from "@/components/ui/icons/IcMeetBalls";
 
 type PaginationProps = {
 	currentPage: number;
@@ -6,7 +7,6 @@ type PaginationProps = {
 	handlePageChange: (page: number) => void;
 };
 
-// 페이지네이션에 표시할 페이지 번호 목록을 계산하는 함수
 function getPaginationPages(currentPage: number, totalPages: number) {
 	const pages: (number | string)[] = [];
 
@@ -34,23 +34,28 @@ function getPaginationPages(currentPage: number, totalPages: number) {
 	return pages;
 }
 
-// 페이지 이동 UI를 렌더링하는 Pagination 컴포넌트
 export default function Pagination({ currentPage, totalPages, handlePageChange }: PaginationProps) {
 	const pages = getPaginationPages(currentPage, totalPages);
 
 	return (
 		<div className="flex items-center gap-2">
-			{/* 이전 페이지로 이동 */}
 			<button
 				onClick={() => handlePageChange(currentPage - 1)}
 				disabled={currentPage === 1}
-				className="text-gray-600 hover:text-gray-900">
+				className="text-gray-600 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50">
 				{"<"}
 			</button>
 
-			{/* 페이지 번호 목록 렌더링 */}
 			{pages.map((page, index) => {
 				const isNumber = typeof page === "number";
+
+				if (page === "...") {
+					return (
+						<div key={index} className="flex h-8 w-8 items-center justify-center">
+							<IcMeetBalls color="gray-400" size="sm" />
+						</div>
+					);
+				}
 
 				return (
 					<PaginationItem
@@ -62,11 +67,10 @@ export default function Pagination({ currentPage, totalPages, handlePageChange }
 				);
 			})}
 
-			{/* 다음 페이지로 이동 */}
 			<button
 				onClick={() => handlePageChange(currentPage + 1)}
 				disabled={currentPage === totalPages}
-				className="text-gray-600 hover:text-gray-900">
+				className="text-gray-600 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50">
 				{">"}
 			</button>
 		</div>

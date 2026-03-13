@@ -5,6 +5,9 @@ import Pagination from "./index";
 const meta: Meta<typeof Pagination> = {
 	title: "UI/Pagination",
 	component: Pagination,
+	parameters: {
+		layout: "centered",
+	},
 	tags: ["autodocs"],
 };
 
@@ -12,23 +15,16 @@ export default meta;
 
 type Story = StoryObj<typeof Pagination>;
 
-/**
- * 기본 Pagination
- */
 export const Default: Story = {
 	render: () => {
-		function PaginationStory() {
-			const [currentPage, setCurrentPage] = useState(1);
+		const [currentPage, setCurrentPage] = useState(1);
 
-			function handlePageChange(page: number) {
-				setCurrentPage(page);
-			}
+		const handlePageChange = (page: number) => {
+			setCurrentPage(page);
+		};
 
-			return (
-				<Pagination currentPage={currentPage} totalPages={9} handlePageChange={handlePageChange} />
-			);
-		}
-
-		return <PaginationStory />;
+		return (
+			<Pagination currentPage={currentPage} totalPages={9} handlePageChange={handlePageChange} />
+		);
 	},
 };
