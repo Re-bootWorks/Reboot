@@ -3,22 +3,10 @@ import { cn } from "@/utils/cn";
 
 interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
 	variant?: "default" | "outlined";
-	inputSize?: "sm" | "md" | "lg";
 }
 
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
-	/*
-   - const { ClassNames, variant, inputSize, ...rest } = props 을 한줄로 줄인것
-     ({ ClassNames, variant = "default", inputSize="md", ...props }, ref)
-    - ...props 는 특정 props를 제외한 나머지 props를 모아두는 객체
- */
-	({ className, variant = "default", inputSize = "md", ...props }, ref) => {
-		const sizeStyles = {
-			sm: "h-10 text-sm px-6",
-			md: "h-12 text-base px-10",
-			lg: "h-14 text-lg px-12",
-		};
-
+	({ className, variant = "default", ...props }, ref) => {
 		const variantStyles = {
 			default:
 				"bg-gray-50 border-none hover:bg-white hover:ring-2 hover:ring-purple-300 focus:bg-white focus:ring-2 focus:ring-purple-500",
@@ -27,17 +15,17 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 		};
 
 		return (
-			<div className="relative w-full">
+			<div className="relative w-94">
 				<input
 					ref={ref}
 					type="search"
 					className={cn(
 						// 기본 input 스타일
 						"w-full rounded-full pr-12 transition-all outline-none",
+						// 기본 사이즈
+						"h-11 px-10 text-base",
 						// placeholder 스타일
 						"placeholder:text-gray-500",
-						// size
-						sizeStyles[inputSize],
 						// variant
 						variantStyles[variant],
 						// 외부 스타일
