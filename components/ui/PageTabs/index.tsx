@@ -21,7 +21,7 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 
 	// defaultId 가 없을 경우 첫 번째 data-id 사용
 	useEffect(() => {
-		if (!listRef.current) return;
+		if (!listRef.current || typeof defaultId === "string") return;
 		const firstDataId = getFirstDataId(listRef.current);
 		if (firstDataId) {
 			setActiveId(firstDataId);

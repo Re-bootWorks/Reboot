@@ -29,7 +29,7 @@ export default function PageTab({
 			)}
 			onClick={props?.onClick}
 			type="button"
-			area-selected="true"
+			aria-selected={isActive}
 			{...props}>
 			{icon}
 			<div className="whitespace-nowrap">{children}</div>
