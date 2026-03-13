@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { cn } from "@/utils/cn";
+import { PAGE_TAB_DEFAULT_STYLE } from "../PageTab";
 
 interface PageTabsProps {
 	defaultId?: string;
@@ -79,10 +80,7 @@ function TabItem({ id, icon, children }: TabItemProps) {
 	return (
 		<li data-id={id}>
 			<button
-				className={cn(
-					"flex min-w-[113.669px] cursor-pointer items-center justify-center gap-x-2 px-8 py-2 text-sm md:min-w-[159px] md:px-4 md:py-4 md:text-xl",
-					isActive ? "text-purple-600" : "text-gray-600",
-				)}
+				className={cn(PAGE_TAB_DEFAULT_STYLE, isActive ? "text-purple-600" : "text-gray-600")}
 				onClick={() => {
 					updateActiveId({ id, label: children });
 					addTransition();
