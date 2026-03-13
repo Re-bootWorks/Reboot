@@ -1,5 +1,4 @@
 import Image from "next/image";
-import ImgEmpty from "@/assets/img/img_empty.svg";
 import { ReactNode } from "react";
 import { cn } from "@/utils/cn";
 
@@ -20,7 +19,7 @@ export default function Empty({ section = false, className, children }: EmptyPro
 			)}>
 			<div>
 				<Image
-					src={ImgEmpty}
+					src="/assets/img/img_empty.svg"
 					alt="컨텐츠가 없습니다."
 					width={120}
 					height={72}
