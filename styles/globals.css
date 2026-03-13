@@ -94,7 +94,6 @@
 	--breakpoint-sm: 640px;
 	--breakpoint-md: 744px; /* tablet */
 	--breakpoint-lg: 1280px; /* desktop */
-
 	/* ─── font family ─── */
 	--font-pretendard: "Pretendard";
 	--font-taenada: "Taenada";
@@ -153,40 +152,61 @@
 	.text-xs {
 		@apply leading-(--text-xs--line-height) tracking-(--text-xs--letter-spacing) text-(--text-xs);
 	}
+
 	.text-sm {
 		@apply leading-(--text-sm--line-height) tracking-(--text-sm--letter-spacing) text-(--text-sm);
 	}
+
 	.text-base {
 		@apply leading-(--text-base--line-height) tracking-(--text-base--letter-spacing) text-(--text-base);
 	}
+
 	.text-lg {
 		@apply leading-(--text-lg--line-height) tracking-(--text-lg--letter-spacing) text-(--text-lg);
 	}
+
 	.text-xl {
 		@apply leading-(--text-xl--line-height) tracking-(--text-xl--letter-spacing) text-(--text-xl);
 	}
+
 	.text-2xl {
 		@apply leading-(--text-2xl--line-height) tracking-(--text-2xl--letter-spacing) text-(--text-2xl);
 	}
+
 	.text-3xl {
 		@apply leading-(--text-3xl--line-height) tracking-(--text-3xl--letter-spacing) text-(--text-3xl);
 	}
+
 	.text-4xl {
 		@apply leading-(--text-4xl--line-height) tracking-(--text-4xl--letter-spacing) text-(--text-4xl);
 	}
+
 	.text-5xl {
 		@apply leading-(--text-5xl--line-height) tracking-(--text-5xl--letter-spacing) text-(--text-5xl);
 	}
+
 	.text-headline-md {
 		@apply leading-(--text-headline-md--line-height) tracking-(--text-headline-md--letter-spacing) text-(--text-headline-md);
 	}
+
 	.text-headline-lg {
 		@apply leading-(--text-headline-lg--line-height) tracking-(--text-headline-lg--letter-spacing) text-(--text-headline-lg);
 	}
+
 	.text-headline-xl {
 		@apply leading-(--text-headline-xl--line-height) tracking-(--text-headline-xl--letter-spacing) text-(--text-headline-xl);
 	}
+
 	body {
 		@apply bg-gray-50;
+	}
+}
+
+@layer utilities {
+	.border-gradient-purple {
+		border: 1px solid transparent;
+		background:
+			linear-gradient(#fff, #fff) padding-box,
+			linear-gradient(to right, #8c81eb, #452cc0) border-box;
 	}
 }
