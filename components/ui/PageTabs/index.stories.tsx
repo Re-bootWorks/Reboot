@@ -1,12 +1,6 @@
 import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import PageTabs from ".";
-import { IcAlignCenter, IcAlignLeft, IcAlignRight } from "../icons";
-
-const DATA_SAMPLE = [
-	{ id: "left", label: "Left", icon: <IcAlignLeft /> },
-	{ id: "right", label: "Right", icon: <IcAlignRight /> },
-	{ id: "center", label: "AlignCenterLongLabel", icon: <IcAlignCenter /> },
-];
+import { IcAlignLeft, IcAlignRight } from "../icons";
 
 const meta: Meta<typeof PageTabs> = {
 	title: "UI/PageTabs",
@@ -22,11 +16,10 @@ const meta: Meta<typeof PageTabs> = {
 	},
 
 	argTypes: {
-		data: {
-			table: { category: "Required" },
-			description: ["- `id`: string", "- `label`: string | ReactNode", "- `icon?`: ReactNode"].join(
-				"\n",
-			),
+		children: {
+			control: false,
+			type: { name: "other", value: "React.ReactNode", required: true },
+			table: { type: { summary: "React.ReactNode" } },
 		},
 		defaultId: {
 			control: false,
@@ -43,10 +36,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-	args: {
-		data: DATA_SAMPLE,
-		defaultId: DATA_SAMPLE[0].id,
-	},
 	parameters: {
 		docs: {
 			description: {
@@ -54,5 +43,15 @@ export const Default: Story = {
 			},
 		},
 	},
-	render: (args) => <PageTabs {...args} />,
+	render: (args) => (
+		<PageTabs defaultId="left" {...args}>
+			<PageTabs.Item id="left" icon={<IcAlignLeft />}>
+				Left
+			</PageTabs.Item>
+			<PageTabs.Item id="right" icon={<IcAlignRight />}>
+				Right
+			</PageTabs.Item>
+			<PageTabs.Item id="center">CenterLongLabelWithoutIcon</PageTabs.Item>
+		</PageTabs>
+	),
 };
