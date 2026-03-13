@@ -1,5 +1,7 @@
 import PaginationItem from "./PaginationItem";
 import IcMeetBalls from "@/components/ui/icons/IcMeetBalls";
+import IcChevronRight from "@/components/ui/icons/IcChevronRight";
+import { cn } from "@/utils/cn";
 
 type PaginationProps = {
 	currentPage: number;
@@ -42,8 +44,17 @@ export default function Pagination({ currentPage, totalPages, handlePageChange }
 			<button
 				onClick={() => handlePageChange(currentPage - 1)}
 				disabled={currentPage === 1}
-				className="text-gray-600 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50">
-				{"<"}
+				className={cn(
+					"flex items-center justify-center transition-colors",
+					"disabled:cursor-not-allowed disabled:opacity-50",
+					currentPage === 1 ? "text-gray-400" : "text-gray-600 hover:text-gray-900",
+				)}
+				aria-label="이전 페이지">
+				<IcChevronRight
+					className="rotate-180"
+					color={currentPage === 1 ? "gray-400" : "gray-600"}
+					size="sm"
+				/>
 			</button>
 
 			{pages.map((page, index) => {
@@ -51,7 +62,7 @@ export default function Pagination({ currentPage, totalPages, handlePageChange }
 
 				if (page === "...") {
 					return (
-						<div key={index} className="flex h-8 w-8 items-center justify-center">
+						<div key={`ellipsis-${index}`} className="flex h-8 w-8 items-center justify-center">
 							<IcMeetBalls color="gray-400" size="sm" />
 						</div>
 					);
@@ -59,7 +70,7 @@ export default function Pagination({ currentPage, totalPages, handlePageChange }
 
 				return (
 					<PaginationItem
-						key={index}
+						key={page}
 						page={page}
 						isActive={currentPage === page}
 						handlePageClick={isNumber ? () => handlePageChange(page) : undefined}
@@ -70,8 +81,13 @@ export default function Pagination({ currentPage, totalPages, handlePageChange }
 			<button
 				onClick={() => handlePageChange(currentPage + 1)}
 				disabled={currentPage === totalPages}
-				className="text-gray-600 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50">
-				{">"}
+				className={cn(
+					"flex items-center justify-center transition-colors",
+					"disabled:cursor-not-allowed disabled:opacity-50",
+					currentPage === totalPages ? "text-gray-400" : "text-gray-600 hover:text-gray-900",
+				)}
+				aria-label="다음 페이지">
+				<IcChevronRight color={currentPage === totalPages ? "gray-400" : "gray-600"} size="sm" />
 			</button>
 		</div>
 	);

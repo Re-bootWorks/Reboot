@@ -30,7 +30,6 @@ export default meta;
 
 type Story = StoryObj<typeof SearchInput>;
 
-// 👇 모든 스토리를 인터랙티브하게 변경
 export const Default: Story = {
 	render: (args) => {
 		const [value, setValue] = useState("");
@@ -94,7 +93,7 @@ export const Disabled: Story = {
 
 export const WithDefaultValue: Story = {
 	render: (args) => {
-		const [value, setValue] = useState("Next.js"); // 👈 초기값
+		const [value, setValue] = useState("Next.js");
 
 		return (
 			<SearchInput
@@ -112,7 +111,6 @@ export const WithDefaultValue: Story = {
 	},
 };
 
-// 인터랙티브 예시
 export const Interactive: Story = {
 	render: () => {
 		const [value, setValue] = useState("");
@@ -138,7 +136,6 @@ export const Interactive: Story = {
 	},
 };
 
-// X 버튼이 보이는 상태
 export const WithClearButton: Story = {
 	render: () => {
 		const [value, setValue] = useState("Next.js");
@@ -164,7 +161,6 @@ export const WithClearButton: Story = {
 	},
 };
 
-// Outlined 스타일 + 인터랙티브
 export const OutlinedInteractive: Story = {
 	render: () => {
 		const [value, setValue] = useState("");

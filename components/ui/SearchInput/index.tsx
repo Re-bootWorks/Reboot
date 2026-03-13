@@ -7,15 +7,15 @@ interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
 	onClear?: () => void;
 }
 
+const variantStyles = {
+	default:
+		"bg-gray-50 border-none hover:bg-white hover:ring-2 hover:ring-purple-300 focus:bg-white focus:ring-2 focus:ring-purple-500",
+	outlined:
+		"bg-white border border-gray-300 hover:border-purple-400 focus:border-purple-500 focus:ring-1 focus:ring-purple-500",
+} as const;
+
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 	({ className, variant = "default", onSearchClick, onClear, value, ...props }, ref) => {
-		const variantStyles = {
-			default:
-				"bg-gray-50 border-none hover:bg-white hover:ring-2 hover:ring-purple-300 focus:bg-white focus:ring-2 focus:ring-purple-500",
-			outlined:
-				"bg-white border border-gray-300 hover:border-purple-400 focus:border-purple-500 focus:ring-1 focus:ring-purple-500",
-		};
-
 		const hasValue = value !== undefined && value !== "";
 
 		return (
@@ -36,6 +36,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 					)}
 					{...props}
 				/>
+
 				{hasValue && onClear && (
 					<button
 						type="button"
@@ -65,7 +66,6 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 					</button>
 				)}
 
-				{/* 검색 버튼 - 회색 */}
 				<button
 					type="button"
 					onClick={onSearchClick}

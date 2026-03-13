@@ -5,30 +5,21 @@ import { cn } from "@/utils/cn";
 type FilterDropdownProps = {
 	label: string;
 	options: string[];
-	value: string; // 제어 컴포넌트: 부모가 현재 선택값을 전달
-	onChange: (value: string) => void; //  필수: 선택 변경 시 부모에게 알림
+	value: string;
+	onChange: (value: string) => void;
 };
 
 export function FilterDropdown({ label, options, value, onChange }: FilterDropdownProps) {
-	//  상태 제거! 부모가 관리하므로 내부 상태 불필요
-
-	//  handleChange도 단순화: 부모에게 알리기만 함
 	const handleChange = (newValue: string) => {
-		onChange(newValue); // 부모의 setState 호출
+		onChange(newValue);
 	};
 
-	//  현재 선택값이 label과 다르면 활성화 상태
 	const isActive = value !== label;
-
-	// label을 options에 자동 포함 (중복 제거)
-	// 예: label="날짜 전체", options=["오늘", "이번 주"]
-	// → allOptions = ["날짜 전체", "오늘", "이번 주"]
 	const allOptions = [label, ...options.filter((opt) => opt !== label)];
 
 	return (
 		<Listbox value={value} onChange={handleChange}>
 			<div className="relative inline-block">
-				{/* 버튼 */}
 				<ListboxButton
 					className={cn(
 						"flex items-center gap-2 rounded-lg px-4 py-2",
