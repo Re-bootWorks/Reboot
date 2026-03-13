@@ -52,11 +52,7 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 	function addTransition() {
 		if (!hasClickedRef.current && indicatorRef.current) {
 			// 클릭 이후부터 transition 추가
-			indicatorRef.current.classList.add(
-				"transition-transform",
-				"transition-width",
-				"duration-300",
-			);
+			indicatorRef.current.classList.add("transition-[transform,width]", "duration-200");
 			hasClickedRef.current = true;
 		}
 	}
