@@ -1,7 +1,7 @@
 "use client";
 
 import NextImage from "next/image";
-import { useImperativeHandle, useRef, useState } from "react";
+import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { IcDelete, IcImagePlus } from "../icons";
 import { cn } from "@/utils/cn";
 
@@ -43,6 +43,10 @@ export default function InputFile({
 	const [previewUrl, setPreviewUrl] = useState<string | null>(defaultUrl);
 	const inputRef = useRef<HTMLInputElement>(null);
 	useImperativeHandle(ref, () => ({ reset: handleClickButtonDelete }));
+
+	useEffect(() => {
+		return () => revokePrevPreviewUrl();
+	}, [previewUrl]);
 
 	// 기존 썸네일 URL 메모리 해제
 	function revokePrevPreviewUrl() {
