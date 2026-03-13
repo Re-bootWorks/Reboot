@@ -1,5 +1,5 @@
 import Image from "next/image";
-import ImgEmpty from "@/assets/img/img_empty.svg";
+import ImgEmpty from "@/public/assets/img/img_empty.svg";
 import { ReactNode } from "react";
 import { cn } from "@/utils/cn";
 
