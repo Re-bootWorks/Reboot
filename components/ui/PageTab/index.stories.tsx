@@ -10,25 +10,13 @@ const meta: Meta<typeof PageTab> = {
 		layout: "padded",
 		docs: {
 			description: {
-				component: "페이지 탭 독립 컴포넌트",
+				component: "페이지 탭 버튼 컴포넌트",
 			},
 		},
 	},
-	argTypes: {
-		icon: {
-			control: false,
-			table: { type: { summary: "React.ReactNode" } },
-		},
-		children: {
-			control: false,
-			type: { name: "other", value: "React.ReactNode", required: true },
-			table: { type: { summary: "React.ReactNode" } },
-		},
-		isActive: {
-			control: { type: "boolean" },
-			description: "페이지 탭 활성 상태",
-		},
-		onClick: { control: false, action: "clicked", description: "페이지 탭 클릭 시 호출되는 콜백" },
+	args: {
+		isActive: false,
+		hasBorder: true,
 	},
 };
 export default meta;

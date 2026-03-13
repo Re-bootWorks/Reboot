@@ -1,11 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import PageTab from "../PageTab";
 
 interface PageTabsProps {
+	/** 초기 활성 탭 ID (마운트 시 1회만 사용) */
 	defaultId?: string;
+	/** 페이지 탭 변경 시 호출되는 콜백 */
 	onChange?: ({ id, label }: OnChangeParams) => void;
+	/** 페이지 탭 아이템 컴포넌트들 */
 	children: React.ReactNode;
 }
 
@@ -13,16 +16,25 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 	const listRef = useRef<HTMLUListElement>(null);
 	const indicatorRef = useRef<HTMLDivElement>(null);
 	const hasClickedRef = useRef(false);
-	const [activeId, setActiveId] = useState(defaultId ?? getFirstDataId(listRef.current));
-	const [indicatorStyle, setindicatorStyle] = useState({ left: 0, width: 0 });
+	const [activeId, setActiveId] = useState(defaultId);
+	const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+
+	// defaultId 가 없을 경우 첫 번째 data-id 사용
+	useEffect(() => {
+		if (!listRef.current) return;
+		const firstDataId = getFirstDataId(listRef.current);
+		if (firstDataId) {
+			setActiveId(firstDataId);
+		}
+	}, []);
 
 	// indicator 위치와 크기 갱신
-	useEffect(() => {
+	useLayoutEffect(() => {
 		function update() {
 			if (!listRef.current) return;
 			const tab = getActiveTab(listRef.current, activeId);
 			if (!tab) return;
-			setindicatorStyle({ left: tab.offsetLeft, width: tab.clientWidth });
+			setIndicatorStyle({ left: tab.offsetLeft, width: tab.clientWidth });
 		}
 		update();
 		window.addEventListener("resize", update);
@@ -40,7 +52,11 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 	function addTransition() {
 		if (!hasClickedRef.current && indicatorRef.current) {
 			// 클릭 이후부터 transition 추가
-			indicatorRef.current.classList.add("transition-transform", "duration-300");
+			indicatorRef.current.classList.add(
+				"transition-transform",
+				"transition-width",
+				"duration-300",
+			);
 			hasClickedRef.current = true;
 		}
 	}
@@ -48,7 +64,7 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 	return (
 		<TabsContext.Provider value={{ activeId, updateActiveId, addTransition }}>
 			<div className="relative w-full">
-				<ul className="flex" ref={listRef}>
+				<ul className="flex" ref={listRef} role="tablist">
 					{children}
 				</ul>
 				<div className="absolute bottom-0 h-0.5 w-full bg-gray-200" />
@@ -66,15 +82,18 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 	);
 }
 
-interface TabItemProps {
+interface TabItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+	/** 식별 ID */
 	id: string;
+	/** 아이콘 */
 	icon?: React.ReactNode;
+	/** 텍스트 또는 컴포넌트 라벨 */
 	children: React.ReactNode;
 }
 
-function TabItem({ id, icon, children }: TabItemProps) {
+function TabItem({ id, icon, children, ...props }: TabItemProps) {
 	const { activeId, updateActiveId, addTransition } = useTabs();
-	console.log(activeId);
+
 	return (
 		<li data-id={id}>
 			<PageTab
@@ -84,7 +103,9 @@ function TabItem({ id, icon, children }: TabItemProps) {
 					updateActiveId({ id, label: children });
 					addTransition();
 				}}
-				icon={icon}>
+				icon={icon}
+				role="tab"
+				{...props}>
 				{children}
 			</PageTab>
 		</li>
@@ -92,7 +113,7 @@ function TabItem({ id, icon, children }: TabItemProps) {
 }
 interface OnChangeParams {
 	id: string;
-	label: string | React.ReactNode;
+	label: React.ReactNode;
 }
 
 // ----- utils -----

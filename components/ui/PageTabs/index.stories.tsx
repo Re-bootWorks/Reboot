@@ -16,19 +16,9 @@ const meta: Meta<typeof PageTabs> = {
 	},
 
 	argTypes: {
-		children: {
-			control: false,
-			type: { name: "other", value: "React.ReactNode", required: true },
-			table: { type: { summary: "React.ReactNode" } },
-		},
-		defaultId: {
-			control: false,
-			description: "초기 활성 탭 ID (마운트 시 1회만 사용)",
-		},
-		onChange: {
-			action: "changed",
-			description: "페이지 탭 변경 시 호출되는 콜백",
-		},
+		children: { control: false },
+		defaultId: { control: false },
+		onChange: { action: "changed" },
 	},
 };
 export default meta;

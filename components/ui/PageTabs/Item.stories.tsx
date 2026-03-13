@@ -10,22 +10,26 @@ const meta: Meta<typeof PageTabs.Item> = {
 		layout: "padded",
 		docs: {
 			description: {
-				component: "PageTabs 하위 탭 아이템 컴포넌트",
+				component: "PageTabs 하위 탭 아이템 버튼 컴포넌트",
 			},
 		},
 	},
 	argTypes: {
 		id: {
 			control: false,
+			description: "식별 ID",
 			type: { name: "string", required: true },
-		},
-		children: {
-			control: false,
-			type: { name: "other", value: "React.ReactNode", required: true },
-			table: { type: { summary: "React.ReactNode" } },
 		},
 		icon: {
 			control: false,
+			description: "아이콘",
+			type: { name: "other", value: "React.ReactNode", required: false },
+			table: { type: { summary: "React.ReactNode" } },
+		},
+		children: {
+			control: false,
+			description: "텍스트 또는 컴포넌트 라벨",
+			type: { name: "other", value: "React.ReactNode", required: true },
 			table: { type: { summary: "React.ReactNode" } },
 		},
 	},

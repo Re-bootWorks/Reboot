@@ -2,12 +2,15 @@
 
 import { cn } from "@/utils/cn";
 
-interface PageTabProps {
+interface PageTabProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+	/** 아이콘 */
 	icon?: React.ReactNode;
+	/** 텍스트 또는 컴포넌트 라벨 */
 	children: React.ReactNode;
+	/** 활성화 여부 */
 	isActive?: boolean;
+	/** 테두리 여부 */
 	hasBorder?: boolean;
-	onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export default function PageTab({
@@ -15,7 +18,7 @@ export default function PageTab({
 	children,
 	isActive = false,
 	hasBorder = true,
-	onClick,
+	...props
 }: PageTabProps) {
 	return (
 		<button
@@ -24,7 +27,10 @@ export default function PageTab({
 				isActive ? "border-purple-600 text-purple-600" : "border-gray-200 text-gray-600",
 				hasBorder && "border-b-2",
 			)}
-			onClick={onClick}>
+			onClick={props?.onClick}
+			type="button"
+			area-selected="true"
+			{...props}>
 			{icon}
 			<div className="whitespace-nowrap">{children}</div>
 		</button>
