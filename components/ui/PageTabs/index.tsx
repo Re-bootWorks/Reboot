@@ -1,8 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { cn } from "@/utils/cn";
-import { PAGE_TAB_DEFAULT_STYLE } from "../PageTab";
+import PageTab from "../PageTab";
 
 interface PageTabsProps {
 	defaultId?: string;
@@ -75,19 +74,19 @@ interface TabItemProps {
 
 function TabItem({ id, icon, children }: TabItemProps) {
 	const { activeId, updateActiveId, addTransition } = useTabs();
-	const isActive = activeId === id;
-
+	console.log(activeId);
 	return (
 		<li data-id={id}>
-			<button
-				className={cn(PAGE_TAB_DEFAULT_STYLE, isActive ? "text-purple-600" : "text-gray-600")}
+			<PageTab
+				isActive={activeId === id}
+				hasBorder={false}
 				onClick={() => {
 					updateActiveId({ id, label: children });
 					addTransition();
-				}}>
-				{icon}
-				<div className="whitespace-nowrap">{children}</div>
-			</button>
+				}}
+				icon={icon}>
+				{children}
+			</PageTab>
 		</li>
 	);
 }
