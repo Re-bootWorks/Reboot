@@ -12,7 +12,7 @@ import {
 } from "react";
 import { usePathname } from "next/navigation";
 import Toast from "@/components/ui/Toast";
-import { ToastBoxProps, ToastContent, ToastItem } from "@/components/ui/Toast/type";
+import { ToastBoxProps, ToastContent } from "@/components/ui/Toast/type";
 
 type ToastContextValue = {
 	handleShowToast: (payload: ToastContent) => void;
@@ -32,7 +32,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
 	const handleShowToast = useCallback((payload: ToastContent) => {
 		const { message, status, duration = 3000 } = payload;
-		const toastId = Date.now();
+		const toastId = Date.now() + Math.random();
 
 		setToasts((prev) => [...prev, { id: toastId, message, status }]);
 
@@ -50,10 +50,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 			setToasts([]);
 		};
 	}, [pathname, clearAllTimers]);
-
-	useEffect(() => {
-		return () => clearAllTimers();
-	}, [clearAllTimers]);
 
 	const contextValue = useMemo(() => ({ handleShowToast }), [handleShowToast]);
 

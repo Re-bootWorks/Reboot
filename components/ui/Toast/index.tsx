@@ -4,13 +4,12 @@ import { ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Status, ToastBoxProps } from "./type";
 
-export function ToastBox({
-	status,
-	children,
-}: {
-	status: Status | undefined;
+interface ToastBoxDisplayProps {
+	status?: Status;
 	children: ReactNode;
-}) {
+}
+
+export function ToastBox({ status, children }: ToastBoxDisplayProps) {
 	return (
 		<div
 			className={cn(

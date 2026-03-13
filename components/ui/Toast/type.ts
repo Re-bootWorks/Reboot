@@ -6,10 +6,6 @@ export interface ToastBoxProps {
 	status?: Status;
 }
 
-export interface ToastItem extends ToastBoxProps {
-	duration?: number;
-}
-
 export interface ToastContent {
 	message: string;
 	status?: Status;
