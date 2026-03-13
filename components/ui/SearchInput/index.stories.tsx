@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { useState } from "react";
 import SearchInput from "./index";
 
 const meta: Meta<typeof SearchInput> = {
@@ -29,7 +30,21 @@ export default meta;
 
 type Story = StoryObj<typeof SearchInput>;
 
+// 👇 모든 스토리를 인터랙티브하게 변경
 export const Default: Story = {
+	render: (args) => {
+		const [value, setValue] = useState("");
+
+		return (
+			<SearchInput
+				{...args}
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
+				onSearchClick={() => console.log("검색:", value)}
+				onClear={() => setValue("")}
+			/>
+		);
+	},
 	args: {
 		placeholder: "궁금한 내용을 검색해보세요.",
 		variant: "default",
@@ -37,6 +52,19 @@ export const Default: Story = {
 };
 
 export const Outlined: Story = {
+	render: (args) => {
+		const [value, setValue] = useState("");
+
+		return (
+			<SearchInput
+				{...args}
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
+				onSearchClick={() => console.log("검색:", value)}
+				onClear={() => setValue("")}
+			/>
+		);
+	},
 	args: {
 		placeholder: "궁금한 내용을 검색해보세요.",
 		variant: "outlined",
@@ -44,6 +72,19 @@ export const Outlined: Story = {
 };
 
 export const Disabled: Story = {
+	render: (args) => {
+		const [value, setValue] = useState("");
+
+		return (
+			<SearchInput
+				{...args}
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
+				onSearchClick={() => console.log("검색:", value)}
+				onClear={() => setValue("")}
+			/>
+		);
+	},
 	args: {
 		placeholder: "궁금한 내용을 검색해보세요.",
 		variant: "default",
@@ -52,9 +93,91 @@ export const Disabled: Story = {
 };
 
 export const WithDefaultValue: Story = {
+	render: (args) => {
+		const [value, setValue] = useState("Next.js"); // 👈 초기값
+
+		return (
+			<SearchInput
+				{...args}
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
+				onSearchClick={() => console.log("검색:", value)}
+				onClear={() => setValue("")}
+			/>
+		);
+	},
 	args: {
 		placeholder: "궁금한 내용을 검색해보세요.",
 		variant: "default",
-		defaultValue: "Next.js",
+	},
+};
+
+// 인터랙티브 예시
+export const Interactive: Story = {
+	render: () => {
+		const [value, setValue] = useState("");
+
+		const handleSearch = () => {
+			alert(`검색: ${value}`);
+		};
+
+		const handleClear = () => {
+			setValue("");
+		};
+
+		return (
+			<SearchInput
+				placeholder="검색어를 입력하세요"
+				variant="default"
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
+				onSearchClick={handleSearch}
+				onClear={handleClear}
+			/>
+		);
+	},
+};
+
+// X 버튼이 보이는 상태
+export const WithClearButton: Story = {
+	render: () => {
+		const [value, setValue] = useState("Next.js");
+
+		const handleSearch = () => {
+			alert(`검색: ${value}`);
+		};
+
+		const handleClear = () => {
+			setValue("");
+		};
+
+		return (
+			<SearchInput
+				placeholder="검색어를 입력하세요"
+				variant="default"
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
+				onSearchClick={handleSearch}
+				onClear={handleClear}
+			/>
+		);
+	},
+};
+
+// Outlined 스타일 + 인터랙티브
+export const OutlinedInteractive: Story = {
+	render: () => {
+		const [value, setValue] = useState("");
+
+		return (
+			<SearchInput
+				placeholder="궁금한 내용을 검색해보세요."
+				variant="outlined"
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
+				onSearchClick={() => alert(`검색: ${value}`)}
+				onClear={() => setValue("")}
+			/>
+		);
 	},
 };

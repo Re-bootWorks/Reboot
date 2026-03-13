@@ -1,3 +1,5 @@
+import { cn } from "@/utils/cn";
+
 type PaginationItemProps = {
 	page: number | string;
 	isActive?: boolean;
@@ -12,9 +14,10 @@ export default function PaginationItem({
 	return (
 		<button
 			onClick={handlePageClick}
-			className={`flex h-8 w-8 items-center justify-center rounded-md transition-colors ${
-				isActive ? "bg-purple-300 text-white" : "text-gray-600 hover:bg-gray-100"
-			} `}>
+			className={cn(
+				"flex h-8 w-8 items-center justify-center rounded-md transition-colors",
+				isActive ? "bg-purple-400 text-white" : "text-gray-900 hover:bg-gray-200",
+			)}>
 			{page}
 		</button>
 	);
