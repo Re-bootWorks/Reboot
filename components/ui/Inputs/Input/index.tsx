@@ -8,7 +8,7 @@ const inputVariants = cva(
 	{
 		variants: {
 			isDestructive: {
-				true: "border border-error ",
+				true: "border border-error",
 				false: "border border-transparent focus-within:border-purple-500",
 			},
 		},
@@ -37,7 +37,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 				disabled && "cursor-not-allowed opacity-50",
 				className,
 			)}>
-			{leftIcon && leftIcon}
+			{leftIcon}
 			<input
 				ref={ref}
 				className="w-full bg-transparent text-gray-800 outline-none placeholder:text-gray-500 disabled:cursor-not-allowed"
