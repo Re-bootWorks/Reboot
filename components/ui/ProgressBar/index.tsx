@@ -24,11 +24,11 @@ export default function ProgressBar({
 			role="progressbar"
 			aria-valuenow={current}
 			aria-valuemax={max}
-			className={cn("rounded-[10px] bg-gray-50", className)}
+			className={cn("overflow-hidden rounded-[10px] bg-gray-50", className)}
 			{...props}>
 			<div
 				className={cn(
-					"h-full overflow-hidden [background-image:var(--gradient-purple-500)]",
+					"h-full [background-image:var(--gradient-purple-500)]",
 					hasAnimation && styles.animated,
 				)}
 				style={{
