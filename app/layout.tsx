@@ -36,7 +36,7 @@ export default function RootLayout({
 			<body className={pretendard.className}>
 				<ToastProvider>
 					<Header />
-					<main>{children}</main>
+					{children}
 				</ToastProvider>
 			</body>
 		</html>
