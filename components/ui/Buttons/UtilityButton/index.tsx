@@ -5,7 +5,7 @@ import animations from "./style.module.css";
 import { UtilityProps, UtilitySizes } from "./type";
 
 export const utilityVariants = cva(
-	"bg-gray-50 border border-gray-200 rounded-full flex justify-center items-center cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 enabled:hover:bg-gray-100",
+	"bg-gray-50 border border-gray-200 rounded-full flex justify-center items-center shrink-0 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 enabled:hover:bg-gray-100",
 	{
 		variants: {
 			sizes: {

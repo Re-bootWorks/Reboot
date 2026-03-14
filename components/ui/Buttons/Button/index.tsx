@@ -7,7 +7,7 @@ const DISABLED_BUTTON_CLASS =
 	"disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed disabled:border-0";
 
 export const buttonVariants = cva(
-	"flex justify-center items-center w-full text-center whitespace-nowrap cursor-pointer",
+	"flex justify-center items-center w-full text-center whitespace-nowrap shrink-0 cursor-pointer",
 	{
 		variants: {
 			sizes: {
