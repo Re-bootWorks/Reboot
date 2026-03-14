@@ -18,12 +18,17 @@ export default function ProgressBar({
 	className = "w-full h-[5px]",
 	...props
 }: ProgressBarProps) {
-	const percent = Math.min((current / max) * 100, 100);
+	const percent = max > 0 ? Math.min((current / max) * 100, 100) : 0;
 	return (
-		<div className={cn("rounded-[10px] bg-gray-50", className)} {...props}>
+		<div
+			role="progressbar"
+			aria-valuenow={current}
+			aria-valuemax={max}
+			className={cn("rounded-[10px] bg-gray-50", className)}
+			{...props}>
 			<div
 				className={cn(
-					"h-full [background-image:var(--gradient-purple-500)]",
+					"h-full overflow-hidden [background-image:var(--gradient-purple-500)]",
 					hasAnimation && styles.animated,
 				)}
 				style={{
