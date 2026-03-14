@@ -1,8 +1,8 @@
 import { cn } from "@/utils/cn";
-import { cva } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority";
 import { IcHeart, IcHeartOutline } from "../../icons";
 import animations from "./style.module.css";
-import { UtilityProps, UtilitySizes } from "./type";
+import { ButtonHTMLAttributes } from "react";
 
 export const utilityVariants = cva(
 	"bg-gray-50 border border-gray-200 rounded-full flex justify-center items-center shrink-0 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 enabled:hover:bg-gray-100",
@@ -19,6 +19,15 @@ export const utilityVariants = cva(
 		},
 	},
 );
+
+export type UtilitySizes = NonNullable<VariantProps<typeof utilityVariants>["sizes"]>;
+
+export interface UtilityProps
+	extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof utilityVariants> {
+	sizes?: UtilitySizes;
+	pressed?: boolean;
+	isPending?: boolean;
+}
 
 const ICON_SIZE_MAP: Record<UtilitySizes, "sm" | "md" | "lg"> = {
 	small: "sm",

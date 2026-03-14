@@ -30,7 +30,7 @@ const meta: Meta<typeof Button> = {
 		},
 		disabled: {
 			control: "boolean",
-			description: "버튼 비활성화 스타일 적용 설영",
+			description: "버튼 비활성화 스타일 적용 설정",
 		},
 	},
 };

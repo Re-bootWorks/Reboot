@@ -1,10 +1,7 @@
 import { cn } from "@/utils/cn";
-import { cva } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority";
 import LoaderDots from "../../LoaderDots";
-import { ButtonProps, ButtonSizes } from "./type";
-
-const DISABLED_BUTTON_CLASS =
-	"disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed disabled:border-0";
+import { ButtonHTMLAttributes } from "react";
 
 export const buttonVariants = cva(
 	"flex justify-center items-center w-full text-center whitespace-nowrap shrink-0 cursor-pointer",
@@ -30,6 +27,14 @@ export const buttonVariants = cva(
 	},
 );
 
+export type ButtonSizes = VariantProps<typeof buttonVariants>["sizes"];
+export type ButtonColors = VariantProps<typeof buttonVariants>["colors"];
+
+export interface ButtonProps
+	extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+	isPending?: boolean;
+}
+
 const LOADER_SIZE_MAP: Record<NonNullable<ButtonSizes>, "xs" | "sm" | "md"> = {
 	small: "xs",
 	smallMedium: "sm",
@@ -37,6 +42,9 @@ const LOADER_SIZE_MAP: Record<NonNullable<ButtonSizes>, "xs" | "sm" | "md"> = {
 	mediumLarge: "md",
 	large: "md",
 };
+
+const DISABLED_BUTTON_CLASS =
+	"disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed disabled:border-0";
 
 export default function Button({
 	children,
