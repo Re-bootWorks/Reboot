@@ -100,11 +100,11 @@ function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: Sideba
 					</nav>
 				</div>
 				{isLogin ? (
-					<button className={cn(STYLE.sidebarItem, "justify-end")}>
+					<button type="button" className={cn(STYLE.sidebarItem, "justify-end")}>
 						<span className={STYLE.link}>로그아웃</span>
 					</button>
 				) : (
-					<button className={cn(STYLE.sidebarItem, "justify-end")}>
+					<button type="button" className={cn(STYLE.sidebarItem, "justify-end")}>
 						<span className={STYLE.link}>로그인</span>
 					</button>
 				)}
@@ -125,7 +125,7 @@ export default function Header() {
 		<Container as="header" className={STYLE.header}>
 			<div className={STYLE.gnb}>
 				<Link href="/">
-					<h1 className={STYLE.logo}>Re:boot</h1>
+					<div className={STYLE.logo}>Re:boot</div>
 				</Link>
 				<nav className="hidden md:flex" aria-label="상단 내비게이션">
 					<GNB favoritesCount={favoritesCount} />
@@ -140,7 +140,10 @@ export default function Header() {
 			<div className={STYLE.etc}>
 				{isLogin ? (
 					<>
-						<button type="button" className={cn(isAlarm ? "cursor-pointer" : "cursor-default")}>
+						<button
+							type="button"
+							disabled={!isAlarm}
+							className={cn(isAlarm ? "cursor-pointer" : "cursor-default")}>
 							{isAlarm ? <IcBellUnreadOutline /> : <IcBellOutline />}
 						</button>
 						<div className="hidden md:block">
