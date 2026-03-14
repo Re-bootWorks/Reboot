@@ -24,7 +24,7 @@ export default function ProgressBar({
 			role="progressbar"
 			aria-valuenow={current}
 			aria-valuemax={max}
-			className={cn("overflow-hidden rounded-[10px] bg-gray-50", className)}
+			className={cn("pointer-events-none overflow-hidden rounded-[10px] bg-gray-50", className)}
 			{...props}>
 			<div
 				className={cn(
