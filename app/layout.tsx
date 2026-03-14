@@ -1,8 +1,9 @@
+import { ToastProvider } from "@/providers/toast-provider";
 import "../styles/globals.css";
 import localFont from "next/font/local";
 
 const pretendard = localFont({
-	src: "../assets/fonts/PretendardVariable.woff2",
+	src: "../public/assets/fonts/PretendardVariable.woff2",
 	display: "swap",
 	weight: "100 900",
 	variable: "--font-pretendard",
@@ -31,7 +32,9 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="ko">
-			<body className={pretendard.className}>{children}</body>
+			<body className={pretendard.className}>
+				<ToastProvider>{children}</ToastProvider>
+			</body>
 		</html>
 	);
 }
