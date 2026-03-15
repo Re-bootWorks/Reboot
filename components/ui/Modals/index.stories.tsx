@@ -125,19 +125,47 @@ export const WithFooter: Story = {
 		/>
 	),
 };
-
 export const LongContent: Story = {
 	args: {
 		title: "긴 콘텐츠",
 		children: true,
 		footer: true,
 	},
-	render: (args) => (
-		<ModalWrapper
-			title={args.title as string}
-			className={args.className}
-			hasChildren={args.children as unknown as boolean}
-			hasFooter={args.footer as unknown as boolean}
-		/>
-	),
+	render: function Render(args) {
+		const [isOpen, setIsOpen] = useState(false);
+		return (
+			<div className="flex min-h-screen items-center justify-center bg-gray-50">
+				<button
+					onClick={() => setIsOpen(true)}
+					className="rounded-xl bg-purple-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-700">
+					모달 열기
+				</button>
+				<Modal
+					isOpen={isOpen}
+					onClose={() => setIsOpen(false)}
+					title={args.title as string}
+					className={args.className ?? "max-w-140"}
+					footer={
+						args.footer ? (
+							<div className="flex gap-3">
+								<button className="flex-1 rounded-xl border border-gray-200 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+									취소
+								</button>
+								<button className="flex-1 rounded-xl bg-purple-600 py-2.5 text-sm font-medium text-white hover:bg-purple-700">
+									확인
+								</button>
+							</div>
+						) : undefined
+					}>
+					{args.children && (
+						<div className="space-y-2">
+							{Array.from({ length: 30 }).map((_, i) => (
+								<p key={i}>이것은 긴 콘텐츠를 테스트하기 위한 문장입니다. 라인 {i + 1}</p>
+							))}
+						</div>
+					)}
+				</Modal>
+			</div>
+		);
+	},
 };
