@@ -210,3 +210,12 @@
 			linear-gradient(to right, #8c81eb, #452cc0) border-box;
 	}
 }
+
+.scrollbar-hide {
+	-ms-overflow-style: none; /* 구형 IE / 구형 Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Edge(Chromium) */
+}
