@@ -20,8 +20,8 @@ export function Modal({ isOpen, onClose, title, children, footer, className = ""
 			<div className="fixed inset-0 flex items-center justify-center px-4">
 				<DialogPanel
 					className={cn(
-						"relative flex w-full flex-col bg-white shadow-xl",
-						"rounded-3xl px-6 py-6 md:rounded-[2.5rem] md:px-12 md:py-12",
+						"relative flex max-h-2/3 w-full flex-col bg-white shadow-xl",
+						"rounded-3xl p-6 md:rounded-[2.5rem] md:p-6",
 						className,
 					)}>
 					<div className="flex items-center justify-between">
