@@ -2,8 +2,9 @@
 
 import NextImage from "next/image";
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
-import { IcDelete, IcImagePlus } from "../icons";
 import { cn } from "@/utils/cn";
+import { IcImagePlus } from "../icons";
+import DeleteButton from "../Buttons/DeleteButton";
 
 interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	/** 식별 ID */
@@ -42,7 +43,7 @@ export default function InputFile({
 }: InputFileProps) {
 	const [previewUrl, setPreviewUrl] = useState<string | null>(defaultUrl);
 	const inputRef = useRef<HTMLInputElement>(null);
-	useImperativeHandle(ref, () => ({ reset: handleClickButtonDelete }));
+	useImperativeHandle(ref, () => ({ reset: resetFile }));
 
 	useEffect(() => {
 		return () => revokePrevPreviewUrl();
@@ -53,10 +54,16 @@ export default function InputFile({
 		if (previewUrl) URL.revokeObjectURL(previewUrl);
 	}
 
-	function handleClickButtonDelete() {
+	function resetFile() {
 		revokePrevPreviewUrl();
 		setPreviewUrl(null);
 		if (inputRef.current) inputRef.current.value = "";
+	}
+
+	function handleClickButtonDelete(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		e.stopPropagation();
+		resetFile();
 	}
 
 	async function handleChangeInputFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -85,7 +92,10 @@ export default function InputFile({
 				{previewUrl && (
 					<>
 						<NextImage src={previewUrl} alt="thumbnail" fill className="object-cover" />
-						<DeleteButton onClick={handleClickButtonDelete} />
+						<DeleteButton
+							className="absolute top-2.5 right-2.5 z-10 cursor-pointer"
+							onClick={handleClickButtonDelete}
+						/>
 					</>
 				)}
 				<input
@@ -114,20 +124,6 @@ function NoPreview({ thumbSize }: Pick<InputFileProps, "thumbSize">) {
 			<IcImagePlus />
 			<span className="text-gray-500 select-none">파일 첨부</span>
 		</div>
-	);
-}
-
-function DeleteButton({ onClick }: { onClick: () => void }) {
-	return (
-		<button
-			type="button"
-			className="absolute top-2.5 right-2.5 z-10 flex h-[18px] w-[18px] cursor-pointer items-center justify-center rounded-full bg-black p-0.5"
-			onClick={(e) => {
-				e.preventDefault();
-				onClick();
-			}}>
-			<IcDelete color="white" />
-		</button>
 	);
 }
 
