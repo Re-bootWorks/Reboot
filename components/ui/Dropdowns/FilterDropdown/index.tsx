@@ -44,9 +44,11 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 									onClick={() => onChange(item.value)}
 									className={cn(
 										"w-full rounded-[0.75rem] px-[0.75rem] py-[0.5rem] text-left text-sm transition",
-										selected
-											? "bg-purple-200 font-semibold text-purple-700"
-											: "text-gray-900 hover:bg-gray-50",
+										{
+											"bg-purple-200 font-semibold text-purple-700": selected,
+											"bg-gray-50": !selected && active,
+											"text-gray-900": !selected,
+										},
 									)}>
 									{item.label}
 								</button>
