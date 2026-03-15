@@ -6,7 +6,7 @@ import { IcMeetBalls, IcPerson } from "../../icons";
 
 const menuVariants = cva(
 	[
-		"min-w-27.5 rounded-xl border border-gray-200 bg-white shadow-[0_4px_16px_0_rgba(0,0,0,0.04)]",
+		"min-w-27.5 rounded-xl border border-gray-200 bg-white shadow-base",
 		"outline-none",
 		"data-[closed]:scale-95 data-[closed]:opacity-0",
 		"transition duration-150 ease-out",

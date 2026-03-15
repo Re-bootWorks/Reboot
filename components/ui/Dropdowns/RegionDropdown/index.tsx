@@ -27,7 +27,7 @@ const buttonVariants = cva(
 const optionsVariants = cva(
 	[
 		"absolute left-0 top-full z-20 mt-2 w-full max-h-55 overflow-y-auto scrollbar-hide rounded-xl border border-gray-200 bg-white",
-		"shadow-[0_0_50px_0_rgba(0,0,0,0.08)]",
+		"shadow-xl",
 		"outline-none",
 		"data-[closed]:scale-95 data-[closed]:opacity-0",
 		"origin-top transition duration-150 ease-out",
