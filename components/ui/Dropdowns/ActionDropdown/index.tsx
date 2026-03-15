@@ -15,8 +15,9 @@ const menuVariants = cva(
 
 const itemVariants = cva(
 	[
-		"flex w-full items-center px-2 text-left text-sm font-semibold text-gray-800 cursor-pointer",
+		"flex w-full h-10 items-center px-2 text-left text-sm font-semibold text-gray-800 cursor-pointer",
 		"focus:outline-none",
+		"data-[focus]:rounded-lg data-[focus]:bg-gray-50",
 		"disabled:cursor-not-allowed disabled:text-gray-300",
 	].join(" "),
 	{
@@ -79,24 +80,20 @@ export default function ActionDropdown({
 				anchor="bottom end"
 				className={cn(menuVariants(), "mt-2", menuClassName)}>
 				<div className="flex flex-col">
-					{items.map((item) => (
+					{items.map((item, index) => (
 						<MenuItem
-							key={item.label}
-							as="div"
-							className="flex h-10 flex-col justify-center"
-							disabled={item.disabled}>
-							<button
-								type="button"
-								onClick={item.onClick}
-								disabled={item.disabled}
-								className={cn(
-									itemVariants({
-										danger: item.danger,
-									}),
-									item.className,
-								)}>
-								{item.label}
-							</button>
+							key={`${item.label}-${index}`}
+							as="button"
+							type="button"
+							onClick={item.onClick}
+							disabled={item.disabled}
+							className={cn(
+								itemVariants({
+									danger: item.danger,
+								}),
+								item.className,
+							)}>
+							{item.label}
 						</MenuItem>
 					))}
 				</div>

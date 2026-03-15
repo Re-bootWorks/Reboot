@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
 import { cva } from "class-variance-authority";
-import { useState, type ButtonHTMLAttributes } from "react";
+import { useMemo, useState, type ButtonHTMLAttributes } from "react";
 import { IcArrowDown } from "../../icons";
 
 const buttonVariants = cva(
@@ -93,7 +93,10 @@ export default function RegionDropdown({
 	const [internalValue, setInternalValue] = useState(defaultValue ?? "");
 
 	const selectedValue = isControlled ? value : internalValue;
-	const selectedOption = options.find((option) => option.value === selectedValue);
+	const selectedOption = useMemo(
+		() => options.find((option) => option.value === selectedValue),
+		[options, selectedValue],
+	);
 
 	const handleChange = (nextValue: string) => {
 		if (!isControlled) {
