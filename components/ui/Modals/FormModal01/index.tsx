@@ -16,6 +16,7 @@ export function FormModal01({ isOpen, onClose, title, footer }: FormModal01Props
 			onClose={onClose}
 			title={title}
 			footer={footer}
+			footerClassName="pt-10"
 			className="w-[21.4375rem] p-6 pt-8 md:w-100 md:p-12">
 			<div></div>
 		</Modal>

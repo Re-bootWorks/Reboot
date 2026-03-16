@@ -11,9 +11,18 @@ export interface ModalProps {
 	children: React.ReactNode;
 	footer?: React.ReactNode;
 	className?: string;
+	footerClassName?: string;
 }
 
-export function Modal({ isOpen, onClose, title, children, footer, className = "" }: ModalProps) {
+export function Modal({
+	isOpen,
+	onClose,
+	title,
+	children,
+	footer,
+	className = "",
+	footerClassName,
+}: ModalProps) {
 	return (
 		<Dialog as="div" className="relative z-50" open={isOpen} onClose={onClose}>
 			<div className="bg-black-50 fixed inset-0" />
@@ -21,10 +30,10 @@ export function Modal({ isOpen, onClose, title, children, footer, className = ""
 				<DialogPanel
 					className={cn(
 						"relative flex max-h-2/3 w-full flex-col bg-white shadow-xl",
-						"rounded-3xl p-6 md:rounded-[2.5rem] md:p-6",
+						"rounded-3xl p-6 md:rounded-[2.5rem] md:p-12",
 						className,
 					)}>
-					<div className="flex items-center justify-between">
+					<div className="flex items-center justify-between pb-8 md:pb-12">
 						{title ? (
 							<DialogTitle as="h2" className="text-lg font-semibold text-gray-900 md:text-2xl">
 								{title}
@@ -40,8 +49,8 @@ export function Modal({ isOpen, onClose, title, children, footer, className = ""
 							<IcDelete />
 						</button>
 					</div>
-					<div className="flex-1 overflow-y-auto pt-8 md:pt-12">{children}</div>
-					{footer && <div className="pt-10 md:pt-14">{footer}</div>}
+					<div className="flex-1 overflow-y-auto">{children}</div>
+					{footer && <div className={cn("pt-8 md:pt-14", footerClassName)}>{footer}</div>}
 				</DialogPanel>
 			</div>
 		</Dialog>
