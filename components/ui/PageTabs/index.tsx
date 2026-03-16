@@ -2,6 +2,9 @@
 
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import PageTab from "../PageTab";
+import useDragScroll from "./useDragScroll";
+import useIndicator from "./useIndicator";
+import { cn } from "@/utils/cn";
 
 interface PageTabsProps {
 	/** 초기 활성 탭 ID (마운트 시 1회만 사용) */
@@ -14,32 +17,18 @@ interface PageTabsProps {
 
 function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 	const listRef = useRef<HTMLUListElement>(null);
-	const indicatorRef = useRef<HTMLDivElement>(null);
-	const hasClickedRef = useRef(false);
 	const [activeId, setActiveId] = useState(defaultId);
-	const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+	const { overflow, ...dragScroll } = useDragScroll();
+	const { indicatorRef, style: indicatorStyle, addTransition } = useIndicator(listRef, activeId);
 
 	// defaultId 가 없을 경우 첫 번째 data-id 사용
 	useEffect(() => {
-		if (!listRef.current || typeof defaultId === "string") return;
+		if (!listRef.current || !defaultId) return;
 		const firstDataId = getFirstDataId(listRef.current);
 		if (firstDataId) {
 			setActiveId(firstDataId);
 		}
 	}, []);
-
-	// indicator 위치와 크기 갱신
-	useLayoutEffect(() => {
-		function update() {
-			if (!listRef.current) return;
-			const tab = getActiveTab(listRef.current, activeId);
-			if (!tab) return;
-			setIndicatorStyle({ left: tab.offsetLeft, width: tab.clientWidth });
-		}
-		update();
-		window.addEventListener("resize", update);
-		return () => window.removeEventListener("resize", update);
-	}, [activeId]);
 
 	function updateActiveId({ id, label }: OnChangeParams) {
 		setActiveId(id);
@@ -49,34 +38,35 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 		}
 	}
 
-	function addTransition() {
-		if (!hasClickedRef.current && indicatorRef.current) {
-			// 클릭 이후부터 transition 추가
-			indicatorRef.current.classList.add("transition-[transform,width]", "duration-200");
-			hasClickedRef.current = true;
-		}
-	}
-
 	return (
 		<TabsContext.Provider value={{ activeId, updateActiveId, addTransition }}>
-			<div className="relative w-full">
-				<ul className="flex" ref={listRef} role="tablist">
-					{children}
-				</ul>
-				<div className="absolute bottom-0 h-0.5 w-full bg-gray-200" />
+			<div className="relative">
 				<div
-					ref={indicatorRef}
-					className="absolute bottom-0 h-0.5 w-px origin-left bg-purple-500"
-					style={{
-						// transform scale 사용 시 브라우저 배율을 변경할 경우 문제 발생
-						width: `${indicatorStyle.width}px`,
-						transform: `translateX(${indicatorStyle.left}px)`,
-					}}
-				/>
+					className="w-full overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+					{...dragScroll}>
+					<div className="relative w-fit min-w-full">
+						<ul className="flex w-full" ref={listRef} role="tablist">
+							{children}
+						</ul>
+						<div className="absolute bottom-0 h-0.5 w-full bg-gray-200" />
+						<div
+							ref={indicatorRef}
+							className="absolute bottom-0 h-0.5 w-px origin-left bg-purple-500"
+							style={{
+								// transform scale 사용 시 브라우저 배율을 변경할 경우 문제 발생
+								width: `${indicatorStyle.width}px`,
+								transform: `translateX(${indicatorStyle.left}px)`,
+							}}
+						/>
+					</div>
+				</div>
+				{overflow.left && <div className={cn(ovelayStyle, "left-0 bg-linear-to-r")} />}
+				{overflow.right && <div className={cn(ovelayStyle, "right-0 bg-linear-to-l")} />}
 			</div>
 		</TabsContext.Provider>
 	);
 }
+const ovelayStyle = "pointer-events-none absolute top-0 h-full w-8 from-white to-transparent";
 
 interface TabItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	/** 식별 ID */
@@ -91,7 +81,7 @@ function TabItem({ id, icon, children, ...props }: TabItemProps) {
 	const { activeId, updateActiveId, addTransition } = useTabs();
 
 	return (
-		<li data-id={id}>
+		<li data-id={id} role="presentation">
 			<PageTab
 				isActive={activeId === id}
 				hasBorder={false}
@@ -107,6 +97,7 @@ function TabItem({ id, icon, children, ...props }: TabItemProps) {
 		</li>
 	);
 }
+
 interface OnChangeParams {
 	id: string;
 	label: React.ReactNode;
