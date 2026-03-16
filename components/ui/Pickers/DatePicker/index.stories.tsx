@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from ".";
 
 const meta: Meta<typeof DatePicker> = {
@@ -10,10 +10,6 @@ const meta: Meta<typeof DatePicker> = {
 		label: {
 			control: "text",
 			description: "라벨",
-		},
-		required: {
-			control: "boolean",
-			description: "필수 여부",
 		},
 		placeholder: {
 			control: "text",
@@ -44,7 +40,6 @@ const meta: Meta<typeof DatePicker> = {
 	},
 	args: {
 		label: "모임 일정",
-		required: false,
 		placeholder: "YYYY-MM-DD",
 		value: "",
 		disabled: false,
@@ -58,6 +53,10 @@ type Story = StoryObj<typeof DatePicker>;
 
 function ControlledDatePicker(args: React.ComponentProps<typeof DatePicker>) {
 	const [value, setValue] = useState(args.value ?? "");
+
+	useEffect(() => {
+		setValue(args.value ?? "");
+	}, [args.value]);
 
 	return (
 		<div className="w-[20rem]">

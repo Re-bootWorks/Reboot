@@ -3,9 +3,10 @@
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/utils/cn";
-import PickerInput, { PickerInputProps } from "../pickekField";
+import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
+import PickerInput, { PickerInputProps } from "../PickerField";
 import Button from "../../Buttons/Button";
-import Calendar from "./calendar";
+import Calendar from "./Calendar";
 
 type DatePickerProps = Omit<
 	PickerInputProps,
@@ -13,30 +14,6 @@ type DatePickerProps = Omit<
 > & {
 	value?: string;
 	onChange?: (value: string) => void;
-};
-
-const formatDateString = (date: Date) => {
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, "0");
-	const day = String(date.getDate()).padStart(2, "0");
-
-	return `${year}-${month}-${day}`;
-};
-
-const parseDateString = (value?: string) => {
-	if (!value) return undefined;
-
-	const [year, month, day] = value.split("-").map(Number);
-
-	if (!year || !month || !day) return undefined;
-
-	const date = new Date(year, month - 1, day);
-
-	if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
-		return undefined;
-	}
-
-	return date;
 };
 
 export default function DatePicker({
@@ -52,7 +29,7 @@ export default function DatePicker({
 	...props
 }: DatePickerProps) {
 	const selectedDate = useMemo(() => parseDateString(value), [value]);
-	const [month, setMonth] = useState<Date>(selectedDate ?? new Date());
+	const [month, setMonth] = useState<Date>(selectedDate ?? getKoreanToday());
 	const [draftDate, setDraftDate] = useState<Date | undefined>(selectedDate);
 
 	useEffect(() => {
@@ -87,7 +64,7 @@ export default function DatePicker({
 								aria-label="날짜 선택 열기"
 								onClick={() => {
 									setDraftDate(selectedDate);
-									setMonth(selectedDate ?? new Date());
+									setMonth(selectedDate ?? getKoreanToday());
 								}}
 								className="absolute inset-0 cursor-pointer rounded-[0.625rem] outline-none md:rounded-xl"
 							/>
