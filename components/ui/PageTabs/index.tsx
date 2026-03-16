@@ -23,7 +23,7 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 
 	// defaultId 가 없을 경우 첫 번째 data-id 사용
 	useEffect(() => {
-		if (!listRef.current || !defaultId) return;
+		if (!listRef.current || defaultId) return;
 		const firstDataId = getFirstDataId(listRef.current);
 		if (firstDataId) {
 			setActiveId(firstDataId);
@@ -61,16 +61,16 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 					</div>
 				</div>
 				<div
-					className={cn(ovelayStyle, "left-0 hidden bg-linear-to-r", overflow.left && "block")}
+					className={cn(overlayStyle, "left-0 hidden bg-linear-to-r", overflow.left && "block")}
 				/>
 				<div
-					className={cn(ovelayStyle, "right-0 hidden bg-linear-to-l", overflow.right && "block")}
+					className={cn(overlayStyle, "right-0 hidden bg-linear-to-l", overflow.right && "block")}
 				/>
 			</div>
 		</TabsContext.Provider>
 	);
 }
-const ovelayStyle = "pointer-events-none absolute top-0 h-full w-8 from-white to-transparent";
+const overlayStyle = "pointer-events-none absolute top-0 h-full w-8 from-white to-transparent";
 
 interface TabItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	/** 식별 ID */
@@ -85,7 +85,7 @@ function TabItem({ id, icon, children, ...props }: TabItemProps) {
 	const { activeId, updateActiveId, addTransition } = useTabs();
 
 	return (
-		<li data-id={id} role="presentation">
+		<li data-id={id} className="flex grow justify-center sm:grow-0" role="presentation">
 			<PageTab
 				isActive={activeId === id}
 				hasBorder={false}
