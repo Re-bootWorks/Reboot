@@ -114,7 +114,7 @@ function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: Sideba
 }
 
 export default function Header() {
-	const { isOpen, setOpen, setClose } = useToggle();
+	const { isOpen, open, close } = useToggle();
 	// @TODO 추후 기능 구현 예정
 	const isLogin = true;
 	const isAlarm = false;
@@ -133,7 +133,7 @@ export default function Header() {
 				<Sidebar
 					isOpen={isOpen}
 					isLogin={isLogin}
-					handleSidebarClose={setClose}
+					handleSidebarClose={close}
 					favoritesCount={favoritesCount}
 				/>
 			</div>
@@ -164,7 +164,7 @@ export default function Header() {
 						</button>
 					</>
 				)}
-				<button type="button" className="cursor-pointer md:hidden" onClick={setOpen}>
+				<button type="button" className="cursor-pointer md:hidden" onClick={open}>
 					<IcMenu />
 				</button>
 			</div>
