@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import InputTextarea from ".";
 
 const meta: Meta<typeof InputTextarea> = {
-	title: "UI/InputTextarea",
+	title: "Inputs/InputTextarea",
 	component: InputTextarea,
 	tags: ["autodocs"],
 	parameters: {

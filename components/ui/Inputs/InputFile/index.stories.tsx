@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import InputFile from ".";
 
 const meta: Meta<typeof InputFile> = {
-	title: "UI/InputFile",
+	title: "Inputs/InputFile",
 	component: InputFile,
 	tags: ["autodocs"],
 	parameters: {
