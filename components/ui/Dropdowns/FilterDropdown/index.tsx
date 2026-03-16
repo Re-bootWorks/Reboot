@@ -24,13 +24,14 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 				<IcFilter size="sm" className="text-gray-500" />
 				{value}
 			</MenuButton>
+
 			<MenuItems
 				anchor="bottom start"
 				className={cn(
-					"mt-[0.5rem] w-[10rem]",
-					"rounded-[1rem] border border-gray-200 bg-white",
-					"shadow-[0_0.5rem_1.25rem_rgba(0,0,0,0.06)]",
-					"p-[0.5rem]",
+					"mt-2 w-40",
+					"rounded-2xl border border-gray-200 bg-white",
+					"shadow-lg",
+					"p-2",
 					"outline-none",
 				)}>
 				{items.map((item) => {
@@ -42,14 +43,11 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 								<button
 									type="button"
 									onClick={() => onChange(item.value)}
-									className={cn(
-										"w-full rounded-[0.75rem] px-[0.75rem] py-[0.5rem] text-left text-sm transition",
-										{
-											"bg-purple-200 font-semibold text-purple-700": selected,
-											"bg-gray-50": !selected && active,
-											"text-gray-900": !selected,
-										},
-									)}>
+									className={cn("w-full rounded-xl px-3 py-2 text-left text-sm transition", {
+										"bg-purple-200 font-semibold text-purple-700": selected,
+										"bg-gray-50": !selected && active,
+										"text-gray-900": !selected,
+									})}>
 									{item.label}
 								</button>
 							)}
