@@ -59,7 +59,7 @@ export default function Calendar({
 				week: "grid grid-cols-7",
 				day: "flex items-center justify-center",
 				day_button: cn(
-					"flex h-8 w-full cursor-pointer items-center justify-center rounded-lg",
+					"select-none flex h-8 w-full cursor-pointer items-center justify-center rounded-lg",
 					"text-sm font-medium text-gray-800",
 					"transition-colors",
 					"hover:bg-purple-100",
