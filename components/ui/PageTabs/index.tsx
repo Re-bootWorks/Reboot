@@ -60,8 +60,12 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 						/>
 					</div>
 				</div>
-				{overflow.left && <div className={cn(ovelayStyle, "left-0 bg-linear-to-r")} />}
-				{overflow.right && <div className={cn(ovelayStyle, "right-0 bg-linear-to-l")} />}
+				<div
+					className={cn(ovelayStyle, "left-0 hidden bg-linear-to-r", overflow.left && "block")}
+				/>
+				<div
+					className={cn(ovelayStyle, "right-0 hidden bg-linear-to-l", overflow.right && "block")}
+				/>
 			</div>
 		</TabsContext.Provider>
 	);

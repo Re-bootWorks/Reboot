@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function useDragScroll() {
 	const ref = useRef<HTMLDivElement>(null);
@@ -44,6 +44,10 @@ export default function useDragScroll() {
 			});
 		},
 	};
+
+	useEffect(() => {
+		handlers.onScroll();
+	}, []);
 
 	return { ref, overflow, ...handlers, onMouseLeave: handlers.onMouseUp };
 }
