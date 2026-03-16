@@ -224,6 +224,21 @@
 	body {
 		@apply bg-gray-50;
 	}
+	.bg-gradient-purple-100-lr {
+		background-image: var(--gradient-purple-100-lr);
+	}
+	.bg-gradient-purple-100-td {
+		background-image: var(--gradient-purple-100-td);
+	}
+	.bg-gradient-purple-200-lr {
+		background-image: var(--gradient-purple-200-lr);
+	}
+	.bg-gradient-purple-200-rl {
+		background-image: var(--gradient-purple-200-rl);
+	}
+	.bg-gradient-purple-500 {
+		background-image: var(--gradient-purple-500);
+	}
 }
 
 @layer utilities {
