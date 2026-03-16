@@ -10,12 +10,10 @@ type FilterButtonProps = {
 export function FilterButton({ label, isActive = false, onClick }: FilterButtonProps) {
 	return (
 		<button
-			type="button"
 			onClick={onClick}
-			aria-pressed={isActive}
 			className={cn(
-				"flex items-center gap-1 rounded-md px-3 py-1.5 text-sm transition-colors",
-				isActive ? "text-gray-900 hover:text-gray-600" : "text-gray-600 hover:text-gray-900",
+				"flex h-[2rem] items-center gap-[0.25rem] rounded-[0.5rem] px-[0.75rem] text-sm font-semibold transition-colors",
+				isActive ? "text-gray-900" : "text-gray-600 hover:text-gray-900",
 			)}>
 			<IcFilter color={isActive ? "gray-900" : "gray-600"} size="xs" />
 			<span>{label}</span>
