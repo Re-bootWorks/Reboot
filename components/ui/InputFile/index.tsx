@@ -1,10 +1,11 @@
 "use client";
 
 import NextImage from "next/image";
-import { useEffect, useImperativeHandle, useRef, useState } from "react";
+import { useImperativeHandle, useRef } from "react";
 import { cn } from "@/utils/cn";
 import { IcImagePlus } from "../icons";
 import DeleteButton from "../Buttons/DeleteButton";
+import useInputImage from "@/hooks/useInputImage";
 
 interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	/** 식별 ID */
@@ -41,44 +42,13 @@ export default function InputFile({
 	onChange,
 	...props
 }: InputFileProps) {
-	const [previewUrl, setPreviewUrl] = useState<string | null>(defaultUrl);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const { previewUrl, resetFile, changeFile } = useInputImage({
+		inputRef,
+		defaultUrl,
+		onChange,
+	});
 	useImperativeHandle(ref, () => ({ reset: resetFile }));
-
-	useEffect(() => {
-		return () => revokePrevPreviewUrl();
-	}, [previewUrl]);
-
-	// 기존 썸네일 URL 메모리 해제
-	function revokePrevPreviewUrl() {
-		if (previewUrl) URL.revokeObjectURL(previewUrl);
-	}
-
-	function resetFile() {
-		revokePrevPreviewUrl();
-		setPreviewUrl(null);
-		if (inputRef.current) inputRef.current.value = "";
-	}
-
-	function handleClickButtonDelete(e: React.MouseEvent<HTMLButtonElement>) {
-		e.preventDefault();
-		e.stopPropagation();
-		resetFile();
-	}
-
-	async function handleChangeInputFile(e: React.ChangeEvent<HTMLInputElement>) {
-		// 새로운 썸네일 생성 및 표시
-		const file = e.target.files?.[0];
-		if (file) {
-			const blob = await createThumbnail(file, 450);
-			if (blob) {
-				revokePrevPreviewUrl();
-				setPreviewUrl(URL.createObjectURL(blob));
-			}
-		}
-		// onChange 콜백 실행
-		if (onChange) onChange(e);
-	}
 
 	return (
 		<div
@@ -94,7 +64,11 @@ export default function InputFile({
 						<NextImage src={previewUrl} alt="thumbnail" fill className="object-cover" />
 						<DeleteButton
 							className="absolute top-2.5 right-2.5 z-10 cursor-pointer"
-							onClick={handleClickButtonDelete}
+							onClick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
+								resetFile();
+							}}
 						/>
 					</>
 				)}
@@ -104,8 +78,7 @@ export default function InputFile({
 					id={id}
 					name={name}
 					accept={accept}
-					disabled={!!previewUrl}
-					onChange={handleChangeInputFile}
+					onChange={changeFile}
 					type="file"
 					className="hidden"
 				/>
@@ -125,32 +98,4 @@ function NoPreview({ thumbSize }: Pick<InputFileProps, "thumbSize">) {
 			<span className="text-gray-500 select-none">파일 첨부</span>
 		</div>
 	);
-}
-
-function createThumbnail(file: File, maxSize = 450): Promise<Blob | null> {
-	return new Promise((resolve) => {
-		const img = new Image();
-		img.onload = () => {
-			const canvas = document.createElement("canvas");
-			let { width, height } = img;
-			if (width > height) {
-				if (width > maxSize) {
-					height = Math.round(height * (maxSize / width));
-					width = maxSize;
-				}
-			} else {
-				if (height > maxSize) {
-					width = Math.round(width * (maxSize / height));
-					height = maxSize;
-				}
-			}
-			canvas.width = width;
-			canvas.height = height;
-			const ctx = canvas.getContext("2d");
-			ctx?.drawImage(img, 0, 0, width, height);
-			canvas.toBlob(resolve, "image/png");
-			URL.revokeObjectURL(img.src);
-		};
-		img.src = URL.createObjectURL(file);
-	});
 }
