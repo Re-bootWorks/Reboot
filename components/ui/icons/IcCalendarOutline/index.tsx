@@ -8,14 +8,14 @@ export default function IcCalendarOutline({
 	const attrs = resolveIconAttr({ fill: color, size });
 	return (
 		<svg
-			xmlns="http://www.w3.org/2000/svg"
 			width={attrs.size}
 			height={attrs.size}
-			viewBox="0 0 18 20"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
 			{...props}
 			fill="none">
 			<path
-				d="M13 0V2H5V0H3V2H2C0.89 2 0.00999999 2.9 0.00999999 4L0 18C0 19.1 0.89 20 2 20H16C17.1 20 18 19.1 18 18V4C18 2.9 17.1 2 16 2H15V0H13ZM16 18H2V7H16V18Z"
+				d="M16 2V4H8V2H6V4H5C3.89 4 3.01 4.9 3.01 6L3 20C3 21.1 3.89 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4H18V2H16ZM19 20H5V9H19V20Z"
 				fill={attrs.fill}
 			/>
 		</svg>
