@@ -1,0 +1,49 @@
+.iconBounce {
+	animation: jellyY 550ms ease-out;
+}
+
+.iconBounceShort {
+	animation: jellyYShort 350ms ease-out;
+}
+
+@keyframes jellyY {
+	0% {
+		transform: scaleY(1);
+	}
+	30% {
+		transform: scaleY(1.28);
+	}
+	50% {
+		transform: scaleY(1);
+	}
+	68% {
+		transform: scaleY(1.16);
+	}
+	82% {
+		transform: scaleY(1);
+	}
+	92% {
+		transform: scaleY(1.08);
+	}
+	100% {
+		transform: scaleY(1);
+	}
+}
+
+@keyframes jellyYShort {
+	0% {
+		transform: scaleY(1);
+	}
+	45% {
+		transform: scaleY(1.15);
+	}
+	70% {
+		transform: scaleY(1);
+	}
+	88% {
+		transform: scaleY(1.06);
+	}
+	100% {
+		transform: scaleY(1);
+	}
+}
