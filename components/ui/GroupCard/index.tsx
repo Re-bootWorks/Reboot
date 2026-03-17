@@ -13,7 +13,6 @@ import ProgressBar from "../ProgressBar";
 import Button from "../Buttons/Button";
 import SendButton from "../Buttons/SendButton";
 import UtilityButton from "../Buttons/UtilityButton";
-import LoaderDots from "../LoaderDots";
 
 interface GroupCardStatus {
 	/** 개설 확정 여부(confirmedAt) */
@@ -37,12 +36,13 @@ interface GroupCardProps {
 }
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
-function GroupCard({ id, href, status, children }: GroupCardProps) {
+function GroupCard({ id, href, status, children, ...props }: GroupCardProps) {
 	return (
 		<GroupCardContext.Provider value={status}>
 			<div
-				data-id={id}
-				className="relative flex h-[346px] w-[343px] flex-col overflow-hidden rounded-4xl bg-white md:h-[219px] md:w-[628px] md:flex-row md:gap-x-5 md:p-6">
+				data-groupid={id}
+				className="relative flex h-[346px] w-[343px] flex-col overflow-hidden rounded-4xl bg-white md:h-[219px] md:w-[628px] md:flex-row md:gap-x-5 md:p-6"
+				{...props}>
 				<Link href={href} className="absolute inset-0 z-1" />
 				{children}
 			</div>
