@@ -16,7 +16,7 @@ export function FilterButton({ label, isActive, onClick, className }: FilterButt
 				"flex h-8 items-center gap-1 rounded-lg px-3 text-sm font-semibold transition-colors",
 				className,
 			)}>
-			<IcFilter className="h-4 w-4" />
+			<IcFilter color="currentColor" className="h-4 w-4" />
 			<span>{label}</span>
 		</button>
 	);
