@@ -15,10 +15,14 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
 	isGradient?: boolean;
 }
 export const GRADIENT_MAP: Record<string, string> = {
-	// --gradient-purple-200-lr, --gradient-purple-200-rl, --gradient-purple-500
-	"purple-400": "purple-700",
 	// --gradient-purple-100-lr, --gradient-purple-100-td
 	"purple-50": "purple-100",
+	// --gradient-purple-200-lr
+	"purple-100": "purple-200",
+	// --gradient-purple-200-rl
+	"purple-200": "purple-100",
+	// --gradient-purple-500
+	"purple-400": "purple-700",
 };
 
 const SIZE_MAP = {
