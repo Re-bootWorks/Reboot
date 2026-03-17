@@ -42,7 +42,7 @@ export default function DatePicker({
 
 	return (
 		<Popover className="relative w-full">
-			{({ close }) => (
+			{({ close, open }) => (
 				<>
 					<div className={cn("relative w-full", className)}>
 						<PickerInput
@@ -54,7 +54,7 @@ export default function DatePicker({
 							placeholder={placeholder}
 							readOnly
 							disabled={disabled}
-							className="pr-3"
+							className={cn("pr-3", open && "border-purple-500")}
 							{...props}
 						/>
 
