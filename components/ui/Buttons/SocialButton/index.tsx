@@ -8,8 +8,8 @@ const socialButtonVariants = cva(
 	{
 		variants: {
 			social: {
-				Kakao: "bg-[#FEE500] text-[#000000]/85",
-				Google: "border border-[#747775] bg-white text-[#1F1F1F] py-[0.6875rem]",
+				Kakao: "bg-kakao-bg text-kakao-text",
+				Google: "border-google-border text-google-text border bg-white py-[0.6875rem]",
 			},
 		},
 	},
