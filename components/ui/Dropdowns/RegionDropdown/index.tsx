@@ -6,8 +6,8 @@ import { IcArrowDown } from "../../icons";
 
 const buttonVariants = cva(
 	[
-		"relative flex h-10 md:h-12 w-full items-center justify-between border border-gray-50 rounded-[0.625rem] bg-gray-50 px-3 text-left",
-		"text-sm md:text-base font-normal text-gray-800",
+		"relative flex h-10 w-full cursor-pointer items-center justify-between rounded-[0.625rem] border border-gray-50 bg-gray-50 px-3 text-left md:h-12 md:rounded-xl",
+		"text-sm font-normal text-gray-800 md:text-base",
 		"transition-colors",
 		"focus:outline-none",
 		"disabled:cursor-not-allowed disabled:text-gray-400",
@@ -26,7 +26,7 @@ const buttonVariants = cva(
 
 const optionsVariants = cva(
 	[
-		"absolute left-0 top-full z-20 mt-2 w-full max-h-55 overflow-y-auto scrollbar-hide rounded-xl border border-gray-200 bg-white",
+		"absolute left-0 top-full z-20 mt-2 max-h-55 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white scrollbar-hide",
 		"shadow-xl",
 		"outline-none",
 		"data-[closed]:scale-95 data-[closed]:opacity-0",
@@ -34,23 +34,36 @@ const optionsVariants = cva(
 	].join(" "),
 );
 
-const optionVariants = cva(
+const optionContentVariants = cva(
 	[
-		"flex w-full h-9.5 items-center px-4 text-left text-sm md:text-base font-medium text-gray-800",
-		"cursor-pointer transition-colors",
-		"focus:outline-none",
-		"data-[focus]:bg-gray-50",
-		"disabled:cursor-not-allowed disabled:text-gray-300",
+		"select-none flex h-9 md:h-9 items-center rounded-lg px-3 text-left text-sm font-medium transition-colors md:text-base",
 	].join(" "),
 	{
 		variants: {
 			selected: {
+				true: "bg-purple-200 text-purple-600 font-bold",
+				false: "text-gray-800",
+			},
+			focus: {
 				true: "bg-gray-50",
 				false: "",
 			},
+			disabled: {
+				true: "cursor-not-allowed text-gray-300",
+				false: "",
+			},
 		},
+		compoundVariants: [
+			{
+				selected: true,
+				focus: true,
+				className: "bg-purple-200 text-purple-600",
+			},
+		],
 		defaultVariants: {
 			selected: false,
+			focus: false,
+			disabled: false,
 		},
 	},
 );
@@ -129,8 +142,20 @@ export default function RegionDropdown({
 								key={option.value}
 								value={option.value}
 								disabled={option.disabled}
-								className={({ selected }) => cn(optionVariants({ selected }), optionClassName)}>
-								{option.label}
+								className="cursor-pointer p-1 outline-none">
+								{({ selected, focus, disabled }) => (
+									<div
+										className={cn(
+											optionContentVariants({
+												selected,
+												focus: !selected && focus,
+												disabled,
+											}),
+											optionClassName,
+										)}>
+										{option.label}
+									</div>
+								)}
 							</ListboxOption>
 						))}
 					</ListboxOptions>
