@@ -38,29 +38,3 @@ export const Interactive: Story = {
 		);
 	},
 };
-
-export const MultipleFilters: Story = {
-	render: () => {
-		const [activeFilter, setActiveFilter] = useState("최신순");
-
-		return (
-			<div className="flex gap-4">
-				<FilterButton
-					label="최신순"
-					isActive={activeFilter === "최신순"}
-					onClick={() => setActiveFilter("최신순")}
-				/>
-				<FilterButton
-					label="마감 임박"
-					isActive={activeFilter === "마감 임박"}
-					onClick={() => setActiveFilter("마감 임박")}
-				/>
-				<FilterButton
-					label="인기순"
-					isActive={activeFilter === "인기순"}
-					onClick={() => setActiveFilter("인기순")}
-				/>
-			</div>
-		);
-	},
-};
