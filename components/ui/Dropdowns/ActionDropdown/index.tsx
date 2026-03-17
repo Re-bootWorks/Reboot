@@ -80,7 +80,7 @@ export default function ActionDropdown({
 						alt="프로필 이미지"
 						width={42}
 						height={42}
-						className="size-10.5 rounded-full object-cover"
+						className="size-10.5 rounded-full border border-gray-200 object-cover"
 					/>
 				) : (
 					<IcMeetBalls size={actionsSize} />
