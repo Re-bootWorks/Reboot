@@ -1,0 +1,249 @@
+"use client";
+
+import type { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { createContext, useContext } from "react";
+import Link from "next/link";
+import NextImage from "next/image";
+import { cn } from "@/utils/cn";
+import { IcLocation, IcPerson } from "../icons";
+import { StatusLabel } from "../StatusLabel";
+import { DeadlineTag } from "../Tags/DeadlineTag";
+import { TimeTag } from "../Tags/TimeTag";
+import ProgressBar from "../ProgressBar";
+import Button from "../Buttons/Button";
+import SendButton from "../Buttons/SendButton";
+import UtilityButton from "../Buttons/UtilityButton";
+import LoaderDots from "../LoaderDots";
+
+interface GroupCardStatus {
+	/** 개설 확정 여부(confirmedAt) */
+	isConfirmed: boolean;
+	/** 모집 마감 여부(registrationEnd, participantCount >= capacity) */
+	isRegClosed: boolean;
+	/** 사용자의 찜 여부 */
+	isLiked: boolean;
+	/** 사용자의 참여 여부 */
+	isJoined: boolean;
+}
+interface GroupCardProps {
+	/** 모임 ID */
+	id: number;
+	/** 클릭 시 이동할 링크 경로 */
+	href: string;
+	/** 모임 상태 */
+	status: Prettify<GroupCardStatus>;
+	/** 자식 컴포넌트 */
+	children: React.ReactNode;
+}
+type Prettify<T> = { [K in keyof T]: T[K] } & {};
+
+function GroupCard({ id, href, status, children }: GroupCardProps) {
+	return (
+		<GroupCardContext.Provider value={status}>
+			<div
+				data-id={id}
+				className="relative flex h-[346px] w-[343px] flex-col overflow-hidden rounded-4xl bg-white md:h-[219px] md:w-[628px] md:flex-row md:gap-x-5 md:p-6">
+				<Link href={href} className="absolute inset-0 z-1" />
+				{children}
+			</div>
+		</GroupCardContext.Provider>
+	);
+}
+
+interface GroupCardImageProps {
+	/** 이미지 경로 */
+	src: string | StaticImport;
+	/** 이미지 대체 텍스트 */
+	alt: string;
+}
+function Image({ src, alt }: GroupCardImageProps) {
+	const { isRegClosed } = useGroupCard();
+
+	// 모집 마감 시 오버레이 추가
+	return (
+		<div className="relative flex h-full items-center justify-center overflow-hidden md:h-[170px] md:w-[170px] md:rounded-3xl">
+			{isRegClosed && (
+				<>
+					<span className="font-taenada pointer-events-none absolute top-1/2 left-1/2 z-2 -translate-x-1/2 -translate-y-1/2 text-2xl font-extrabold whitespace-nowrap text-white select-none">
+						모집 마감
+					</span>
+					<div
+						className="pointer-events-none absolute inset-0 z-1 bg-black tracking-[-0.72px] opacity-70"
+						aria-hidden="true"
+					/>
+				</>
+			)}
+			<NextImage src={src} alt={alt} fill className="object-cover" />
+		</div>
+	);
+}
+
+interface ContentProp {
+	/** 이미지 외의 자식 요소 */
+	children: React.ReactNode;
+}
+function Content({ children }: ContentProp) {
+	return (
+		<div
+			className={cn(
+				"grid flex-1 px-4 py-4.5 md:px-0 md:py-2",
+				"grid-cols-[1fr_auto]",
+				"md:grid-rows-[auto_auto_1fr_auto]",
+				"[grid-template-areas:'title_title'_'subtitle_subtitle'_'badge-group_badge-group'_'participant-bar_join-button']",
+				"md:[grid-template-areas:'title_title'_'subtitle_subtitle'_'._.'_'badge-group_join-button'_'participant-bar_join-button']",
+			)}>
+			{children}
+		</div>
+	);
+}
+
+interface TitleProp {
+	/** 모임 이름 */
+	name: string;
+}
+function Title({ name }: TitleProp) {
+	const { isConfirmed } = useGroupCard();
+
+	// 개설 확정 시 배지 추가
+	return (
+		<div className="mb-1.5 flex items-center gap-x-2 [grid-area:title]">
+			<span className="text-xl font-semibold text-gray-800">{name}</span>
+			{isConfirmed && <StatusLabel>개설 확정</StatusLabel>}
+		</div>
+	);
+}
+
+interface SubTitleProp {
+	/** 모임 위치 */
+	region: string;
+	/** 모임 종류 */
+	type: string;
+}
+function SubTitle({ region, type }: SubTitleProp) {
+	return (
+		<div className="mb-3.5 flex items-center gap-x-0.5 text-sm text-gray-600 [grid-area:subtitle] md:mb-0">
+			<IcLocation />
+			{region}
+			<span>·</span>
+			<span>{type}</span>
+		</div>
+	);
+}
+
+interface BadgeGroupProp {
+	/** 모임 일시 */
+	date: string;
+	/** 모임 시간 */
+	time: string;
+	/** 등록 마감 시간(선택) */
+	registrationTime?: string;
+}
+function BadgeGroup({ date, time, registrationTime }: BadgeGroupProp) {
+	return (
+		<div className="mb-5.5 flex items-center gap-x-1.5 [grid-area:badge-group] md:mb-4">
+			<TimeTag>{date}</TimeTag>
+			<TimeTag>{time}</TimeTag>
+			{registrationTime && <DeadlineTag>{`오늘 ${registrationTime}시 마감`}</DeadlineTag>}
+		</div>
+	);
+}
+
+interface ParticipantBarProp {
+	/** 참여 가능 인원 */
+	capacity: number;
+	/** 참여자 수 */
+	participantCount: number;
+}
+function ParticipantBar({ capacity, participantCount }: ParticipantBarProp) {
+	return (
+		<div className="flex w-full items-center [grid-area:participant-bar]">
+			<IcPerson className="mr-1.25" />
+			<ProgressBar
+				max={capacity}
+				current={participantCount}
+				hasAnimation={false}
+				className="h-[5px] w-[126px] md:w-[191px]"
+			/>
+			<div className="ml-3.25 text-sm text-gray-600 md:ml-2">
+				<span className="font-bold text-purple-500">{participantCount}</span>
+				<span>/</span>
+				<span>{capacity}</span>
+			</div>
+		</div>
+	);
+}
+
+interface ButtonProp extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+	/** 버튼 클릭 이벤트 콜백 */
+	onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+	/** 버튼 상태 변경 진행 여부 */
+	isPending?: boolean;
+}
+function JoinButton({ onClick, isPending, ...props }: ButtonProp) {
+	const { isRegClosed, isJoined } = useGroupCard();
+
+	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		e.stopPropagation();
+		onClick(e);
+	}
+
+	return (
+		<Button
+			disabled={isRegClosed}
+			colors="purpleBorder"
+			className="relative z-2 mt-auto h-10 w-20 text-sm font-semibold [grid-area:join-button] md:h-12 md:w-[103px] md:text-base"
+			onClick={handleClick}
+			isPending={isPending}
+			{...props}>
+			{!isJoined ? "참여하기" : "참여 취소"}
+		</Button>
+	);
+}
+
+function LikeButton({ onClick, isPending, ...props }: ButtonProp) {
+	const { isRegClosed, isLiked } = useGroupCard();
+
+	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		e.stopPropagation();
+		onClick(e);
+	}
+
+	// SendButton 은 모임 마감 여부 표시, 클릭 이벤트 없음
+	return !isRegClosed ? (
+		<UtilityButton
+			pressed={isLiked}
+			className={likeButtonStyle}
+			onClick={handleClick}
+			isPending={isPending}
+			{...props}
+		/>
+	) : (
+		<SendButton className={cn(likeButtonStyle, "pointer-events-none")} />
+	);
+}
+const likeButtonStyle = "z-2 absolute top-4 right-4 [grid-area:like-button] md:top-8 md:right-6";
+
+// ----- context -----
+
+const GroupCardContext = createContext<GroupCardStatus | null>(null);
+
+function useGroupCard() {
+	const ctx = useContext(GroupCardContext);
+	if (!ctx) {
+		throw new Error("useGroupCard는 GroupCardProvider 안에서만 사용할 수 있습니다");
+	}
+	return ctx;
+}
+
+GroupCard.Content = Content;
+GroupCard.Image = Image;
+GroupCard.Title = Title;
+GroupCard.SubTitle = SubTitle;
+GroupCard.BadgeGroup = BadgeGroup;
+GroupCard.ParticipantBar = ParticipantBar;
+GroupCard.JoinButton = JoinButton;
+GroupCard.LikeButton = LikeButton;
+
+export default GroupCard;
