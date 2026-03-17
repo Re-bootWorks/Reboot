@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { useState, type ComponentProps } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 import TimePicker from ".";
 
 const meta: Meta<typeof TimePicker> = {
@@ -43,6 +43,7 @@ const meta: Meta<typeof TimePicker> = {
 		},
 	},
 	args: {
+		label: "모임 시간",
 		required: false,
 		placeholder: "00:00",
 		value: "",
@@ -57,6 +58,10 @@ type Story = StoryObj<typeof TimePicker>;
 
 function ControlledTimePicker(args: ComponentProps<typeof TimePicker>) {
 	const [value, setValue] = useState(args.value ?? "");
+
+	useEffect(() => {
+		setValue(args.value ?? "");
+	}, [args.value]);
 
 	return (
 		<div className="h-50">
@@ -77,6 +82,17 @@ function ControlledTimePicker(args: ComponentProps<typeof TimePicker>) {
 export const Default: Story = {
 	render: (args) => <ControlledTimePicker {...args} />,
 	args: {
+		label: "모임 시간",
+		required: false,
+		placeholder: "00:00",
+	},
+};
+
+export const Required: Story = {
+	render: (args) => <ControlledTimePicker {...args} />,
+	args: {
+		label: "모임 시간",
+		required: true,
 		placeholder: "00:00",
 	},
 };

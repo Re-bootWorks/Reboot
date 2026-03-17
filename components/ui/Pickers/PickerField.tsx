@@ -18,6 +18,7 @@ const iconMap = {
 
 export default function PickerInput({
 	label,
+	required = false,
 	iconType = "calendar",
 	className,
 	disabled,
@@ -32,7 +33,7 @@ export default function PickerInput({
 			{label && (
 				<label htmlFor={id} className="text-sm font-medium text-gray-800">
 					{label}
-					<span className="ml-0.5 text-purple-500">*</span>
+					{required && <span className="ml-0.5 text-purple-500">*</span>}
 				</label>
 			)}
 
@@ -44,6 +45,7 @@ export default function PickerInput({
 				<input
 					id={id}
 					type="text"
+					required={required}
 					disabled={disabled}
 					placeholder={placeholder}
 					className={cn(
