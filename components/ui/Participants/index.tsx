@@ -32,7 +32,6 @@ export function Participants({ participants }: ParticipantsImageProps) {
 			))}
 
 			{showOverCount && (
-				// justify-center 하나만 추가해서 숫자를 중앙으로 보냈습니다.
 				<div className="flex h-7.25 w-7.25 shrink-0 items-center justify-center rounded-full bg-white text-xs text-gray-700">
 					+{overCount}
 				</div>

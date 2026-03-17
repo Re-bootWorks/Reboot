@@ -24,8 +24,8 @@ const defaultArgs = {
 	name: "달램핏 모임",
 	type: "달램핏",
 	region: "건대입구",
-	dateTime: "2월10일",
-	registrationEnd: "13",
+	dateTime: "2026-02-10T14:00:00.000Z",
+	registrationEnd: "2026-02-09T23:59:59.000Z",
 	capacity: 10,
 };
 

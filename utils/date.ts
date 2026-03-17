@@ -24,3 +24,18 @@ export const parseDateString = (value?: string) => {
 
 	return parsed.toDate();
 };
+
+// UI 표시용 "M월 D일"
+export const uiFormatDate = (date: string | Date) => {
+	return dayjs(date).tz(KOREAN_TIMEZONE).format("M월 D일");
+};
+
+// UI 표시용 "HH:mm"
+export const uiFormatTime = (date: string | Date) => {
+	return dayjs(date).tz(KOREAN_TIMEZONE).format("HH:mm");
+};
+
+// UI 표시용 "HH시"
+export const uiFormatDeadline = (date: string | Date) => {
+	return dayjs(date).tz(KOREAN_TIMEZONE).format("HH시");
+};

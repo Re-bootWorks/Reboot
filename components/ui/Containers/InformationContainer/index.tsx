@@ -6,6 +6,7 @@ import { IcCrownOutline, IcLocation } from "@/components/ui/icons";
 import Button from "@/components/ui/Buttons/Button";
 import UtilityButton from "@/components/ui/Buttons/UtilityButton";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
+import { uiFormatDate, uiFormatDeadline, uiFormatTime } from "@/utils/date";
 
 interface InformationContainerProps {
 	name: string;
@@ -42,10 +43,9 @@ export default function InformationContainer({
 			<div className="flex w-full flex-col gap-4 lg:gap-6">
 				<div className={`flex w-full items-center gap-2 ${isHost && "justify-between"}`}>
 					<div className="flex items-center gap-2">
-						<DeadlineTag>오늘 {registrationEnd}시 마감</DeadlineTag>
-						{/* TODO: format utils 함수 구조 필요 (date / time) */}
-						<TimeTag>{dateTime}</TimeTag>
-						<TimeTag>{dateTime}</TimeTag>
+						<DeadlineTag>오늘 {uiFormatDeadline(registrationEnd)} 마감</DeadlineTag>
+						<TimeTag>{uiFormatDate(dateTime)}</TimeTag>
+						<TimeTag>{uiFormatTime(dateTime)}</TimeTag>
 					</div>
 					{isHost && <ActionDropdown items={actionItems} />}
 				</div>

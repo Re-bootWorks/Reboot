@@ -7,7 +7,7 @@ const meta: Meta<typeof PersonnelContainer> = {
 	tags: ["autodocs"],
 	argTypes: {
 		capacity: { control: "number" },
-		participantCount: { control: false }, // Controls에서 제거
+		participantCount: { control: false },
 	},
 };
 
