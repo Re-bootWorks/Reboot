@@ -5,17 +5,18 @@ type FilterButtonProps = {
 	label: string;
 	isActive?: boolean;
 	onClick?: () => void;
+	className?: string;
 };
 
-export function FilterButton({ label, isActive = false, onClick }: FilterButtonProps) {
+export function FilterButton({ label, isActive, onClick, className }: FilterButtonProps) {
 	return (
 		<button
 			onClick={onClick}
 			className={cn(
-				"flex h-[2rem] items-center gap-[0.25rem] rounded-[0.5rem] px-[0.75rem] text-sm font-semibold transition-colors",
-				isActive ? "text-gray-900" : "text-gray-600 hover:text-gray-900",
+				"flex h-8 items-center gap-1 rounded-lg px-3 text-sm font-semibold transition-colors",
+				className,
 			)}>
-			<IcFilter color={isActive ? "gray-900" : "gray-600"} size="xs" />
+			<IcFilter className="h-4 w-4" />
 			<span>{label}</span>
 		</button>
 	);
