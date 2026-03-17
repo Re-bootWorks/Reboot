@@ -14,6 +14,7 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
 	size?: Size;
 	isGradient?: boolean;
 }
+
 export const GRADIENT_MAP: Record<string, string> = {
 	// --gradient-purple-100-lr, --gradient-purple-100-td
 	"purple-50": "purple-100",
@@ -34,6 +35,7 @@ const SIZE_MAP = {
 	xl: 40,
 	xxl: 42,
 } as const;
+
 type Color = string;
 type Size = keyof typeof SIZE_MAP | number | `${number}%` | `${number}px`;
 interface Props {
@@ -44,18 +46,20 @@ interface Props {
 	size: Size;
 }
 
+const CSS_KEYWORDS = new Set([
+	"currentColor",
+	"inherit",
+	"transparent",
+	"none",
+	"unset",
+	"initial",
+]);
+
 function resolveColor(value: Color | undefined): Color {
 	if (!value) return "currentColor";
-	// hex, rgb, none, transparent
-	if (
-		value.startsWith("#") ||
-		value.startsWith("rgb") ||
-		value === "none" ||
-		value === "transparent"
-	) {
+	if (CSS_KEYWORDS.has(value) || value.startsWith("#") || value.startsWith("rgb")) {
 		return value;
 	}
-	// css variable
 	return `var(--color-${value})`;
 }
 
