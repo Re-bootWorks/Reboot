@@ -41,17 +41,19 @@ interface Props {
 }
 
 function resolveColor(value: Color | undefined): Color {
+	const CSS_KEYWORDS = new Set([
+		"currentColor",
+		"inherit",
+		"transparent",
+		"none",
+		"unset",
+		"initial",
+	]);
+
 	if (!value) return "currentColor";
-	// hex, rgb, none, transparent
-	if (
-		value.startsWith("#") ||
-		value.startsWith("rgb") ||
-		value === "none" ||
-		value === "transparent"
-	) {
+	if (CSS_KEYWORDS.has(value) || value.startsWith("#") || value.startsWith("rgb")) {
 		return value;
 	}
-	// css variable
 	return `var(--color-${value})`;
 }
 
