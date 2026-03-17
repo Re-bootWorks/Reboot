@@ -4,12 +4,12 @@ import { cn } from "@/utils/cn";
 import { IcKakao, IcGoogle } from "../../icons";
 
 const socialButtonVariants = cva(
-	"font-pretendard flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-3 py-4 text-base font-semibold text-gray-800",
+	"flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold",
 	{
 		variants: {
 			social: {
-				Kakao: "bg-[#FFEE01]",
-				Google: "border border-gray-200 bg-white",
+				Kakao: "bg-[#FEE500] text-[#000000]/85",
+				Google: "border border-[#747775] bg-white text-[#1F1F1F] py-[0.6875rem]",
 			},
 		},
 	},
