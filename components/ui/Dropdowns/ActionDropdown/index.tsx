@@ -1,8 +1,9 @@
 import { cn } from "@/utils/cn";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { cva } from "class-variance-authority";
+import Image from "next/image";
 import type { ButtonHTMLAttributes } from "react";
-import { IcMeetBalls, IcPerson } from "../../icons";
+import { IcMeetBalls } from "../../icons";
 
 const menuVariants = cva(
 	[
@@ -15,7 +16,7 @@ const menuVariants = cva(
 
 const itemVariants = cva(
 	[
-		"flex w-full h-10 items-center px-2 text-left text-sm font-semibold text-gray-800 cursor-pointer",
+		"flex h-10 w-full cursor-pointer items-center px-2 text-left text-sm font-semibold text-gray-800",
 		"focus:outline-none",
 		"data-[focus]:rounded-lg data-[focus]:bg-gray-50",
 		"disabled:cursor-not-allowed disabled:text-gray-300",
@@ -46,7 +47,8 @@ interface ActionDropdownProps extends Omit<ButtonHTMLAttributes<HTMLButtonElemen
 	menuClassName?: string;
 	triggerClassName?: string;
 	triggerType?: "actions" | "profile";
-	actionsSize?: "md" | "xl"; // md: 24, xl: 40
+	actionsSize?: "md" | "xl";
+	profileImage?: string | null;
 }
 
 export default function ActionDropdown({
@@ -56,10 +58,13 @@ export default function ActionDropdown({
 	triggerClassName,
 	triggerType = "actions",
 	actionsSize = "md",
+	profileImage,
 	type,
 	...props
 }: ActionDropdownProps) {
 	const ariaLabel = triggerType === "profile" ? "프로필 메뉴 열기" : "액션 메뉴 열기";
+
+	const profileImageSrc = profileImage?.trim() ? profileImage : "/assets/img/img_profile.svg";
 
 	return (
 		<Menu as="div" className={cn("relative inline-block", className)}>
@@ -68,8 +73,15 @@ export default function ActionDropdown({
 				className={cn("cursor-pointer outline-none", triggerClassName)}
 				{...props}>
 				<span className="sr-only">{ariaLabel}</span>
+
 				{triggerType === "profile" ? (
-					<IcPerson size="xxl" className="rounded-full border border-gray-200 bg-gray-50" />
+					<Image
+						src={profileImageSrc}
+						alt="프로필 이미지"
+						width={42}
+						height={42}
+						className="size-10.5 rounded-full object-cover"
+					/>
 				) : (
 					<IcMeetBalls size={actionsSize} />
 				)}
