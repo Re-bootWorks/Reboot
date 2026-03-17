@@ -3,8 +3,8 @@
 import NextImage from "next/image";
 import { useImperativeHandle, useRef } from "react";
 import { cn } from "@/utils/cn";
-import { IcImagePlus } from "../icons";
-import DeleteButton from "../Buttons/DeleteButton";
+import { IcImagePlus } from "../../icons";
+import DeleteButton from "../../Buttons/DeleteButton";
 import useInputImage from "@/hooks/useInputImage";
 
 interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
