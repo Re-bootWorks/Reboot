@@ -47,12 +47,12 @@ export default function ConnectCard({
 	return (
 		<div
 			onClick={onClick}
-			className="flex h-[19.375rem] w-full max-w-[18.4375rem] cursor-pointer flex-col rounded-xl border border-gray-200 bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
-			<h3 className="truncate px-4 pt-3 pb-3 text-base font-semibold text-gray-900 sm:hidden">
+			className="flex h-[19.375rem] w-full max-w-[18.4375rem] cursor-pointer flex-col rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
+			<h3 className="truncate pt-2 pb-3 text-base leading-6 font-bold tracking-[-0.02em] text-gray-900 sm:hidden">
 				{title}
 			</h3>
 
-			<div className="// ← 294px / 144px order-2 h-[9rem] w-[18.375rem] shrink-0 overflow-hidden rounded-xl sm:order-1 sm:h-full sm:w-[12.5rem]">
+			<div className="order-2 h-[9rem] w-[18.375rem] shrink-0 overflow-hidden rounded-xl sm:order-1 sm:h-full sm:w-[12.5rem]">
 				<img src={imageUrl} alt={title} className="h-full w-full object-cover" />
 			</div>
 
@@ -60,10 +60,10 @@ export default function ConnectCard({
 				<div className="flex flex-col gap-1">
 					<h3 className="hidden pt-4 text-base font-semibold text-gray-900 sm:block">{title}</h3>
 
-					<p className="line-clamp-2 pt-3 pb-4 text-sm text-gray-600">{description}</p>
+					<p className="line-clamp-2 pt-2 text-sm text-gray-600">{description}</p>
 				</div>
 
-				<div className="mt-auto flex items-center justify-between pb-6 text-xs text-gray-400 sm:pb-6">
+				<div className="mt-auto flex items-center justify-between pb-6 text-xs leading-4 font-normal text-gray-500 sm:pb-6">
 					<div className="flex items-center gap-2">
 						<div className="flex items-center gap-1">
 							<IcPerson size="xxs" color="gray-400" />
@@ -72,7 +72,7 @@ export default function ConnectCard({
 						<span>{formatDate(date)}</span>
 					</div>
 
-					<div className="flex items-center gap-4">
+					<div className="flex items-center gap-2">
 						<span>{getTimeAgo(date)}</span>
 
 						<div className="flex items-center gap-1">
