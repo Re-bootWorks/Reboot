@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import PostCard from "./index";
+import ConnectCard from "./index";
 
-const meta: Meta<typeof PostCard> = {
-	title: "UI/Post/PostCard",
-	component: PostCard,
+const meta: Meta<typeof ConnectCard> = {
+	title: "connect/ConnectCard",
+	component: ConnectCard,
 	parameters: {
 		layout: "centered",
 	},
@@ -11,7 +11,7 @@ const meta: Meta<typeof PostCard> = {
 
 export default meta;
 
-type Story = StoryObj<typeof PostCard>;
+type Story = StoryObj<typeof ConnectCard>;
 
 export const Default: Story = {
 	args: {

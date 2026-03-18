@@ -9,7 +9,7 @@ import "dayjs/locale/ko";
 dayjs.extend(relativeTime);
 dayjs.locale("ko");
 
-type PostCardProps = {
+type ConnectCardProps = {
 	title: string;
 	description: string;
 	imageUrl: string;
@@ -34,7 +34,7 @@ function getTimeAgo(timestamp: number) {
 	return dayjs(timestamp).fromNow();
 }
 
-export default function PostCard({
+export default function ConnectCard({
 	title,
 	description,
 	imageUrl,
@@ -43,7 +43,7 @@ export default function PostCard({
 	likeCount,
 	commentCount,
 	onClick,
-}: PostCardProps) {
+}: ConnectCardProps) {
 	return (
 		<div
 			onClick={onClick}
