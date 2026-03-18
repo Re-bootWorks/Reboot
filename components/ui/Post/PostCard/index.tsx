@@ -1,5 +1,13 @@
 import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
+import IcPerson from "@/components/ui/icons/IcPerson";
+
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ko";
+
+dayjs.extend(relativeTime);
+dayjs.locale("ko");
 
 type PostCardProps = {
 	title: string;
@@ -7,7 +15,6 @@ type PostCardProps = {
 	imageUrl: string;
 	author: string;
 	date: number;
-	timeAgo: string;
 	likeCount: number;
 	commentCount: number;
 	onClick?: () => void;
@@ -23,13 +30,16 @@ function formatDate(timestamp: number) {
 	return `${year}.${month}.${day}`;
 }
 
+function getTimeAgo(timestamp: number) {
+	return dayjs(timestamp).fromNow();
+}
+
 export default function PostCard({
 	title,
 	description,
 	imageUrl,
 	author,
 	date,
-	timeAgo,
 	likeCount,
 	commentCount,
 	onClick,
@@ -37,27 +47,29 @@ export default function PostCard({
 	return (
 		<div
 			onClick={onClick}
-			className="flex h-auto w-full max-w-[76rem] cursor-pointer flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition hover:bg-gray-50 md:h-50 md:flex-row">
-			<img src={imageUrl} alt={title} className="h-[12rem] w-full object-cover md:h-full md:w-50" />
-			<div className="flex flex-1 flex-col px-4 py-3 md:px-6 md:py-4">
-				<div className="flex flex-col gap-1">
-					<h3 className="line-clamp-2 text-base font-semibold text-gray-900 md:line-clamp-1 md:text-lg">
-						{title}
-					</h3>
+			className="flex h-[12.5rem] w-full max-w-[40.25rem] cursor-pointer flex-row rounded-xl border border-gray-200 bg-white transition hover:bg-gray-50 md:max-w-[76rem]">
+			<div className="w-50 shrink-0 overflow-hidden rounded-xl">
+				<img src={imageUrl} alt={title} className="h-full w-full object-cover" />
+			</div>
 
-					<p className="line-clamp-2 text-xs leading-relaxed text-gray-600 md:text-sm">
-						{description}
-					</p>
+			<div className="flex flex-1 flex-col px-6">
+				<div className="flex flex-col gap-1">
+					<h3 className="line-clamp-1 pt-4 text-base font-semibold text-gray-900">{title}</h3>
+
+					<p className="line-clamp-2 text-sm text-gray-600">{description}</p>
 				</div>
 
-				<div className="mt-2 flex items-center justify-between text-xs text-gray-400 md:mt-auto">
+				<div className="mt-auto flex items-center justify-between pb-6 text-xs text-gray-400">
 					<div className="flex items-center gap-2">
-						<span>{author}</span>
+						<div className="flex items-center gap-1">
+							<IcPerson size="xxs" color="gray-400" />
+							<span>{author}</span>
+						</div>
 						<span>{formatDate(date)}</span>
 					</div>
 
 					<div className="flex items-center gap-4">
-						<span>{timeAgo}</span>
+						<span>{getTimeAgo(date)}</span>
 
 						<div className="flex items-center gap-1">
 							<IcThumbOutline color="gray-400" size={15} />
