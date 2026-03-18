@@ -41,12 +41,22 @@ function GroupCard({ id, href, status, children, ...props }: GroupCardProps) {
 		<GroupCardContext.Provider value={status}>
 			<div
 				data-groupid={id}
-				className="relative flex h-[346px] w-[343px] flex-col overflow-hidden rounded-4xl bg-white md:h-[219px] md:w-[628px] md:flex-row md:gap-x-5 md:p-6"
+				className={cn("relative flex flex-col md:flex-row md:gap-x-5 md:p-6", containerStyle)}
 				{...props}>
 				<Link href={href} className="absolute inset-0 z-1" />
 				{children}
 			</div>
 		</GroupCardContext.Provider>
+	);
+}
+const containerStyle =
+	"h-[346px] w-[343px] md:h-[219px] md:w-[628px] rounded-4xl overflow-hidden bg-white";
+
+function Skeleton() {
+	return (
+		<div className={containerStyle}>
+			<div className="h-full animate-pulse bg-gray-200" />
+		</div>
 	);
 }
 
@@ -237,8 +247,9 @@ function useGroupCard() {
 	return ctx;
 }
 
-GroupCard.Content = Content;
+GroupCard.Skeleton = Skeleton;
 GroupCard.Image = Image;
+GroupCard.Content = Content;
 GroupCard.Title = Title;
 GroupCard.SubTitle = SubTitle;
 GroupCard.BadgeGroup = BadgeGroup;

@@ -6,6 +6,7 @@ const meta: Meta<typeof GroupCard> = {
 	title: "UI/GroupCard",
 	component: GroupCard,
 	subcomponents: {
+		Skeleton: GroupCard.Skeleton,
 		Image: GroupCard.Image,
 		Content: GroupCard.Content,
 		Title: GroupCard.Title,
@@ -63,6 +64,10 @@ export const RegistrationClosed: Story = {
 		},
 	},
 	render: renderPreview,
+};
+
+export const Loading: Story = {
+	render: () => <GroupCard.Skeleton />,
 };
 
 function renderPreview(...[args]: Parameters<NonNullable<Story["render"]>>) {
