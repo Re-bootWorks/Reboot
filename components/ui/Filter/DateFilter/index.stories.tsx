@@ -6,6 +6,9 @@ const meta: Meta<typeof DateFilter> = {
 	title: "Filters/DateFilter",
 	component: DateFilter,
 	tags: ["autodocs"],
+	parameters: {
+		layout: "centered",
+	},
 };
 
 export default meta;

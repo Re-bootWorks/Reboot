@@ -35,13 +35,3 @@ export const Interactive: Story = {
 		return <FilterButton label="최신순" isActive={active} onClick={() => setActive(!active)} />;
 	},
 };
-
-export const ParentColor: Story = {
-	render: () => {
-		return (
-			<div className="text-purple-600">
-				<FilterButton label="최신순" />
-			</div>
-		);
-	},
-};
