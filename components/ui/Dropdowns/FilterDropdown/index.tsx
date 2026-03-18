@@ -50,7 +50,7 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 										"transition",
 										"px-2",
 										{
-											"bg-[#BEBAF4] text-purple-600": selected,
+											"bg-purple-200 text-purple-600": selected,
 											"bg-gray-50 text-gray-900": !selected && active,
 											"text-gray-900": !selected,
 										},

@@ -2,20 +2,25 @@
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { useState } from "react";
-import { formatDateString, getKoreanToday } from "@/utils/date";
+import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
 import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
-import { parseDateString } from "@/utils/date";
 import { cn } from "@/utils/cn";
+
+type DateFilterProps = {
+	value?: string;
+	onChange?: (value: string) => void;
+};
 
 function formatDisplayDate(date: Date) {
 	return `${date.getMonth() + 1}월 ${date.getDate()}일`;
 }
-export default function DateFilter() {
-	const [date, setDate] = useState<string>("");
+
+export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 	const [month, setMonth] = useState<Date>(getKoreanToday());
 	const [draftDate, setDraftDate] = useState<Date | undefined>();
-	const parsed = parseDateString(date);
+
+	const parsed = parseDateString(value);
 
 	return (
 		<Popover className="relative">
@@ -27,7 +32,7 @@ export default function DateFilter() {
 							parsed ? "text-gray-900" : "text-gray-600",
 						)}>
 						<span>{parsed ? formatDisplayDate(parsed) : "날짜 전체"}</span>
-						<IcChevronDown size={16} color={parsed ? "gray-900" : "gray-500"} />
+						<IcChevronDown color="currentColor" />
 					</PopoverButton>
 
 					<PopoverPanel
@@ -49,7 +54,7 @@ export default function DateFilter() {
 
 							<button
 								onClick={() => {
-									setDate(draftDate ? formatDateString(draftDate) : "");
+									onChange?.(draftDate ? formatDateString(draftDate) : "");
 									close();
 								}}
 								className="flex-1 rounded-lg bg-purple-500 px-3 py-1 text-sm text-white">

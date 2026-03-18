@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DateFilter from ".";
 
 const meta: Meta<typeof DateFilter> = {
@@ -20,7 +20,7 @@ function ControlledDateFilter() {
 
 	return (
 		<div className="w-72">
-			<DateFilter />
+			<DateFilter value={date} onChange={setDate} />
 		</div>
 	);
 }

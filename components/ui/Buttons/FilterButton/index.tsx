@@ -8,7 +8,7 @@ type FilterButtonProps = {
 	className?: string;
 };
 
-export function FilterButton({ label, isActive, onClick, className }: FilterButtonProps) {
+export function FilterButton({ label, isActive = false, onClick, className }: FilterButtonProps) {
 	return (
 		<button
 			onClick={onClick}
