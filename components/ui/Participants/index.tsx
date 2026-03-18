@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Participant } from "@/components/ui/Containers/PersonnelContainer";
+import { Participant } from "@/features/Post/components/Containers/PersonnelContainer";
 
 // TODO: 추후 API 응답 타입으로 대체 예정
 

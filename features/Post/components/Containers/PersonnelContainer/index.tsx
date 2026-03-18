@@ -25,7 +25,7 @@ export default function PersonnelContainer({
 	participants,
 }: PersonnelProps) {
 	return (
-		<div className="flex h-28.75 w-85.75 flex-col gap-2 rounded-[5px] bg-linear-to-r from-purple-100 to-purple-200 px-6 py-6 pt-5 pb-5.5 lg:h-35.25 lg:w-157.5 lg:rounded-[28px] lg:px-10 lg:py-10 lg:pt-7 lg:pb-8.5">
+		<div className="flex h-28.75 w-85.75 flex-col gap-2 rounded-[20px] bg-linear-to-r from-purple-100 to-purple-200 px-6 py-6 pt-5 pb-5.5 lg:h-35.25 lg:w-157.5 lg:rounded-[28px] lg:px-10 lg:py-10 lg:pt-7 lg:pb-8.5">
 			<div className="flex flex-col gap-3 lg:gap-4">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
@@ -36,7 +36,9 @@ export default function PersonnelContainer({
 						{/* TODO: 추후, API 응답으로 이미지 리스트 구현 예정 */}
 						<Participants participants={participants} />
 					</div>
-					<StatusLabel>개설확정</StatusLabel>
+					<StatusLabel size="sm" className="h-6 lg:text-sm">
+						개설확정
+					</StatusLabel>
 				</div>
 
 				<div className="flex flex-col gap-2">
