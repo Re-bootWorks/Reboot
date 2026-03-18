@@ -106,8 +106,8 @@ function Title({ name }: TitleProp) {
 
 	// 개설 확정 시 배지 추가
 	return (
-		<div className="mb-1.5 flex items-center gap-x-2 [grid-area:title]">
-			<span className="text-xl font-semibold text-gray-800">{name}</span>
+		<div className="mb-1.5 flex items-center gap-x-2 overflow-hidden [grid-area:title] md:mr-16">
+			<span className="min-w-0 truncate text-xl font-semibold text-gray-800">{name}</span>
 			{isConfirmed && <StatusLabel>개설 확정</StatusLabel>}
 		</div>
 	);
