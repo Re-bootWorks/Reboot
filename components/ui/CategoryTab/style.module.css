@@ -1,4 +1,4 @@
-.cardBorderGlow {
+.borderGlow {
 	/* 그라데이션 border: border-radius 까지 적용 */
 	background:
 		linear-gradient(var(--color-purple-100), var(--color-purple-100)) padding-box,
