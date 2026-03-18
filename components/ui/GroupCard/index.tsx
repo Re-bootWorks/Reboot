@@ -24,7 +24,7 @@ interface GroupCardStatus {
 	/** 사용자의 참여 여부 */
 	isJoined: boolean;
 }
-interface GroupCardProps {
+interface GroupCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "id"> {
 	/** 모임 ID */
 	id: number;
 	/** 클릭 시 이동할 링크 경로 */
