@@ -2,7 +2,7 @@ import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 import IcPerson from "@/components/ui/icons/IcPerson";
 
-import dayjs from "dayjs";
+import dayjs from "@/libs/dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
 
@@ -19,16 +19,6 @@ type ConnectCardProps = {
 	commentCount: number;
 	onClick?: () => void;
 };
-
-function formatDate(timestamp: number) {
-	const date = new Date(timestamp);
-
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, "0");
-	const day = String(date.getDate()).padStart(2, "0");
-
-	return `${year}.${month}.${day}`;
-}
 
 function getTimeAgo(timestamp: number) {
 	return dayjs(timestamp).fromNow();
@@ -66,22 +56,22 @@ export default function ConnectCard({
 				<div className="mt-auto flex items-center justify-between pb-6 text-xs leading-4 font-normal text-gray-500 sm:pb-6">
 					<div className="flex items-center gap-2">
 						<div className="flex items-center gap-1">
-							<IcPerson size="xxs" color="gray-400" />
+							<IcPerson color="gray-400" />
 							<span>{author}</span>
 						</div>
-						<span>{formatDate(date)}</span>
+						<span>{dayjs(date).format("YYYY.MM.DD")}</span>
 					</div>
 
 					<div className="flex items-center gap-2">
 						<span>{getTimeAgo(date)}</span>
 
 						<div className="flex items-center gap-1">
-							<IcThumbOutline color="gray-400" size={15} />
+							<IcThumbOutline color="gray-400" />
 							<span>{likeCount}</span>
 						</div>
 
 						<div className="flex items-center gap-1">
-							<IcMessageOutline color="gray-400" size={15} />
+							<IcMessageOutline color="gray-400" />
 							<span>{commentCount}</span>
 						</div>
 					</div>
