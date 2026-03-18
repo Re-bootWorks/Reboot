@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn";
 import { IcCheckCircle } from "@/components/ui/icons";
 
-type StatusLabelSize = "sm" | "md" | "lg";
+type StatusLabelSize = "sm" | "md";
 
 interface StatusLabelProps {
 	children: React.ReactNode;
@@ -13,13 +13,11 @@ interface StatusLabelProps {
 const sizeVariants: Record<StatusLabelSize, string> = {
 	sm: "h-4.5 text-xs",
 	md: "h-6 text-sm",
-	lg: "h-6 text-sm",
 };
 
 const iconSizeMap: Record<StatusLabelSize, "xs" | "sm"> = {
 	sm: "xs",
 	md: "sm",
-	lg: "sm",
 };
 
 export function StatusLabel({ children, size = "sm", iconSize, className }: StatusLabelProps) {

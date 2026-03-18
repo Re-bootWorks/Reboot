@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn";
 import { IcAlarm } from "@/components/ui/icons";
 
-type DeadlineTagSize = "sm" | "md" | "lg";
+type DeadlineTagSize = "sm" | "md";
 
 interface DeadlineTagProps {
 	children: React.ReactNode;
@@ -13,13 +13,11 @@ interface DeadlineTagProps {
 const sizeVariants: Record<DeadlineTagSize, string> = {
 	sm: "h-5 rounded-md text-xs",
 	md: "h-6 rounded-lg text-sm",
-	lg: "h-6 rounded-lg text-sm",
 };
 
 const iconSizeMap: Record<DeadlineTagSize, "sm" | "md"> = {
 	sm: "sm",
 	md: "md",
-	lg: "md",
 };
 
 export function DeadlineTag({ children, size = "sm", iconSize, className }: DeadlineTagProps) {

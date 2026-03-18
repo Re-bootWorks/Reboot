@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn";
 
-type TimeTagSize = "sm" | "md" | "lg";
+type TimeTagSize = "sm" | "md";
 
 interface TimeTagProps {
 	children: React.ReactNode;
@@ -11,7 +11,6 @@ interface TimeTagProps {
 const sizeVariants: Record<TimeTagSize, string> = {
 	sm: "h-5 rounded-md text-xs",
 	md: "h-6 rounded-lg text-sm",
-	lg: "h-6 rounded-lg text-sm",
 };
 
 export function TimeTag({ children, size = "sm", className }: TimeTagProps) {

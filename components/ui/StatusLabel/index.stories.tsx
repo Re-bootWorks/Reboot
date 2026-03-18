@@ -8,11 +8,11 @@ const meta: Meta<typeof StatusLabel> = {
 	argTypes: {
 		size: {
 			control: "select",
-			options: ["sm", "md", "lg"],
+			options: ["sm", "md"],
 		},
 		iconSize: {
 			control: "select",
-			options: ["xs", "sm", "md"],
+			options: ["xs", "sm"],
 		},
 	},
 	parameters: {

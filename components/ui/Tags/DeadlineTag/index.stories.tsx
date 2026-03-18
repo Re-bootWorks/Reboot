@@ -8,7 +8,7 @@ const meta: Meta<typeof DeadlineTag> = {
 	argTypes: {
 		size: {
 			control: "select",
-			options: ["sm", "md", "lg"],
+			options: ["sm", "md"],
 		},
 		iconSize: {
 			control: "select",
