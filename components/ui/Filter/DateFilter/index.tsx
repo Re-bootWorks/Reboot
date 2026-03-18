@@ -18,11 +18,47 @@ export default function DateFilter() {
 	const parsed = parseDateString(date);
 
 	return (
-		// <DatePicker
-		//   value={date}
-		//   onChange={setDate}
-		//   placeholder="날짜 전체"
-		// />
-		<></>
+		<Popover className="relative">
+			{({ close }) => (
+				<>
+					<PopoverButton
+						className={cn(
+							"flex items-center gap-1 px-2 py-1 text-base leading-6 font-medium tracking-[-0.32px] whitespace-nowrap",
+							parsed ? "text-gray-900" : "text-gray-600",
+						)}>
+						<span>{parsed ? formatDisplayDate(parsed) : "날짜 전체"}</span>
+						<IcChevronDown size={16} color={parsed ? "gray-900" : "gray-500"} />
+					</PopoverButton>
+
+					<PopoverPanel
+						anchor={{ to: "bottom start" }}
+						className="z-20 mt-2 w-[300px] rounded-xl border border-gray-200 bg-white p-6 shadow-xl">
+						<Calendar
+							month={month}
+							selectedDate={draftDate}
+							onMonthChange={setMonth}
+							onSelectDate={setDraftDate}
+						/>
+
+						<div className="mt-3 flex gap-2">
+							<button
+								onClick={() => setDraftDate(undefined)}
+								className="flex-1 rounded-lg border border-purple-500 px-3 py-1 text-sm text-purple-500">
+								초기화
+							</button>
+
+							<button
+								onClick={() => {
+									setDate(draftDate ? formatDateString(draftDate) : "");
+									close();
+								}}
+								className="flex-1 rounded-lg bg-purple-500 px-3 py-1 text-sm text-white">
+								적용
+							</button>
+						</div>
+					</PopoverPanel>
+				</>
+			)}
+		</Popover>
 	);
 }
