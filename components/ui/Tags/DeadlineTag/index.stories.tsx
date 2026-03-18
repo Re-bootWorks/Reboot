@@ -1,11 +1,20 @@
 import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { DeadlineTag } from "./index";
-import { IcAlarm } from "@/components/ui/icons";
 
 const meta: Meta<typeof DeadlineTag> = {
 	title: "UI/Tags/DeadlineTag",
 	component: DeadlineTag,
 	tags: ["autodocs"],
+	argTypes: {
+		size: {
+			control: "select",
+			options: ["sm", "md", "lg"],
+		},
+		iconSize: {
+			control: "select",
+			options: ["sm", "md"],
+		},
+	},
 	parameters: {
 		viewport: {
 			viewports: {
@@ -32,5 +41,5 @@ export default meta;
 type Story = StoryObj<typeof DeadlineTag>;
 
 export const Default: Story = {
-	render: () => <DeadlineTag>오늘 21시 마감</DeadlineTag>,
+	args: { size: "sm", children: "오늘 21시 마감" },
 };

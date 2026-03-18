@@ -1,11 +1,20 @@
 import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { StatusLabel } from "./index";
-import { IcCheckCircle } from "@/components/ui/icons";
 
 const meta: Meta<typeof StatusLabel> = {
 	title: "UI/StatusLabel",
 	component: StatusLabel,
 	tags: ["autodocs"],
+	argTypes: {
+		size: {
+			control: "select",
+			options: ["sm", "md", "lg"],
+		},
+		iconSize: {
+			control: "select",
+			options: ["xs", "sm", "md"],
+		},
+	},
 	parameters: {
 		viewport: {
 			viewports: {
@@ -32,5 +41,5 @@ export default meta;
 type Story = StoryObj<typeof StatusLabel>;
 
 export const Default: Story = {
-	render: () => <StatusLabel>개설 확정</StatusLabel>,
+	args: { size: "sm", children: "개설확정" },
 };

@@ -5,6 +5,12 @@ const meta: Meta<typeof TimeTag> = {
 	title: "UI/Tags/TimeTag",
 	component: TimeTag,
 	tags: ["autodocs"],
+	argTypes: {
+		size: {
+			control: "select",
+			options: ["sm", "md", "lg"],
+		},
+	},
 	parameters: {
 		viewport: {
 			viewports: {
@@ -31,9 +37,9 @@ export default meta;
 type Story = StoryObj<typeof TimeTag>;
 
 export const Time: Story = {
-	render: () => <TimeTag>17:30</TimeTag>,
+	args: { size: "sm", children: "17:30" },
 };
 
 export const Date: Story = {
-	render: () => <TimeTag>1월 7일</TimeTag>,
+	args: { size: "sm", children: "1월 7일" },
 };
