@@ -135,15 +135,15 @@ interface BadgeGroupProp {
 	date: string;
 	/** 모임 시간 */
 	time: string;
-	/** 등록 마감 시간(선택) */
-	registrationTime?: string;
+	/** 모집 마감 텍스트 */
+	deadlineText?: string;
 }
-function BadgeGroup({ date, time, registrationTime }: BadgeGroupProp) {
+function BadgeGroup({ date, time, deadlineText }: BadgeGroupProp) {
 	return (
 		<div className="mb-5.5 flex items-center gap-x-1.5 [grid-area:badge-group] md:mb-4">
 			<TimeTag>{date}</TimeTag>
 			<TimeTag>{time}</TimeTag>
-			{registrationTime && <DeadlineTag>{`오늘 ${registrationTime}시 마감`}</DeadlineTag>}
+			{deadlineText && <DeadlineTag>{deadlineText}</DeadlineTag>}
 		</div>
 	);
 }

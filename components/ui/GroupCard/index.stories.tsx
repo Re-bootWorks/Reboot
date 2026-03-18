@@ -78,7 +78,7 @@ function renderPreview(...[args]: Parameters<NonNullable<Story["render"]>>) {
 			<GroupCard.Content>
 				<GroupCard.Title name="오피스 스트레칭" />
 				<GroupCard.SubTitle region="을지로 3가" type="운동/건강" />
-				<GroupCard.BadgeGroup date="1월 7일" time="17:30" registrationTime="21" />
+				<GroupCard.BadgeGroup date="1월 7일" time="17:30" deadlineText="오늘 21시 마감" />
 				<GroupCard.ParticipantBar capacity={20} participantCount={12} />
 				<GroupCard.JoinButton
 					isPending={isPending.join}
