@@ -26,7 +26,7 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 			<MenuItems
 				anchor="bottom start"
 				className={cn(
-					"mt-2 w-[126px]",
+					"mt-2 w-32",
 					"rounded-lg border border-gray-200 bg-white",
 					"shadow-lg",
 					"p-1",
@@ -43,10 +43,10 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 									type="button"
 									onClick={() => onChange(item.value)}
 									className={cn(
-										"h-[32px] w-full",
+										"h-8 w-full",
 										"flex items-center",
 										"rounded-lg",
-										"text-[14px] leading-[20px] font-semibold tracking-[-0.42px]",
+										"text-sm font-semibold",
 										"transition",
 										"px-2",
 										{

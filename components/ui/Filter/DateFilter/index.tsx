@@ -37,7 +37,7 @@ export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 
 					<PopoverPanel
 						anchor={{ to: "bottom start" }}
-						className="z-20 mt-2 w-[300px] rounded-xl border border-gray-200 bg-white p-6 shadow-xl">
+						className="z-20 mt-2 w-80 rounded-xl border border-gray-200 bg-white p-6 shadow-xl">
 						<Calendar
 							month={month}
 							selectedDate={draftDate}
