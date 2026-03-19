@@ -1,18 +1,27 @@
 import { cn } from "@/utils/cn";
 
+type TimeTagSize = "sm" | "md";
+
 interface TimeTagProps {
 	children: React.ReactNode;
+	size?: TimeTagSize;
 	className?: string;
 }
 
-export function TimeTag({ children, className }: TimeTagProps) {
+const sizeVariants: Record<TimeTagSize, string> = {
+	sm: "h-5 rounded-md text-xs",
+	md: "h-6 rounded-lg text-sm",
+};
+
+export function TimeTag({ children, size = "sm", className }: TimeTagProps) {
 	return (
 		<div
 			className={cn(
-				"inline-flex h-5 shrink-0 items-center rounded-md border border-gray-200 bg-white px-2 py-0.5 whitespace-nowrap md:h-6 md:rounded-lg",
+				"inline-flex shrink-0 items-center border border-gray-200 bg-white px-2 py-0.5 font-medium whitespace-nowrap text-gray-600",
+				sizeVariants[size],
 				className,
 			)}>
-			<span className="text-xs font-medium text-gray-600 md:text-sm">{children}</span>
+			{children}
 		</div>
 	);
 }
