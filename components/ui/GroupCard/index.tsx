@@ -50,7 +50,7 @@ function GroupCard({ id, href, status, children, ...props }: GroupCardProps) {
 	);
 }
 const containerStyle =
-	"h-[346px] w-[343px] md:h-[219px] md:w-[628px] rounded-4xl overflow-hidden bg-white";
+	"h-[346px] w-[343px] md:h-[219px] lg:w-[628px] md:w-full rounded-4xl overflow-hidden bg-white";
 
 function Skeleton() {
 	return (
