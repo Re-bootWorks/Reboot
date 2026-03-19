@@ -4,6 +4,7 @@ import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { createContext, useContext } from "react";
 import Link from "next/link";
 import NextImage from "next/image";
+import Skeleton from "react-loading-skeleton";
 import { cn } from "@/utils/cn";
 import { IcLocation, IcPerson } from "../icons";
 import { StatusLabel } from "../StatusLabel";
@@ -52,10 +53,10 @@ function GroupCard({ id, href, status, children, ...props }: GroupCardProps) {
 const containerStyle =
 	"h-[346px] w-[343px] md:h-[219px] lg:w-[628px] md:w-full rounded-4xl overflow-hidden bg-white";
 
-function Skeleton() {
+function GroupCardSkeleton() {
 	return (
 		<div className={containerStyle}>
-			<div className="h-full animate-pulse bg-gray-200" />
+			<Skeleton className="h-full" />
 		</div>
 	);
 }
@@ -247,7 +248,7 @@ function useGroupCard() {
 	return ctx;
 }
 
-GroupCard.Skeleton = Skeleton;
+GroupCard.Skeleton = GroupCardSkeleton;
 GroupCard.Image = Image;
 GroupCard.Content = Content;
 GroupCard.Title = Title;
