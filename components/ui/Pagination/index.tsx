@@ -12,9 +12,8 @@ type PaginationProps = {
 
 function getPaginationPages(currentPage: number, totalPages: number) {
 	const pages: (number | string)[] = [];
-	const maxVisible = 5;
 
-	if (totalPages <= maxVisible) {
+	if (totalPages <= 7) {
 		return Array.from({ length: totalPages }, (_, i) => i + 1);
 	}
 
@@ -48,6 +47,7 @@ export default function Pagination({ currentPage, totalPages, handlePageChange }
 			<button
 				onClick={() => handlePageChange(currentPage - 1)}
 				disabled={currentPage === 1}
+				aria-label="이전 페이지"
 				className={cn(
 					"flex items-center justify-center transition-colors",
 					"disabled:cursor-not-allowed disabled:opacity-50",
@@ -80,6 +80,7 @@ export default function Pagination({ currentPage, totalPages, handlePageChange }
 			<button
 				onClick={() => handlePageChange(currentPage + 1)}
 				disabled={currentPage === totalPages}
+				aria-label="다음 페이지"
 				className={cn(
 					"flex items-center justify-center transition-colors",
 					"disabled:cursor-not-allowed disabled:opacity-50",
