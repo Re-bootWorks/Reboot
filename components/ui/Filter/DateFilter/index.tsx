@@ -28,7 +28,7 @@ export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 				<>
 					<PopoverButton
 						className={cn(
-							"flex items-center gap-1 px-2 py-1 text-base leading-6 font-medium tracking-[-0.32px] whitespace-nowrap",
+							"flex cursor-pointer items-center gap-1 px-2 py-1 text-base font-medium whitespace-nowrap focus:outline-none",
 							parsed ? "text-gray-900" : "text-gray-600",
 						)}>
 						<span>{parsed ? formatDisplayDate(parsed) : "날짜 전체"}</span>
