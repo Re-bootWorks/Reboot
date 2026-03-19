@@ -63,12 +63,13 @@ function GroupCardSkeleton() {
 
 interface GroupCardImageProps {
 	/** 이미지 경로 */
-	src: string | StaticImport;
+	src?: string | StaticImport | null;
 	/** 이미지 대체 텍스트 */
 	alt: string;
 }
 function Image({ src, alt }: GroupCardImageProps) {
 	const { isRegClosed } = useGroupCard();
+	const hasSrc = !!src;
 
 	// 모집 마감 시 오버레이 추가
 	return (
@@ -84,7 +85,12 @@ function Image({ src, alt }: GroupCardImageProps) {
 					/>
 				</>
 			)}
-			<NextImage src={src} alt={alt} fill className="object-cover" />
+			<NextImage
+				src={src || "/assets/img/img_empty_purple.svg"}
+				alt={alt}
+				fill
+				className={hasSrc ? "object-cover" : "bg-purple-50 object-scale-down"}
+			/>
 		</div>
 	);
 }
