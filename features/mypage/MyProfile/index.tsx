@@ -23,7 +23,7 @@ export default function MyProfile({ user }: MyProfileProps) {
 				<div>
 					<div className="mb-2 flex items-center text-base font-semibold md:mb-4 md:text-lg lg:translate-x-3 lg:justify-center">
 						{user.name}
-						<button type="button" className="p-1.25">
+						<button type="button" className="p-1.25" aria-label="프로필 수정">
 							<IcEditOutline color="gray-500" size="xs" />
 						</button>
 					</div>
