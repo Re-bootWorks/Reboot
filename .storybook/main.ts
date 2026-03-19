@@ -5,6 +5,7 @@ const config: StorybookConfig = {
 		"../stories/**/*.mdx",
 		"../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
 		"../components/**/*.stories.@(js|jsx|msx|mjs|ts|tsx)",
+		"../features/**/*.stories.@(js|jsx|mjs|ts|tsx)",
 	],
 	addons: [
 		"@chromatic-com/storybook",
@@ -15,5 +16,8 @@ const config: StorybookConfig = {
 	],
 	framework: "@storybook/nextjs-vite",
 	staticDirs: ["../public"],
+	typescript: {
+		reactDocgen: "react-docgen-typescript",
+	},
 };
 export default config;

@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Badge } from "./index";
 import { StatusLabel } from "@/components/ui/StatusLabel";
-import { IcCheckCircle } from "@/components/ui/icons";
 
 const meta: Meta<typeof Badge> = {
 	title: "UI/Badge",

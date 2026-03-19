@@ -3,7 +3,7 @@ import InputField from "./index";
 import { IcVisibilityOffOutline, IcLocation, IcCalendarOutline } from "../../icons";
 
 const meta: Meta<typeof InputField> = {
-	title: "ui/InputField",
+	title: "Inputs/InputField",
 	component: InputField,
 	tags: ["autodocs"],
 	parameters: {
