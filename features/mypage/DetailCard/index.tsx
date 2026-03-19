@@ -53,7 +53,7 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 				<div>
 					{badges && (
 						<div className="mb-3 flex gap-2">
-							{badges?.map((badge) => (
+							{badges.map((badge) => (
 								<Badge key={badge.label} variant={badge.variant}>
 									{badge.showStatusLabel ? <StatusLabel>{badge.label}</StatusLabel> : badge.label}
 								</Badge>
@@ -85,7 +85,7 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 					</div>
 					<div className={STYLE.btnWrapper}>
 						{actions &&
-							actions?.map((action) => (
+							actions.map((action) => (
 								<Button
 									key={action.label}
 									onClick={action.handleCardButtonClick}

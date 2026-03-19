@@ -26,6 +26,7 @@ export interface DetailCardBadge {
 export interface DetailCardAction {
 	label: string;
 	variant?: "purple" | "purpleBorder" | "grayBorder";
+	isDestructive?: boolean;
 	handleCardButtonClick: () => void;
 }
 export interface DetailCardWishAction {

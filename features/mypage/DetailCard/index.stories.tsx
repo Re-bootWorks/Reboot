@@ -75,7 +75,12 @@ export const Host: Story = {
 		},
 		actions: [
 			{ label: "모임 확정하기", variant: "purple", handleCardButtonClick: () => {} },
-			{ label: "모임 삭제하기", variant: "purpleBorder", handleCardButtonClick: () => {} },
+			{
+				label: "모임 삭제하기",
+				variant: "grayBorder",
+				handleCardButtonClick: () => {},
+				isDestructive: true,
+			},
 		],
 		wishAction: { isWished: baseItem.isFavorited, handleWishClick: () => {} },
 	},
