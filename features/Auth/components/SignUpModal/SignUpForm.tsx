@@ -8,6 +8,7 @@ import Button from "@/components/ui/Buttons/Button";
 import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
+import { useToast } from "@/providers/toast-provider";
 
 const signUpSchema = z
 	.object({
@@ -30,6 +31,7 @@ interface SignUpFormProps {
 export function SignUpForm({ onSuccess }: SignUpFormProps) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] = useState(false);
+	const { handleShowToast } = useToast();
 	const {
 		register,
 		handleSubmit,
@@ -54,12 +56,25 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
 			if (response.status === 409) {
 				setError("email", { message: "이미 사용 중인 아이디입니다." });
+				handleShowToast({ message: "이미 사용 중인 아이디입니다.", status: "error" });
 				return;
 			}
 
+			if (!response.ok) {
+				handleShowToast({
+					message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+					status: "error",
+				});
+				return;
+			}
+
+			handleShowToast({ message: "회원가입이 완료됐습니다.", status: "success" });
 			onSuccess();
 		} catch (error) {
-			console.error(error);
+			handleShowToast({
+				message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+				status: "error",
+			});
 		}
 	};
 

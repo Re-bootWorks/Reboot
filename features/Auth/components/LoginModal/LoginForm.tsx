@@ -8,6 +8,7 @@ import Button from "@/components/ui/Buttons/Button";
 import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
+import { useToast } from "@/providers/toast-provider";
 
 const loginSchema = z.object({
 	email: z.email("이메일 형식이 아닙니다"),
@@ -22,6 +23,7 @@ interface LoginFormProps {
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+	const { handleShowToast } = useToast();
 	const {
 		register,
 		handleSubmit,
@@ -42,17 +44,32 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 				}),
 			});
 
+			if (response.status === 401) {
+				handleShowToast({
+					message: "이메일 또는 비밀번호가 올바르지 않습니다.",
+					status: "error",
+				});
+				return;
+			}
+
 			if (!response.ok) {
-				alert("이메일 또는 비밀번호가 올바르지 않습니다.");
+				handleShowToast({
+					message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+					status: "error",
+				});
 				return;
 			}
 
 			const { accessToken, refreshToken } = await response.json();
 			console.log(accessToken, refreshToken); // TODO: 토큰 저장
 
+			handleShowToast({ message: "로그인이 완료됐습니다.", status: "success" });
 			onSuccess();
 		} catch (error) {
-			console.error(error); // TODO: 토스트 연결
+			handleShowToast({
+				message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+				status: "error",
+			});
 		}
 	};
 
