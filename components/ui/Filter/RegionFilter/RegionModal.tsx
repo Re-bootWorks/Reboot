@@ -5,11 +5,12 @@ import { REGION_DATA } from "@/constants/region";
 import RegionTrigger from "./RegionTrigger";
 import IcDelete from "@/components/ui/icons/IcDelete";
 import IcCheck from "@/components/ui/icons/IcCheck";
+import { cn } from "@/utils/cn";
 
 interface RegionModalProps {
-	isOpen: boolean;
-	onClose: () => void;
-	onConfirm: (region: string, district: string) => void;
+	isOpen: boolean; //모달 열림 상태
+	onClose: () => void; //모달 닫기
+	onConfirm: (region: string, district: string) => void; //onConfirm(지역, 구)
 }
 
 export default function RegionModal({ isOpen, onClose, onConfirm }: RegionModalProps) {
@@ -37,15 +38,12 @@ export default function RegionModal({ isOpen, onClose, onConfirm }: RegionModalP
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
 			<div className="flex h-[724px] w-[544px] flex-col rounded-2xl bg-white p-6">
-				{/* 헤더 */}
 				<div className="mb-6 flex items-center justify-between">
 					<h2 className="text-lg font-semibold">지역 선택</h2>
 					<button onClick={onClose}>
 						<IcDelete />
 					</button>
 				</div>
-
-				{/* 리스트 */}
 				<div className="flex flex-1 flex-col gap-3 overflow-y-auto">
 					{/* 지역 전체 */}
 					<button
@@ -54,7 +52,10 @@ export default function RegionModal({ isOpen, onClose, onConfirm }: RegionModalP
 							setSelectedDistrict("");
 							setOpenRegion(null);
 						}}
-						className={`flex w-full items-center justify-between gap-2.5 rounded-xl bg-gray-50 px-3 py-3 text-sm text-gray-800 transition-colors md:text-base`}>
+						className={cn(
+							"flex w-full items-center justify-between gap-2.5 rounded-xl bg-gray-50 px-3 py-3 text-sm text-gray-800 transition-colors md:text-base",
+							isAllSelected ? "border border-purple-500" : "border border-gray-50",
+						)}>
 						<span>지역 전체</span>
 						{isAllSelected && <IcCheck />}
 					</button>
@@ -85,11 +86,12 @@ export default function RegionModal({ isOpen, onClose, onConfirm }: RegionModalP
 														setSelectedDistrict(district.value);
 														setOpenRegion(null);
 													}}
-													className={`flex h-9 w-full items-center justify-between rounded-lg px-3 text-sm transition-colors md:text-base ${
+													className={cn(
+														"flex h-9 w-full items-center justify-between rounded-lg px-3 text-sm transition-colors md:text-base",
 														isSelected
 															? "bg-purple-200 font-semibold text-purple-600"
-															: "text-gray-800 hover:bg-gray-50"
-													} `}>
+															: "text-gray-800 hover:bg-gray-50",
+													)}>
 													<span>{district.label}</span>
 													{isSelected && <IcCheck />}
 												</button>

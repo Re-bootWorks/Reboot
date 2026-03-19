@@ -15,7 +15,6 @@ export default function RegionFilter({ className }: RegionButtonProps) {
 	const [selectedRegion, setSelectedRegion] = useState("");
 	const [selectedDistrict, setSelectedDistrict] = useState("");
 
-	// ✅ label 계산
 	const getLabel = () => {
 		if (!selectedRegion) return "지역 전체";
 
@@ -38,7 +37,7 @@ export default function RegionFilter({ className }: RegionButtonProps) {
 					"flex items-center gap-1",
 					"rounded-b-md px-3 py-1.5",
 					"bg-white",
-					"text-base font-medium tracking-[-0.32px] text-gray-600",
+					"text-base font-medium tracking-[-0.02rem] text-gray-600",
 					className,
 				)}>
 				{getLabel()}
