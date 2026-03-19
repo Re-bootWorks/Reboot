@@ -6,6 +6,12 @@ import { TabId } from "../type";
 export default function TabWrapper() {
 	const [activeTab, setActiveTab] = useState<TabId>("meetup");
 
+	const tabContents: Record<TabId, React.ReactNode> = {
+		meetup: <Meetup />,
+		review: <Review />,
+		created: <Created />,
+	};
+
 	return (
 		<div className="grow">
 			<PageTabs defaultId={"meetup"} onChange={({ id }) => setActiveTab(id as TabId)}>
@@ -14,9 +20,7 @@ export default function TabWrapper() {
 				<PageTabs.Item id="created">내가 만든 모임</PageTabs.Item>
 			</PageTabs>
 
-			{activeTab === "meetup" && <Meetup />}
-			{activeTab === "review" && <Review />}
-			{activeTab === "created" && <Created />}
+			{tabContents[activeTab]}
 		</div>
 	);
 }
