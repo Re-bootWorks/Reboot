@@ -1,47 +1,25 @@
 import { cn } from "@/utils/cn";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
 import { cva } from "class-variance-authority";
-import { useMemo, useState, type ButtonHTMLAttributes } from "react";
+import { useMemo, useState } from "react";
 import { IcArrowDown } from "../../icons";
-
-const buttonVariants = cva(
-	[
-		"relative flex h-10 w-full cursor-pointer items-center justify-between rounded-[0.625rem] border border-gray-50 bg-gray-50 px-3 text-left md:h-12 md:rounded-xl",
-		"text-sm font-normal text-gray-800 md:text-base",
-		"transition-colors",
-		"focus:outline-none",
-		"disabled:cursor-not-allowed disabled:text-gray-400",
-	].join(" "),
-	{
-		variants: {
-			open: {
-				true: "border-purple-500",
-			},
-		},
-		defaultVariants: {
-			open: false,
-		},
-	},
-);
+import Input from "../../Inputs/Input";
 
 const optionsVariants = cva(
 	[
 		"absolute left-0 top-full z-20 mt-2 max-h-55 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white scrollbar-hide",
-		"shadow-xl",
-		"outline-none",
-		"data-[closed]:scale-95 data-[closed]:opacity-0",
+		"shadow-xl outline-none",
 		"origin-top transition duration-150 ease-out",
+		"data-[closed]:scale-95 data-[closed]:opacity-0",
 	].join(" "),
 );
 
 const optionContentVariants = cva(
-	[
-		"select-none flex h-9 md:h-9 items-center rounded-lg px-3 text-left text-sm font-medium transition-colors md:text-base",
-	].join(" "),
+	"flex h-9 select-none items-center rounded-lg px-3 text-left text-sm font-medium transition-colors md:text-base",
 	{
 		variants: {
 			selected: {
-				true: "bg-purple-200 text-purple-600 font-bold",
+				true: "bg-purple-200 font-bold text-purple-600",
 				false: "text-gray-800",
 			},
 			focus: {
@@ -68,80 +46,108 @@ const optionContentVariants = cva(
 	},
 );
 
-export type RegionDropdownOption = {
-	label: string;
-	value: string;
-	disabled?: boolean;
-};
-
-interface RegionDropdownProps extends Omit<
-	ButtonHTMLAttributes<HTMLButtonElement>,
-	"children" | "value" | "defaultValue" | "onChange"
-> {
-	options: RegionDropdownOption[];
+interface RegionDropdownProps {
+	/** 선택 전 트리거 버튼에 표시할 기본 문구 */
+	triggerLabel: string;
+	/** 드롭다운에 표시할 옵션 목록 */
+	options: string[];
+	/** 선택된 옵션 값 */
 	value?: string;
+	/** 초기 선택 옵션 값 */
 	defaultValue?: string;
+	/** 값이 없을 때 표시할 문구 */
 	placeholder?: string;
-	buttonClassName?: string;
+	/** 비활성화 여부 */
+	disabled?: boolean;
+	/** 최상위 래퍼 클래스명 */
+	className?: string;
+	/** 입력창(Input) 클래스명 */
+	inputClassName?: string;
+	/** 옵션 목록(ListboxOptions) 클래스명 */
 	optionsClassName?: string;
+	/** 개별 옵션 클래스명 */
 	optionClassName?: string;
+	/** 값 변경 콜백 */
 	onChange?: (value: string) => void;
 }
 
+const normalizeText = (value?: string) => value?.trim() ?? "";
+
 export default function RegionDropdown({
+	triggerLabel,
 	options,
 	value,
 	defaultValue,
 	placeholder = "선택해 주세요",
+	disabled = false,
 	className,
-	buttonClassName,
+	inputClassName,
 	optionsClassName,
 	optionClassName,
 	onChange,
-	disabled,
-	type,
-	...props
 }: RegionDropdownProps) {
-	const isControlled = value !== undefined;
-	const [internalValue, setInternalValue] = useState(defaultValue ?? "");
+	const normalizedTriggerLabel = normalizeText(triggerLabel);
 
-	const selectedValue = isControlled ? value : internalValue;
-	const selectedOption = useMemo(
-		() => options.find((option) => option.value === selectedValue),
-		[options, selectedValue],
+	const normalizedOptions = useMemo(
+		() => options.map((option) => normalizeText(option)).filter(Boolean),
+		[options],
 	);
 
+	const isControlled = value !== undefined;
+
+	const [internalValue, setInternalValue] = useState(() => normalizeText(defaultValue));
+
+	const selectedValue = isControlled ? normalizeText(value) : internalValue;
+
+	const triggerDisplayValue = selectedValue || normalizedTriggerLabel;
+
 	const handleChange = (nextValue: string) => {
+		const normalizedValue = normalizeText(nextValue);
+
 		if (!isControlled) {
-			setInternalValue(nextValue);
+			setInternalValue(normalizedValue);
 		}
 
-		onChange?.(nextValue);
+		onChange?.(normalizedValue);
 	};
 
 	return (
 		<Listbox value={selectedValue} onChange={handleChange} disabled={disabled}>
 			{({ open }) => (
 				<div className={cn("relative w-full", className)}>
-					<ListboxButton
-						type={type ?? "button"}
-						className={cn(buttonVariants({ open }), buttonClassName)}
-						{...props}>
-						<span className="truncate">{selectedOption?.label ?? placeholder}</span>
-						<IcArrowDown
+					<div className="relative">
+						<Input
+							readOnly
+							tabIndex={-1}
+							disabled={disabled}
+							value={triggerDisplayValue}
+							placeholder={placeholder}
+							rightIcon={
+								<IcArrowDown
+									className={cn(
+										"size-4.5 shrink-0 transition-transform duration-200 md:size-6",
+										open && "rotate-180",
+									)}
+								/>
+							}
 							className={cn(
-								"size-4.5 shrink-0 transition-transform duration-200 md:size-6",
-								open && "rotate-180",
+								"pointer-events-none",
+								open && "border border-purple-500",
+								inputClassName,
 							)}
 						/>
-					</ListboxButton>
+
+						<ListboxButton
+							className="absolute inset-0 z-10 cursor-pointer rounded-[10px] md:rounded-[12px]"
+							aria-label={triggerDisplayValue || placeholder}
+						/>
+					</div>
 
 					<ListboxOptions transition className={cn(optionsVariants(), optionsClassName)}>
-						{options.map((option) => (
+						{normalizedOptions.map((option, index) => (
 							<ListboxOption
-								key={option.value}
-								value={option.value}
-								disabled={option.disabled}
+								key={`${option}-${index}`}
+								value={option}
 								className="cursor-pointer p-1 outline-none">
 								{({ selected, focus, disabled }) => (
 									<div
@@ -153,7 +159,7 @@ export default function RegionDropdown({
 											}),
 											optionClassName,
 										)}>
-										{option.label}
+										{option}
 									</div>
 								)}
 							</ListboxOption>
