@@ -26,7 +26,7 @@ const STYLE = {
 };
 
 export default function DetailCard({ item, badges, actions, wishAction }: DetailCardProps) {
-	const isWish = !item.isCompleted && item.participantCount < item.capacity;
+	const isWishable = !item.isCompleted && item.participantCount < item.capacity;
 
 	return (
 		<li className={STYLE.itemBgBox}>
@@ -38,7 +38,7 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 				className={cn(STYLE.itemImage, !!item.image ? "" : "bg-purple-50 object-scale-down")}
 			/>
 			<div className={STYLE.wishBtn}>
-				{isWish ? (
+				{isWishable ? (
 					<UtilityButton
 						pressed={wishAction?.isWished}
 						isPending={wishAction?.isPending}
@@ -91,10 +91,7 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 									onClick={action.handleCardButtonClick}
 									colors={action.variant}
 									sizes="smallMedium"
-									className={cn(
-										STYLE.actionBtn,
-										action.variant === "grayBorder" ? "text-error" : "",
-									)}>
+									className={cn(STYLE.actionBtn, action.isDestructive ? "text-error" : "")}>
 									{action.label}
 								</Button>
 							))}
