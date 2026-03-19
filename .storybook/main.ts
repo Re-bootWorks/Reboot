@@ -16,5 +16,8 @@ const config: StorybookConfig = {
 	],
 	framework: "@storybook/nextjs-vite",
 	staticDirs: ["../public"],
+	typescript: {
+		reactDocgen: "react-docgen-typescript",
+	},
 };
 export default config;
