@@ -9,6 +9,7 @@ import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
 import { useToast } from "@/providers/toast-provider";
+import { postSignUp } from "@/features/auth/apis";
 
 const signUpSchema = z
 	.object({
@@ -44,14 +45,10 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
 	const onSubmit = async (data: SignUpFormData) => {
 		try {
-			const response = await fetch("https://dallaem-backend.vercel.app/dallaem/auth/signup", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					email: data.email,
-					password: data.password,
-					name: data.name,
-				}),
+			const response = await postSignUp({
+				email: data.email,
+				password: data.password,
+				name: data.name,
 			});
 
 			if (response.status === 409) {
