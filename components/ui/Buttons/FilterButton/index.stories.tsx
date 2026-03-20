@@ -8,7 +8,6 @@ const meta: Meta<typeof FilterButton> = {
 	parameters: {
 		layout: "centered",
 	},
-	tags: ["autodocs"],
 };
 
 export default meta;
@@ -31,10 +30,8 @@ export const Active: Story = {
 
 export const Interactive: Story = {
 	render: () => {
-		const [isActive, setIsActive] = useState(false);
+		const [active, setActive] = useState(false);
 
-		return (
-			<FilterButton label="최신순" isActive={isActive} onClick={() => setIsActive(!isActive)} />
-		);
+		return <FilterButton label="최신순" isActive={active} onClick={() => setActive(!active)} />;
 	},
 };

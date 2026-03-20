@@ -1,6 +1,7 @@
 import PaginationItem from "./PaginationItem";
 import IcMeetBalls from "@/components/ui/icons/IcMeetBalls";
-import IcChevronRight from "@/components/ui/icons/IcChevronRight";
+import IcArrowLeft from "@/components/ui/icons/IcArrowLeft";
+import IcArrowRight from "@/components/ui/icons/IcArrowRight";
 import { cn } from "@/utils/cn";
 
 type PaginationProps = {
@@ -12,82 +13,80 @@ type PaginationProps = {
 function getPaginationPages(currentPage: number, totalPages: number) {
 	const pages: (number | string)[] = [];
 
-	const startPage = Math.max(currentPage - 1, 2);
-	const endPage = Math.min(currentPage + 1, totalPages - 1);
-
-	pages.push(1);
-
-	if (startPage > 2) {
-		pages.push("...");
+	if (totalPages <= 7) {
+		return Array.from({ length: totalPages }, (_, i) => i + 1);
 	}
 
-	for (let page = startPage; page <= endPage; page++) {
-		pages.push(page);
+	if (currentPage <= 3) {
+		pages.push(1, 2, 3, 4, 5, "...", totalPages);
+		return pages;
 	}
 
-	if (endPage < totalPages - 1) {
-		pages.push("...");
+	if (currentPage >= totalPages - 2) {
+		pages.push(
+			1,
+			"...",
+			totalPages - 4,
+			totalPages - 3,
+			totalPages - 2,
+			totalPages - 1,
+			totalPages,
+		);
+		return pages;
 	}
 
-	if (totalPages > 1) {
-		pages.push(totalPages);
-	}
+	pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
 
 	return pages;
 }
-
 export default function Pagination({ currentPage, totalPages, handlePageChange }: PaginationProps) {
 	const pages = getPaginationPages(currentPage, totalPages);
 
 	return (
-		<div className="flex items-center gap-2">
+		<div className="flex h-8 w-[16.25rem] items-center justify-center md:h-12 md:w-[29.75rem]">
 			<button
 				onClick={() => handlePageChange(currentPage - 1)}
 				disabled={currentPage === 1}
+				aria-label="이전 페이지"
 				className={cn(
 					"flex items-center justify-center transition-colors",
 					"disabled:cursor-not-allowed disabled:opacity-50",
 					currentPage === 1 ? "text-gray-400" : "text-gray-600 hover:text-gray-900",
-				)}
-				aria-label="이전 페이지">
-				<IcChevronRight
-					className="rotate-180"
-					color={currentPage === 1 ? "gray-400" : "gray-600"}
-					size="sm"
-				/>
+				)}>
+				<IcArrowLeft color={currentPage === 1 ? "gray-400" : "gray-800"} size="sm" />
 			</button>
+			<div className="mx-[0.625rem] flex items-center gap-1">
+				{pages.map((page, index) => {
+					const isNumber = typeof page === "number";
 
-			{pages.map((page, index) => {
-				const isNumber = typeof page === "number";
+					if (page === "...") {
+						return (
+							<div key={`ellipsis-${index}`} className="flex h-8 w-8 items-center justify-center">
+								<IcMeetBalls color="gray-400" size="sm" />
+							</div>
+						);
+					}
 
-				if (page === "...") {
 					return (
-						<div key={`ellipsis-${index}`} className="flex h-8 w-8 items-center justify-center">
-							<IcMeetBalls color="gray-400" size="sm" />
-						</div>
+						<PaginationItem
+							key={page}
+							page={page}
+							isActive={currentPage === page}
+							handlePageClick={isNumber ? () => handlePageChange(page) : undefined}
+						/>
 					);
-				}
-
-				return (
-					<PaginationItem
-						key={page}
-						page={page}
-						isActive={currentPage === page}
-						handlePageClick={isNumber ? () => handlePageChange(page) : undefined}
-					/>
-				);
-			})}
-
+				})}
+			</div>
 			<button
 				onClick={() => handlePageChange(currentPage + 1)}
 				disabled={currentPage === totalPages}
+				aria-label="다음 페이지"
 				className={cn(
 					"flex items-center justify-center transition-colors",
 					"disabled:cursor-not-allowed disabled:opacity-50",
 					currentPage === totalPages ? "text-gray-400" : "text-gray-600 hover:text-gray-900",
-				)}
-				aria-label="다음 페이지">
-				<IcChevronRight color={currentPage === totalPages ? "gray-400" : "gray-600"} size="sm" />
+				)}>
+				<IcArrowRight color={currentPage === totalPages ? "gray-400" : "gray-800"} size="sm" />
 			</button>
 		</div>
 	);
