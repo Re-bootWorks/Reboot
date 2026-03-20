@@ -1,13 +1,7 @@
 import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 import IcPerson from "@/components/ui/icons/IcPerson";
-
 import dayjs from "@/libs/dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import "dayjs/locale/ko";
-
-dayjs.extend(relativeTime);
-dayjs.locale("ko");
 
 type ConnectCardProps = {
 	title: string;
