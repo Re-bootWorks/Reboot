@@ -18,9 +18,7 @@ type FilterDropdownProps = {
 export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) {
 	return (
 		<Menu as="div" className="relative inline-block">
-			<MenuButton
-				type="button"
-				className="flex items-center gap-2 text-sm font-semibold text-gray-800">
+			<MenuButton className="flex items-center gap-1 text-sm font-semibold text-gray-800">
 				<IcFilter size="sm" className="text-gray-500" />
 				{value}
 			</MenuButton>
@@ -28,10 +26,11 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 			<MenuItems
 				anchor="bottom start"
 				className={cn(
-					"mt-2 w-40",
-					"rounded-2xl border border-gray-200 bg-white",
+					"mt-2 w-32",
+					"rounded-lg border border-gray-200 bg-white",
 					"shadow-lg",
-					"p-2",
+					"p-1",
+					"flex flex-col gap-1",
 					"outline-none",
 				)}>
 				{items.map((item) => {
@@ -43,11 +42,19 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 								<button
 									type="button"
 									onClick={() => onChange(item.value)}
-									className={cn("w-full rounded-xl px-3 py-2 text-left text-sm transition", {
-										"bg-purple-200 font-semibold text-purple-700": selected,
-										"bg-gray-50": !selected && active,
-										"text-gray-900": !selected,
-									})}>
+									className={cn(
+										"h-8 w-full",
+										"flex items-center",
+										"rounded-lg",
+										"text-sm font-semibold",
+										"transition",
+										"px-2",
+										{
+											"bg-purple-200 text-purple-600": selected,
+											"bg-gray-50 text-gray-900": !selected && active,
+											"text-gray-900": !selected,
+										},
+									)}>
 									{item.label}
 								</button>
 							)}
