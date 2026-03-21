@@ -5,7 +5,7 @@ export interface PageIntroContent {
 	imageAlt?: string;
 }
 
-export const PAGE_INTRO_CONTENTS: Record<string, PageIntroContent> = {
+export const PAGE_INTRO_CONTENTS: Record<"favorites" | "reviews" | "posts", PageIntroContent> = {
 	favorites: {
 		title: "찜한 모임",
 		description: "눈길이 갔던 모임 이제 직접 경험해봐요 ✨",

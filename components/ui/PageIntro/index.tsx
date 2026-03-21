@@ -32,7 +32,7 @@ export default function PageIntro() {
 				</div>
 			)}
 
-			<div className="flex flex-col justify-between whitespace-nowrap select-none">
+			<div className="flex flex-col justify-between select-none">
 				<h1 className={PAGE_INTRO_STYLE.title}>{content.title}</h1>
 				<p className={PAGE_INTRO_STYLE.description}>{content.description}</p>
 			</div>
