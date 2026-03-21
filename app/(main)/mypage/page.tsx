@@ -1,5 +1,5 @@
-import MyProfile from "@/features/mypage/MyProfile";
-import TabWrapper from "@/features/mypage/TabWrapper";
+import MyProfile from "@/features/mypage/components/MyProfile";
+import TabWrapper from "@/features/mypage/components/TabWrapper";
 import { UserProfile } from "@/features/mypage/type";
 
 // @TODO 추후 api 작업 예정
