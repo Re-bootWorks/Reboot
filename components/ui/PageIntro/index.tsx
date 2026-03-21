@@ -27,7 +27,7 @@ export default function PageIntro() {
 						alt={content.imageAlt ?? content.title}
 						width={97}
 						height={91}
-						className={PAGE_INTRO_STYLE.image}
+						className={`${PAGE_INTRO_STYLE.image} object-contain`}
 					/>
 				</div>
 			)}

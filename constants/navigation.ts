@@ -16,7 +16,7 @@ export const GNB_MENU_ITEMS = [
 	},
 	{
 		href: "/posts",
-		label: "달램 토크",
+		label: "커넥트",
 		key: "posts",
 	},
 ];
