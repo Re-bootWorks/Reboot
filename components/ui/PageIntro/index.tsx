@@ -19,7 +19,7 @@ export default function PageIntro() {
 	if (!content) return null;
 
 	return (
-		<section className="flex shrink-0 gap-3 md:gap-6.5">
+		<div className="flex shrink-0 gap-3 md:gap-6.5">
 			{content.imageSrc && (
 				<div className="shrink-0">
 					<Image
@@ -36,6 +36,6 @@ export default function PageIntro() {
 				<h1 className={PAGE_INTRO_STYLE.title}>{content.title}</h1>
 				<p className={PAGE_INTRO_STYLE.description}>{content.description}</p>
 			</div>
-		</section>
+		</div>
 	);
 }
