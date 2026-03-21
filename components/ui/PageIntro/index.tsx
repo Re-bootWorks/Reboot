@@ -14,7 +14,9 @@ export default function PageIntro() {
 	const pathname = usePathname();
 	const pageKey = pathname.split("/")[1];
 
-	const content = PAGE_INTRO_CONTENTS[pageKey];
+	if (!pageKey || !(pageKey in PAGE_INTRO_CONTENTS)) return null;
+
+	const content = PAGE_INTRO_CONTENTS[pageKey as keyof typeof PAGE_INTRO_CONTENTS];
 
 	if (!content) return null;
 
