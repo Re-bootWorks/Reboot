@@ -24,3 +24,8 @@ export const parseDateString = (value?: string) => {
 
 	return parsed.toDate();
 };
+
+// ISO 날짜 문자열을 "YYYY.MM.DD" 형식으로 반환
+export const formatIsoDateWithDots = (value: string) => {
+	return dayjs(value).tz(KOREAN_TIMEZONE).format("YYYY.MM.DD");
+};
