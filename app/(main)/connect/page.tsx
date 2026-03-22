@@ -1,4 +1,6 @@
 import Container from "@/components/layout/Container";
+import PostContainer from "@/features/connect/containers/PostContainer";
+
 export default function ConnectPage() {
 	return (
 		<Container className="border border-2">
@@ -17,21 +19,11 @@ export default function ConnectPage() {
 					</h2>
 				</div>
 			</div>
-			<div className="mt-[98px]">
+			<div className="mt-[98px] pb-[140px]">
 				{/* 게시글 영역 */}
 				<div className="-mx-4 border border-gray-300 bg-gray-100">
-					{/* 검색 */}
-					<div className="h-[44px] max-w-[1280px]">
-						<p className=""> 검색</p>
-					</div>
-					{/* 게시글 리스트 */}
-					<div className="mt-[16px]">
-						<div>슥슥</div>
-						<div>슥슥</div>
-						<div>슥슥</div>
-						<div>슥슥</div>
-						<div>슥슥</div>
-					</div>
+					{/* 검색 h-[44px] max-w-[1280px] */}
+					<PostContainer />
 				</div>
 			</div>
 		</Container>

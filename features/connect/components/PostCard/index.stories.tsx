@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import ConnectCard from "./index";
 
 const meta: Meta<typeof ConnectCard> = {
-	title: "connect/ConnectCard",
+	title: "connect/PostCard",
 	component: ConnectCard,
 	parameters: {
 		layout: "centered",
