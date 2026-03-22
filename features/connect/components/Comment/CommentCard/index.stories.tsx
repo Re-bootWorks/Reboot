@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import CommentCard from "../Comment/CommentCard/index";
+import CommentCard from "./index";
 
 const meta: Meta<typeof CommentCard> = {
 	title: "connect/CommentCard",
