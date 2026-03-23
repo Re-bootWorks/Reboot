@@ -24,3 +24,15 @@ const BASE_ARGS: RatingSummaryProps = {
 export const Default: Story = {
 	args: BASE_ARGS,
 };
+
+export const Empty: Story = {
+	args: {
+		averageScore: 0,
+		totalReviews: 0,
+		oneStar: 0,
+		twoStars: 0,
+		threeStars: 0,
+		fourStars: 0,
+		fiveStars: 0,
+	},
+};
