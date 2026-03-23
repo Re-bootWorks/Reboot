@@ -9,7 +9,7 @@ import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
 import { useToast } from "@/providers/toast-provider";
-import { postSignUp } from "@/features/auth/apis";
+import { postSignUp } from "@/features/Auth/apis";
 
 const signUpSchema = z
 	.object({

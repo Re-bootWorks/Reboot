@@ -9,7 +9,7 @@ import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
 import { useToast } from "@/providers/toast-provider";
-import { postLogin } from "@/features/auth/apis";
+import { postLogin } from "@/features/Auth/apis";
 
 const loginSchema = z.object({
 	email: z.email("이메일 형식이 아닙니다"),
