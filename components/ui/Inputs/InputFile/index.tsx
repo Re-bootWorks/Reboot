@@ -75,14 +75,19 @@ export default function InputFile({
 			{({ id, descriptionId }) => (
 				<div
 					className={cn(
-						"relative overflow-hidden rounded-xl bg-gray-50 transition-colors",
+						"overflow-hidden rounded-xl bg-gray-50 transition-colors",
 						thumbSize === "large" && "h-[147px] w-[147px]",
 						thumbSize === "small" && "h-[114px] w-[114px]",
 						!isDestructive
 							? "border border-transparent focus-within:border-purple-500"
 							: "border-error border",
 					)}>
-					<label htmlFor={id} className={!previewUrl ? "cursor-pointer" : "cursor-initial"}>
+					<label
+						htmlFor={id}
+						className={cn(
+							"relative block h-full w-full",
+							!previewUrl ? "cursor-pointer" : "cursor-initial",
+						)}>
 						{!previewUrl && <NoPreview thumbSize={thumbSize} />}
 						{previewUrl && (
 							<>
