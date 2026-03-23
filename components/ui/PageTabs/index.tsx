@@ -109,17 +109,7 @@ interface OnChangeParams {
 
 // ----- utils -----
 type ActiveId = string | null | undefined;
-type ActiveTab = HTMLLIElement | null | undefined;
 type TabList = HTMLUListElement | null | undefined;
-
-function getActiveTab(list: TabList, activeId: ActiveId): ActiveTab {
-	let tab: ActiveTab;
-	tab = list?.querySelector(`[data-id="${activeId}"]`) ?? null;
-	if (!tab) {
-		tab = list?.children[0] as HTMLLIElement;
-	}
-	return tab;
-}
 
 function getFirstDataId(list: TabList): ActiveId {
 	return list?.querySelector("[data-id]")?.getAttribute("data-id");
