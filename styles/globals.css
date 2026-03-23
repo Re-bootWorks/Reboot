@@ -266,3 +266,27 @@
 .scrollbar-hide::-webkit-scrollbar {
 	display: none; /* Chrome, Safari, Edge(Chromium) */
 }
+
+/* 스크롤바 스타일 */
+.scrollbar {
+	overflow: auto;
+	scrollbar-width: thin;
+	scrollbar-color: var(--color-gray-300) transparent;
+	scroll-behavior: smooth;
+	&::-webkit-scrollbar {
+		width: 10px;
+		background: transparent;
+	}
+	&::-webkit-scrollbar-track {
+		margin: 4px 0;
+		background: transparent;
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: 40px;
+		background-color: var(--color-gray-300);
+		border: 4px solid transparent;
+	}
+	&::-webkit-scrollbar-corner {
+		background: transparent;
+	}
+}
