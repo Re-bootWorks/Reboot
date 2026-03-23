@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import PageTab from "../PageTab";
 import useDragScroll from "./useDragScroll";
 import useIndicator from "./useIndicator";

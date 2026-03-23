@@ -5,19 +5,19 @@ export const GNB_MENU_ITEMS = [
 		key: "meetings",
 	},
 	{
-		href: "#",
+		href: "/favorites",
 		label: "찜한 모임",
 		key: "favorites",
 	},
 	{
-		href: "#",
+		href: "/reviews",
 		label: "모든 리뷰",
 		key: "reviews",
 	},
 	{
-		href: "#",
-		label: "달램 토크",
-		key: "posts",
+		href: "/connect",
+		label: "커넥트",
+		key: "connect",
 	},
 ];
 
