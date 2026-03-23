@@ -51,17 +51,16 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 				name: data.name,
 			});
 
-			if (response.status === 409) {
-				setError("email", { message: "이미 사용 중인 아이디입니다." });
-				handleShowToast({ message: "이미 사용 중인 아이디입니다.", status: "error" });
-				return;
-			}
-
 			if (!response.ok) {
-				handleShowToast({
-					message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-					status: "error",
-				});
+				if (response.status === 409) {
+					setError("email", { message: "이미 사용 중인 아이디입니다." });
+					handleShowToast({ message: "이미 사용 중인 아이디입니다.", status: "error" });
+				} else {
+					handleShowToast({
+						message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+						status: "error",
+					});
+				}
 				return;
 			}
 

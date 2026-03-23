@@ -38,19 +38,18 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 		try {
 			const response = await postLogin({ email: data.email, password: data.password });
 
-			if (response.status === 401) {
-				handleShowToast({
-					message: "이메일 또는 비밀번호가 올바르지 않습니다.",
-					status: "error",
-				});
-				return;
-			}
-
 			if (!response.ok) {
-				handleShowToast({
-					message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-					status: "error",
-				});
+				if (response.status === 401) {
+					handleShowToast({
+						message: "이메일 또는 비밀번호가 올바르지 않습니다.",
+						status: "error",
+					});
+				} else {
+					handleShowToast({
+						message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+						status: "error",
+					});
+				}
 				return;
 			}
 
