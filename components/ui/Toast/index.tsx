@@ -40,7 +40,7 @@ export default function Toast({ toasts }: { toasts: ToastBoxProps[] }) {
 	if (!mounted) return null;
 
 	return createPortal(
-		<div className="fixed bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-4 lg:bottom-24">
+		<div className="fixed bottom-10 left-1/2 z-99 flex -translate-x-1/2 flex-col items-center gap-4 lg:bottom-24">
 			<AnimatePresence initial={false} mode="popLayout">
 				{toasts.map((toast) => {
 					const { id, status, message } = toast;

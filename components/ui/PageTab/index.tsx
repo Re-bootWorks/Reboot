@@ -23,7 +23,7 @@ export default function PageTab({
 	return (
 		<button
 			className={cn(
-				"flex min-w-28 cursor-pointer items-center justify-center gap-x-2 py-2 text-sm transition-[color,border-color] duration-200 md:min-w-40 md:px-4 md:py-4 md:text-xl",
+				"flex min-w-28 cursor-pointer items-center justify-center gap-x-2 py-2 text-sm font-semibold transition-[color,border-color] duration-200 md:min-w-40 md:px-4 md:py-4 md:text-xl",
 				isActive ? "border-purple-600 text-purple-600" : "border-gray-200 text-gray-600",
 				hasBorder && "border-b-2",
 			)}

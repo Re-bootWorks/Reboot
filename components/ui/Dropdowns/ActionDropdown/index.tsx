@@ -7,7 +7,8 @@ import { IcMeetBalls } from "../../icons";
 
 const menuVariants = cva(
 	[
-		"min-w-27.5 rounded-xl border border-gray-200 bg-white shadow-base",
+		"flex flex-col gap-1",
+		"min-w-27.5 rounded-lg border border-gray-200 bg-white shadow-base",
 		"outline-none",
 		"data-[closed]:scale-95 data-[closed]:opacity-0",
 		"transition duration-150 ease-out",
@@ -16,7 +17,7 @@ const menuVariants = cva(
 
 const itemVariants = cva(
 	[
-		"flex h-10 w-full cursor-pointer items-center px-2 text-left text-sm font-semibold text-gray-800",
+		"flex h-8 w-full cursor-pointer items-center px-2 text-left text-sm font-semibold text-gray-800",
 		"focus:outline-none",
 		"data-[focus]:rounded-lg data-[focus]:bg-gray-50",
 		"disabled:cursor-not-allowed disabled:text-gray-300",
@@ -44,6 +45,7 @@ export type ActionDropdownItem = {
 
 interface ActionDropdownProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
 	items: ActionDropdownItem[];
+	actionsIconClassName?: string;
 	menuClassName?: string;
 	triggerClassName?: string;
 	triggerType?: "actions" | "profile";
@@ -54,6 +56,7 @@ interface ActionDropdownProps extends Omit<ButtonHTMLAttributes<HTMLButtonElemen
 export default function ActionDropdown({
 	items,
 	className,
+	actionsIconClassName,
 	menuClassName,
 	triggerClassName,
 	triggerType = "actions",
@@ -83,32 +86,30 @@ export default function ActionDropdown({
 						className="size-10.5 rounded-full border border-gray-200 object-cover"
 					/>
 				) : (
-					<IcMeetBalls size={actionsSize} />
+					<IcMeetBalls size={actionsSize} className={actionsIconClassName} />
 				)}
 			</MenuButton>
 
 			<MenuItems
 				transition
 				anchor="bottom end"
-				className={cn(menuVariants(), "mt-2", menuClassName)}>
-				<div className="flex flex-col">
-					{items.map((item, index) => (
-						<MenuItem
-							key={`${item.label}-${index}`}
-							as="button"
-							type="button"
-							onClick={item.onClick}
-							disabled={item.disabled}
-							className={cn(
-								itemVariants({
-									danger: item.danger,
-								}),
-								item.className,
-							)}>
-							{item.label}
-						</MenuItem>
-					))}
-				</div>
+				className={cn(menuVariants(), "mt-2 p-1", menuClassName)}>
+				{items.map((item, index) => (
+					<MenuItem
+						key={`${item.label}-${index}`}
+						as="button"
+						type="button"
+						onClick={item.onClick}
+						disabled={item.disabled}
+						className={cn(
+							itemVariants({
+								danger: item.danger,
+							}),
+							item.className,
+						)}>
+						{item.label}
+					</MenuItem>
+				))}
 			</MenuItems>
 		</Menu>
 	);

@@ -9,7 +9,9 @@ export const SIZE_MAP = {
 } as const;
 
 interface LoaderDotsProps {
+	/** xxs ~ xxl 키 또는 숫자, px, % 단위 */
 	size?: keyof typeof SIZE_MAP | number | `${number}px` | `${number}%`;
+	/** SVG circle 커스텀 스타일 */
 	className?: string;
 }
 
