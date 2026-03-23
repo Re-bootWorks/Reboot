@@ -32,12 +32,12 @@ export const Default: Story = {
 	render: (args) => (
 		<PageTabs defaultId="left" {...args}>
 			<PageTabs.Item id="left" icon={<IcAlignLeft />}>
-				Left
+				왼쪽 정렬
 			</PageTabs.Item>
 			<PageTabs.Item id="right" icon={<IcAlignRight />}>
-				Right
+				오른쪽 정렬
 			</PageTabs.Item>
-			<PageTabs.Item id="center">CenterLongLabelWithoutIcon</PageTabs.Item>
+			<PageTabs.Item id="center">아이콘 없는 중앙 정렬</PageTabs.Item>
 		</PageTabs>
 	),
 };
