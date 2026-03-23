@@ -16,7 +16,7 @@ export default async function ConnectPage({
 	const data = await getPosts(page);
 	return (
 		<Container className="border border-2">
-			<div className="mt-[51px]">
+			<div className="mt-12">
 				{/* 임시 문구 영역 */}
 				<div className="-mx-4 h-[91px] max-w-[1280px] border border-gray-300 bg-gray-100">
 					커넥트 토크 임시
@@ -26,7 +26,7 @@ export default async function ConnectPage({
 				{/* HOT 게시물 */}
 				<div className="-mx-4 h-[304px] max-w-[1280px] border border-gray-300 bg-gray-100">
 					{/* 제목 */}
-					<h2 className="trackging-[-0.03rem] h-[32px] w-[187px] text-2xl leading-8 font-semibold whitespace-nowrap">
+					<h2 className="h-[32px] w-[187px] text-2xl leading-8 font-semibold tracking-[-0.03rem] whitespace-nowrap">
 						이번주 HOT 게시물!
 					</h2>
 				</div>

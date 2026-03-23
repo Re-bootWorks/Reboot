@@ -1,5 +1,8 @@
-const BASE_URL = "https://together-dallaem-api.vercel.app";
-const TEAM_ID = "lucky7";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+if (!BASE_URL) {
+	throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
+}
 
 export const fetchPosts = async (page: number) => {
 	const size = 10;
@@ -12,7 +15,7 @@ export const fetchPosts = async (page: number) => {
 		offset: String((page - 1) * size),
 	});
 
-	const res = await fetch(`${BASE_URL}/${TEAM_ID}/posts?${params}`, {
+	const res = await fetch(`${BASE_URL}/posts?${params}`, {
 		// credentials: "include", 로그인추가시 활성화
 	});
 
