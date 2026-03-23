@@ -1,4 +1,14 @@
-import { MeetupList } from "./type";
+import { UserProfile } from "@/features/mypage/type";
+import { ReviewList } from "./components/ReviewCard/type";
+import { MeetupList } from "@/features/mypage/type";
+
+export const mockUserProfile: UserProfile = {
+	id: 1333,
+	name: "소금빵",
+	email: "test@example.com",
+	image:
+		"https://images.unsplash.com/photo-1700284923285-90d6fe468920?q=80&w=721&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+};
 
 export const mockMyMeetups: MeetupList = [
 	{
@@ -83,5 +93,35 @@ export const mockMyMeetups: MeetupList = [
 		isFavorited: true,
 		isReviewed: false,
 		isCompleted: false,
+	},
+];
+
+export const mockMyReviews: ReviewList = [
+	{
+		id: 349,
+		score: 5,
+		comment: "정말 좋은 모임이었습니다!",
+		meetingId: 708,
+		meeting: {
+			id: 708,
+			type: "달램핏",
+			name: "달램핏 모임",
+			image:
+				"https://images.unsplash.com/photo-1773578639782-2046b150ce28?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		},
+		dateTime: "2026-03-17T22:30:00.000Z",
+	},
+	{
+		id: 350,
+		score: 1,
+		comment: "정말 좋은 모임이었습니다!",
+		meetingId: 708,
+		meeting: {
+			id: 708,
+			type: "달램핏",
+			name: "달램핏 모임",
+			image: null,
+		},
+		dateTime: "2026-03-17T22:30:00.000Z",
 	},
 ];

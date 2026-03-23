@@ -1,7 +1,7 @@
 "use client";
 import PageTabs from "@/components/ui/PageTabs";
 import { useState } from "react";
-import { TabId } from "../../type";
+import { TabId } from "@/features/mypage/type";
 
 export default function TabWrapper() {
 	const [activeTab, setActiveTab] = useState<TabId>("meetup");
