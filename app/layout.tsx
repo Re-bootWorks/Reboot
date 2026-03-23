@@ -2,7 +2,7 @@ import { ToastProvider } from "@/providers/toast-provider";
 import "../styles/globals.css";
 import localFont from "next/font/local";
 import Header from "@/components/layout/Header";
-import Providers from "@/providers/query-provider";
+import QueryProvider from "@/providers/query-provider";
 
 const pretendard = localFont({
 	src: "../public/assets/fonts/PretendardVariable.woff2",
@@ -35,12 +35,12 @@ export default function RootLayout({
 	return (
 		<html lang="ko">
 			<body className={pretendard.className}>
-				<Providers>
+				<QueryProvider>
 					<ToastProvider>
 						<Header />
 						{children}
 					</ToastProvider>
-				</Providers>
+				</QueryProvider>
 			</body>
 		</html>
 	);
