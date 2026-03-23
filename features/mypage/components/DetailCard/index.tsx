@@ -25,13 +25,15 @@ const STYLE = {
 	actionBtn: `h-12 w-fit min-w-[calc(50%-0.5rem)] rounded-xl min-[870px]:min-w-auto lg:min-w-39`,
 };
 
+const EMPTY_THUMBNAIL_IMAGE = "/assets/img/img_empty_purple.svg";
+
 export default function DetailCard({ item, badges, actions, wishAction }: DetailCardProps) {
 	const isWishable = !item.isCompleted && item.participantCount < item.capacity;
 
 	return (
 		<li className={STYLE.itemBgBox}>
 			<Image
-				src={item.image ?? "/assets/img/img_empty_purple.svg"}
+				src={item.image ?? EMPTY_THUMBNAIL_IMAGE}
 				alt="모임 대표 이미지"
 				width={343}
 				height={343}
