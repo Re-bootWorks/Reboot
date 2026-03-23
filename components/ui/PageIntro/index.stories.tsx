@@ -38,12 +38,12 @@ export const Favorites: Story = {
 	},
 };
 
-export const Posts: Story = {
+export const Connect: Story = {
 	parameters: {
 		nextjs: {
 			appDirectory: true,
 			navigation: {
-				pathname: "/posts",
+				pathname: "/connect",
 			},
 		},
 	},

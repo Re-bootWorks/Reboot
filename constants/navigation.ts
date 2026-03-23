@@ -15,9 +15,9 @@ export const GNB_MENU_ITEMS = [
 		key: "reviews",
 	},
 	{
-		href: "/posts",
+		href: "/connect",
 		label: "커넥트",
-		key: "posts",
+		key: "connect",
 	},
 ];
 

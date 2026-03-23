@@ -5,7 +5,7 @@ export interface PageIntroContent {
 	imageAlt?: string;
 }
 
-export const PAGE_INTRO_CONTENTS: Record<"favorites" | "reviews" | "posts", PageIntroContent> = {
+export const PAGE_INTRO_CONTENTS: Record<"favorites" | "reviews" | "connect", PageIntroContent> = {
 	favorites: {
 		title: "찜한 모임",
 		description: "눈길이 갔던 모임 이제 직접 경험해봐요 ✨",
@@ -18,7 +18,7 @@ export const PAGE_INTRO_CONTENTS: Record<"favorites" | "reviews" | "posts", Page
 		imageSrc: "/assets/img/img_review.svg",
 		imageAlt: "모든 리뷰 페이지 대표 이미지",
 	},
-	posts: {
+	connect: {
 		title: "커넥트",
 		description: "Re:boot에서 여러분의 이야기를 들려주세요 💬",
 		imageSrc: "/assets/img/img_talk.svg",
