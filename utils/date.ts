@@ -29,3 +29,36 @@ export const parseDateString = (value?: string) => {
 export const formatIsoDateWithDots = (value: string) => {
 	return dayjs(value).tz(KOREAN_TIMEZONE).format("YYYY.MM.DD");
 };
+
+// YYYY-MM-DD HH:mm:ss 문자열을 ISOString 형식("2026-01-31T23:59:59.000Z")으로 변환
+export const parseTimestamp = (date: string, time: string) => {
+	if (!date || !time) {
+		return undefined;
+	}
+
+	if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+		return undefined;
+	}
+
+	let timeStr: string;
+	if (/^\d{2}:\d{2}:\d{2}$/.test(time)) {
+		timeStr = time;
+	} else if (/^\d{2}:\d{2}$/.test(time)) {
+		timeStr = `${time}:00`;
+	} else {
+		return undefined;
+	}
+
+	const dateTimeStr = `${date} ${timeStr}`;
+	const parsed = dayjs.tz(dateTimeStr, "YYYY-MM-DD HH:mm:ss", KOREAN_TIMEZONE);
+
+	if (!parsed.isValid()) {
+		return undefined;
+	}
+	const asDate = parsed.toDate();
+	if (isNaN(asDate.getTime())) {
+		return undefined;
+	}
+
+	return parsed.toISOString();
+};
