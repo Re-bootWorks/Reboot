@@ -7,6 +7,7 @@ import { IcMeetBalls } from "../../icons";
 
 const menuVariants = cva(
 	[
+		"flex flex-col gap-1",
 		"min-w-27.5 rounded-lg border border-gray-200 bg-white shadow-base",
 		"outline-none",
 		"data-[closed]:scale-95 data-[closed]:opacity-0",
@@ -93,24 +94,22 @@ export default function ActionDropdown({
 				transition
 				anchor="bottom end"
 				className={cn(menuVariants(), "mt-2 p-1", menuClassName)}>
-				<div className="flex flex-col gap-1">
-					{items.map((item, index) => (
-						<MenuItem
-							key={`${item.label}-${index}`}
-							as="button"
-							type="button"
-							onClick={item.onClick}
-							disabled={item.disabled}
-							className={cn(
-								itemVariants({
-									danger: item.danger,
-								}),
-								item.className,
-							)}>
-							{item.label}
-						</MenuItem>
-					))}
-				</div>
+				{items.map((item, index) => (
+					<MenuItem
+						key={`${item.label}-${index}`}
+						as="button"
+						type="button"
+						onClick={item.onClick}
+						disabled={item.disabled}
+						className={cn(
+							itemVariants({
+								danger: item.danger,
+							}),
+							item.className,
+						)}>
+						{item.label}
+					</MenuItem>
+				))}
 			</MenuItems>
 		</Menu>
 	);
