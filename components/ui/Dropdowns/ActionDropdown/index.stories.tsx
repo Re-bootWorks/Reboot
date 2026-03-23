@@ -19,6 +19,10 @@ const meta: Meta<typeof ActionDropdown> = {
 			options: ["md", "xl"],
 			description: "actions 타입일 때 IcMeetBalls 아이콘 크기",
 		},
+		actionsIconClassName: {
+			control: "text",
+			description: "액션 아이콘의 className",
+		},
 		triggerClassName: {
 			control: false,
 		},

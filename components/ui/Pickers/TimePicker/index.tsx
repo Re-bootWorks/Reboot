@@ -1,5 +1,6 @@
 "use client";
 
+import type { ComponentProps } from "react";
 import {
 	Listbox,
 	ListboxButton,
@@ -11,11 +12,12 @@ import {
 } from "@headlessui/react";
 import { useMemo } from "react";
 import { cn } from "@/utils/cn";
-import PickerInput, { PickerInputProps } from "../PickerField";
+import InputField from "../../Inputs/InputField";
+import { IcClockOutline } from "../../icons";
 
 type TimePickerProps = Omit<
-	PickerInputProps,
-	"type" | "value" | "defaultValue" | "onChange" | "iconType"
+	ComponentProps<typeof InputField>,
+	"type" | "value" | "defaultValue" | "onChange" | "leftIcon" | "rightIcon" | "onRightIconClick"
 > & {
 	value?: string;
 	onChange?: (value: string) => void;
@@ -104,12 +106,11 @@ export default function TimePicker({
 	value = "",
 	onChange,
 	label,
-	required,
+	isRequired = false,
 	placeholder = "00:00",
 	className,
 	readOnly,
 	disabled,
-	id,
 	...props
 }: TimePickerProps) {
 	const { hour, minute } = useMemo(() => parseTimeString(value), [value]);
@@ -129,24 +130,36 @@ export default function TimePicker({
 			{({ open }) => (
 				<>
 					<div className={cn("relative w-full", className)}>
-						<PickerInput
-							id={id}
+						<InputField
+							{...props}
 							label={label}
-							required={required}
-							iconType="clock"
+							isRequired={isRequired}
 							value={displayValue}
 							placeholder={placeholder}
 							readOnly
 							disabled={disabled}
-							className={cn("pr-3", open && "border-purple-600")}
-							{...props}
+							leftIcon={<IcClockOutline className="size-4.5 text-gray-800 md:size-6" />}
 						/>
+
+						{!disabled && !readOnly && (
+							<div
+								aria-hidden="true"
+								className={cn(
+									"pointer-events-none absolute inset-x-0 z-10 rounded-[10px] border transition-colors md:rounded-[12px]",
+									label ? "bottom-0 h-10 md:h-12" : "top-0 h-10 md:h-12",
+									open ? "border-purple-500" : "border-transparent",
+								)}
+							/>
+						)}
 
 						{!disabled && !readOnly && (
 							<PopoverButton
 								type="button"
 								aria-label={`${pickerLabel} 선택 열기. 현재 선택된 시간 ${hour}시 ${minute}분`}
-								className="absolute inset-0 cursor-pointer rounded-[0.625rem] outline-none md:rounded-xl"
+								className={cn(
+									"absolute inset-x-0 z-20 cursor-pointer rounded-[10px] outline-none md:rounded-[12px]",
+									label ? "bottom-0 h-10 md:h-12" : "top-0 h-10 md:h-12",
+								)}
 							/>
 						)}
 					</div>

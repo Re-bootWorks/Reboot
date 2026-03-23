@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "./font.css";
 @import "react-loading-skeleton/dist/skeleton.css";
+@import "@smastrom/react-rating/style.css";
 
 @theme static {
 	/* ─── Gray ─── */
