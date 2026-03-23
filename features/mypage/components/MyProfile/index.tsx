@@ -1,10 +1,12 @@
 import { IcEditOutline } from "@/components/ui/icons";
 import Image from "next/image";
-import { UserProfile } from "../type";
+import { UserProfile } from "../../type";
 
 interface MyProfileProps {
 	user: UserProfile;
 }
+
+const EMPTY_PROFILE_IMAGE = "/assets/img/img_profile.svg";
 
 export default function MyProfile({ user }: MyProfileProps) {
 	return (
@@ -14,7 +16,7 @@ export default function MyProfile({ user }: MyProfileProps) {
 			</h1>
 			<div className="bg-gradient-purple-100-lr flex items-center gap-6 rounded-2xl border border-purple-400 p-4 md:rounded-3xl md:p-6 lg:flex-col lg:py-10">
 				<Image
-					src={user.image ?? "/assets/img/img_profile.svg"}
+					src={user.image ?? EMPTY_PROFILE_IMAGE}
 					alt="프로필 이미지"
 					className="size-11 rounded-full border border-gray-200 object-cover md:size-28"
 					width={114}
