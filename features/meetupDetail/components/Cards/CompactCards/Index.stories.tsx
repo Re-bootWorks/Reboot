@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import CompactCards from "./index";
 
-const meta: Meta<typeof CompactCard> = {
+const meta: Meta<typeof CompactCards> = {
 	title: "Features/MeetupDetail/CompactCards",
 	component: CompactCards,
 	tags: ["autodocs"],
