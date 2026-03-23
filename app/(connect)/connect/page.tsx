@@ -1,7 +1,19 @@
 import Container from "@/components/layout/Container";
 import PostContainer from "@/features/connect/containers/PostContainer";
+import { getPosts } from "@/features/connect/apis/getPosts";
 
-export default function ConnectPage() {
+// 서버 컴포넌트
+export default async function ConnectPage({
+	searchParams,
+}: {
+	searchParams: Promise<{ page?: string }>;
+}) {
+	const { page: pageParam } = await searchParams;
+
+	const page = Number(pageParam ?? 1);
+
+	// 서버에서 데이터 가져오기
+	const data = await getPosts(page);
 	return (
 		<Container className="border border-2">
 			<div className="mt-[51px]">
@@ -23,7 +35,7 @@ export default function ConnectPage() {
 				{/* 게시글 영역 */}
 				<div className="-mx-4 border border-gray-300 bg-gray-100">
 					{/* 검색 h-[44px] max-w-[1280px] */}
-					<PostContainer />
+					<PostContainer data={data} page={page} />
 				</div>
 			</div>
 		</Container>
