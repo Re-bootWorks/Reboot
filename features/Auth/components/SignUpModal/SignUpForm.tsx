@@ -40,7 +40,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 		formState: { errors, isValid },
 	} = useForm<SignUpFormData>({
 		resolver: zodResolver(signUpSchema),
-		mode: "onChange",
+		mode: "onTouched",
 	});
 
 	const onSubmit = async (data: SignUpFormData) => {
