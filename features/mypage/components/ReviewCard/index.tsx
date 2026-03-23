@@ -38,12 +38,12 @@ export default function ReviewCard({ user, item, handleEdit, handleDelete }: Rev
 						<Rating value={item.score} itemStyles={RATING_STYLE} className="max-w-30" readOnly />
 						<ActionDropdown
 							className="leading-0"
-							actionsSize="md"
+							aria-label="리뷰 옵션 열기"
+							actionsIconClassName="md:size-10"
 							items={[
 								{ label: "수정하기", onClick: handleEdit },
 								{ label: "삭제하기", onClick: handleDelete },
 							]}
-							triggerType="actions"
 						/>
 					</div>
 					<div className={STYLE.profileWrapper}>
