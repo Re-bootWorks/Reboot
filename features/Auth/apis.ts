@@ -13,3 +13,9 @@ export async function postSignUp(data: { email: string; password: string; name: 
 		body: JSON.stringify(data),
 	});
 }
+
+export async function postLogout() {
+	return clientFetch("/auth/logout", {
+		method: "POST",
+	});
+}
