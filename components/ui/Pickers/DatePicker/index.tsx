@@ -1,16 +1,18 @@
 "use client";
 
+import type { ComponentProps } from "react";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/utils/cn";
 import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
-import PickerInput, { PickerInputProps } from "../PickerField";
 import Button from "../../Buttons/Button";
 import Calendar from "./Calendar";
+import InputField from "../../Inputs/InputField";
+import { IcCalendarOutline } from "../../icons";
 
 type DatePickerProps = Omit<
-	PickerInputProps,
-	"type" | "value" | "defaultValue" | "onChange" | "iconType"
+	ComponentProps<typeof InputField>,
+	"type" | "value" | "defaultValue" | "onChange" | "leftIcon" | "rightIcon" | "onRightIconClick"
 > & {
 	value?: string;
 	onChange?: (value: string) => void;
@@ -20,12 +22,11 @@ export default function DatePicker({
 	value = "",
 	onChange,
 	label,
-	required,
+	isRequired = false,
 	placeholder = "YYYY-MM-DD",
 	className,
 	readOnly,
 	disabled,
-	id,
 	...props
 }: DatePickerProps) {
 	const selectedDate = useMemo(() => parseDateString(value), [value]);
@@ -45,18 +46,27 @@ export default function DatePicker({
 			{({ close, open }) => (
 				<>
 					<div className={cn("relative w-full", className)}>
-						<PickerInput
-							id={id}
+						<InputField
 							label={label}
-							required={required}
-							iconType="calendar"
+							isRequired={isRequired}
 							value={value}
 							placeholder={placeholder}
 							readOnly
 							disabled={disabled}
-							className={cn("pr-3", open && "border-purple-500")}
+							leftIcon={<IcCalendarOutline className="size-4.5 text-gray-800 md:size-6" />}
 							{...props}
 						/>
+
+						{!disabled && !readOnly && (
+							<div
+								aria-hidden="true"
+								className={cn(
+									"pointer-events-none absolute inset-x-0 z-10 rounded-[10px] border transition-colors md:rounded-[12px]",
+									label ? "bottom-0 h-10 md:h-12" : "top-0 h-10 md:h-12",
+									open ? "border-purple-500" : "border-transparent",
+								)}
+							/>
+						)}
 
 						{!disabled && !readOnly && (
 							<PopoverButton
@@ -66,7 +76,10 @@ export default function DatePicker({
 									setDraftDate(selectedDate);
 									setMonth(selectedDate ?? getKoreanToday());
 								}}
-								className="absolute inset-0 cursor-pointer rounded-[0.625rem] outline-none md:rounded-xl"
+								className={cn(
+									"absolute inset-x-0 z-20 cursor-pointer rounded-[10px] outline-none md:rounded-[12px]",
+									label ? "bottom-0 h-10 md:h-12" : "top-0 h-10 md:h-12",
+								)}
 							/>
 						)}
 					</div>

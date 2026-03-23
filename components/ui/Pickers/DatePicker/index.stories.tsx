@@ -11,7 +11,7 @@ const meta: Meta<typeof DatePicker> = {
 			control: "text",
 			description: "라벨",
 		},
-		required: {
+		isRequired: {
 			control: "boolean",
 			description: "필수 여부",
 		},
@@ -44,7 +44,7 @@ const meta: Meta<typeof DatePicker> = {
 	},
 	args: {
 		label: "모임 일정",
-		required: false,
+		isRequired: false,
 		placeholder: "YYYY-MM-DD",
 		value: "",
 		disabled: false,
@@ -81,7 +81,7 @@ export const Default: Story = {
 	render: (args) => <ControlledDatePicker {...args} />,
 	args: {
 		label: "모임 일정",
-		required: false,
+		isRequired: false,
 		placeholder: "YYYY-MM-DD",
 	},
 };
@@ -90,7 +90,7 @@ export const Required: Story = {
 	render: (args) => <ControlledDatePicker {...args} />,
 	args: {
 		label: "모임 일정",
-		required: true,
+		isRequired: true,
 		placeholder: "YYYY-MM-DD",
 	},
 };

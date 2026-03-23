@@ -11,7 +11,7 @@ const meta: Meta<typeof TimePicker> = {
 			control: "text",
 			description: "라벨",
 		},
-		required: {
+		isRequired: {
 			control: "boolean",
 			description: "필수 여부",
 		},
@@ -21,7 +21,7 @@ const meta: Meta<typeof TimePicker> = {
 		},
 		value: {
 			control: "text",
-			description: "시간 값",
+			description: "시간 값 (HH:mm 형식)",
 		},
 		disabled: {
 			control: "boolean",
@@ -44,7 +44,7 @@ const meta: Meta<typeof TimePicker> = {
 	},
 	args: {
 		label: "모임 시간",
-		required: false,
+		isRequired: false,
 		placeholder: "00:00",
 		value: "",
 		disabled: false,
@@ -83,7 +83,7 @@ export const Default: Story = {
 	render: (args) => <ControlledTimePicker {...args} />,
 	args: {
 		label: "모임 시간",
-		required: false,
+		isRequired: false,
 		placeholder: "00:00",
 	},
 };
@@ -92,7 +92,7 @@ export const Required: Story = {
 	render: (args) => <ControlledTimePicker {...args} />,
 	args: {
 		label: "모임 시간",
-		required: true,
+		isRequired: true,
 		placeholder: "00:00",
 	},
 };
