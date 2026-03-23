@@ -4,7 +4,7 @@ import { useModalStore } from "@/store/modal.store";
 import { ToastProvider } from "@/providers/toast-provider";
 
 const meta: Meta<typeof LoginModal> = {
-	title: "Ui/Modal/LoginModal",
+	title: "Features/auth/LoginModal",
 	component: LoginModal,
 	tags: ["autodocs"],
 	parameters: {

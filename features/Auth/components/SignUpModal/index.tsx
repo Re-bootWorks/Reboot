@@ -4,7 +4,11 @@ import { Modal } from "@/components/ui/Modals";
 import { useModalStore } from "@/store/modal.store";
 import { SignUpForm } from "./SignUpForm";
 
-export function SignUpModal() {
+interface SignUpModalProps {
+	hideCloseButton?: boolean;
+}
+
+export function SignUpModal({ hideCloseButton }: SignUpModalProps) {
 	const { signupOpen, closeSignup, openLogin } = useModalStore();
 
 	return (
@@ -12,6 +16,8 @@ export function SignUpModal() {
 			isOpen={signupOpen}
 			onClose={closeSignup}
 			title="회원가입"
+			isCenterTitle={true}
+			hideCloseButton={hideCloseButton}
 			footer={
 				<div className="flex justify-center gap-1">
 					<span>이미 회원이신가요?</span>

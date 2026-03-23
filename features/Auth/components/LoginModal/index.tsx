@@ -3,8 +3,11 @@
 import { Modal } from "@/components/ui/Modals";
 import { useModalStore } from "@/store/modal.store";
 import { LoginForm } from "./LoginForm";
+interface LoginModalProps {
+	hideCloseButton?: boolean;
+}
 
-export function LoginModal() {
+export function LoginModal({ hideCloseButton }: LoginModalProps) {
 	const { loginOpen, closeLogin, openSignup } = useModalStore();
 
 	return (
@@ -12,6 +15,8 @@ export function LoginModal() {
 			isOpen={loginOpen}
 			onClose={closeLogin}
 			title="로그인"
+			isCenterTitle={true}
+			hideCloseButton={hideCloseButton}
 			footer={
 				<div className="flex justify-center gap-1">
 					<span>같이달램이 처음이신가요?</span>
