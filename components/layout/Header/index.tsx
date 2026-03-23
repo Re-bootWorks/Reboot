@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/icons";
 import Image from "next/image";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
-import useToggle from "@/hooks/use-toggle";
+import useToggle from "@/hooks/useToggle";
 
 interface GNBProps {
 	favoritesCount: number;

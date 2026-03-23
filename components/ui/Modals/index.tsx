@@ -59,7 +59,7 @@ export function Modal({
 							</button>
 						)}
 					</div>
-					<div className="flex-1 overflow-y-auto">{children}</div>
+					<div className="scrollbar flex-1 overflow-y-auto">{children}</div>
 					{footer && <div className={cn("pt-8 md:pt-14", footerClassName)}>{footer}</div>}
 				</DialogPanel>
 			</div>
