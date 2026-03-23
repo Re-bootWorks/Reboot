@@ -10,6 +10,7 @@ import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/i
 import InputField from "@/components/ui/Inputs/InputField";
 import { useToast } from "@/providers/toast-provider";
 import { postLogin } from "@/features/auth/apis";
+import { useUserStore } from "@/store/user.store";
 
 const loginSchema = z.object({
 	email: z.email("이메일 형식이 아닙니다"),
@@ -25,6 +26,7 @@ interface LoginFormProps {
 export function LoginForm({ onSuccess }: LoginFormProps) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const { handleShowToast } = useToast();
+	const { setUser } = useUserStore();
 	const {
 		register,
 		handleSubmit,
@@ -53,8 +55,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 				return;
 			}
 
-			const { accessToken, refreshToken } = await response.json();
-			console.log(accessToken, refreshToken); // TODO: 토큰 저장
+			const { user } = await response.json();
+			setUser(user);
 
 			handleShowToast({ message: "로그인이 완료됐습니다.", status: "success" });
 			onSuccess();
