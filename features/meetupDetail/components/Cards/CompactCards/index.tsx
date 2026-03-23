@@ -7,11 +7,11 @@ import {
 	uiFormatDate,
 	uiFormatDeadline,
 	uiFormatTime,
-} from "@/features/Post/utills";
+} from "@/features/meetupDetail/utills";
 import { TimeTag } from "@/components/ui/Tags/TimeTag";
 import { IcLocation } from "@/components/ui/icons";
 
-interface CompactCardProps {
+interface CompactCardsProps {
 	registrationEnd: string;
 	dateTime: string;
 	name: string;
@@ -21,7 +21,7 @@ interface CompactCardProps {
 	onPress: () => void;
 }
 
-export default function CompactCard({
+export default function CompactCards({
 	registrationEnd,
 	dateTime,
 	name,
@@ -29,12 +29,17 @@ export default function CompactCard({
 	region,
 	isPressed,
 	onPress,
-}: CompactCardProps) {
+}: CompactCardsProps) {
 	const isClosed = isDeadlinePassed(registrationEnd);
 	return (
 		<div className="flex h-67.5 w-40.5 flex-col gap-2.5 md:h-71.5 md:w-75.5 md:gap-3.5">
 			<div className="relative h-40.5 w-40.5 overflow-hidden rounded-2xl md:h-45 md:w-75.5 md:rounded-3xl">
-				<Image alt={"모임 이미지"} src="./assets/img/img_empty.svg" fill className="object-cover" />
+				<Image
+					alt={"모임 이미지"}
+					src="./assets/img/img_purple_empty.svg"
+					fill
+					className="object-cover"
+				/>
 				<UtilityButton
 					sizes="small"
 					pressed={isPressed}
