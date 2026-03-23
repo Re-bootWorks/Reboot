@@ -20,8 +20,8 @@ const STYLE = {
 };
 
 const reviewFormSchema = z.object({
-	rating: z.number().min(1, "평점을 선택해 주세요.").max(5),
-	content: z.string().trim().min(1, "리뷰 내용을 입력해 주세요."),
+	score: z.number().min(1, "평점을 선택해 주세요.").max(5),
+	comment: z.string().trim().min(1, "리뷰 내용을 입력해 주세요."),
 });
 
 type ReviewFormValues = z.infer<typeof reviewFormSchema>;
@@ -44,8 +44,8 @@ interface ReviewFormModalProps {
 // form 기본값 생성
 function getReviewDefaultValues(initialValue?: Partial<ReviewFormValues>): ReviewFormValues {
 	return {
-		rating: initialValue?.rating ?? 0,
-		content: initialValue?.content ?? "",
+		score: initialValue?.score ?? 0,
+		comment: initialValue?.comment ?? "",
 	};
 }
 
@@ -65,7 +65,7 @@ export default function ReviewFormModal({
 		control,
 		handleSubmit,
 		reset,
-		formState: { errors },
+		formState: { errors, isValid },
 	} = useForm<ReviewFormValues>({
 		resolver: zodResolver(reviewFormSchema),
 		defaultValues: getReviewDefaultValues(initialValue),
@@ -112,7 +112,8 @@ export default function ReviewFormModal({
 						colors="purple"
 						sizes="medium"
 						isPending={isPending}
-						className={STYLE.modalButton}>
+						className={STYLE.modalButton}
+						disabled={!isValid}>
 						{reviewFormSubmitLabel}
 					</Button>
 				</div>
@@ -123,7 +124,7 @@ export default function ReviewFormModal({
 						만족스러운 경험이었나요? <span className="text-purple-500">*</span>
 					</div>
 					<Controller
-						name="rating"
+						name="score"
 						control={control}
 						render={({ field }) => (
 							<>
@@ -136,7 +137,7 @@ export default function ReviewFormModal({
 									itemStyles={RATING_STYLE}
 									className={cn(rating.review, "max-w-54")}
 								/>
-								{errors.rating && <p className={STYLE.errorMsg}>{errors.rating.message}</p>}
+								{errors.score && <p className={STYLE.errorMsg}>{errors.score.message}</p>}
 							</>
 						)}
 					/>
@@ -147,7 +148,7 @@ export default function ReviewFormModal({
 						좋았던 점을 자유롭게 적어주세요. <span className="text-purple-500">*</span>
 					</label>
 					<Controller
-						name="content"
+						name="comment"
 						control={control}
 						render={({ field }) => (
 							<InputTextarea
@@ -159,8 +160,8 @@ export default function ReviewFormModal({
 								placeholder="남겨주신 리뷰는 프로그램 운영 및 다른 회원 분들께 큰 도움이 됩니다."
 								isRequired
 								disabled={isPending}
-								isDestructive={!!errors.content}
-								hintText={errors.content?.message}
+								isDestructive={!!errors.comment}
+								hintText={errors.comment?.message}
 							/>
 						)}
 					/>
