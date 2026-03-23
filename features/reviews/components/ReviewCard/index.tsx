@@ -111,7 +111,7 @@ export default function ReviewCard({
 										},
 									]}
 									aria-label="리뷰 옵션 열기"
-									// actionsIconClassName="md:size-10" -> action dropdown 머지 후 수정 예정
+									actionsIconClassName="md:size-10"
 								/>
 							) : null}
 						</div>

@@ -3,7 +3,7 @@ import ReviewCard from ".";
 import type { ReviewCardProps } from ".";
 
 const meta: Meta<typeof ReviewCard> = {
-	title: "Reviews/ReviewCard",
+	title: "Features/Reviews/ReviewCard",
 	component: ReviewCard,
 	parameters: {
 		layout: "centered",
