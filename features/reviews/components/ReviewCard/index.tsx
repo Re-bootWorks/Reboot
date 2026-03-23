@@ -1,6 +1,5 @@
 import { cn } from "@/utils/cn";
 import Image from "next/image";
-import "@smastrom/react-rating/style.css";
 import { Rating, Heart } from "@smastrom/react-rating";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { formatIsoDateWithDots } from "@/utils/date";
