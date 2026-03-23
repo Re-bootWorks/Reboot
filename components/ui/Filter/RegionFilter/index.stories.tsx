@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import RegionFilter from "./index";
 
 const meta: Meta<typeof RegionFilter> = {
-	title: "Filter/RegionFilter",
+	title: "Filters/RegionFilter",
 	component: RegionFilter,
 	tags: ["autodocs"],
 	parameters: {
