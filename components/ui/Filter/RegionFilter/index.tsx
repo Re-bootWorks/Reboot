@@ -5,7 +5,7 @@ import { cn } from "@/utils/cn";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
 import RegionModal from "./RegionModal";
 import { REGION_DATA } from "@/constants/region";
-
+import Button from "../../Buttons/Button";
 interface RegionButtonProps {
 	className?: string;
 }
@@ -31,20 +31,20 @@ export default function RegionFilter({ className }: RegionButtonProps) {
 	return (
 		<>
 			{/* 버튼 */}
-			<button
+			<Button
 				onClick={() => setIsOpen(true)}
+				sizes="small"
+				colors="grayBorder"
 				className={cn(
-					"flex items-center gap-1",
-					"rounded-b-md px-3 py-1.5",
-					"bg-white",
-					"text-base font-medium tracking-[-0.02rem]",
-					"cursor-pointer",
+					"w-auto justify-start gap-1",
+					"rounded-b-md",
+					"border-none",
 					selectedRegion || selectedDistrict ? "text-gray-700" : "text-gray-600",
 					className,
 				)}>
 				{getLabel()}
 				<IcChevronDown color="currentColor" />
-			</button>
+			</Button>
 
 			{/* 모달 */}
 			<RegionModal
