@@ -1,11 +1,12 @@
 "use client";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
 import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
 import { cn } from "@/utils/cn";
+import Button from "@/components/ui/Buttons/Button";
 
 type DateFilterProps = {
 	value?: string;
@@ -19,6 +20,14 @@ function formatDisplayDate(date: Date) {
 export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 	const [month, setMonth] = useState<Date>(getKoreanToday());
 	const [draftDate, setDraftDate] = useState<Date | undefined>();
+	const [isMd, setIsMd] = useState(false);
+
+	useEffect(() => {
+		const check = () => setIsMd(window.innerWidth >= 744);
+		check();
+		window.addEventListener("resize", check);
+		return () => window.removeEventListener("resize", check);
+	}, []);
 
 	const parsed = parseDateString(value);
 
@@ -36,8 +45,8 @@ export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 					</PopoverButton>
 
 					<PopoverPanel
-						anchor={{ to: "bottom start" }}
-						className="z-20 mt-2 w-80 rounded-xl border border-gray-200 bg-white p-6 shadow-xl">
+						anchor={{ to: isMd ? "bottom end" : "bottom start" }}
+						className="z-20 mt-2 w-74.5 rounded-xl border border-gray-200 bg-white p-6 shadow-xl">
 						<Calendar
 							month={month}
 							selectedDate={draftDate}
@@ -45,21 +54,19 @@ export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 							onSelectDate={setDraftDate}
 						/>
 
-						<div className="mt-3 flex gap-2">
-							<button
-								onClick={() => setDraftDate(undefined)}
-								className="flex-1 rounded-lg border border-purple-500 px-3 py-1 text-sm text-purple-500">
+						<div className="mt-3 grid grid-cols-2 gap-3">
+							<Button sizes="small" colors="purpleBorder" onClick={() => setDraftDate(undefined)}>
 								초기화
-							</button>
+							</Button>
 
-							<button
+							<Button
+								sizes="small"
 								onClick={() => {
 									onChange?.(draftDate ? formatDateString(draftDate) : "");
 									close();
-								}}
-								className="flex-1 rounded-lg bg-purple-500 px-3 py-1 text-sm text-white">
+								}}>
 								적용
-							</button>
+							</Button>
 						</div>
 					</PopoverPanel>
 				</>
