@@ -1,6 +1,6 @@
 import { IcEditOutline } from "@/components/ui/icons";
 import Image from "next/image";
-import { UserProfile } from "../../type";
+import { UserProfile } from "@/features/mypage/type";
 
 interface MyProfileProps {
 	user: UserProfile;

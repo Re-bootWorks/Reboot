@@ -12,7 +12,7 @@ import {
 	uiFormatDate,
 	uiFormatDeadline,
 	uiFormatTime,
-} from "@/features/Post/utills";
+} from "@/features/meetupDetail/utills";
 
 interface InformationContainerProps {
 	name: string;
