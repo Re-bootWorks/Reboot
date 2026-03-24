@@ -42,7 +42,10 @@ function GroupCard({ id, href, status, children, ...props }: GroupCardProps) {
 		<GroupCardContext.Provider value={status}>
 			<div
 				data-groupid={id}
-				className={cn("relative flex flex-col md:flex-row md:gap-x-5 md:p-6", containerStyle)}
+				className={cn(
+					"relative isolate flex flex-col md:flex-row md:gap-x-5 md:p-6",
+					containerStyle,
+				)}
 				{...props}>
 				<Link href={href} className="absolute inset-0 z-1" />
 				{children}
@@ -51,7 +54,7 @@ function GroupCard({ id, href, status, children, ...props }: GroupCardProps) {
 	);
 }
 const containerStyle =
-	"h-[346px] w-[343px] md:h-[219px] lg:w-[628px] md:w-full rounded-4xl overflow-hidden bg-white";
+	"h-[346px] min-w-[343px] md:h-[219px] lg:max-w-[628px] md:w-full rounded-4xl overflow-hidden bg-white";
 
 function GroupCardSkeleton() {
 	return (
