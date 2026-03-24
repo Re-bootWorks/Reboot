@@ -7,10 +7,11 @@ import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
 import { cn } from "@/utils/cn";
 import Button from "@/components/ui/Buttons/Button";
+import { useIsMd } from "@/hooks/useIsMd";
 
 type DateFilterProps = {
-	value?: string;
-	onChange?: (value: string) => void;
+	value: string;
+	onChange: (value: string) => void;
 };
 
 function formatDisplayDate(date: Date) {
@@ -20,14 +21,7 @@ function formatDisplayDate(date: Date) {
 export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 	const [month, setMonth] = useState<Date>(getKoreanToday());
 	const [draftDate, setDraftDate] = useState<Date | undefined>();
-	const [isMd, setIsMd] = useState(false);
-
-	useEffect(() => {
-		const check = () => setIsMd(window.innerWidth >= 744);
-		check();
-		window.addEventListener("resize", check);
-		return () => window.removeEventListener("resize", check);
-	}, []);
+	const isMd = useIsMd();
 
 	const parsed = parseDateString(value);
 
