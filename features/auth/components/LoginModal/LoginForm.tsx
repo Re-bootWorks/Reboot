@@ -8,9 +8,7 @@ import Button from "@/components/ui/Buttons/Button";
 import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
-import { useToast } from "@/providers/toast-provider";
-import { postLogin } from "@/features/auth/apis";
-import { useUserStore } from "@/store/user.store";
+import { useLogin } from "@/features/auth/mutations";
 
 const loginSchema = z.object({
 	email: z.email("이메일 형식이 아닙니다"),
@@ -25,8 +23,7 @@ interface LoginFormProps {
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-	const { handleShowToast } = useToast();
-	const { setUser } = useUserStore();
+	const { mutate: login } = useLogin(onSuccess);
 	const {
 		register,
 		handleSubmit,
@@ -36,36 +33,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 		mode: "onTouched",
 	});
 
-	const onSubmit = async (data: LoginFormData) => {
-		try {
-			const response = await postLogin({ email: data.email, password: data.password });
-
-			if (!response.ok) {
-				if (response.status === 401) {
-					handleShowToast({
-						message: "이메일 또는 비밀번호가 올바르지 않습니다.",
-						status: "error",
-					});
-				} else {
-					handleShowToast({
-						message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-						status: "error",
-					});
-				}
-				return;
-			}
-
-			const { user } = await response.json();
-			setUser(user);
-
-			handleShowToast({ message: "로그인이 완료됐습니다.", status: "success" });
-			onSuccess();
-		} catch (error) {
-			handleShowToast({
-				message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
-				status: "error",
-			});
-		}
+	const onSubmit = (data: LoginFormData) => {
+		login({ email: data.email, password: data.password });
 	};
 
 	return (

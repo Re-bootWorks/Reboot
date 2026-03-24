@@ -1,17 +1,33 @@
 import { clientFetch } from "@/libs/clientFetch";
 
 export async function postLogin(data: { email: string; password: string }) {
-	return clientFetch("/auth/login", {
+	const response = await clientFetch("/auth/login", {
 		method: "POST",
 		body: JSON.stringify(data),
 	});
+
+	if (!response.ok) {
+		const error = new Error("로그인 실패") as Error & { status: number };
+		error.status = response.status;
+		throw error;
+	}
+
+	return response.json();
 }
 
 export async function postSignUp(data: { email: string; password: string; name: string }) {
-	return clientFetch("/auth/signup", {
+	const response = await clientFetch("/auth/signup", {
 		method: "POST",
 		body: JSON.stringify(data),
 	});
+
+	if (!response.ok) {
+		const error = new Error("회원가입 실패") as Error & { status: number };
+		error.status = response.status;
+		throw error;
+	}
+
+	return response.json();
 }
 
 export async function postLogout() {

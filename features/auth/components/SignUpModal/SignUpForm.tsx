@@ -8,9 +8,7 @@ import Button from "@/components/ui/Buttons/Button";
 import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
-import { useToast } from "@/providers/toast-provider";
-import { postSignUp, postLogin } from "@/features/auth/apis";
-import { useUserStore } from "@/store/user.store";
+import { useSignUp } from "@/features/auth/mutations";
 
 const signUpSchema = z
 	.object({
@@ -33,64 +31,19 @@ interface SignUpFormProps {
 export function SignUpForm({ onSuccess }: SignUpFormProps) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] = useState(false);
-	const { handleShowToast } = useToast();
-	const { setUser } = useUserStore();
+	const { mutate: signUp } = useSignUp(onSuccess);
 
 	const {
 		register,
 		handleSubmit,
-		setError,
 		formState: { errors, isValid },
 	} = useForm<SignUpFormData>({
 		resolver: zodResolver(signUpSchema),
 		mode: "onTouched",
 	});
-	const onSubmit = async (data: SignUpFormData) => {
-		try {
-			const response = await postSignUp({
-				email: data.email,
-				password: data.password,
-				name: data.name,
-			});
 
-			if (!response.ok) {
-				if (response.status === 409) {
-					setError("email", { message: "이미 사용 중인 아이디입니다." });
-					handleShowToast({ message: "이미 사용 중인 아이디입니다.", status: "error" });
-				} else {
-					handleShowToast({
-						message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-						status: "error",
-					});
-				}
-				return;
-			}
-
-			const loginResponse = await postLogin({
-				email: data.email,
-				password: data.password,
-			});
-
-			if (!loginResponse.ok) {
-				handleShowToast({
-					message: "자동 로그인에 실패했습니다. 직접 로그인해주세요.",
-					status: "error",
-				});
-				onSuccess();
-				return;
-			}
-
-			const { user } = await loginResponse.json();
-			setUser(user);
-
-			handleShowToast({ message: "회원가입이 완료됐습니다.", status: "success" });
-			onSuccess();
-		} catch (error) {
-			handleShowToast({
-				message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
-				status: "error",
-			});
-		}
+	const onSubmit = (data: SignUpFormData) => {
+		signUp({ email: data.email, password: data.password, name: data.name });
 	};
 
 	return (
