@@ -202,7 +202,7 @@ export default function TimePicker({
 						/>
 
 						{/* form submit 시 실제 전송할 값("HH:mm")용 hidden input */}
-						{name ? <input type="hidden" name={name} value={value} /> : ""}
+						<input type="hidden" name={name} value={value || ""} />
 
 						{!disabled && !readOnly && (
 							<PopoverButton
@@ -223,7 +223,12 @@ export default function TimePicker({
 						{open && !disabled && !readOnly && (
 							<PopoverPanel
 								anchor="bottom start"
-								className="z-20 mt-1.5 overflow-hidden rounded-xl border border-gray-200 bg-white p-0 md:mt-2">
+								transition
+								className={cn(
+									"z-20 mt-1.5 overflow-hidden rounded-xl border border-gray-200 bg-white p-0 md:mt-2",
+									"origin-top transition duration-150 ease-out",
+									"data-closed:scale-95 data-closed:opacity-0",
+								)}>
 								<div className="relative flex bg-white p-3">
 									<TimeListbox
 										label="시간"
