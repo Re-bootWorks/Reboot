@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { REGION_DATA } from "@/constants/region";
-import RegionTrigger from "./RegionTrigger";
 import IcDelete from "@/components/ui/icons/IcDelete";
 import IcCheck from "@/components/ui/icons/IcCheck";
 import { cn } from "@/utils/cn";
+import RegionDropdown from "@/components/ui/Dropdowns/RegionDropdown";
 
 interface RegionModalProps {
 	isOpen: boolean; // 모달 열림 여부
@@ -22,9 +22,6 @@ export default function RegionModal({
 	initialRegion,
 	initialDistrict,
 }: RegionModalProps) {
-	// 현재 펼쳐진 시/도 (드롭다운 상태)
-	const [openRegion, setOpenRegion] = useState<string | null>(null);
-
 	// 모달 내부에서 임시로 관리하는 선택 상태
 	const [selectedRegion, setSelectedRegion] = useState(initialRegion);
 	const [selectedDistrict, setSelectedDistrict] = useState(initialDistrict);
@@ -34,7 +31,6 @@ export default function RegionModal({
 		if (isOpen) {
 			setSelectedRegion(initialRegion);
 			setSelectedDistrict(initialDistrict);
-			setOpenRegion(null); // 드롭다운 초기화
 		}
 	}, [isOpen, initialRegion, initialDistrict]);
 
@@ -64,10 +60,9 @@ export default function RegionModal({
 						onClick={() => {
 							setSelectedRegion("");
 							setSelectedDistrict("");
-							setOpenRegion(null);
 						}}
 						className={cn(
-							"flex h-[2.5rem] min-h-[2.5rem] w-full items-center justify-between gap-1.5 rounded-xl bg-gray-50 px-4 text-sm text-gray-800 transition-colors",
+							"flex h-[2.5rem] min-h-[2.5rem] w-full items-center justify-between gap-1.5 rounded-xl bg-gray-50 px-4 text-base text-gray-800 transition-colors",
 							"md:h-[2.875rem] md:min-h-[2.875rem]",
 							isAllSelected ? "border border-purple-500" : "border border-gray-50",
 						)}>
@@ -76,48 +71,18 @@ export default function RegionModal({
 					</button>
 
 					{/* 시/도 리스트 */}
-					{REGION_DATA.map((region) => {
-						const isOpenRegion = openRegion === region.value;
-
-						return (
-							<div key={region.value} className="relative">
-								{/* 시/도 선택 버튼 */}
-								<RegionTrigger
-									label={region.label}
-									isOpen={isOpenRegion}
-									onToggle={() => setOpenRegion(isOpenRegion ? null : region.value)}
-								/>
-
-								{/* 구/군 드롭다운 */}
-								{isOpenRegion && (
-									<div className="absolute top-full left-0 z-20 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border bg-white shadow-xl">
-										{region.districts.map((district) => {
-											const isSelected = selectedDistrict === district.value;
-
-											return (
-												<button
-													key={district.value}
-													onClick={() => {
-														setSelectedRegion(region.value);
-														setSelectedDistrict(district.value);
-														setOpenRegion(null);
-													}}
-													className={cn(
-														"flex h-[2.75rem] w-full items-center justify-between px-3 text-sm",
-														isSelected
-															? "bg-purple-200 font-semibold text-purple-600"
-															: "hover:bg-gray-50",
-													)}>
-													<span>{district.label}</span>
-													{isSelected && <IcCheck />}
-												</button>
-											);
-										})}
-									</div>
-								)}
-							</div>
-						);
-					})}
+					{REGION_DATA.map((region) => (
+						<RegionDropdown
+							key={region.value}
+							triggerLabel={region.label}
+							options={region.districts.map((d) => d.label)}
+							value={selectedRegion === region.value ? selectedDistrict : ""}
+							onChange={(value: string) => {
+								setSelectedRegion(region.value);
+								setSelectedDistrict(value);
+							}}
+						/>
+					))}
 				</div>
 
 				{/* 하단 버튼 영역 */}

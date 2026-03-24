@@ -37,7 +37,8 @@ export default function RegionFilter({ className }: RegionButtonProps) {
 					"flex items-center gap-1",
 					"rounded-b-md px-3 py-1.5",
 					"bg-white",
-					"text-base font-medium tracking-[-0.02rem] text-gray-600",
+					"text-base font-medium tracking-[-0.02rem]",
+					selectedRegion || selectedDistrict ? "text-gray-700" : "text-gray-600",
 					className,
 				)}>
 				{getLabel()}
@@ -52,6 +53,8 @@ export default function RegionFilter({ className }: RegionButtonProps) {
 					setSelectedRegion(region);
 					setSelectedDistrict(district);
 				}}
+				initialRegion={selectedRegion}
+				initialDistrict={selectedDistrict}
 			/>
 		</>
 	);
