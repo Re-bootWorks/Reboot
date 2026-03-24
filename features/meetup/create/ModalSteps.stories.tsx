@@ -132,8 +132,12 @@ const MOCK_KAKAO_DATA: KakaoAddressItem[] = [
 	},
 ];
 
-async function mockUploadImage() {
-	return "mock_image_url";
+async function mockUploadImage(e: React.ChangeEvent<HTMLInputElement>) {
+	const file = e.target.files?.[0];
+	if (file) {
+		const url = URL.createObjectURL(file);
+		return url;
+	} else return "";
 }
 
 async function mockKakaoAddress() {

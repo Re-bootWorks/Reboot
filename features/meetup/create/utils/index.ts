@@ -5,5 +5,5 @@ export const getRegion = (first: string, second: string) => {
 
 /** 도로명 주소 통합 */
 export const getAddress = (name: string, detail: string) => {
-	return name + ", " + detail;
+	return `${name}, ${detail}`;
 };

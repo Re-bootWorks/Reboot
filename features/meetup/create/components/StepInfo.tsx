@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/utils/cn";
 import { KakaoAddressItem, MeetupCreateData } from "../types";
 import { getAddress, getRegion } from "../utils";
-import { useLeaveStep } from "../hooks";
 import { useFormData } from "../providers/FormDataProvider";
-import { useFormStep } from "../providers/FormStepProvider";
 import Input from "@/components/ui/Inputs/Input";
 import InputField from "@/components/ui/Inputs/InputField";
 import InputFile from "@/components/ui/Inputs/InputFile";
@@ -29,7 +27,6 @@ type InputValues = {
 	addressDetail: string;
 };
 export default function StepInfo({ step, uploadImageFunc, kakaoAddressFunc }: StepInfoProps) {
-	const { currentStep } = useFormStep();
 	const { setStepValid, setData } = useFormData();
 	const [isComboOpened, setIsComboOpened] = useState(false);
 	const [kakaoAddressData, setKakaoAddressData] = useState<KakaoAddressItem[]>([]);
@@ -44,20 +41,6 @@ export default function StepInfo({ step, uploadImageFunc, kakaoAddressFunc }: St
 		addressDetail: "",
 	});
 
-	// 이 단계를 떠나는 순간 한 번 실행
-	function setCurrentData() {
-		setData((prev) => ({
-			...prev,
-			name: inputValues.name,
-			latitude: inputValues.latitude,
-			longitude: inputValues.longitude,
-			region: getRegion(inputValues.regionFirst, inputValues.regionSecond),
-			address: getAddress(inputValues.addressName, inputValues.addressDetail),
-			image: inputValues.image,
-		}));
-	}
-	useLeaveStep({ currentStep, step, onLeave: setCurrentData });
-
 	async function handleChangeAddress(e: React.ChangeEvent<HTMLInputElement>) {
 		setInputValues((prev) => ({ ...prev, addressName: e.target.value }));
 		const data = await kakaoAddressFunc(e);
@@ -68,9 +51,7 @@ export default function StepInfo({ step, uploadImageFunc, kakaoAddressFunc }: St
 
 	async function handleUploadImage(e: React.ChangeEvent<HTMLInputElement>) {
 		const image = await uploadImageFunc(e);
-		if (image) {
-			setInputValues((prev) => ({ ...prev, image }));
-		}
+		setInputValues((prev) => ({ ...prev, image }));
 	}
 
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -90,11 +71,22 @@ export default function StepInfo({ step, uploadImageFunc, kakaoAddressFunc }: St
 		setIsComboOpened(false);
 	}
 
-	// 유효성 검사
+	// 유효성 검사 및 데이터 업데이트
 	useEffect(() => {
-		if (Object.values(inputValues).every((value) => !!value)) {
-			setStepValid(step, true);
-		}
+		const { name, image, addressName, addressDetail, regionFirst, regionSecond } = inputValues;
+		const isLocationValid = !!(addressName && addressDetail && regionFirst && regionSecond);
+		const isValid = !!(name && image && isLocationValid);
+
+		setStepValid(step, isValid);
+		setData((prev) => ({
+			...prev,
+			name: inputValues.name,
+			latitude: inputValues.latitude,
+			longitude: inputValues.longitude,
+			region: getRegion(inputValues.regionFirst, inputValues.regionSecond),
+			address: getAddress(inputValues.addressName, inputValues.addressDetail),
+			image: inputValues.image,
+		}));
 	}, [inputValues, setStepValid, step]);
 
 	return (

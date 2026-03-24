@@ -37,13 +37,13 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 
 	// 유효성 검사
 	useEffect(() => {
-		const isDateTimeValid = dateTime.date && dateTime.time;
-		const isRegEndValid = regEnd.date && regEnd.time;
+		const isDateTimeValid = !!(dateTime.date && dateTime.time);
+		const isRegEndValid = !!(regEnd.date && regEnd.time);
 		const isCapacityValid = capacity > 0;
-		if (isDateTimeValid && isRegEndValid && isCapacityValid) {
-			setStepValid(step, true);
-		}
-	}, [dateTime, regEnd, capacity, setStepValid]);
+		const isValid = isDateTimeValid && isRegEndValid && isCapacityValid;
+
+		setStepValid(step, isValid);
+	}, [step, dateTime, regEnd, capacity, setStepValid]);
 
 	// 실시간 변환 및 데이터 저장
 	useEffect(() => {

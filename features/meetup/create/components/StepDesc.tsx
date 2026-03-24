@@ -11,7 +11,7 @@ export default function StepDesc({ step }: StepDescProps) {
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target;
 		setData((prev) => ({ ...prev, [name]: value }));
-		setStepValid(step, true);
+		setStepValid(step, !!value.trim());
 	}
 
 	return (
