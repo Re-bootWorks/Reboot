@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import PersonnelContainer from "./index";
 
 const meta: Meta<typeof PersonnelContainer> = {
-	title: "POSTS/PersonnelContainer",
+	title: "Features/MeetupDetail/PersonnelContainer",
 	component: PersonnelContainer,
 	tags: ["autodocs"],
 	argTypes: {
