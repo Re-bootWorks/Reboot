@@ -1,5 +1,6 @@
 "use server";
 import { cookies } from "next/headers";
+import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE, COOKIE_OPTIONS } from "@/constants/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -37,15 +38,14 @@ export async function refreshToken(): Promise<string | null> {
 
 	if (!newAccessToken || !newRefreshToken) return null;
 
-	const cookieOptions = {
-		httpOnly: true,
-		secure: process.env.NODE_ENV === "production",
-		sameSite: "strict" as const,
-		path: "/",
-	};
-
-	cookieStore.set("accessToken", newAccessToken, { ...cookieOptions, maxAge: 60 * 15 });
-	cookieStore.set("refreshToken", newRefreshToken, { ...cookieOptions, maxAge: 60 * 60 * 24 * 7 });
+	cookieStore.set("accessToken", newAccessToken, {
+		...COOKIE_OPTIONS,
+		maxAge: ACCESS_TOKEN_MAX_AGE,
+	});
+	cookieStore.set("refreshToken", newRefreshToken, {
+		...COOKIE_OPTIONS,
+		maxAge: REFRESH_TOKEN_MAX_AGE,
+	});
 
 	return newAccessToken;
 }

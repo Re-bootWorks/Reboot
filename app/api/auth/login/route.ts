@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverFetch } from "@/libs/serverFetch";
+import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE, COOKIE_OPTIONS } from "@/constants/auth";
 
 export async function POST(request: NextRequest) {
 	try {
@@ -26,19 +27,13 @@ export async function POST(request: NextRequest) {
 		const res = NextResponse.json({ user }, { status: 200 });
 
 		res.cookies.set("accessToken", accessToken, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: "strict",
-			maxAge: 60 * 15,
-			path: "/",
+			...COOKIE_OPTIONS,
+			maxAge: ACCESS_TOKEN_MAX_AGE,
 		});
 
 		res.cookies.set("refreshToken", refreshToken, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: "strict",
-			maxAge: 60 * 60 * 24 * 7,
-			path: "/",
+			...COOKIE_OPTIONS,
+			maxAge: REFRESH_TOKEN_MAX_AGE,
 		});
 
 		return res;

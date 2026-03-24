@@ -143,58 +143,65 @@ export default function Header() {
 	const profile = null;
 
 	return (
-		<Container as="header" className={STYLE.header}>
-			<div className={STYLE.gnb}>
-				<Link href="/">
-					<div className={STYLE.logo}>Re:boot</div>
-				</Link>
-				<nav className="hidden md:flex" aria-label="상단 내비게이션">
-					<GNB favoritesCount={favoritesCount} />
-				</nav>
-				<Sidebar
-					isOpen={isOpen}
-					isLogin={isLogin}
-					handleSidebarClose={close}
-					favoritesCount={favoritesCount}
-				/>
-			</div>
-			<div className={STYLE.etc}>
-				{isLogin ? (
-					<>
-						<button
-							type="button"
-							disabled={!isAlarm}
-							className={cn(isAlarm ? "cursor-pointer" : "cursor-default")}>
-							{isAlarm ? <IcBellUnreadOutline /> : <IcBellOutline />}
-						</button>
-						<button
-							type="button"
-							onClick={() => logout()}
-							className={cn(STYLE.link, "hidden md:block")}>
-							로그아웃
-						</button>
-						<div className="hidden md:block">
-							<button type="button" className={STYLE.image}>
-								<Image
-									src={profile ? profile : "/assets/img/img_profile.svg"}
-									alt="프로필 이미지"
-									width={44}
-									height={44}
-								/>
+		<>
+			<Container as="header" className={STYLE.header}>
+				<div className={STYLE.gnb}>
+					<Link href="/">
+						<div className={STYLE.logo}>Re:boot</div>
+					</Link>
+					<nav className="hidden md:flex" aria-label="상단 내비게이션">
+						<GNB favoritesCount={favoritesCount} />
+					</nav>
+					<Sidebar
+						isOpen={isOpen}
+						isLogin={isLogin}
+						handleSidebarClose={close}
+						favoritesCount={favoritesCount}
+					/>
+				</div>
+				<div className={STYLE.etc}>
+					{isLogin ? (
+						<>
+							<button
+								type="button"
+								disabled={!isAlarm}
+								className={cn(isAlarm ? "cursor-pointer" : "cursor-default")}>
+								{isAlarm ? <IcBellUnreadOutline /> : <IcBellOutline />}
 							</button>
-						</div>
-					</>
-				) : (
-					<>
-						<button type="button" className={cn(STYLE.link, "hidden md:block")} onClick={openLogin}>
-							로그인
-						</button>
-					</>
-				)}
-				<button type="button" className="cursor-pointer md:hidden" onClick={open}>
-					<IcMenu />
-				</button>
-			</div>
-		</Container>
+							<button
+								type="button"
+								onClick={() => logout()}
+								className={cn(STYLE.link, "hidden md:block")}>
+								로그아웃
+							</button>
+							<div className="hidden md:block">
+								<button type="button" className={STYLE.image}>
+									<Image
+										src={profile ? profile : "/assets/img/img_profile.svg"}
+										alt="프로필 이미지"
+										width={44}
+										height={44}
+									/>
+								</button>
+							</div>
+						</>
+					) : (
+						<>
+							<button
+								type="button"
+								className={cn(STYLE.link, "hidden md:block")}
+								onClick={openLogin}>
+								로그인
+							</button>
+						</>
+					)}
+					<button type="button" className="cursor-pointer md:hidden" onClick={open}>
+						<IcMenu />
+					</button>
+				</div>
+			</Container>
+			<LoginModal />
+			<SignUpModal />
+		</>
 	);
 }
