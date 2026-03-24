@@ -23,8 +23,13 @@ export default function DatePicker({
 	hintText,
 	...props
 }: DatePickerProps) {
+	/** 부모가 내려준 value(예: "2026-03-24")를 Date 객체로 변환한 "확정된 현재 값" */
 	const selectedDate = useMemo(() => parseDateString(value), [value]);
+
+	/** 캘린더가 지금 어떤 "월"을 보고 있는지 관리하는 상태 */
 	const [month, setMonth] = useState<Date>(selectedDate ?? getKoreanToday());
+
+	/** 패널 안에서 사용자가 임시로 고른 날짜 */
 	const [draftDate, setDraftDate] = useState<Date | undefined>(selectedDate);
 
 	useEffect(() => {
