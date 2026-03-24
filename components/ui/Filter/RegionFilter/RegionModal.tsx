@@ -90,7 +90,7 @@ export default function RegionModal({
 					{/* 취소 버튼 */}
 					<button
 						onClick={onClose}
-						className="flex h-[3.75rem] flex-1 cursor-pointer items-center justify-center rounded-2xl border border-gray-200">
+						className="flex h-12 w-[141px] cursor-pointer items-center justify-center rounded-2xl border border-gray-200 md:h-[3.75rem] md:w-auto md:flex-1">
 						취소
 					</button>
 
@@ -100,7 +100,7 @@ export default function RegionModal({
 							onConfirm(selectedRegion, selectedDistrict);
 							onClose();
 						}}
-						className="flex h-[3.75rem] flex-1 cursor-pointer items-center justify-center rounded-2xl bg-purple-500 text-white">
+						className="flex h-12 w-[141px] cursor-pointer items-center justify-center rounded-2xl bg-purple-500 text-white md:h-[3.75rem] md:w-auto md:flex-1">
 						확인
 					</button>
 				</div>
