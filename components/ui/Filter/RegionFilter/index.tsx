@@ -7,25 +7,30 @@ import RegionModal from "./RegionModal";
 import { REGION_DATA } from "@/constants/region";
 import Button from "../../Buttons/Button";
 interface RegionButtonProps {
+	value: {
+		region: string;
+		district: string;
+	};
+	onChange: (region: string, district: string) => void;
 	className?: string;
 }
 
-export default function RegionFilter({ className }: RegionButtonProps) {
+export default function RegionFilter({ value, onChange, className }: RegionButtonProps) {
 	const [isOpen, setIsOpen] = useState(false);
-	const [selectedRegion, setSelectedRegion] = useState("");
-	const [selectedDistrict, setSelectedDistrict] = useState("");
 
 	const getLabel = () => {
-		if (!selectedRegion) return "지역 전체";
+		const { region, district } = value;
 
-		const region = REGION_DATA.find((r) => r.value === selectedRegion);
 		if (!region) return "지역 전체";
 
-		if (!selectedDistrict) return region.label;
+		const foundRegion = REGION_DATA.find((r) => r.value === region);
+		if (!foundRegion) return "지역 전체";
 
-		const district = region.districts.find((d) => d.value === selectedDistrict);
+		if (!district) return foundRegion.label;
 
-		return district?.label ?? region.label;
+		const foundDistrict = foundRegion.districts.find((d) => d.value === district);
+
+		return foundDistrict?.label ?? foundRegion.label;
 	};
 
 	return (
@@ -39,7 +44,7 @@ export default function RegionFilter({ className }: RegionButtonProps) {
 					"w-auto justify-start gap-1",
 					"rounded-b-md",
 					"border-none",
-					selectedRegion || selectedDistrict ? "text-gray-700" : "text-gray-600",
+					value.region || value.district ? "text-gray-700" : "text-gray-600",
 					className,
 				)}>
 				{getLabel()}
@@ -51,11 +56,10 @@ export default function RegionFilter({ className }: RegionButtonProps) {
 				isOpen={isOpen}
 				onClose={() => setIsOpen(false)}
 				onConfirm={(region, district) => {
-					setSelectedRegion(region);
-					setSelectedDistrict(district);
+					onChange(region, district);
 				}}
-				initialRegion={selectedRegion}
-				initialDistrict={selectedDistrict}
+				initialRegion={value.region}
+				initialDistrict={value.district}
 			/>
 		</>
 	);
