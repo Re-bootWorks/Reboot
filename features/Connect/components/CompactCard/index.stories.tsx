@@ -8,7 +8,7 @@ const meta: Meta<typeof CompactCard> = {
 	component: CompactCard,
 	tags: ["autodocs"],
 	parameters: {
-		layout: "padded",
+		layout: "fullscreen",
 	},
 };
 
@@ -27,7 +27,9 @@ export const WithImage: Story = {
 	},
 	render: (args) => (
 		<Container>
-			<div className="flex gap-4">
+			<div className="-mx-6 flex gap-6">
+				<CompactCard {...args} />
+				<CompactCard {...args} />
 				<CompactCard {...args} />
 				<CompactCard {...args} />
 			</div>

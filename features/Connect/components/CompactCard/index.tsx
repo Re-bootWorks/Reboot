@@ -1,6 +1,6 @@
 import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
-import EmptyImage from "@/features/Connect/ui/EmptyImage";
+import EmptyImage from "@/features/connect/ui/EmptyImage";
 import dayjs from "@/libs/dayjs";
 
 type CompactCardProps = {

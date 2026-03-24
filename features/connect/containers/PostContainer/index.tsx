@@ -1,87 +1,69 @@
-import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
-import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
-import IcPerson from "@/components/ui/icons/IcPerson";
+"use client";
 
-import dayjs from "@/libs/dayjs";
+import Container from "@/components/layout/Container";
+import SearchInput from "@/components/ui/SearchInput";
+import FilterButton from "@/components/ui/Buttons/FilterButton";
+import PostCard from "@/features/connect/components/PostCard";
+import Pagination from "@/components/ui/Pagination";
+import type { Post } from "@/features/connect/types";
+import { getMockPosts } from "@/features/connect/apis/mockPosts";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPosts } from "@/features/connect/apis/fetchPosts";
+import { useRouter } from "next/navigation";
+import { useRef } from "react";
 
-type PostCardProps = {
-	title: string;
-	description: string;
-	imageUrl: string;
-	author: string;
-	date: number;
-	likeCount: number;
-	commentCount: number;
-	onClick?: () => void;
-};
+export default function PostContainer({ page }: { page: number }) {
+	const { data } = useQuery({
+		queryKey: ["posts", page],
+		queryFn: () => fetchPosts(page),
+	});
 
-function getTimeAgo(timestamp: number) {
-	return dayjs(timestamp).fromNow();
-}
+	const posts = data?.data ?? [];
 
-export default function ConnectCard({
-	title,
-	description,
-	imageUrl,
-	author,
-	date,
-	likeCount,
-	commentCount,
-	onClick,
-}: PostCardProps) {
+	const router = useRouter();
+	const containerRef = useRef<HTMLDivElement | null>(null);
+
 	return (
-		/* 카드 전체 */
-		<div
-			onClick={onClick}
-			className="flex h-[19.375rem] w-full max-w-[18.4375rem] cursor-pointer flex-col rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
-			{/* 모바일 제목 */}
-			<h3 className="truncate pt-2 pb-3 text-base leading-6 font-bold tracking-[-0.02em] text-gray-900 sm:hidden">
-				{title}
-			</h3>
-
-			{/* 썸네일 이미지 */}
-			<div className="order-2 h-[9rem] w-[18.375rem] shrink-0 overflow-hidden rounded-xl sm:order-1 sm:h-full sm:w-[12.5rem]">
-				<img src={imageUrl} alt={title} className="h-full w-full object-cover" />
+		<Container>
+			{/* 검색 + 정렬 */}
+			<div className="-mx-4 flex items-center justify-between pb-4">
+				<SearchInput placeholder="궁금한 내용을 검색해보세요." />
+				<FilterButton label="최신순" />
 			</div>
 
-			{/* 텍스트 영역 */}
-			<div className="order-3 flex flex-1 flex-col px-4 sm:order-2 sm:px-6">
-				{/* 제목 + 내용 */}
-				<div className="flex flex-col gap-1">
-					{/* 데스크탑 제목 */}
-					<h3 className="hidden pt-4 text-base font-semibold text-gray-900 sm:block">{title}</h3>
-
-					{/* 설명 */}
-					<p className="line-clamp-2 pt-2 text-sm text-gray-600">{description}</p>
-				</div>
-
-				{/* 하단 메타 정보 */}
-				<div className="mt-auto flex items-center justify-between pb-6 text-xs leading-4 font-normal text-gray-500 sm:pb-6">
-					{/* 작성자 + 날짜 */}
-					<div className="flex items-center gap-2">
-						<div className="flex items-center gap-1">
-							<IcPerson color="gray-400" />
-							<span>{author}</span>
-						</div>
-						<span>{dayjs(date).format("YYYY.MM.DD")}</span>
-					</div>
-
-					{/* 시간 + 좋아요 + 댓글 */}
-					<div className="flex items-center gap-2">
-						<span>{getTimeAgo(date)}</span>
-
-						<div className="flex items-center gap-1">
-							<IcThumbOutline color="gray-400" />
-							<span>{likeCount}</span>
-						</div>
-
-						<div className="flex items-center gap-1">
-							<IcMessageOutline color="gray-400" />
-							<span>{commentCount}</span>
-						</div>
-					</div>
-				</div>
+			{/* 게시글 목록 */}
+			<div ref={containerRef} className="-mx-4 flex flex-col gap-12 rounded-3xl bg-white px-8 py-8">
+				{posts.map((post: Post) => (
+					<PostCard
+						key={post.id}
+						title={post.title}
+						description={post.content}
+						imageUrl={post.image}
+						author={post.author.name}
+						date={new Date(post.createdAt).getTime()}
+						likeCount={post.likeCount}
+						commentCount={post._count.comments}
+					/>
+				))}
 			</div>
-		</div>
+			{/* 페이지 이동 */}
+			<div className="flex items-center justify-center pt-10">
+				<Pagination
+					currentPage={page}
+					totalPages={9}
+					handlePageChange={(newPage) => {
+						//페이지 이동시 게시글 목록까지만 스크롤 이동
+						router.push(`?page=${newPage}`);
+
+						setTimeout(() => {
+							containerRef.current?.scrollIntoView({
+								behavior: "smooth",
+								block: "start",
+							});
+						}, 0);
+					}}
+				/>
+			</div>
+		</Container>
 	);
 }
