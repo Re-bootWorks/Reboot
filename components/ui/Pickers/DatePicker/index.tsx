@@ -1,6 +1,5 @@
 "use client";
 
-import type { ComponentProps } from "react";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/utils/cn";
@@ -9,14 +8,7 @@ import Button from "../../Buttons/Button";
 import Calendar from "./Calendar";
 import InputField from "../../Inputs/InputField";
 import { IcCalendarOutline } from "../../icons";
-
-type DatePickerProps = Omit<
-	ComponentProps<typeof InputField>,
-	"type" | "value" | "defaultValue" | "onChange" | "leftIcon" | "rightIcon" | "onRightIconClick"
-> & {
-	value?: string;
-	onChange?: (value: string) => void;
-};
+import { DatePickerProps } from "./types";
 
 export default function DatePicker({
 	value = "",
@@ -27,6 +19,8 @@ export default function DatePicker({
 	className,
 	readOnly,
 	disabled,
+	isDestructive,
+	hintText,
 	...props
 }: DatePickerProps) {
 	const selectedDate = useMemo(() => parseDateString(value), [value]);
@@ -54,19 +48,11 @@ export default function DatePicker({
 							readOnly
 							disabled={disabled}
 							leftIcon={<IcCalendarOutline className="size-4.5 text-gray-800 md:size-6" />}
+							hintText={hintText}
+							isDestructive={isDestructive}
+							inputClassName={cn(open && "border-purple-500")}
 							{...props}
 						/>
-
-						{!disabled && !readOnly && (
-							<div
-								aria-hidden="true"
-								className={cn(
-									"pointer-events-none absolute inset-x-0 z-10 rounded-[10px] border transition-colors md:rounded-[12px]",
-									label ? "bottom-0 h-10 md:h-12" : "top-0 h-10 md:h-12",
-									open ? "border-purple-500" : "border-transparent",
-								)}
-							/>
-						)}
 
 						{!disabled && !readOnly && (
 							<PopoverButton
@@ -77,7 +63,7 @@ export default function DatePicker({
 									setMonth(selectedDate ?? getKoreanToday());
 								}}
 								className={cn(
-									"absolute inset-x-0 z-20 cursor-pointer rounded-[10px] outline-none md:rounded-[12px]",
+									"absolute inset-x-0 z-20 cursor-pointer rounded-[0.625rem] outline-none md:rounded-xl",
 									label ? "bottom-0 h-10 md:h-12" : "top-0 h-10 md:h-12",
 								)}
 							/>
