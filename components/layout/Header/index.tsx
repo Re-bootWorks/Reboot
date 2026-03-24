@@ -15,6 +15,11 @@ import {
 import Image from "next/image";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import useToggle from "@/hooks/useToggle";
+import { useUserStore } from "@/store/user.store";
+import { useModalStore } from "@/store/modal.store";
+import { useLogout } from "@/features/auth/mutations";
+import { LoginModal } from "@/features/auth/components/LoginModal";
+import { SignUpModal } from "@/features/auth/components/SignUpModal";
 
 interface GNBProps {
 	favoritesCount: number;
@@ -69,6 +74,8 @@ function GNB({ favoritesCount, handleItemClick, showChevron = false, className }
 }
 
 function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: SidebarProps) {
+	const { mutate: logout } = useLogout();
+	const { openLogin } = useModalStore();
 	return (
 		<Dialog open={isOpen} onClose={handleSidebarClose} className={"relative z-30 md:hidden"}>
 			<DialogBackdrop className="bg-black-50 fixed inset-0" />
@@ -100,11 +107,23 @@ function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: Sideba
 					</nav>
 				</div>
 				{isLogin ? (
-					<button type="button" className={cn(STYLE.sidebarItem, "justify-end")}>
+					<button
+						type="button"
+						className={cn(STYLE.sidebarItem, "justify-end")}
+						onClick={() => {
+							logout();
+							handleSidebarClose();
+						}}>
 						<span className={STYLE.link}>로그아웃</span>
 					</button>
 				) : (
-					<button type="button" className={cn(STYLE.sidebarItem, "justify-end")}>
+					<button
+						type="button"
+						className={cn(STYLE.sidebarItem, "justify-end")}
+						onClick={() => {
+							openLogin();
+							handleSidebarClose();
+						}}>
 						<span className={STYLE.link}>로그인</span>
 					</button>
 				)}
@@ -115,8 +134,10 @@ function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: Sideba
 
 export default function Header() {
 	const { isOpen, open, close } = useToggle();
-	// @TODO 추후 기능 구현 예정
-	const isLogin = true;
+	const { user } = useUserStore();
+	const { openLogin } = useModalStore();
+	const { mutate: logout } = useLogout();
+	const isLogin = !!user;
 	const isAlarm = false;
 	const favoritesCount = 1;
 	const profile = null;
@@ -146,6 +167,12 @@ export default function Header() {
 							className={cn(isAlarm ? "cursor-pointer" : "cursor-default")}>
 							{isAlarm ? <IcBellUnreadOutline /> : <IcBellOutline />}
 						</button>
+						<button
+							type="button"
+							onClick={() => logout()}
+							className={cn(STYLE.link, "hidden md:block")}>
+							로그아웃
+						</button>
 						<div className="hidden md:block">
 							<button type="button" className={STYLE.image}>
 								<Image
@@ -159,7 +186,7 @@ export default function Header() {
 					</>
 				) : (
 					<>
-						<button type="button" className={cn(STYLE.link, "hidden md:block")}>
+						<button type="button" className={cn(STYLE.link, "hidden md:block")} onClick={openLogin}>
 							로그인
 						</button>
 					</>
