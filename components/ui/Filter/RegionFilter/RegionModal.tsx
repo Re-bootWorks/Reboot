@@ -48,7 +48,7 @@ export default function RegionModal({
 					<h2 className="text-lg font-semibold md:text-2xl">지역 선택</h2>
 
 					{/* 모달 닫기 버튼 */}
-					<button onClick={onClose}>
+					<button onClick={onClose} className="cursor-pointer">
 						<IcDelete />
 					</button>
 				</div>
@@ -62,7 +62,7 @@ export default function RegionModal({
 							setSelectedDistrict("");
 						}}
 						className={cn(
-							"flex h-[2.5rem] min-h-[2.5rem] w-full items-center justify-between gap-1.5 rounded-xl bg-gray-50 px-4 text-base text-gray-800 transition-colors",
+							"flex h-[2.5rem] min-h-[2.5rem] w-full cursor-pointer items-center justify-between gap-1.5 rounded-xl bg-gray-50 px-4 text-base text-gray-800 transition-colors",
 							"md:h-[2.875rem] md:min-h-[2.875rem]",
 							isAllSelected ? "border border-purple-500" : "border border-gray-50",
 						)}>
@@ -87,20 +87,20 @@ export default function RegionModal({
 
 				{/* 하단 버튼 영역 */}
 				<div className="mt-8 flex gap-2.5 md:mt-[3.5rem] md:gap-4">
-					{/* 취소 버튼 (변경사항 반영 X) */}
+					{/* 취소 버튼 */}
 					<button
 						onClick={onClose}
-						className="flex h-[3.75rem] flex-1 items-center justify-center rounded-2xl border">
+						className="flex h-[3.75rem] flex-1 cursor-pointer items-center justify-center rounded-2xl border border-gray-200">
 						취소
 					</button>
 
-					{/* 확인 버튼 (선택값 부모로 전달) */}
+					{/* 확인 버튼 */}
 					<button
 						onClick={() => {
 							onConfirm(selectedRegion, selectedDistrict);
 							onClose();
 						}}
-						className="flex h-[3.75rem] flex-1 items-center justify-center rounded-2xl bg-purple-500 text-white">
+						className="flex h-[3.75rem] flex-1 cursor-pointer items-center justify-center rounded-2xl bg-purple-500 text-white">
 						확인
 					</button>
 				</div>
