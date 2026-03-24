@@ -13,7 +13,12 @@ export async function POST() {
 		});
 
 		if (!response.ok) {
-			const data = await response.json();
+			let data;
+			try {
+				data = await response.json();
+			} catch {
+				data = null;
+			}
 			return NextResponse.json(data, { status: response.status });
 		}
 

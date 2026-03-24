@@ -14,18 +14,8 @@ export function useLogin(onSuccess: () => void) {
 			handleShowToast({ message: "로그인이 완료됐습니다.", status: "success" });
 			onSuccess();
 		},
-		onError: (error: Error & { status?: number }) => {
-			if (error.status === 401) {
-				handleShowToast({
-					message: "이메일 또는 비밀번호가 올바르지 않습니다.",
-					status: "error",
-				});
-			} else {
-				handleShowToast({
-					message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-					status: "error",
-				});
-			}
+		onError: (error: Error) => {
+			handleShowToast({ message: error.message, status: "error" });
 		},
 	});
 }
@@ -47,15 +37,8 @@ export function useSignUp(onSuccess: () => void) {
 			handleShowToast({ message: "회원가입이 완료됐습니다.", status: "success" });
 			onSuccess();
 		},
-		onError: (error: Error & { status?: number }) => {
-			if (error.status === 409) {
-				handleShowToast({ message: "이미 사용 중인 아이디입니다.", status: "error" });
-			} else {
-				handleShowToast({
-					message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-					status: "error",
-				});
-			}
+		onError: (error: Error) => {
+			handleShowToast({ message: error.message, status: "error" });
 		},
 	});
 }

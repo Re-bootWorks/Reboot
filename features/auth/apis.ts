@@ -7,7 +7,15 @@ export async function postLogin(data: { email: string; password: string }) {
 	});
 
 	if (!response.ok) {
-		const error = new Error("로그인 실패") as Error & { status: number };
+		let data;
+		try {
+			data = await response.json();
+		} catch {
+			data = null;
+		}
+		const error = new Error(data?.message ?? "오류가 발생했습니다.") as Error & {
+			status: number;
+		};
 		error.status = response.status;
 		throw error;
 	}
@@ -22,7 +30,15 @@ export async function postSignUp(data: { email: string; password: string; name: 
 	});
 
 	if (!response.ok) {
-		const error = new Error("회원가입 실패") as Error & { status: number };
+		let data;
+		try {
+			data = await response.json();
+		} catch {
+			data = null;
+		}
+		const error = new Error(data?.message ?? "오류가 발생했습니다.") as Error & {
+			status: number;
+		};
 		error.status = response.status;
 		throw error;
 	}

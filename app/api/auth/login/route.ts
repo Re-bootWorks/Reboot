@@ -10,7 +10,12 @@ export async function POST(request: NextRequest) {
 			body: JSON.stringify(body),
 		});
 
-		const data = await response.json();
+		let data;
+		try {
+			data = await response.json();
+		} catch {
+			data = null;
+		}
 
 		if (!response.ok) {
 			return NextResponse.json(data, { status: response.status });
