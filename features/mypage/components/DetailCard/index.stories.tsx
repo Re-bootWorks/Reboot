@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import DetailCard from ".";
-import { mockMyMeetups } from "./mockData";
+import { mockMyMeetups } from "@/features/mypage/mockData";
 
 const baseItem = mockMyMeetups[0];
 
