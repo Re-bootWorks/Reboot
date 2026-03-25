@@ -9,15 +9,14 @@ const AUTH_ROUTES = ["/login", "/signup"];
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 	const accessToken = request.cookies.get("accessToken")?.value;
-	const refreshToken = request.cookies.get("refreshToken")?.value;
 
-	// 로그인 한 유저가 로그인 및 회원가입 URL로 진입시 -> 홈으로 리다이렉트
-	if (AUTH_ROUTES.includes(pathname) && accessToken) {
+	// 로그인 한 유저가 로그인 및 회원가입 URL로 진입시: 홈으로 리다이렉트
+	if (AUTH_ROUTES.some((route) => pathname.startsWith(route)) && accessToken) {
 		return NextResponse.redirect(new URL("/", request.url));
 	}
 
-	// 인증되지 않은 유저가 인증이 필요한 URL로 진입시 -> 로그인페이지로이동
-	if (PROTECTED_ROUTES.includes(pathname) && !accessToken && !refreshToken) {
+	// 인증되지 않은 유저가 인증이 필요한 URL로 진입시:로그인페이지로이동
+	if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route)) && !accessToken) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
 
