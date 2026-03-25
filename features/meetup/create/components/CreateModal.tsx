@@ -13,28 +13,26 @@ import StepInfo from "./StepInfo";
 import StepSchedule from "./StepSchedule";
 import StepDesc from "./StepDesc";
 
+export default function CreateModal({ isOpen, onClose, onSubmit, isPending }: CreateModalProps) {
+	return (
+		<FormStepProvider totalSteps={TOTAL_STEPS}>
+			<FormDataProvider totalSteps={TOTAL_STEPS}>
+				<CreateForm isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} isPending={isPending} />
+			</FormDataProvider>
+		</FormStepProvider>
+	);
+}
+export type OnSubmit = (data: MeetupCreateData) => Promise<void>;
 interface CreateModalProps {
 	/** 모달 열기 상태 */
 	isOpen: boolean;
 	/** 모달 닫기 시 호출 */
 	onClose: () => void;
 	/** 제출 버튼 클릭 시 호출 */
-	onSubmit: (data: MeetupCreateData) => Promise<void>;
+	onSubmit: OnSubmit;
 	/** 제출 버튼 로딩 상태 */
 	isPending: boolean;
 }
-export type OnSubmit = (data: MeetupCreateData) => Promise<void>;
-
-export default function CreateModal({ isOpen, onClose, onSubmit, isPending }: CreateModalProps) {
-	return (
-		<FormStepProvider isOpen={isOpen} totalSteps={TOTAL_STEPS}>
-			<FormDataProvider isOpen={isOpen} totalSteps={TOTAL_STEPS}>
-				<CreateForm isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} isPending={isPending} />
-			</FormDataProvider>
-		</FormStepProvider>
-	);
-}
-
 function CreateForm({ isOpen, onClose, onSubmit, isPending }: CreateModalProps) {
 	const { currentStep } = useFormStep();
 

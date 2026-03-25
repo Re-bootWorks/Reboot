@@ -41,12 +41,9 @@ const initialData: MeetupCreateData = {
 };
 
 export default function FormDataProvider({
-	isOpen,
 	totalSteps,
 	children,
 }: {
-	/** 모달 열기 상태 */
-	isOpen: boolean;
 	/** 총 단계 숫자 */
 	totalSteps: number;
 	/** 폼 컴포넌트 */
@@ -71,11 +68,11 @@ export default function FormDataProvider({
 
 	// 모달이 닫히면 데이터, 유효성 초기화
 	useEffect(() => {
-		if (!isOpen) {
+		return () => {
 			setIsStepValid(Array(totalSteps).fill(false));
 			setData(initialData);
-		}
-	}, [isOpen, totalSteps]);
+		};
+	}, []);
 
 	return (
 		<FormDataContext.Provider

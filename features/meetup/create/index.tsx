@@ -1,24 +1,33 @@
 "use client";
 
+import useToggle from "@/hooks/useToggle";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useModal } from "@/hooks/use-modal";
-import CreateModal from "./components/CreateModal";
-import CreateOpenButton from "./components/CreateOpenButton";
+
+const CreateModal = dynamic(() => import("./components/CreateModal"), { ssr: false });
 
 export default function MeetUpCreate() {
-	const { isOpen, open, close } = useModal();
+	const router = useRouter();
+	const { close } = useToggle();
 	const [isPending, setIsPending] = useState(false);
+
+	function handleClickClose() {
+		close();
+		router.back();
+	}
 
 	async function handleSubmit() {
 		setIsPending(true);
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 		setIsPending(false);
 	}
-
 	return (
-		<>
-			<CreateOpenButton onClick={open} />
-			<CreateModal isOpen={isOpen} onClose={close} onSubmit={handleSubmit} isPending={isPending} />
-		</>
+		<CreateModal
+			isOpen={true}
+			onClose={handleClickClose}
+			onSubmit={handleSubmit}
+			isPending={isPending}
+		/>
 	);
 }

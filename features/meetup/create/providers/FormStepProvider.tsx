@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { createContext, useCallback, useContext, useEffect } from "react";
+import { createContext, useCallback, useContext } from "react";
 
 interface FormStepContextValue {
 	/** 현재 단계 숫자 */
@@ -27,13 +27,10 @@ export function useFormStep() {
 }
 
 export default function FormStepProvider({
-	isOpen,
 	step = 1,
 	totalSteps,
 	children,
 }: {
-	/** 모달 열기 상태 */
-	isOpen: boolean;
 	/** 현재 단계 숫자 */
 	step?: number;
 	/** 총 단계 숫자 */
@@ -61,15 +58,6 @@ export default function FormStepProvider({
 		params.set(QUERY_KEY, String(current - 1));
 		router.replace(`${pathname}?${params}`);
 	}, [router, pathname, searchParams]);
-
-	// 모달이 닫히면 쿼리스트링 삭제
-	useEffect(() => {
-		if (!isOpen) {
-			const params = new URLSearchParams(searchParams.toString());
-			params.delete(QUERY_KEY);
-			router.replace(`${pathname}?${params}`);
-		}
-	}, [isOpen, pathname, router, searchParams]);
 
 	return (
 		<FormStepContext.Provider value={{ currentStep, totalSteps, next, prev }}>
