@@ -33,7 +33,7 @@ export default function FilterTrigger({
 				"flex items-center gap-1 whitespace-nowrap",
 
 				"border-none shadow-none",
-				"bg-gray-100",
+				"bg-transparent",
 
 				className,
 			)}>

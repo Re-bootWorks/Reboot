@@ -7,6 +7,8 @@ import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
 import Button from "@/components/ui/Buttons/Button";
 import FilterTrigger from "@/components/ui/Filter/FilterTrigger";
+import { useIsMd } from "@/hooks/useIsMd";
+import { cn } from "@/utils/cn";
 
 type DateFilterProps = {
 	value: string;
@@ -20,7 +22,7 @@ function formatDisplayDate(date: Date) {
 export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 	const [month, setMonth] = useState<Date>(getKoreanToday());
 	const [draftDate, setDraftDate] = useState<Date | undefined>();
-
+	const isMd = useIsMd();
 	const parsed = parseDateString(value);
 
 	useEffect(() => {
@@ -40,7 +42,11 @@ export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 						</FilterTrigger>
 					</PopoverButton>
 
-					<PopoverPanel className="absolute z-20 mt-2 w-74.5 rounded-xl border border-gray-200 bg-white p-6 shadow-xl">
+					<PopoverPanel
+						className={cn(
+							"absolute z-20 mt-2 w-74.5 rounded-xl border border-gray-200 bg-white p-6 shadow-xl",
+							isMd ? "left-0" : "right-0",
+						)}>
 						<Calendar
 							month={month}
 							selectedDate={draftDate}
