@@ -7,10 +7,19 @@ interface InputFieldProps extends ComponentProps<typeof Input> {
 	label?: string;
 	isRequired?: boolean;
 	hintText?: string;
+	inputClassName?: string;
 }
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function InputField(
-	{ label, isRequired = false, hintText, isDestructive = false, className, ...props },
+	{
+		label,
+		isRequired = false,
+		hintText,
+		isDestructive = false,
+		className,
+		inputClassName,
+		...props
+	},
 	ref,
 ) {
 	return (
@@ -26,6 +35,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function InputF
 					id={id}
 					aria-describedby={hintText ? descriptionId : undefined}
 					isDestructive={isDestructive}
+					className={inputClassName}
 					{...props}
 				/>
 			)}

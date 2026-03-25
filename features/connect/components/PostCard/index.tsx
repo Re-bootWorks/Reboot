@@ -1,0 +1,87 @@
+import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
+import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
+import IcPerson from "@/components/ui/icons/IcPerson";
+
+import dayjs from "@/libs/dayjs";
+
+type PostCardProps = {
+	title: string;
+	description: string;
+	imageUrl: string;
+	author: string;
+	date: number;
+	likeCount: number;
+	commentCount: number;
+	onClick?: () => void;
+};
+
+function getTimeAgo(timestamp: number) {
+	return dayjs(timestamp).fromNow();
+}
+
+export default function ConnectCard({
+	title,
+	description,
+	imageUrl,
+	author,
+	date,
+	likeCount,
+	commentCount,
+	onClick,
+}: PostCardProps) {
+	return (
+		/* 카드 전체 */
+		<div
+			onClick={onClick}
+			className="flex h-[19.375rem] w-full max-w-[18.4375rem] cursor-pointer flex-col rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
+			{/* 모바일 제목 */}
+			<h3 className="truncate pt-2 pb-3 text-base leading-6 font-bold tracking-[-0.02em] text-gray-900 sm:hidden">
+				{title}
+			</h3>
+
+			{/* 썸네일 이미지 */}
+			<div className="order-2 h-[9rem] w-[18.375rem] shrink-0 overflow-hidden rounded-xl sm:order-1 sm:h-full sm:w-[12.5rem]">
+				<img src={imageUrl} alt={title} className="h-full w-full object-cover" />
+			</div>
+
+			{/* 텍스트 영역 */}
+			<div className="order-3 flex flex-1 flex-col px-4 sm:order-2 sm:px-6">
+				{/* 제목 + 내용 */}
+				<div className="flex flex-col gap-1">
+					{/* 데스크탑 제목 */}
+					<h3 className="hidden pt-4 text-base font-semibold text-gray-900 sm:block">{title}</h3>
+
+					{/* 설명 */}
+					<p className="line-clamp-2 pt-2 text-sm text-gray-600">{description}</p>
+				</div>
+
+				{/* 하단 메타 정보 */}
+				<div className="mt-auto flex items-center justify-between pb-6 text-xs leading-4 font-normal text-gray-500 sm:pb-6">
+					{/* 작성자 + 날짜 */}
+					<div className="flex items-center gap-2">
+						<div className="flex items-center gap-1">
+							<IcPerson color="gray-400" />
+							<span>{author}</span>
+						</div>
+						<span>{dayjs(date).format("YYYY.MM.DD")}</span>
+					</div>
+
+					{/* 시간 + 좋아요 + 댓글 */}
+					<div className="flex items-center gap-2">
+						<span>{getTimeAgo(date)}</span>
+
+						<div className="flex items-center gap-1">
+							<IcThumbOutline color="gray-400" />
+							<span>{likeCount}</span>
+						</div>
+
+						<div className="flex items-center gap-1">
+							<IcMessageOutline color="gray-400" />
+							<span>{commentCount}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}

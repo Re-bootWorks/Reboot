@@ -2,14 +2,9 @@
 import Image from "next/image";
 import UtilityButton from "@/components/ui/Buttons/UtilityButton";
 import { DeadlineTag } from "@/components/ui/Tags/DeadlineTag";
-import {
-	isDeadlinePassed,
-	uiFormatDate,
-	uiFormatDeadline,
-	uiFormatTime,
-} from "@/features/meetupDetail/utills";
 import { TimeTag } from "@/components/ui/Tags/TimeTag";
 import { IcLocation } from "@/components/ui/icons";
+import { isDeadlinePassed, uiFormatDate, uiFormatDeadline, uiFormatTime } from "@/utils/date";
 
 interface CompactCardsProps {
 	registrationEnd: string;
@@ -36,7 +31,7 @@ export default function CompactCards({
 			<div className="relative h-40.5 w-40.5 overflow-hidden rounded-2xl md:h-45 md:w-75.5 md:rounded-3xl">
 				<Image
 					alt={"모임 이미지"}
-					src="./assets/img/img_purple_empty.svg"
+					src="/assets/img/img_empty_purple.svg"
 					fill
 					className="object-cover"
 				/>

@@ -13,7 +13,7 @@ export function FilterButton({ label, isActive = false, onClick, className }: Fi
 		<button
 			onClick={onClick}
 			className={cn(
-				"flex h-8 items-center gap-1 rounded-lg px-3 text-sm font-semibold transition-colors",
+				"flex h-8 items-center gap-1 rounded-lg text-sm font-semibold transition-colors",
 				isActive ? "text-gray-800" : "text-gray-600",
 				className,
 			)}>

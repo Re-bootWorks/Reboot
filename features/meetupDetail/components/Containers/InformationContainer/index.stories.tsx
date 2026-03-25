@@ -11,7 +11,6 @@ const meta: Meta<typeof InformationContainer> = {
 		region: { control: "text" },
 		dateTime: { control: "text" },
 		registrationEnd: { control: "text" },
-		capacity: { control: "number" },
 		isHost: { control: "boolean" },
 	},
 };

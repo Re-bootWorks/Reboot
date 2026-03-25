@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 
 /**
 <input type="file" name="file" ref={inputRef} onChange={changeFile} />
@@ -25,7 +25,16 @@ export default function useInputImage({ inputRef, defaultUrl = null, onChange }:
 	function resetFile() {
 		revokePrevPreviewUrl();
 		setPreviewUrl(null);
-		if (inputRef && "current" in inputRef && inputRef.current) inputRef.current.value = "";
+
+		const input = inputRef && "current" in inputRef ? inputRef.current : null;
+		if (!input) return;
+		input.value = "";
+
+		// 파일 선택 해제 시 onChange를 직접 호출
+		onChange?.({
+			target: input,
+			currentTarget: input,
+		} as ChangeEvent<HTMLInputElement>);
 	}
 
 	async function changeFile(e: React.ChangeEvent<HTMLInputElement>) {
