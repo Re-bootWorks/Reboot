@@ -122,7 +122,7 @@ const optionsVariants = [
 ];
 
 const optionContentVariants = [
-	"flex select-none items-center rounded-lg px-2.5 py-4 font-medium transition-colors md:text-base text-gray-800",
-	"focus:bg-gray-50",
+	"w-full cursor-pointer flex select-none items-center rounded-lg px-2.5 py-4 font-medium transition-colors md:text-base text-gray-800",
+	"hover:bg-gray-50 focus:bg-gray-50",
 	"disabled:cursor-not-allowed disabled:text-gray-300",
 ];
