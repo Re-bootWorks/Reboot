@@ -4,11 +4,11 @@ import { User } from "@/features/auth/types";
 
 interface UserStore {
 	user: User | null;
-	isLoading: boolean;
+	isPending: boolean;
 	isError: boolean;
 	setUser: (user: User) => void;
 	clearUser: () => void;
-	setIsLoading: (isLoading: boolean) => void;
+	setIsPending: (isPending: boolean) => void;
 	setIsError: (isError: boolean) => void;
 }
 
@@ -16,11 +16,11 @@ export const useUserStore = create<UserStore>()(
 	devtools(
 		(set) => ({
 			user: null,
-			isLoading: true,
+			isPending: true,
 			isError: false,
 			setUser: (user) => set({ user }),
 			clearUser: () => set({ user: null }),
-			setIsLoading: (isLoading) => set({ isLoading }),
+			setIsPending: (isPending) => set({ isPending }),
 			setIsError: (isError) => set({ isError }),
 		}),
 		{ name: "UserStore" },

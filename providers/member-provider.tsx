@@ -5,19 +5,19 @@ import { useGetMe } from "@/features/auth/queries";
 import { useUserStore } from "@/store/user.store";
 
 export function MemberProvider({ children }: { children: React.ReactNode }) {
-	const { data: user, isSuccess, isLoading, isError } = useGetMe();
-	const { setUser, clearUser, setIsLoading, setIsError } = useUserStore();
+	const { data: user, isSuccess, isPending, isError } = useGetMe();
+	const { setUser, clearUser, setIsPending, setIsError } = useUserStore();
 
 	useEffect(() => {
-		setIsLoading(isLoading);
+		setIsPending(isPending);
 		setIsError(isError);
 
 		if (isSuccess && user) {
 			setUser(user);
-		} else if (!isLoading) {
+		} else if (!isPending) {
 			clearUser();
 		}
-	}, [isSuccess, isLoading, isError, user]);
+	}, [isSuccess, isPending, isError, user]);
 
 	return <>{children}</>;
 }
