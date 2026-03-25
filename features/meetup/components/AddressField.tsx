@@ -5,7 +5,7 @@ import { cn } from "@/utils/cn";
 import Input from "@/components/ui/Inputs/Input";
 import InputField from "@/components/ui/Inputs/InputField";
 import { IcLocation } from "@/components/ui/icons";
-import { KakaoAddressFunc, KakaoAddressItem } from "../types";
+import { GetKakaoAddressFn, KakaoAddressItem } from "../types";
 
 interface AddressFieldProps {
 	/** 주소 검색 콤보박스 열림 여부 */
@@ -17,7 +17,7 @@ interface AddressFieldProps {
 	/** 주소 입력 값 변경 함수 */
 	setValue: React.Dispatch<React.SetStateAction<AddressValues>>;
 	/** 카카오 주소 검색 함수 */
-	kakaoAddressFunc: KakaoAddressFunc;
+	getKakaoAddressFn: GetKakaoAddressFn;
 }
 
 export type AddressValues = {
@@ -39,13 +39,13 @@ export default function AddressField({
 	setIsComboOpened,
 	value,
 	setValue,
-	kakaoAddressFunc,
+	getKakaoAddressFn,
 }: AddressFieldProps) {
 	const [kakaoAddressData, setKakaoAddressData] = useState<KakaoAddressItem[]>([]);
 
 	async function handleChangeAddress(e: React.ChangeEvent<HTMLInputElement>) {
 		setValue((prev) => ({ ...prev, addressName: e.target.value }));
-		const data = await kakaoAddressFunc(e);
+		const data = await getKakaoAddressFn(e);
 		if (data) {
 			setKakaoAddressData(data);
 		}

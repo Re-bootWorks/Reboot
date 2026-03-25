@@ -1,4 +1,4 @@
-export type KakaoAddressFunc = (
+export type GetKakaoAddressFn = (
 	e: React.ChangeEvent<HTMLInputElement>,
 ) => Promise<KakaoAddressItem[]>;
 
@@ -37,4 +37,4 @@ export interface KakaoAddressItem {
 	y: string;
 }
 
-export type UploadImageFunc = (e: React.ChangeEvent<HTMLInputElement>) => Promise<string>;
+export type UploadImageFn = (e: React.ChangeEvent<HTMLInputElement>) => Promise<string>;

@@ -1,7 +1,7 @@
 "use client";
 
 import InputFile from "@/components/ui/Inputs/InputFile";
-import { UploadImageFunc } from "../types";
+import { UploadImageFn } from "../types";
 
 interface FileFieldProps {
 	/** 기본 이미지 */
@@ -9,7 +9,7 @@ interface FileFieldProps {
 	/** 이미지 값 변경 함수 */
 	onChange: (image: string, e: React.ChangeEvent<HTMLInputElement>) => void;
 	/** 이미지 업로드 함수 */
-	uploadImageFunc: UploadImageFunc;
+	uploadImageFn: UploadImageFn;
 	/** 필드명 @default "imageUrl" */
 	name?: string;
 }
@@ -17,10 +17,10 @@ export default function FileField({
 	defaultUrl,
 	name = "imageUrl",
 	onChange,
-	uploadImageFunc,
+	uploadImageFn,
 }: FileFieldProps) {
 	async function handleUploadImage(e: React.ChangeEvent<HTMLInputElement>) {
-		const res = await uploadImageFunc(e);
+		const res = await uploadImageFn(e);
 		onChange(res, e);
 	}
 

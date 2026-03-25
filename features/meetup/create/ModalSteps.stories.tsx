@@ -36,7 +36,7 @@ export const StepInfoStory: Story = {
 	name: "StepInfo",
 	render: () => (
 		<StepStoryShell step={2}>
-			<StepInfo step={2} uploadImageFunc={mockUploadImage} kakaoAddressFunc={mockKakaoAddress} />
+			<StepInfo step={2} uploadImageFn={mockUploadImage} getKakaoAddressFn={mockGetKakaoAddress} />
 		</StepStoryShell>
 	),
 };
@@ -95,6 +95,18 @@ function StepStoryShell({ step, children }: { step: number; children: React.Reac
 const TITLE = "모임 만들기";
 const TOTAL_STEPS = 4;
 
+async function mockUploadImage(e: React.ChangeEvent<HTMLInputElement>) {
+	const file = e.target.files?.[0];
+	if (file) {
+		const url = URL.createObjectURL(file);
+		return url;
+	} else return "";
+}
+
+async function mockGetKakaoAddress() {
+	return MOCK_KAKAO_DATA;
+}
+
 const MOCK_KAKAO_DATA: KakaoAddressItem[] = [
 	{
 		address: {
@@ -131,15 +143,3 @@ const MOCK_KAKAO_DATA: KakaoAddressItem[] = [
 		y: "37.4978399531903",
 	},
 ];
-
-async function mockUploadImage(e: React.ChangeEvent<HTMLInputElement>) {
-	const file = e.target.files?.[0];
-	if (file) {
-		const url = URL.createObjectURL(file);
-		return url;
-	} else return "";
-}
-
-async function mockKakaoAddress() {
-	return MOCK_KAKAO_DATA;
-}

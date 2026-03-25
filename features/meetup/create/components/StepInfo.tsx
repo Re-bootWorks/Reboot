@@ -1,20 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { GetKakaoAddressFn, UploadImageFn } from "../../types";
 import { getAddress, getRegion } from "../../utils";
 import { useFormData } from "../providers/FormDataProvider";
 import AddressField, { AddressValues } from "../../components/AddressField";
 import NameField from "../../components/NameField";
 import FileField from "../../components/FileField";
-import { KakaoAddressItem } from "../../types";
 
 interface StepInfoProps {
 	/** 단계 숫자 */
 	step: number;
-	uploadImageFunc: (e: React.ChangeEvent<HTMLInputElement>) => Promise<string>;
-	kakaoAddressFunc: (e: React.ChangeEvent<HTMLInputElement>) => Promise<KakaoAddressItem[]>;
+	uploadImageFn: UploadImageFn;
+	getKakaoAddressFn: GetKakaoAddressFn;
 }
-export default function StepInfo({ step, uploadImageFunc, kakaoAddressFunc }: StepInfoProps) {
+export default function StepInfo({ step, uploadImageFn, getKakaoAddressFn }: StepInfoProps) {
 	const { setStepValid, setData } = useFormData();
 	const [isComboOpened, setIsComboOpened] = useState(false);
 	const [addressValues, setAddressValues] = useState<AddressValues>({
@@ -55,9 +55,9 @@ export default function StepInfo({ step, uploadImageFunc, kakaoAddressFunc }: St
 				setIsComboOpened={setIsComboOpened}
 				value={addressValues}
 				setValue={setAddressValues}
-				kakaoAddressFunc={kakaoAddressFunc}
+				getKakaoAddressFn={getKakaoAddressFn}
 			/>
-			<FileField defaultUrl={image} onChange={setImage} uploadImageFunc={uploadImageFunc} />
+			<FileField defaultUrl={image} onChange={setImage} uploadImageFn={uploadImageFn} />
 		</fieldset>
 	);
 }
