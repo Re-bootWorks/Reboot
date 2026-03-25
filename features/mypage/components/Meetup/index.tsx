@@ -169,18 +169,14 @@ export default function Meetup() {
 	async function handleAlertConfirm() {
 		if (!alertTarget || !alertAction) return;
 
-		if (alertAction === "confirm") {
-			console.log("모임 확정 API", alertTarget.id);
-		}
-		if (alertAction === "delete") {
-			console.log("모임 삭제 API", alertTarget.id);
-		}
-		if (alertAction === "cancelMeetup") {
-			console.log("모임 취소 API", alertTarget.id);
-		}
-		if (alertAction === "cancelReservation") {
-			console.log("모임 예약 취소 API", alertTarget.id);
-		}
+		const actionHandlers: Record<AlertAction, () => void> = {
+			confirm: () => console.log("모임 확정 API", alertTarget.id),
+			delete: () => console.log("모임 삭제 API", alertTarget.id),
+			cancelMeetup: () => console.log("모임 취소 API", alertTarget.id),
+			cancelReservation: () => console.log("모임 예약 취소 API", alertTarget.id),
+		};
+
+		actionHandlers[alertAction]();
 	}
 	// 리뷰 제출 시
 	async function handleReviewSubmit(reviewFormValues: ReviewFormValues) {
