@@ -23,6 +23,7 @@ interface MeetupActionHandlers {
 
 type AlertAction = "confirm" | "delete" | "cancelMeetup" | "cancelReservation";
 
+// alert 메세지
 const ALERT_MESSAGE = {
 	confirm: "모임을 확정하시겠습니까?",
 	delete: "모임을 삭제하시겠습니까?",
@@ -118,10 +119,13 @@ export default function Meetup() {
 
 	// @TODO 추후 zustand로 변경
 	const userId = 1333;
-	const [items, setItems] = useState(initialMeetups);
+	const [items, setItems] = useState(initialMeetups); // 삭제, 확정, 취소, 리뷰 성공 시 아이템 업데이트
 	const { handleWishToggle } = useMeetingFavorite(setItems);
+	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
 	const [reviewTarget, setReviewTarget] = useState<MeetupItem | null>(null);
+	// 어떤 모임에 대해 alert을 띄웠는지
 	const [alertTarget, setAlertTarget] = useState<MeetupItem | null>(null);
+	// alert이 어떤 행동을 할것인지
 	const [alertAction, setAlertAction] = useState<AlertAction | null>(null);
 
 	// alert modal 닫기
@@ -135,7 +139,7 @@ export default function Meetup() {
 		setReviewTarget(null);
 	}
 
-	// DetailCard 버튼 핸들러
+	// DetailCard 버튼 핸들러 - 실제 api 행동이 아닌 alert을 우선 띄움
 	function meetupActionHandlers(item: MeetupItem): MeetupActionHandlers {
 		return {
 			// 모임 확정하기
@@ -165,7 +169,7 @@ export default function Meetup() {
 		};
 	}
 
-	// Alert 확인 시
+	// Alert 확인 시 api 연결
 	async function handleAlertConfirm() {
 		if (!alertTarget || !alertAction) return;
 
