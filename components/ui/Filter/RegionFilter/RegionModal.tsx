@@ -7,13 +7,18 @@ import IcCheck from "@/components/ui/icons/IcCheck";
 import { cn } from "@/utils/cn";
 import RegionDropdown from "@/components/ui/Dropdowns/RegionDropdown";
 import Button from "@/components/ui/Buttons/Button";
+import { Option } from "./option";
 
 interface RegionModalProps {
 	isOpen: boolean; // 모달 열림 여부
 	onClose: () => void; // 모달 닫기 함수
-	onConfirm: (region: string, district: string) => void; // 선택값을 부모로 전달
-	initialRegion: string; // 부모에서 전달받은 초기 지역값
-	initialDistrict: string; // 부모에서 전달받은 초기 구/군 값
+	onConfirm: (data: {
+		region: Option | null;
+		district: Option | null;
+		fullLabel: string; //조합된 전체 텍스트
+	}) => void;
+	initialRegion: Option | null; // 부모에서 전달받은 초기 지역값
+	initialDistrict: Option | null; // 부모에서 전달받은 초기 구/군 값
 }
 
 export default function RegionModal({
@@ -24,8 +29,8 @@ export default function RegionModal({
 	initialDistrict,
 }: RegionModalProps) {
 	// 모달 내부에서 임시로 관리하는 선택 상태
-	const [selectedRegion, setSelectedRegion] = useState(initialRegion);
-	const [selectedDistrict, setSelectedDistrict] = useState(initialDistrict);
+	const [selectedRegion, setSelectedRegion] = useState<Option | null>(null);
+	const [selectedDistrict, setSelectedDistrict] = useState<Option | null>(null);
 
 	// 모달이 열릴 때마다 부모의 값을 기준으로 상태 초기화
 	useEffect(() => {
@@ -40,6 +45,31 @@ export default function RegionModal({
 
 	// "지역 전체" 선택 여부 (UI 상태 판단)
 	const isAllSelected = !selectedRegion && !selectedDistrict;
+
+	// 지역/구군 선택 시 상태 업데이트
+	const handleSelect = (region: Option, district: Option) => {
+		setSelectedRegion(region);
+		setSelectedDistrict(district);
+	};
+
+	//  선택값 전체 초기화
+	const handleAll = () => {
+		setSelectedRegion(null);
+		setSelectedDistrict(null);
+	};
+
+	// 확인 버튼 클릭 시 최종 선택값 전달 후 모달 닫기
+	const handleConfirm = () => {
+		const fullLabel =
+			selectedRegion && selectedDistrict ? `${selectedRegion.label} ${selectedDistrict.label}` : "";
+		onConfirm({
+			region: selectedRegion,
+			district: selectedDistrict,
+			fullLabel,
+		});
+
+		onClose();
+	};
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -58,12 +88,9 @@ export default function RegionModal({
 				<div className="scrollbar flex flex-1 flex-col gap-4 overflow-y-auto">
 					{/* 지역 전체 */}
 					<button
-						onClick={() => {
-							setSelectedRegion("");
-							setSelectedDistrict("");
-						}}
+						onClick={handleAll}
 						className={cn(
-							"flex h-[2.5rem] min-h-[2.5rem] w-full cursor-pointer items-center justify-between gap-1.5 rounded-xl bg-gray-50 px-3 py-2.5 text-sm text-gray-800 transition-colors",
+							"flex h-[2.5rem] min-h-[2.5rem] w-full cursor-pointer items-center justify-between gap-1.5 rounded-xl bg-gray-50 px-3 py-2.5 text-sm text-gray-800 transition-colors md:text-base",
 							"md:h-[2.875rem] md:min-h-[3rem]",
 							isAllSelected ? "border border-purple-500" : "border border-gray-50",
 						)}>
@@ -77,10 +104,13 @@ export default function RegionModal({
 							key={region.value}
 							triggerLabel={region.label}
 							options={region.districts.map((d) => d.label)}
-							value={selectedRegion === region.value ? selectedDistrict : ""}
-							onChange={(value: string) => {
-								setSelectedRegion(region.value);
-								setSelectedDistrict(value);
+							value={selectedRegion?.value === region.value ? (selectedDistrict?.label ?? "") : ""}
+							onChange={(label: string) => {
+								const districtOption = region.districts.find((d) => d.label === label);
+
+								if (!districtOption) return;
+
+								handleSelect({ value: region.value, label: region.label }, districtOption);
 							}}
 						/>
 					))}
@@ -98,10 +128,7 @@ export default function RegionModal({
 
 					{/* 확인 버튼 */}
 					<Button
-						onClick={() => {
-							onConfirm(selectedRegion, selectedDistrict);
-							onClose();
-						}}
+						onClick={handleConfirm}
 						className="h-12 w-[141px] rounded-2xl md:h-[3.75rem] md:w-auto md:flex-1 md:text-xl">
 						확인
 					</Button>

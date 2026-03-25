@@ -6,12 +6,14 @@ import IcChevronDown from "@/components/ui/icons/IcChevronDown";
 import RegionModal from "./RegionModal";
 import { REGION_DATA } from "@/constants/region";
 import Button from "../../Buttons/Button";
+import { Option } from "./option";
+
 interface RegionButtonProps {
 	value: {
-		region: string;
-		district: string;
+		region: Option | null;
+		district: Option | null;
 	};
-	onChange: (region: string, district: string) => void;
+	onChange: (data: { region: Option | null; district: Option | null; fullLabel: string }) => void;
 	className?: string;
 }
 
@@ -22,15 +24,8 @@ export default function RegionFilter({ value, onChange, className }: RegionButto
 		const { region, district } = value;
 
 		if (!region) return "지역 전체";
-
-		const foundRegion = REGION_DATA.find((r) => r.value === region);
-		if (!foundRegion) return "지역 전체";
-
-		if (!district) return foundRegion.label;
-
-		const foundDistrict = foundRegion.districts.find((d) => d.value === district);
-
-		return foundDistrict?.label ?? foundRegion.label;
+		if (!district) return region.label;
+		return `${region.label} ${district.label}`;
 	};
 
 	return (
@@ -55,8 +50,8 @@ export default function RegionFilter({ value, onChange, className }: RegionButto
 			<RegionModal
 				isOpen={isOpen}
 				onClose={() => setIsOpen(false)}
-				onConfirm={(region, district) => {
-					onChange(region, district);
+				onConfirm={(data) => {
+					onChange(data);
 				}}
 				initialRegion={value.region}
 				initialDistrict={value.district}
