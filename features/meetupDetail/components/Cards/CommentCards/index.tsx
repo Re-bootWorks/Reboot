@@ -5,12 +5,7 @@ import { ReviewScore } from "@/features/reviews/components/ReviewCard";
 import { Rating, Heart } from "@smastrom/react-rating";
 import { formatIsoDateWithDots } from "@/utils/date";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
-
-export type User = {
-	id: number;
-	name: string;
-	image: string | null;
-};
+import { User } from "@/features/meetupDetail/types";
 
 export interface CommentProps {
 	id: number;

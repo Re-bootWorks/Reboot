@@ -1,5 +1,5 @@
+import { Participant } from "@/features/meetupDetail/types";
 import Image from "next/image";
-import { Participant } from "@/features/meetupDetail/components/Containers/PersonnelContainer";
 
 // TODO: 추후 API 응답 타입으로 대체 예정
 
@@ -27,6 +27,7 @@ export function Participants({ participants }: ParticipantsImageProps) {
 						width={32}
 						height={32}
 						className="h-full w-full object-cover"
+						priority
 					/>
 				</div>
 			))}
