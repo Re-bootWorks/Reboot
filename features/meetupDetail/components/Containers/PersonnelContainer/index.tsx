@@ -2,15 +2,8 @@ import React from "react";
 import { StatusLabel } from "@/components/ui/StatusLabel";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { Participants } from "@/components/ui/Participants";
+import { Participant } from "@/features/meetupDetail/types";
 
-export interface Participant {
-	id: number;
-	user: {
-		id: number;
-		name: string;
-		image: string | null;
-	};
-}
 // TODO: 추후, API 응답 타입에 따라 변경 가능
 interface PersonnelProps {
 	capacity: number;

@@ -708,3 +708,5 @@ FodyWeavers.xsd
 
 # vscode setting
 .vscode
+
+.env

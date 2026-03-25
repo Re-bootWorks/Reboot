@@ -1,0 +1,40 @@
+export type GetKakaoAddressFn = (
+	e: React.ChangeEvent<HTMLInputElement>,
+) => Promise<KakaoAddressItem[]>;
+
+export interface KakaoAddressItem {
+	address: {
+		address_name: string;
+		b_code: string;
+		h_code: string;
+		main_address_no: string;
+		mountain_yn: string;
+		region_1depth_name: string;
+		region_2depth_name: string;
+		region_3depth_h_name: string;
+		region_3depth_name: string;
+		sub_address_no: string;
+		x: string;
+		y: string;
+	};
+	address_name: string;
+	address_type: "REGION" | "ROAD" | "REGION_ADDR" | "ROAD_ADDR";
+	road_address: {
+		address_name: string;
+		building_name: string;
+		main_building_no: string;
+		region_1depth_name: string;
+		region_2depth_name: string;
+		region_3depth_name: string;
+		road_name: string;
+		sub_building_no: string;
+		underground_yn: string;
+		x: string;
+		y: string;
+		zone_no: string;
+	};
+	x: string;
+	y: string;
+}
+
+export type UploadImageFn = (e: React.ChangeEvent<HTMLInputElement>) => Promise<string>;
