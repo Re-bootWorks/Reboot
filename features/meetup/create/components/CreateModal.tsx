@@ -2,7 +2,7 @@
 
 import { Modal } from "@/components/ui/Modals";
 import { cn } from "@/utils/cn";
-import { MeetupCreateData } from "../types";
+import { MeetupCreateData } from "../../types";
 import { getKakaoAddress, uploadImage } from "../../apis";
 import FormStepProvider, { useFormStep } from "../providers/FormStepProvider";
 import FormDataProvider from "../providers/FormDataProvider";
@@ -13,27 +13,27 @@ import StepInfo from "./StepInfo";
 import StepSchedule from "./StepSchedule";
 import StepDesc from "./StepDesc";
 
-export default function CreateModal({ isOpen, onClose, onSubmit, isPending }: CreateModalProps) {
+export default function CreateModal({ isOpen, onClose, onSuccess }: CreateModalProps) {
 	return (
 		<FormStepProvider totalSteps={TOTAL_STEPS}>
 			<FormDataProvider totalSteps={TOTAL_STEPS}>
-				<CreateForm isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} isPending={isPending} />
+				<CreateForm isOpen={isOpen} onClose={onClose} onSuccess={onSuccess} />
 			</FormDataProvider>
 		</FormStepProvider>
 	);
 }
 export type OnSubmit = (data: MeetupCreateData) => Promise<void>;
+export type OnSuccess = (id: number) => void;
+
 interface CreateModalProps {
 	/** 모달 열기 상태 */
 	isOpen: boolean;
 	/** 모달 닫기 시 호출 */
 	onClose: () => void;
-	/** 제출 버튼 클릭 시 호출 */
-	onSubmit: OnSubmit;
-	/** 제출 버튼 로딩 상태 */
-	isPending: boolean;
+	/** 모임 생성 성공 시 호출 */
+	onSuccess: OnSuccess;
 }
-function CreateForm({ isOpen, onClose, onSubmit, isPending }: CreateModalProps) {
+function CreateForm({ isOpen, onClose, onSuccess }: CreateModalProps) {
 	const { currentStep } = useFormStep();
 
 	return (
@@ -42,7 +42,7 @@ function CreateForm({ isOpen, onClose, onSubmit, isPending }: CreateModalProps) 
 			isOpen={isOpen}
 			onClose={onClose}
 			title={<FormHeader>{TITLE}</FormHeader>}
-			footer={<FormFooter onClose={onClose} isPending={isPending} onSubmit={onSubmit} />}>
+			footer={<FormFooter onClose={onClose} onSuccess={onSuccess} />}>
 			<form className="overflow-hidden">
 				{STEP_COMPS.map((Comp) => {
 					const isInvisible = Comp.props.step !== currentStep;

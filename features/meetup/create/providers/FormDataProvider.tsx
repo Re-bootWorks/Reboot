@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { MeetupCreateData } from "../types";
+import { MeetupCreateData } from "../../types";
 
 interface FormDataContextValue {
 	/** 단계 유효성 조회 */

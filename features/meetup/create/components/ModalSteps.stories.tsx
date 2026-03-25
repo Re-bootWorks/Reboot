@@ -1,15 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
-import { KakaoAddressItem } from "../types";
+import { KakaoAddressItem } from "../../types";
 import { Modal } from "@/components/ui/Modals";
-import FormStepProvider from "./providers/FormStepProvider";
-import FormDataProvider from "./providers/FormDataProvider";
-import FormHeader from "./components/FormHeader";
-import FormFooter from "./components/FormFooter";
-import StepTypeSelect from "./components/StepTypeSelect";
-import StepInfo from "./components/StepInfo";
-import StepDesc from "./components/StepDesc";
-import StepSchedule from "./components/StepSchedule";
+import FormStepProvider from "@/features/meetup/create/providers/FormStepProvider";
+import FormDataProvider from "@/features/meetup/create/providers/FormDataProvider";
+import { ToastProvider } from "@/providers/toast-provider";
+import FormHeader from "./FormHeader";
+import FormFooter from "./FormFooter";
+import StepTypeSelect from "./StepTypeSelect";
+import StepInfo from "./StepInfo";
+import StepDesc from "./StepDesc";
+import StepSchedule from "./StepSchedule";
 
 const meta: Meta = {
 	title: "Features/Meetup/Create/ModalSteps",
@@ -26,65 +27,67 @@ type Story = StoryObj;
 export const StepTypeSelectStory: Story = {
 	name: "StepTypeSelect",
 	render: () => (
-		<StepStoryShell step={1}>
-			<StepTypeSelect step={1} />
-		</StepStoryShell>
+		<ToastProvider>
+			<StepStoryShell step={1}>
+				<StepTypeSelect step={1} />
+			</StepStoryShell>
+		</ToastProvider>
 	),
 };
 
 export const StepInfoStory: Story = {
 	name: "StepInfo",
 	render: () => (
-		<StepStoryShell step={2}>
-			<StepInfo step={2} uploadImageFn={mockUploadImage} getKakaoAddressFn={mockGetKakaoAddress} />
-		</StepStoryShell>
+		<ToastProvider>
+			<StepStoryShell step={2}>
+				<StepInfo
+					step={2}
+					uploadImageFn={mockUploadImage}
+					getKakaoAddressFn={mockGetKakaoAddress}
+				/>
+			</StepStoryShell>
+		</ToastProvider>
 	),
 };
 
 export const StepDescStory: Story = {
 	name: "StepDesc",
 	render: () => (
-		<StepStoryShell step={3}>
-			<StepDesc step={3} />
-		</StepStoryShell>
+		<ToastProvider>
+			<StepStoryShell step={3}>
+				<StepDesc step={3} />
+			</StepStoryShell>
+		</ToastProvider>
 	),
 };
 
 export const StepScheduleStory: Story = {
 	name: "StepSchedule",
 	render: () => (
-		<StepStoryShell step={4}>
-			<StepSchedule step={4} />
-		</StepStoryShell>
+		<ToastProvider>
+			<StepStoryShell step={4}>
+				<StepSchedule step={4} />
+			</StepStoryShell>
+		</ToastProvider>
 	),
 };
 
 function StepStoryShell({ step, children }: { step: number; children: React.ReactNode }) {
 	const [isOpen, setIsOpen] = useState(true);
-	const [isPending, setIsPending] = useState(false);
 
-	async function handleSubmit() {
-		setIsPending(true);
-		await new Promise((r) => setTimeout(r, 500));
-		setIsPending(false);
+	function handleSuccess(_id: number) {
 		setIsOpen(false);
 	}
 
 	return (
-		<FormStepProvider isOpen={isOpen} totalSteps={TOTAL_STEPS} step={step}>
-			<FormDataProvider isOpen={isOpen} totalSteps={TOTAL_STEPS}>
+		<FormStepProvider totalSteps={TOTAL_STEPS} step={step}>
+			<FormDataProvider totalSteps={TOTAL_STEPS}>
 				<Modal
 					className="max-h-fit w-[342px] md:w-[544px]"
 					isOpen={isOpen}
 					onClose={() => setIsOpen(false)}
 					title={<FormHeader>{TITLE}</FormHeader>}
-					footer={
-						<FormFooter
-							onClose={() => setIsOpen(false)}
-							isPending={isPending}
-							onSubmit={handleSubmit}
-						/>
-					}>
+					footer={<FormFooter onClose={() => setIsOpen(false)} onSuccess={handleSuccess} />}>
 					<form className="overflow-hidden">{children}</form>
 				</Modal>
 			</FormDataProvider>
@@ -95,15 +98,11 @@ function StepStoryShell({ step, children }: { step: number; children: React.Reac
 const TITLE = "모임 만들기";
 const TOTAL_STEPS = 4;
 
-async function mockUploadImage(e: React.ChangeEvent<HTMLInputElement>) {
-	const file = e.target.files?.[0];
-	if (file) {
-		const url = URL.createObjectURL(file);
-		return url;
-	} else return "";
+async function mockUploadImage(file: File): Promise<string> {
+	return URL.createObjectURL(file);
 }
 
-async function mockGetKakaoAddress() {
+async function mockGetKakaoAddress(_query: string): Promise<KakaoAddressItem[]> {
 	return MOCK_KAKAO_DATA;
 }
 

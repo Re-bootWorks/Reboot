@@ -15,7 +15,7 @@ interface StepInfoProps {
 	getKakaoAddressFn: GetKakaoAddressFn;
 }
 export default function StepInfo({ step, uploadImageFn, getKakaoAddressFn }: StepInfoProps) {
-	const { setStepValid, setData } = useFormData();
+	const { setStepValid, setData, data } = useFormData();
 	const [isComboOpened, setIsComboOpened] = useState(false);
 	const [addressValues, setAddressValues] = useState<AddressValues>({
 		latitude: 0,

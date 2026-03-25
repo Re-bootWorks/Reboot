@@ -1,51 +1,69 @@
-import { KakaoAddressItem } from "./types";
+import { clientFetch } from "@/libs/clientFetch";
+import { MeetupCreateData, MeetupDetailData, PresignedUrlResponse } from "./types";
 
-export async function uploadImage(e: React.ChangeEvent<HTMLInputElement>) {
-	// TODO: 이미지 업로드 처리(파일 분리)
-	const file = e.target.files?.[0];
-	if (file) {
-		const url = URL.createObjectURL(file);
-		return url;
-	} else return "";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+if (!BASE_URL) {
+	throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
 }
 
-export async function getKakaoAddress() {
-	// TODO: 외부 API 연동 및 드롭다운 목록 표시(파일 분리)
-	return MOCK_DATA;
+/** 이미지 업로드 */
+export async function uploadImage(file: File): Promise<string> {
+	const { presignedUrl, publicUrl } = await getPresignedUrl(file.name, file.type);
+	await uploadToS3(presignedUrl, file);
+	return publicUrl;
 }
-const MOCK_DATA: KakaoAddressItem[] = [
-	{
-		address: {
-			address_name: "서울 강남구 역삼동 825",
-			b_code: "1168010100",
-			h_code: "1168064000",
-			main_address_no: "825",
-			mountain_yn: "N",
-			region_1depth_name: "서울",
-			region_2depth_name: "강남구",
-			region_3depth_h_name: "역삼1동",
-			region_3depth_name: "역삼동",
-			sub_address_no: "",
-			x: "127.028578846319",
-			y: "37.4978399531903",
-		},
-		address_name: "서울 강남구 강남대로 390",
-		address_type: "ROAD_ADDR",
-		road_address: {
-			address_name: "서울 강남구 강남대로 390",
-			building_name: "미진프라자",
-			main_building_no: "390",
-			region_1depth_name: "서울",
-			region_2depth_name: "강남구",
-			region_3depth_name: "역삼동",
-			road_name: "강남대로",
-			sub_building_no: "",
-			underground_yn: "N",
-			x: "127.028578846319",
-			y: "37.4978399531903",
-			zone_no: "06232",
-		},
-		x: "127.028578846319",
-		y: "37.4978399531903",
-	},
-];
+
+/** 이미지 업로드 Step1: presigned URL 발급 */
+const ROUTE_IMAGES = "/images/presigned";
+async function getPresignedUrl(
+	fileName: string,
+	contentType: string,
+	folder: string = "meetings",
+): Promise<PresignedUrlResponse> {
+	const res = await clientFetch(ROUTE_IMAGES, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ fileName, contentType, folder }),
+	});
+
+	if (!res.ok) throw new Error(`이미지 업로드 주소 생성에 실패했습니다. (${res.status})`);
+	return res.json();
+}
+
+/** 이미지 업로드 Step2: S3에 이미지 업로드 */
+async function uploadToS3(presignedUrl: string, file: File): Promise<void> {
+	const res = await fetch(presignedUrl, {
+		method: "PUT",
+		headers: { "Content-Type": file.type },
+		body: file,
+	});
+
+	if (!res.ok) throw new Error(`이미지 업로드에 실패했습니다. (${res.status})`);
+}
+
+/** 카카오 주소 검색 API */
+const ROUTE_KAKAO_ADDRESS = "/kakao/address";
+export async function getKakaoAddress(query: string) {
+	const res = await clientFetch(`${ROUTE_KAKAO_ADDRESS}?query=${query}`);
+	if (!res.ok) {
+		throw new Error(`카카오 주소 API 호출에 실패했습니다. (${res.status})`);
+	}
+
+	const data = await res.json();
+	const { documents } = data;
+	return documents;
+}
+
+/** 모임 생성 */
+const ROUTE_MEETINGS = "/meetings";
+export async function postMeetup(data: MeetupCreateData): Promise<MeetupDetailData> {
+	const res = await clientFetch(ROUTE_MEETINGS, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(data),
+	});
+
+	if (!res.ok) throw new Error(`모임 생성에 실패했습니다. (${res.status})`);
+	return res.json();
+}

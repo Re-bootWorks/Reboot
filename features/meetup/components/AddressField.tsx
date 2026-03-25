@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/utils/cn";
 import Input from "@/components/ui/Inputs/Input";
 import InputField from "@/components/ui/Inputs/InputField";
 import { IcLocation } from "@/components/ui/icons";
 import { GetKakaoAddressFn, KakaoAddressItem } from "../types";
+import { debounce } from "@/utils/performance";
+import { useToast } from "@/providers/toast-provider";
+import { formatLatLng, validateText } from "../utils";
 
 interface AddressFieldProps {
 	/** 주소 검색 콤보박스 열림 여부 */
@@ -34,6 +37,7 @@ export type AddressValues = {
 	/** 사용자 입력 상세 주소 */
 	addressDetail: string;
 };
+
 export default function AddressField({
 	isComboOpened,
 	setIsComboOpened,
@@ -42,13 +46,36 @@ export default function AddressField({
 	getKakaoAddressFn,
 }: AddressFieldProps) {
 	const [kakaoAddressData, setKakaoAddressData] = useState<KakaoAddressItem[]>([]);
+	const { handleShowToast } = useToast();
 
-	async function handleChangeAddress(e: React.ChangeEvent<HTMLInputElement>) {
-		setValue((prev) => ({ ...prev, addressName: e.target.value }));
-		const data = await getKakaoAddressFn(e);
-		if (data) {
-			setKakaoAddressData(data);
+	// 디바운스 적용
+	const fetchAddressesDebounced = useMemo(
+		() =>
+			debounce(async (query: string) => {
+				try {
+					const data = await getKakaoAddressFn(query);
+					setKakaoAddressData(Array.isArray(data) ? data : []);
+				} catch (error) {
+					let message: string;
+					if (error instanceof Error) {
+						message = error.message;
+					} else {
+						message = "카카오 주소 검색 중 오류가 발생했습니다.";
+					}
+					handleShowToast({ message, status: "error" });
+				}
+			}, 100),
+		[getKakaoAddressFn],
+	);
+
+	function handleChangeAddress(e: React.ChangeEvent<HTMLInputElement>) {
+		const value = e.target.value;
+		setValue((prev) => ({ ...prev, addressName: value }));
+		if (!validateText(value)) {
+			setKakaoAddressData([]);
+			return;
 		}
+		fetchAddressesDebounced(value);
 	}
 
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -59,8 +86,8 @@ export default function AddressField({
 	function handleClickStreet(data: KakaoAddressItem) {
 		setValue((prev) => ({
 			...prev,
-			latitude: Number(data.x),
-			longitude: Number(data.y),
+			latitude: Number(data.y),
+			longitude: Number(data.x),
 			regionFirst: data.road_address?.region_1depth_name ?? data.address.region_1depth_name,
 			regionSecond: data.road_address?.region_2depth_name ?? data.address.region_2depth_name,
 			addressName: data.road_address?.address_name ?? data.address.address_name,

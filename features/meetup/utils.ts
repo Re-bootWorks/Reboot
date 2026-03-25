@@ -1,6 +1,6 @@
-/** 모임 설명 유효성 검사 */
-export function validateDesc(desc: string) {
-	return !!desc.trim();
+/** 텍스트 유효성 검사 */
+export function validateText(value: string) {
+	return !!value.trim();
 }
 
 /** 모임 일시, 모집 마감 일시 유효성 검사 */
@@ -21,4 +21,12 @@ export function getRegion(first: string, second: string) {
 /** 도로명 주소 통합 */
 export function getAddress(name: string, detail: string) {
 	return `${name}, ${detail}`;
+}
+
+/** 위경도 소수점 4자리로 변환 */
+export function formatLatLng(value: number | string) {
+	if (typeof value === "string") {
+		value = Number(value);
+	}
+	return Number(value.toFixed(4));
 }
