@@ -4,7 +4,7 @@ import DetailCard from "../DetailCard";
 import ReviewFormModal, { ReviewFormValues } from "../ReviewFormModal";
 import { WritableReviewItem, WritableReviewList } from "@/features/mypage/type";
 import { mockMyReviews, mockMyWritableReview, mockUserProfile } from "../../mockData";
-import useToggleMeetingFavorite from "../../hooks/useMeetingFavorite";
+import useMeetingFavorite from "../../hooks/useMeetingFavorite";
 import TabButton from "@/components/ui/Buttons/TabButton";
 import ReviewCard from "../ReviewCard";
 import { ReviewCardItem, ReviewList } from "../ReviewCard/type";
@@ -17,7 +17,7 @@ function Writable() {
 	const initialItems: WritableReviewList = mockMyWritableReview;
 
 	const [items, setItems] = useState(initialItems);
-	const { handleWishToggle } = useToggleMeetingFavorite(setItems);
+	const { handleWishToggle } = useMeetingFavorite(setItems);
 	const [reviewTarget, setReviewTarget] = useState<WritableReviewItem | null>(null);
 
 	// review modal 닫기
