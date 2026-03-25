@@ -56,7 +56,7 @@ export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 							<Button
 								sizes="small"
 								onClick={() => {
-									onChange?.(draftDate ? formatDateString(draftDate) : "");
+									onChange(draftDate ? formatDateString(draftDate) : "");
 									close();
 								}}>
 								적용
