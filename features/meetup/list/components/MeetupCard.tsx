@@ -4,17 +4,18 @@ import GroupCard from "@/components/ui/GroupCard";
 import { formatDateTime } from "@/utils/date";
 import { Suspense } from "react";
 import { Meeting } from "../types";
+import { checkIsConfirmed, checkIsRegClosed } from "../utils";
 
 export default function MeetupCard({ data }: { data: Meeting }) {
-	const href = `/meetup-detail/${data.id}`;
 	const [date, time] = formatDateTime(data.dateTime);
 	const status = {
-		isConfirmed: data.confirmedAt !== null,
-		isRegClosed: data.participantCount >= data.capacity,
+		isConfirmed: checkIsConfirmed(data.confirmedAt),
+		isRegClosed: checkIsRegClosed(data.registrationEnd, data.participantCount, data.capacity),
 		isLiked: data.isFavorited,
-		// isJoined: data.isJoined,
+		// TODO: isJoined: data.isJoined,
 		isJoined: false,
 	};
+	const href = `/meetup/${data.id}`;
 
 	return (
 		<Suspense fallback={<GroupCard.Skeleton />}>
@@ -28,6 +29,7 @@ export default function MeetupCard({ data }: { data: Meeting }) {
 						capacity={data.capacity}
 						participantCount={data.participantCount}
 					/>
+					{/* TODO: Button 클릭 시 처리 */}
 					<GroupCard.JoinButton onClick={() => {}} isPending={false} />
 					<GroupCard.LikeButton onClick={() => {}} isPending={false} />
 				</GroupCard.Content>
