@@ -13,8 +13,8 @@ export default function ReviewsSection() {
 		<section className="rounded-3xl bg-white p-6 md:rounded-4xl md:p-8">
 			{hasReviews ? (
 				<div className="flex flex-col gap-4 md:gap-8">
-					{REVIEW_CARD_MOCK_DATA.map((review, index) => (
-						<ReviewCard key={index} {...review} />
+					{REVIEW_CARD_MOCK_DATA.map((review) => (
+						<ReviewCard key={review.id} {...review} />
 					))}
 				</div>
 			) : (

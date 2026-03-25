@@ -41,6 +41,7 @@ import { ReviewCardProps } from "@/features/reviews/types";
 
 export const REVIEW_CARD_MOCK_DATA: ReviewCardProps[] = [
 	{
+		id: 1,
 		meetingImage:
 			"https://images.unsplash.com/photo-1540539234-c14a20fb7c7b?auto=format&fit=crop&w=1200&q=80",
 		score: 5,
@@ -55,6 +56,7 @@ export const REVIEW_CARD_MOCK_DATA: ReviewCardProps[] = [
 		meetingId: 1,
 	},
 	{
+		id: 2,
 		meetingImage: "",
 		score: 4,
 		userImage: null,
@@ -68,6 +70,7 @@ export const REVIEW_CARD_MOCK_DATA: ReviewCardProps[] = [
 		meetingId: 2,
 	},
 	{
+		id: 3,
 		meetingImage:
 			"https://images.unsplash.com/photo-1518644961665-ed172691aaa1?auto=format&fit=crop&w=1200&q=80",
 		score: 3,

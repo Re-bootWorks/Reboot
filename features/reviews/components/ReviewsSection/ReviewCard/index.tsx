@@ -133,14 +133,14 @@ export default function ReviewCard({
 
 					{/* 리뷰 내용 */}
 					<Link href={`/meetup/${meetingId}`}>
-						<p className="cursor-pointer text-sm whitespace-pre-line text-gray-700 md:mb-2 md:text-lg">
+						<p className="text-sm whitespace-pre-line text-gray-700 md:mb-2 md:text-lg">
 							{comment}
 						</p>
 					</Link>
 				</div>
 				{/* 모임명 / 카테고리 */}
 				<div className="space-x-0.5 text-xs font-medium text-gray-500 md:text-sm">
-					<Link href={`/meetup/${meetingId}`} className="cursor-pointer select-none">
+					<Link href={`/meetup/${meetingId}`} className="select-none">
 						{meetingName}
 					</Link>
 					<span aria-hidden="true" className="select-none">

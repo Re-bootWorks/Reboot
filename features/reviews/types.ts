@@ -11,6 +11,7 @@ export interface RatingSummaryProps {
 export type ReviewScore = 1 | 2 | 3 | 4 | 5;
 
 export interface ReviewCardProps {
+	id: number;
 	meetingId: number;
 	meetingImage: string;
 	score: ReviewScore;
