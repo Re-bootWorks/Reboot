@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@/utils/cn";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
 import RegionModal from "./RegionModal";
-import { REGION_DATA } from "@/constants/region";
-import Button from "../../Buttons/Button";
 import { Option } from "./option";
+import FilterTrigger from "@/components/ui/Filter/FilterTrigger";
 
 interface RegionButtonProps {
 	value: {
@@ -31,20 +29,13 @@ export default function RegionFilter({ value, onChange, className }: RegionButto
 	return (
 		<>
 			{/* 버튼 */}
-			<Button
+			<FilterTrigger
 				onClick={() => setIsOpen(true)}
-				sizes="small"
-				colors="grayBorder"
-				className={cn(
-					"w-auto justify-start gap-1",
-					"rounded-b-md",
-					"border-none",
-					value.region || value.district ? "text-gray-700" : "text-gray-600",
-					className,
-				)}>
+				isActive={!!value.region || !!value.district}
+				className={className}>
 				{getLabel()}
-				<IcChevronDown color="currentColor" />
-			</Button>
+				<IcChevronDown className="h-4 w-4" />
+			</FilterTrigger>
 
 			{/* 모달 */}
 			<RegionModal

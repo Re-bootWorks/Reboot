@@ -5,9 +5,8 @@ import { useEffect, useState } from "react";
 import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
 import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
-import { cn } from "@/utils/cn";
 import Button from "@/components/ui/Buttons/Button";
-import { useIsMd } from "@/hooks/useIsMd";
+import FilterTrigger from "@/components/ui/Filter/FilterTrigger";
 
 type DateFilterProps = {
 	value: string;
@@ -21,26 +20,27 @@ function formatDisplayDate(date: Date) {
 export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 	const [month, setMonth] = useState<Date>(getKoreanToday());
 	const [draftDate, setDraftDate] = useState<Date | undefined>();
-	const isMd = useIsMd();
 
 	const parsed = parseDateString(value);
+
+	useEffect(() => {
+		if (!draftDate) {
+			setDraftDate(parsed || undefined);
+		}
+	}, [parsed]);
 
 	return (
 		<Popover className="relative">
 			{({ close }) => (
 				<>
-					<PopoverButton
-						className={cn(
-							"flex cursor-pointer items-center gap-1 px-2 py-1 text-base font-medium whitespace-nowrap focus:outline-none",
-							parsed ? "text-gray-900" : "text-gray-600",
-						)}>
-						<span>{parsed ? formatDisplayDate(parsed) : "날짜 전체"}</span>
-						<IcChevronDown color="currentColor" />
+					<PopoverButton as="div">
+						<FilterTrigger isActive={!!parsed}>
+							<span>{parsed ? formatDisplayDate(parsed) : "날짜 전체"}</span>
+							<IcChevronDown className="h-4 w-4" />
+						</FilterTrigger>
 					</PopoverButton>
 
-					<PopoverPanel
-						anchor={{ to: isMd ? "bottom end" : "bottom start" }}
-						className="z-20 mt-2 w-74.5 rounded-xl border border-gray-200 bg-white p-6 shadow-xl">
+					<PopoverPanel className="absolute z-20 mt-2 w-74.5 rounded-xl border border-gray-200 bg-white p-6 shadow-xl">
 						<Calendar
 							month={month}
 							selectedDate={draftDate}
@@ -49,7 +49,14 @@ export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 						/>
 
 						<div className="mt-3 grid grid-cols-2 gap-3">
-							<Button sizes="small" colors="purpleBorder" onClick={() => setDraftDate(undefined)}>
+							<Button
+								sizes="small"
+								colors="purpleBorder"
+								onClick={() => {
+									setDraftDate(undefined);
+									onChange(""); // 부모값 초기화
+									close(); // 패널 닫기
+								}}>
 								초기화
 							</Button>
 
