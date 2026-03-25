@@ -2,20 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { parseTimestamp } from "@/utils/date";
+import { validateCapacity, validateDateTime } from "../../utils";
 import { useFormData } from "../providers/FormDataProvider";
-import InputField from "@/components/ui/Inputs/InputField";
-import { InputFieldWrapper } from "@/components/ui/Inputs/InputFieldWrapper";
-import DatePicker from "@/components/ui/Pickers/DatePicker";
-import TimePicker from "@/components/ui/Pickers/TimePicker";
+import CapacityField from "../../components/CapacityField";
+import DateTimeField, { DateTime } from "../../components/DateTimeField";
 
 interface StepScheduleProps {
 	/** 단계 숫자 */
 	step: number;
 }
-type DateTime = {
-	date: string;
-	time: string;
-};
 export default function StepSchedule({ step }: StepScheduleProps) {
 	const { setStepValid, setData } = useFormData();
 	const [dateTime, setDateTime] = useState<DateTime>({ date: "", time: "" });
@@ -37,9 +32,9 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 
 	// 유효성 검사
 	useEffect(() => {
-		const isDateTimeValid = !!(dateTime.date && dateTime.time);
-		const isRegEndValid = !!(regEnd.date && regEnd.time);
-		const isCapacityValid = capacity > 0;
+		const isDateTimeValid = validateDateTime(dateTime.date, dateTime.time);
+		const isRegEndValid = validateDateTime(regEnd.date, regEnd.time);
+		const isCapacityValid = validateCapacity(capacity);
 		const isValid = isDateTimeValid && isRegEndValid && isCapacityValid;
 
 		setStepValid(step, isValid);
@@ -57,61 +52,21 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 
 	return (
 		<fieldset className="flex flex-col gap-y-4 md:gap-y-6">
-			<InputFieldWrapper label="모임 일정" isRequired>
-				{({ id }) => (
-					<div role="group" aria-labelledby={id} className="flex gap-x-3 md:gap-x-3">
-						<DatePicker
-							id={id}
-							name="dateTimeDate"
-							placeholder="YYYY-MM-DD"
-							isRequired
-							onChange={(v) => handleChangeSchedule(DATE_TIME_KEY, DATE_KEY, v)}
-							value={dateTime.date}
-							aria-labelledby={id}
-						/>
-						<TimePicker
-							name="dateTimeTime"
-							placeholder="00 : 00"
-							isRequired
-							onChange={(v) => handleChangeSchedule(DATE_TIME_KEY, TIME_KEY, v)}
-							value={dateTime.time}
-							aria-labelledby={id}
-						/>
-					</div>
-				)}
-			</InputFieldWrapper>
-			<InputFieldWrapper label="모집 마감 날짜" isRequired>
-				{({ id }) => (
-					<div role="group" aria-labelledby={id} className="flex gap-x-3 md:gap-x-3">
-						<DatePicker
-							id={id}
-							name="regEndDate"
-							placeholder="YYYY-MM-DD"
-							isRequired
-							onChange={(v) => handleChangeSchedule(REG_END_KEY, DATE_KEY, v)}
-							value={regEnd.date}
-							aria-labelledby={id}
-						/>
-						<TimePicker
-							name="regEndTime"
-							placeholder="00 : 00"
-							isRequired
-							onChange={(v) => handleChangeSchedule(REG_END_KEY, TIME_KEY, v)}
-							value={regEnd.time}
-							aria-labelledby={id}
-						/>
-					</div>
-				)}
-			</InputFieldWrapper>
-			<InputField
-				name="capacity"
-				label="모임 정원"
-				placeholder="숫자만 입력해주세요"
-				type="number"
-				className="mt-8 md:mt-12"
-				isRequired
-				onChange={(e) => setCapacity(Number(e.target.value))}
+			<DateTimeField
+				label="모임 일정"
+				date={dateTime.date}
+				time={dateTime.time}
+				onDateChange={(v) => handleChangeSchedule(DATE_TIME_KEY, DATE_KEY, v)}
+				onTimeChange={(v) => handleChangeSchedule(DATE_TIME_KEY, TIME_KEY, v)}
 			/>
+			<DateTimeField
+				label="모집 마감 날짜"
+				date={regEnd.date}
+				time={regEnd.time}
+				onDateChange={(v) => handleChangeSchedule(REG_END_KEY, DATE_KEY, v)}
+				onTimeChange={(v) => handleChangeSchedule(REG_END_KEY, TIME_KEY, v)}
+			/>
+			<CapacityField name="capacity" value={capacity} onChange={setCapacity} />
 		</fieldset>
 	);
 }

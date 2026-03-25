@@ -2,7 +2,8 @@
 
 import { Modal } from "@/components/ui/Modals";
 import { cn } from "@/utils/cn";
-import { KakaoAddressItem, MeetupCreateData } from "../types";
+import { MeetupCreateData } from "../types";
+import { KakaoAddressItem } from "../../types";
 import FormStepProvider, { useFormStep } from "../providers/FormStepProvider";
 import FormDataProvider from "../providers/FormDataProvider";
 import FormHeader from "./FormHeader";

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
-import type { KakaoAddressItem } from "./types";
+import { KakaoAddressItem } from "../types";
 import { Modal } from "@/components/ui/Modals";
 import FormStepProvider from "./providers/FormStepProvider";
 import FormDataProvider from "./providers/FormDataProvider";
