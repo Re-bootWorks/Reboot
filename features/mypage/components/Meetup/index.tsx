@@ -5,7 +5,7 @@ import { DetailCardAction, DetailCardBadge } from "../DetailCard/type";
 import ReviewFormModal, { ReviewFormValues } from "../ReviewFormModal";
 import { MeetupItem, MeetupList } from "@/features/mypage/type";
 import { mockMyMeetups } from "../../mockData";
-import Alert from "@/components/ui/Modals/AlertModal";
+import AlertModal from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/features/mypage/hooks/useMeetingFavorite";
 
 interface MeetupActionHandlers {
@@ -211,7 +211,10 @@ export default function Meetup() {
 					);
 				})}
 			</ul>
-			<Alert isOpen={!!alertTarget} onClose={closeAlert} handleConfirmButton={handleAlertConfirm}>
+			<AlertModal
+				isOpen={!!alertTarget}
+				onClose={closeAlert}
+				handleConfirmButton={handleAlertConfirm}>
 				{alertAction ? ALERT_MESSAGE[alertAction] : ""}
 				{alertAction === "cancelMeetup" && (
 					<>
@@ -219,7 +222,7 @@ export default function Meetup() {
 						재확정이 불가능 합니다.
 					</>
 				)}
-			</Alert>
+			</AlertModal>
 
 			<ReviewFormModal
 				mode="create"

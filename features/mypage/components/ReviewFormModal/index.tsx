@@ -11,7 +11,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/utils/cn";
 import rating from "./style.module.css";
-import Alert from "@/components/ui/Modals/AlertModal";
+import AlertModal from "@/components/ui/Modals/AlertModal";
 import useToggle from "@/hooks/useToggle";
 
 const STYLE = {
@@ -179,9 +179,9 @@ export default function ReviewFormModal({
 					</div>
 				</form>
 			</Modal>
-			<Alert isOpen={alertOpen} onClose={close} handleConfirmButton={handleReviewClose}>
+			<AlertModal isOpen={alertOpen} onClose={close} handleConfirmButton={handleReviewClose}>
 				{reviewFormTitle}을 취소하시겠습니까?
-			</Alert>
+			</AlertModal>
 		</>
 	);
 }

@@ -8,7 +8,7 @@ import useToggleMeetingFavorite from "../../hooks/useMeetingFavorite";
 import TabButton from "@/components/ui/Buttons/TabButton";
 import ReviewCard from "../ReviewCard";
 import { ReviewCardItem, ReviewList } from "../ReviewCard/type";
-import Alert from "@/components/ui/Modals/AlertModal";
+import AlertModal from "@/components/ui/Modals/AlertModal";
 
 type ReviewTabId = "writable" | "written";
 
@@ -123,9 +123,12 @@ function Written() {
 					/>
 				))}
 			</ul>
-			<Alert isOpen={!!alertTarget} onClose={closeAlert} handleConfirmButton={handleReviewDelete}>
+			<AlertModal
+				isOpen={!!alertTarget}
+				onClose={closeAlert}
+				handleConfirmButton={handleReviewDelete}>
 				리뷰를 삭제하시겠습니까?
-			</Alert>
+			</AlertModal>
 
 			<ReviewFormModal
 				mode="edit"

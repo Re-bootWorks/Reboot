@@ -4,7 +4,7 @@ import DetailCard from "../DetailCard";
 import { DetailCardBadge } from "../DetailCard/type";
 import { CreatedItem, CreatedList } from "@/features/mypage/type";
 import { mockMyCreated } from "../../mockData";
-import Alert from "@/components/ui/Modals/AlertModal";
+import AlertModal from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/features/mypage/hooks/useMeetingFavorite";
 
 // 모임 배지 상태
@@ -55,12 +55,12 @@ export default function Created() {
 					);
 				})}
 			</ul>
-			<Alert
+			<AlertModal
 				isOpen={!!alertTarget}
 				onClose={() => setAlertTarget(null)}
 				handleConfirmButton={handleAlertConfirm}>
 				모임을 삭제하시겠습니까?
-			</Alert>
+			</AlertModal>
 		</>
 	);
 }
