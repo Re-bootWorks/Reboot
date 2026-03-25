@@ -23,12 +23,14 @@ export const QUERY_KEYS = {
 	DATE: "date",
 };
 
+/** 정렬 기준 항목 */
 export const SORT_BY_OPTIONS = [
 	{ value: "dateTime", label: "모임 일시" },
 	{ value: "registrationEnd", label: "마감 임박" },
 	{ value: "participantCount", label: "참여인원순" },
 ];
 
+/** 정렬 순서 항목 */
 export const SORT_ORDER_OPTIONS = [
 	{ value: "asc", label: "오름차순" },
 	{ value: "desc", label: "내림차순" },
