@@ -7,7 +7,7 @@ export default function MeetupList() {
 	return (
 		<main className="mx-auto max-w-7xl md:p-6 lg:p-0 lg:pt-[27px]">
 			<Banner />
-			<section className="my-12 flex flex-col gap-y-5 px-4 md:gap-y-4 md:px-0 lg:gap-y-6">
+			<div className="my-12 flex flex-col gap-y-5 px-4 md:gap-y-4 md:px-0 lg:gap-y-6">
 				<ListFilters />
 				<ul className="grid gap-4 md:gap-6 lg:grid-cols-2">
 					{MOCK_MEETUP_DATA.map((item) => (
@@ -16,7 +16,7 @@ export default function MeetupList() {
 						</li>
 					))}
 				</ul>
-			</section>
+			</div>
 		</main>
 	);
 }

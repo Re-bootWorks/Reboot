@@ -9,7 +9,6 @@ import { IcChevronDown } from "@/components/ui/icons";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
 import { getSortByItem, getSortOrderItem } from "../utils";
-import { useLayoutEffect } from "react";
 
 interface ListFiltersProps {
 	/** 최상위 컨테이너 클래스 */
@@ -35,14 +34,7 @@ export default function ListFilters({ className }: ListFiltersProps) {
 function TypeFilters() {
 	const { ref, overlays, ...events } = useDragScroll<HTMLUListElement>();
 	const { get, set } = useQueryParams();
-	const typeParam = get(QUERY_KEYS.TYPE);
-	const type = typeParam ?? MEETUP_TYPES[0].value;
-
-	useLayoutEffect(() => {
-		if (!typeParam) {
-			set({ [QUERY_KEYS.TYPE]: MEETUP_TYPES[0].value });
-		}
-	}, [typeParam, set]);
+	const type = get(QUERY_KEYS.TYPE) ?? MEETUP_TYPES[0].value;
 
 	function handleChangeType(v: string) {
 		set({ [QUERY_KEYS.TYPE]: v });
@@ -67,10 +59,10 @@ function TypeFilters() {
 // 우측 드롭다운 필터 목록
 function DropdownFilters() {
 	const { get, set } = useQueryParams();
-
 	const date = get(QUERY_KEYS.DATE);
-	const sortBy = getSortByItem(get(QUERY_KEYS.SORT_BY));
-	const sortOrder = getSortOrderItem(get(QUERY_KEYS.SORT_ORDER));
+	// TODO: const region = get(QUERY_KEYS.REGION);
+	const sortBy = getSortByItem(get(QUERY_KEYS.SORT_BY)) ?? SORT_BY_OPTIONS[0].value;
+	const sortOrder = getSortOrderItem(get(QUERY_KEYS.SORT_ORDER)) ?? SORT_ORDER_OPTIONS[0].value;
 
 	function handleChangeDate(v: string) {
 		set({ [QUERY_KEYS.DATE]: v });
@@ -85,7 +77,7 @@ function DropdownFilters() {
 	return (
 		<div className="flex items-center lg:ml-auto">
 			<DateFilter value={date ?? ""} onChange={handleChangeDate} />
-			{/* <RegionFilter /> */}
+			{/* TODO: RegionFilter 추가 시 하단 요소 제거 */}
 			<div className="flex items-center px-2 py-1 text-red-500">
 				지역 전체
 				<IcChevronDown color="currentColor" />
