@@ -83,7 +83,7 @@ function TimeListbox({ label, unit, value, options, onChange }: TimeListboxProps
 				<ListboxOptions
 					static
 					aria-label={label}
-					className="scrollbar-hide max-h-60.5 overflow-y-auto overscroll-contain px-2 py-2.5 outline-none">
+					className="scrollbar scrollbar-thumb max-h-60.5 overflow-y-auto overscroll-contain px-2 py-2.5 outline-none">
 					<div className="flex flex-col gap-2.5">
 						{options.map((option) => {
 							/** 현재 옵션이 선택된 값인지 여부 */
