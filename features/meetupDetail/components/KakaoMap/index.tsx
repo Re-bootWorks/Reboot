@@ -60,7 +60,6 @@ export default function KakaoMap({ address, latitude, longitude }: KakaoMapProps
 				strategy="afterInteractive"
 				onReady={() => {
 					setIsScriptLoaded(true);
-					initMap();
 				}}
 			/>
 
