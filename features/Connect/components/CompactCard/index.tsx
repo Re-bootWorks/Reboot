@@ -25,7 +25,7 @@ export default function CompactCard({
 		// 카드 컨테이너
 		<div
 			onClick={onClick}
-			className="flex h-[13.875rem] w-[10.125rem] shrink-0 cursor-pointer flex-col transition duration-300 ease-out hover:-translate-y-0.5 md:h-[15.75rem] md:w-[18.875rem]">
+			className="flex h-[13.875rem] w-[10.125rem] shrink-0 cursor-pointer flex-col transition duration-300 ease-out hover:-translate-y-0.5 md:h-[15.75rem] md:w-[18.5rem]">
 			{/* 이미지 영역 */}
 			<div className="h-[11.25rem] overflow-hidden rounded-[1.5rem]">
 				{image?.trim() ? (

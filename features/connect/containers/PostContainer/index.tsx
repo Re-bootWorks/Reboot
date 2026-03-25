@@ -7,21 +7,33 @@ import PostCard from "@/features/connect/components/PostCard";
 import Pagination from "@/components/ui/Pagination";
 import type { Post } from "@/features/connect/types";
 import { getMockPosts } from "@/features/connect/apis/mockPosts";
+// import { fetchPosts } from "@/features/connect/apis/fetchPosts";
 import { useQuery } from "@tanstack/react-query";
-import { fetchPosts } from "@/features/connect/apis/fetchPosts";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
 export default function PostContainer({ page }: { page: number }) {
+	// const { data } = useQuery({
+	// 	queryKey: ["posts", page],
+	// 	queryFn: () => fetchPosts({
+	// 		type: "all",
+	// 		sortBy: "createdAt",
+	// 		offset:(page -1) *10,
+	// 		limit:10,
+	// 	}),
+	// });
+
 	const { data } = useQuery({
 		queryKey: ["posts", page],
-		queryFn: () => fetchPosts(page),
+		queryFn: () => Promise.resolve(getMockPosts(page)),
 	});
 
 	const posts = data?.data ?? [];
 
 	const router = useRouter();
 	const containerRef = useRef<HTMLDivElement | null>(null);
+
+	console.log(data);
 
 	return (
 		<Container>
@@ -35,6 +47,7 @@ export default function PostContainer({ page }: { page: number }) {
 			<div ref={containerRef} className="-mx-4 flex flex-col gap-12 rounded-3xl bg-white px-8 py-8">
 				{posts.map((post: Post) => (
 					<PostCard
+						id={post.id}
 						key={post.id}
 						title={post.title}
 						description={post.content}
@@ -43,6 +56,7 @@ export default function PostContainer({ page }: { page: number }) {
 						date={new Date(post.createdAt).getTime()}
 						likeCount={post.likeCount}
 						commentCount={post._count.comments}
+						onClick={() => router.push(`/connect/${post.id}`)}
 					/>
 				))}
 			</div>

@@ -1,7 +1,9 @@
 import Container from "@/components/layout/Container";
 import PostContainer from "@/features/connect/containers/PostContainer";
+import HotPostSection from "@/features/connect/components/HotPostSection";
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { fetchPosts } from "@/features/connect/apis/fetchPosts";
+import type { GetPostsParams } from "@/features/connect/types";
 
 // 서버 컴포넌트
 export default async function ConnectPage({
@@ -14,31 +16,39 @@ export default async function ConnectPage({
 
 	const queryClient = new QueryClient(); // 캐시저장소+ 쿼리 관리자(데이터를 담아두는 통 )
 
+	const params: GetPostsParams = {
+		type: "all",
+		sortBy: "createdAt",
+		offset: (page - 1) * 10,
+		limit: 10,
+	};
+
 	await queryClient.prefetchQuery({
-		queryKey: ["posts", page],
-		queryFn: () => fetchPosts(page),
+		queryKey: ["posts", params],
+		queryFn: () => fetchPosts(params),
 		staleTime: 1000 * 60,
 	});
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<Container className="border border-2">
+			<Container>
 				<div className="mt-12">
 					{/* 임시 문구 영역 */}
-					<div className="h-[91px] border border-gray-300 bg-gray-100">커넥트 토크 임시</div>
+					<div className="h-[91px] border border-gray-300">커넥트 토크 임시</div>
 				</div>
-				<div className="mt-[81px]">
+				<div className="-mx-4 mt-[81px]">
 					{/* HOT 게시물 */}
-					<div className="h-[304px] border border-gray-300 bg-gray-100">
+					<div className="h-[304px]">
 						{/* 제목 */}
 						<h2 className="h-[32px] w-[187px] text-2xl leading-8 font-semibold tracking-[-0.03rem] whitespace-nowrap">
 							이번주 HOT 게시물!
 						</h2>
+						<HotPostSection />
 					</div>
 				</div>
 				<div className="mt-[98px] pb-[140px]">
 					{/* 게시글 영역 */}
-					<div className="-mx-4 border border-gray-300 bg-gray-100">
+					<div className="-mx-4">
 						{/* 검색 h-[44px] max-w-[1280px] */}
 						<PostContainer page={page} />
 					</div>
