@@ -45,13 +45,13 @@ export default function FormFooter({ onClose, onSubmit, isPending }: FormFooterP
 	}
 
 	return (
-		<div className="flex justify-between gap-x-4">
-			<Button colors="grayBorder" className="flex-1" onClick={handleClickPrev}>
+		<div className="grid grid-cols-2 gap-x-4">
+			<Button colors="grayBorder" className="min-w-0" onClick={handleClickPrev}>
 				{prevLabel}
 			</Button>
 			<Button
 				disabled={isLastStep ? !checkAllStepValid() : !getStepValid(currentStep)}
-				className="flex-1"
+				className="min-w-0"
 				isPending={isPending}
 				onClick={handleClickNext}>
 				{nextLabel}
