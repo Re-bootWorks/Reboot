@@ -68,7 +68,7 @@ export default function ReviewFormModal({
 		control,
 		handleSubmit,
 		reset,
-		formState: { errors, isValid },
+		formState: { errors, isDirty },
 	} = useForm<ReviewFormValues>({
 		resolver: zodResolver(reviewFormSchema),
 		defaultValues: getReviewDefaultValues(initialValue),
@@ -83,7 +83,11 @@ export default function ReviewFormModal({
 
 	// 리뷰 작성 중 취소 시 Alert
 	function handleReviewCancel() {
-		open();
+		if (isDirty) {
+			open(); // 확인 알림창 열기
+		} else {
+			handleReviewClose(); // 내용이 없으면 바로 닫기
+		}
 	}
 
 	// 리뷰 모달 닫기
@@ -106,7 +110,7 @@ export default function ReviewFormModal({
 			<Modal
 				className={STYLE.modal}
 				isOpen={isOpen}
-				onClose={handleReviewClose}
+				onClose={handleReviewCancel}
 				title={reviewFormTitle}
 				footer={
 					<div className="flex gap-3">
@@ -123,8 +127,7 @@ export default function ReviewFormModal({
 							colors="purple"
 							sizes="medium"
 							isPending={isPending}
-							className={STYLE.modalButton}
-							disabled={!isValid}>
+							className={STYLE.modalButton}>
 							{reviewFormSubmitLabel}
 						</Button>
 					</div>
