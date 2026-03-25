@@ -4,10 +4,10 @@ import UtilityButton from "@/components/ui/Buttons/UtilityButton";
 import { IcPerson } from "@/components/ui/icons";
 import { StatusLabel } from "@/components/ui/StatusLabel";
 import Image from "next/image";
-import { uiFormatDate, uiFormatTime } from "@/features/meetupDetail/utills";
 import { cn } from "@/utils/cn";
 import SendButton from "@/components/ui/Buttons/SendButton";
 import { DetailCardProps } from "./type";
+import { uiFormatDate, uiFormatTime } from "@/utils/date";
 
 const STYLE = {
 	itemBgBox: "relative overflow-hidden rounded-3xl bg-white md:flex md:gap-6 md:rounded-4xl md:p-6",
