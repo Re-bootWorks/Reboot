@@ -1,5 +1,9 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
+if (!BASE_URL) {
+	throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
+}
+
 type GetPostsParams = {
 	type?: "all" | "best";
 	sortBy?: "createdAt" | "viewCount" | "likeCount" | "commentCount";

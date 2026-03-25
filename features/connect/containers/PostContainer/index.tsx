@@ -33,8 +33,6 @@ export default function PostContainer({ page }: { page: number }) {
 	const router = useRouter();
 	const containerRef = useRef<HTMLDivElement | null>(null);
 
-	console.log(data);
-
 	return (
 		<Container>
 			{/* 검색 + 정렬 */}
