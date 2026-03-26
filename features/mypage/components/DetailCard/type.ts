@@ -1,7 +1,16 @@
-import { MeetupItem } from "@/features/mypage/type";
+export interface DetailCardItem {
+	id: number;
+	name: string;
+	region: string;
+	dateTime: string;
+	capacity: number;
+	participantCount: number;
+	image: string | null;
+	isFavorited: boolean;
+}
 export interface DetailCardBadge {
 	label: string;
-	variant: "scheduled" | "confirmed" | "pending" | "completed";
+	variant: "scheduled" | "confirmed" | "pending" | "completed" | "completedAlt";
 	showStatusLabel?: boolean;
 }
 
@@ -18,7 +27,7 @@ export interface DetailCardWishAction {
 }
 
 export interface DetailCardProps {
-	item: MeetupItem;
+	item: DetailCardItem;
 	badges?: DetailCardBadge[];
 	actions?: DetailCardAction[];
 	wishAction?: DetailCardWishAction;

@@ -11,6 +11,8 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/utils/cn";
 import rating from "./style.module.css";
+import AlertModal from "@/components/ui/Modals/AlertModal";
+import useToggle from "@/hooks/useToggle";
 
 const STYLE = {
 	modal: "min-h-100 w-[calc(100%-32px)] max-w-136 p-6 pt-8 md:w-full md:p-12",
@@ -24,7 +26,7 @@ const reviewFormSchema = z.object({
 	comment: z.string().trim().min(1, "리뷰 내용을 입력해 주세요."),
 });
 
-type ReviewFormValues = z.infer<typeof reviewFormSchema>;
+export type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 
 interface ReviewFormModalProps {
 	/** 작성 모드인지 수정 모드인지 구분 */
@@ -57,6 +59,7 @@ export default function ReviewFormModal({
 	onClose,
 	handleFormSubmit,
 }: ReviewFormModalProps) {
+	const { isOpen: alertOpen, open, close } = useToggle();
 	const reviewFormId = useId();
 	const reviewScoreId = useId();
 	const reviewContentId = useId();
@@ -65,7 +68,7 @@ export default function ReviewFormModal({
 		control,
 		handleSubmit,
 		reset,
-		formState: { errors, isValid },
+		formState: { errors, isDirty },
 	} = useForm<ReviewFormValues>({
 		resolver: zodResolver(reviewFormSchema),
 		defaultValues: getReviewDefaultValues(initialValue),
@@ -78,11 +81,21 @@ export default function ReviewFormModal({
 		reset(getReviewDefaultValues(initialValue));
 	}, [initialValue, isOpen, reset]);
 
+	// 리뷰 작성 중 취소 시 Alert
+	function handleReviewCancel() {
+		if (isDirty) {
+			open(); // 확인 알림창 열기
+		} else {
+			handleReviewClose(); // 내용이 없으면 바로 닫기
+		}
+	}
+
+	// 리뷰 모달 닫기
 	function handleReviewClose() {
-		reset(getReviewDefaultValues(initialValue));
 		onClose();
 	}
 
+	// 리뷰 제출
 	const handleReviewSubmit = handleSubmit(async (reviewFormValues) => {
 		await handleFormSubmit(reviewFormValues);
 		handleReviewClose();
@@ -92,81 +105,87 @@ export default function ReviewFormModal({
 	const reviewFormSubmitLabel = mode === "create" ? "작성 완료" : "수정 완료";
 
 	return (
-		<Modal
-			className={STYLE.modal}
-			isOpen={isOpen}
-			onClose={handleReviewClose}
-			title={reviewFormTitle}
-			footer={
-				<div className="flex gap-3">
-					<Button
-						colors="grayBorder"
-						sizes="medium"
-						onClick={handleReviewClose}
-						className={STYLE.modalButton}>
-						취소
-					</Button>
-					<Button
-						type="submit"
-						form={reviewFormId}
-						colors="purple"
-						sizes="medium"
-						isPending={isPending}
-						className={STYLE.modalButton}
-						disabled={!isValid}>
-						{reviewFormSubmitLabel}
-					</Button>
-				</div>
-			}>
-			<form id={reviewFormId} onSubmit={handleReviewSubmit} className="space-y-8" noValidate>
-				<div>
-					<div id={reviewScoreId} className={STYLE.formLabel}>
-						만족스러운 경험이었나요? <span className="text-purple-500">*</span>
+		<>
+			<Modal
+				className={STYLE.modal}
+				isOpen={isOpen}
+				onClose={handleReviewCancel}
+				title={reviewFormTitle}
+				footer={
+					<div className="flex gap-3">
+						<Button
+							colors="grayBorder"
+							sizes="medium"
+							onClick={handleReviewCancel}
+							className={STYLE.modalButton}>
+							취소
+						</Button>
+						<Button
+							type="submit"
+							form={reviewFormId}
+							colors="purple"
+							sizes="medium"
+							isPending={isPending}
+							className={STYLE.modalButton}>
+							{reviewFormSubmitLabel}
+						</Button>
 					</div>
-					<Controller
-						name="score"
-						control={control}
-						render={({ field }) => (
-							<>
-								<Rating
-									isRequired
+				}>
+				<form id={reviewFormId} onSubmit={handleReviewSubmit} className="space-y-8" noValidate>
+					<div>
+						<div id={reviewScoreId} className={STYLE.formLabel}>
+							만족스러운 경험이었나요? <span className="text-purple-500">*</span>
+						</div>
+						<Controller
+							name="score"
+							control={control}
+							render={({ field }) => (
+								<>
+									<Rating
+										isRequired
+										value={field.value}
+										visibleLabelId={reviewScoreId}
+										onChange={field.onChange}
+										onBlur={field.onBlur}
+										itemStyles={RATING_STYLE}
+										className={cn(rating.review, "max-w-54")}
+									/>
+									{errors.score && <p className={STYLE.errorMsg}>{errors.score.message}</p>}
+								</>
+							)}
+						/>
+					</div>
+
+					<div>
+						<label htmlFor={reviewContentId} className={cn(STYLE.formLabel, "block")}>
+							좋았던 점을 자유롭게 적어주세요. <span className="text-purple-500">*</span>
+						</label>
+						<Controller
+							name="comment"
+							control={control}
+							render={({ field }) => (
+								<InputTextarea
+									id={reviewContentId}
+									name={field.name}
 									value={field.value}
-									visibleLabelId={reviewScoreId}
 									onChange={field.onChange}
 									onBlur={field.onBlur}
-									itemStyles={RATING_STYLE}
-									className={cn(rating.review, "max-w-54")}
+									placeholder="남겨주신 리뷰는 프로그램 운영 및 다른 회원 분들께 큰 도움이 됩니다."
+									isRequired
+									disabled={isPending}
+									isDestructive={!!errors.comment}
+									hintText={errors.comment?.message}
 								/>
-								{errors.score && <p className={STYLE.errorMsg}>{errors.score.message}</p>}
-							</>
-						)}
-					/>
-				</div>
+							)}
+						/>
+					</div>
+				</form>
+			</Modal>
 
-				<div>
-					<label htmlFor={reviewContentId} className={cn(STYLE.formLabel, "block")}>
-						좋았던 점을 자유롭게 적어주세요. <span className="text-purple-500">*</span>
-					</label>
-					<Controller
-						name="comment"
-						control={control}
-						render={({ field }) => (
-							<InputTextarea
-								id={reviewContentId}
-								name={field.name}
-								value={field.value}
-								onChange={field.onChange}
-								onBlur={field.onBlur}
-								placeholder="남겨주신 리뷰는 프로그램 운영 및 다른 회원 분들께 큰 도움이 됩니다."
-								isRequired
-								disabled={isPending}
-								isDestructive={!!errors.comment}
-								hintText={errors.comment?.message}
-							/>
-						)}
-					/>
-				</div>
-			</form>
-		</Modal>
+			{/* dirty 상태에서 닫으려 할 때 취소 확인용 Alert 노출 */}
+			<AlertModal isOpen={alertOpen} onClose={close} handleConfirmButton={handleReviewClose}>
+				{reviewFormTitle}을 취소하시겠습니까?
+			</AlertModal>
+		</>
 	);
 }

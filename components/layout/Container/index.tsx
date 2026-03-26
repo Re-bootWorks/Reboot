@@ -16,7 +16,7 @@ export default function Container({
 }: ContainerProps) {
 	return (
 		<Component
-			className={cn("mx-auto w-full px-4 md:px-6", narrow ? "max-w-215" : "max-w-7xl", className)}>
+			className={cn("mx-auto w-full px-4 md:px-6", narrow ? "max-w-227" : "max-w-332", className)}>
 			{children}
 		</Component>
 	);
