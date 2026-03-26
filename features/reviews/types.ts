@@ -1,3 +1,5 @@
+import { ReviewScore } from "@/types/common";
+
 export interface RatingSummaryProps {
 	averageScore: number;
 	totalReviews: number;
@@ -7,8 +9,6 @@ export interface RatingSummaryProps {
 	fourStars: number;
 	fiveStars: number;
 }
-
-export type ReviewScore = 1 | 2 | 3 | 4 | 5;
 
 export interface ReviewCardProps {
 	id: number;
