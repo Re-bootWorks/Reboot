@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { getKakaoPlaceFn } from "../../types";
-import type { UploadImageFn } from "@/apis/image";
+import type { UploadImageFn } from "@/apis/images";
 import { getAddress } from "../../utils";
 import { useFormData } from "../providers/FormDataProvider";
 import AddressField, { AddressValues } from "../../components/AddressField";

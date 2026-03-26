@@ -85,7 +85,7 @@ export default function AddressField({
 		setValue((prev) => ({ ...prev, [name]: value }));
 	}
 
-	async function handleClickStreet(data: KakaoPlaceItem) {
+	function handleClickStreet(data: KakaoPlaceItem) {
 		setValue((prev) => ({
 			...prev,
 			latitude: Number(data.y),
@@ -93,7 +93,6 @@ export default function AddressField({
 			region: getRegion(data.address_name),
 			addressName: data.address_name,
 		}));
-		console.log(getRegion(data.address_name));
 		setIsComboOpened(false);
 	}
 

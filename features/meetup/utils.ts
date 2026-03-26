@@ -21,11 +21,18 @@ export function validatePlaceSearch(value: string) {
 }
 
 /** 주소 region 반환 */
+/**
+ * 앞부분 (| 기준 왼쪽) — 지번 주소 매칭
+ * "읍/면/동/가/리"로 끝나는 행정구역명(예: 역삼동, 신사동)을 찾고, 뒤에 붙는 번지("산 123" 등)도 함께 포함
+ * 뒷부분 (| 기준 오른쪽) — 도로명 주소 매칭
+ * "로" 또는 "길"로 끝나는 도로명(예: 테헤란로, 봉은사길) 포함
+ */
 const DONG_REGEX =
 	/(([가-힣]+(\d|\d[,\.]\d|)+(읍|면|동|가|리))(?=[\s\d]|$)([^구\s]|)((\d(~|-)\d|\d)(가|리)|))([ ](산[ ]?\d+([~-]\d+)?))?|(([가-힣]|(\d(~|-)\d)|\d)+(로|길))(?=[\s\d]|$)/;
 export function getRegion(text: string) {
 	const dong = text.match(DONG_REGEX);
 	if (!dong) return text.trim();
+	// 매칭되는 문자열 전까지 반환
 	const prefix = text.substring(0, dong.index).trim();
 	if (!prefix) return text.trim();
 	// 세종시 주소 예외 처리

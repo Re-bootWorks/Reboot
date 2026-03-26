@@ -4,7 +4,7 @@ import { Modal } from "@/components/ui/Modals";
 import { cn } from "@/utils/cn";
 import { MeetupCreateData } from "../../types";
 import { getKakaoPlace } from "../../apis";
-import { uploadImage } from "@/apis/image";
+import { uploadImage } from "@/apis/images";
 import FormStepProvider, { useFormStep } from "../providers/FormStepProvider";
 import FormDataProvider from "../providers/FormDataProvider";
 import FormHeader from "./FormHeader";

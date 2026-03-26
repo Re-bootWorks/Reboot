@@ -13,8 +13,8 @@ export async function POST(request: NextRequest) {
 		});
 
 		if (!response.ok) {
-			const error = await response.json().catch(() => null);
-			return NextResponse.json(error, { status: error.status });
+			const errorBody = await response.json().catch(() => null);
+			return NextResponse.json(errorBody, { status: response.status });
 		}
 
 		const data = await response.json();

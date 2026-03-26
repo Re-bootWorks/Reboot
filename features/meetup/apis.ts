@@ -31,6 +31,5 @@ export async function postMeetup(
 		body: JSON.stringify(data),
 	});
 
-	if (!res.ok) throw new Error(`모임 생성에 실패했습니다. (${res.status})`);
 	return res.json();
 }

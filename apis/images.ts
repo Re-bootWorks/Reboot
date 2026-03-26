@@ -18,9 +18,15 @@ export interface PresignedUrlResponse {
 
 /** 이미지 업로드 */
 export async function uploadImage(file: File): Promise<string | ErrorResponse> {
-	const { presignedUrl, publicUrl } = await getPresignedUrl(file.name, file.type);
-	await uploadToS3(presignedUrl, file);
-	return publicUrl;
+	try {
+		const { presignedUrl, publicUrl } = await getPresignedUrl(file.name, file.type);
+		await uploadToS3(presignedUrl, file);
+		return publicUrl;
+	} catch (error) {
+		const message =
+			error instanceof Error ? error.message : "이미지 업로드 중 알 수 없는 오류가 발생했습니다.";
+		return { code: "UPLOAD_ERROR", message };
+	}
 }
 
 /** 이미지 업로드 Step1: presigned URL 발급 */
