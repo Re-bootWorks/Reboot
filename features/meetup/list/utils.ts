@@ -1,4 +1,4 @@
-import { isDeadlinePassed } from "@/features/meetupDetail/utills";
+import { isDeadlinePassed } from "@/utils/date";
 import { SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "./constants";
 
 /** 정렬 기준 항목 조회 */

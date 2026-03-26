@@ -4,7 +4,7 @@ import UtilityButton from "@/components/ui/Buttons/UtilityButton";
 import { IcPerson } from "@/components/ui/icons";
 import { StatusLabel } from "@/components/ui/StatusLabel";
 import Image from "next/image";
-import { uiFormatDate, uiFormatTime } from "@/features/Post/utills";
+import { uiFormatDate, uiFormatTime } from "@/utils/date";
 import { cn } from "@/utils/cn";
 import SendButton from "@/components/ui/Buttons/SendButton";
 import { DetailCardProps } from "./type";

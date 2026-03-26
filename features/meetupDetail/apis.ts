@@ -22,7 +22,7 @@ export async function getMeetingDetail(meetingId: number): Promise<Meeting> {
 	return mockInformationData.find((m) => m.id === meetingId) ?? mockInformationData[0];
 }
 
-export async function getParticipants(meetingId: number): Promise<ParticipantsResponse> {
+export async function getParticipants(_meetingId: number): Promise<ParticipantsResponse> {
 	// TODO: 추후 실제 API로 교체 예정 (아래는 예시)
 	// const res = await fetch(`${BASE_URL}/meetings/${meetingId}/participants`, {
 	// 	next: { tags: [`participants-${meetingId}`] },
@@ -34,7 +34,7 @@ export async function getParticipants(meetingId: number): Promise<ParticipantsRe
 	return { data: mockParticipants, nextCursor: "", hasMore: false };
 }
 
-export async function getReviews(meetingId: number): Promise<ReviewsResponse> {
+export async function getReviews(_meetingId: number): Promise<ReviewsResponse> {
 	// TODO: 추후 실제 API로 교체 예정 (아래는 예시)
 	// const res = await fetch(`${BASE_URL}/meetings/${meetingId}/reviews`, {
 	// 	next: { tags: [`reviews-${meetingId}`] },

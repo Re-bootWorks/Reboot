@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import PageIntro from "@/components/ui/PageIntro";
 import ListControls from "@/features/reviews/components/ListControls";
 import RatingSummary from "@/features/reviews/components/RatingSummary";
@@ -11,7 +12,9 @@ export default function ReviewsPage() {
 				<PageIntro />
 			</header>
 
-			<ListControls />
+			<Suspense fallback={<></>}>
+				<ListControls />
+			</Suspense>
 			<RatingSummary {...RATING_SUMMARY} />
 			<ReviewsSection />
 		</>
