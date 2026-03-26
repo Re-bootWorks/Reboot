@@ -4,7 +4,7 @@ import { useFormData } from "../providers/FormDataProvider";
 import { postMeetup } from "../../apis";
 import { useState } from "react";
 import { useToast } from "@/providers/toast-provider";
-import { OnSuccess } from "./CreateModal";
+import type { OnSuccess } from "./CreateModal";
 
 interface FormFooterProps {
 	/** 닫기 버튼 클릭 시 호출 */

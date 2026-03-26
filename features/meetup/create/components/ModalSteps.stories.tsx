@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
-import { KakaoPlaceItem, KakaoPlaceResponse } from "../../types";
+import type { KakaoPlaceItem, KakaoPlaceResponse } from "../../types";
 import { Modal } from "@/components/ui/Modals";
 import FormStepProvider from "@/features/meetup/create/providers/FormStepProvider";
 import FormDataProvider from "@/features/meetup/create/providers/FormDataProvider";

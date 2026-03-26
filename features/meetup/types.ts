@@ -1,11 +1,3 @@
-// 이미지 업로드
-export type UploadImageFn = (file: File) => Promise<string | ErrorResponse>;
-
-export interface PresignedUrlResponse {
-	presignedUrl: string;
-	publicUrl: string;
-}
-
 // 카카오 장소 검색: 키워드로 장소 검색
 export type getKakaoPlaceFn = (query: string) => Promise<KakaoPlaceItem[]>;
 

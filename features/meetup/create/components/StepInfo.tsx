@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getKakaoPlaceFn, UploadImageFn } from "../../types";
+import type { getKakaoPlaceFn } from "../../types";
+import type { UploadImageFn } from "@/apis/image";
 import { getAddress } from "../../utils";
 import { useFormData } from "../providers/FormDataProvider";
 import AddressField, { AddressValues } from "../../components/AddressField";
