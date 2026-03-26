@@ -3,7 +3,7 @@
 import { Modal } from "@/components/ui/Modals";
 import { cn } from "@/utils/cn";
 import { MeetupCreateData } from "../../types";
-import { getKakaoAddress, uploadImage } from "../../apis";
+import { getKakaoPlace, uploadImage } from "../../apis";
 import FormStepProvider, { useFormStep } from "../providers/FormStepProvider";
 import FormDataProvider from "../providers/FormDataProvider";
 import FormHeader from "./FormHeader";
@@ -63,7 +63,7 @@ const TITLE = "모임 만들기";
 const TOTAL_STEPS = 4;
 const STEP_COMPS = [
 	<StepTypeSelect key="type" step={1} />,
-	<StepInfo key="info" step={2} uploadImageFn={uploadImage} getKakaoAddressFn={getKakaoAddress} />,
+	<StepInfo key="info" step={2} uploadImageFn={uploadImage} getKakaoPlaceFn={getKakaoPlace} />,
 	<StepDesc key="desc" step={3} />,
 	<StepSchedule key="schedule" step={4} />,
 ];

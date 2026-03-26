@@ -30,10 +30,10 @@ export default function FileField({
 
 		try {
 			const res = await uploadImageFn(file);
-			if (res) {
+			if (typeof res === "string") {
 				onChange(res, e);
 			} else {
-				throw new Error("이미지 업로드에 실패했습니다.");
+				handleShowToast({ message: res.message, status: "error" });
 			}
 		} catch (error) {
 			let message: string;

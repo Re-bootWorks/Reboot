@@ -1,5 +1,5 @@
 import { clientFetch } from "@/libs/clientFetch";
-import { MeetupCreateData, MeetupDetailData, PresignedUrlResponse } from "./types";
+import { ErrorResponse, MeetupCreateData, MeetupDetailData, PresignedUrlResponse } from "./types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -8,7 +8,7 @@ if (!BASE_URL) {
 }
 
 /** 이미지 업로드 */
-export async function uploadImage(file: File): Promise<string> {
+export async function uploadImage(file: File): Promise<string | ErrorResponse> {
 	const { presignedUrl, publicUrl } = await getPresignedUrl(file.name, file.type);
 	await uploadToS3(presignedUrl, file);
 	return publicUrl;
@@ -42,12 +42,12 @@ async function uploadToS3(presignedUrl: string, file: File): Promise<void> {
 	if (!res.ok) throw new Error(`이미지 업로드에 실패했습니다. (${res.status})`);
 }
 
-/** 카카오 주소 검색 API */
-const ROUTE_KAKAO_ADDRESS = "/kakao/address";
-export async function getKakaoAddress(query: string) {
-	const res = await clientFetch(`${ROUTE_KAKAO_ADDRESS}?query=${query}`);
+/** 카카오 장소 검색 API(목록 표시) */
+const ROUTE_KAKAO_PLACE = "/kakao/place";
+export async function getKakaoPlace(query: string) {
+	const res = await clientFetch(`${ROUTE_KAKAO_PLACE}?query=${query}`);
 	if (!res.ok) {
-		throw new Error(`카카오 주소 API 호출에 실패했습니다. (${res.status})`);
+		throw new Error(`카카오 장소 검색 API 호출에 실패했습니다. (${res.status})`);
 	}
 
 	const data = await res.json();
@@ -57,7 +57,9 @@ export async function getKakaoAddress(query: string) {
 
 /** 모임 생성 */
 const ROUTE_MEETINGS = "/meetings";
-export async function postMeetup(data: MeetupCreateData): Promise<MeetupDetailData> {
+export async function postMeetup(
+	data: MeetupCreateData,
+): Promise<MeetupDetailData | ErrorResponse> {
 	const res = await clientFetch(ROUTE_MEETINGS, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },

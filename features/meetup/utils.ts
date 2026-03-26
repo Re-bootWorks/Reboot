@@ -13,20 +13,29 @@ export function validateCapacity(capacity: number) {
 	return capacity > 0;
 }
 
-/** 지역 추출 (서울 강남구) */
-export function getRegion(first: string, second: string) {
-	return `${first} ${second}`;
+/** 장소 검색 시 입력 값 유효성 검사 */
+export function validatePlaceSearch(value: string) {
+	const isCompletedText = /^[\uAC00-\uD7A3|A-Z|a-z|\s]*$/.test(value);
+	if (!isCompletedText) return false;
+	return true;
 }
 
-/** 도로명 주소 통합 */
+/** 주소 region 반환 */
+const DONG_REGEX =
+	/(([가-힣]+(\d|\d[,\.]\d|)+(읍|면|동|가|리))(?=[\s\d]|$)([^구\s]|)((\d(~|-)\d|\d)(가|리)|))([ ](산[ ]?\d+([~-]\d+)?))?|(([가-힣]|(\d(~|-)\d)|\d)+(로|길))(?=[\s\d]|$)/;
+export function getRegion(text: string) {
+	const dong = text.match(DONG_REGEX);
+	if (!dong) return text.trim();
+	const prefix = text.substring(0, dong.index).trim();
+	if (!prefix) return text.trim();
+	// 세종시 주소 예외 처리
+	if (/세종/.test(prefix)) {
+		return (prefix + " " + dong[0]).trim();
+	}
+	return prefix;
+}
+
+/** 주소 address 반환 */
 export function getAddress(name: string, detail: string) {
 	return `${name}, ${detail}`;
-}
-
-/** 위경도 소수점 4자리로 변환 */
-export function formatLatLng(value: number | string) {
-	if (typeof value === "string") {
-		value = Number(value);
-	}
-	return Number(value.toFixed(4));
 }

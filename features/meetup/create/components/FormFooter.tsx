@@ -37,8 +37,12 @@ export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
 			try {
 				setIsPending(true);
 				const res = await postMeetup(data);
+				if ("id" in res) {
+					onSuccess(res.id);
+				} else {
+					handleShowToast({ message: res.message, status: "error" });
+				}
 				setIsPending(false);
-				onSuccess(res.id);
 			} catch (error) {
 				if (error instanceof Error) {
 					handleShowToast({ message: error.message, status: "error" });

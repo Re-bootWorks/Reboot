@@ -1,47 +1,43 @@
 // 이미지 업로드
-export type UploadImageFn = (file: File) => Promise<string>;
+export type UploadImageFn = (file: File) => Promise<string | ErrorResponse>;
 
 export interface PresignedUrlResponse {
 	presignedUrl: string;
 	publicUrl: string;
 }
 
-// 카카오 주소 검색
-export type GetKakaoAddressFn = (query: string) => Promise<KakaoAddressItem[]>;
+// 카카오 장소 검색: 키워드로 장소 검색
+export type getKakaoPlaceFn = (query: string) => Promise<KakaoPlaceItem[]>;
 
-export interface KakaoAddressItem {
-	address: {
-		address_name: string;
-		b_code: string;
-		h_code: string;
-		main_address_no: string;
-		mountain_yn: string;
-		region_1depth_name: string;
-		region_2depth_name: string;
-		region_3depth_h_name: string;
-		region_3depth_name: string;
-		sub_address_no: string;
-		x: string;
-		y: string;
-	};
+export interface KakaoPlaceItem {
 	address_name: string;
-	address_type: "REGION" | "ROAD" | "REGION_ADDR" | "ROAD_ADDR";
-	road_address: {
-		address_name: string;
-		building_name: string;
-		main_building_no: string;
-		region_1depth_name: string;
-		region_2depth_name: string;
-		region_3depth_name: string;
-		road_name: string;
-		sub_building_no: string;
-		underground_yn: string;
-		x: string;
-		y: string;
-		zone_no: string;
-	};
+	category_group_code: string;
+	category_group_name: string;
+	category_name: string;
+	distance: string;
+	id: string;
+	phone: string;
+	place_name: string;
+	place_url: string;
+	road_address_name: string;
 	x: string;
 	y: string;
+}
+
+export interface KakaoPlaceMeta {
+	is_end: boolean;
+	pageable_count: number;
+	same_name: {
+		keyword: string;
+		region: string[];
+		selected_region: string;
+	};
+	total_count: number;
+}
+
+export interface KakaoPlaceResponse {
+	documents: KakaoPlaceItem[];
+	meta: KakaoPlaceMeta;
 }
 
 // 모임 생성/수정
@@ -102,4 +98,9 @@ export interface MeetupDetailData {
 	isFavorited: boolean;
 	isJoined: boolean;
 	isCompleted: boolean;
+}
+
+export interface ErrorResponse {
+	code: string;
+	message: string;
 }
