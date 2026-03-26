@@ -9,6 +9,7 @@ import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
 import { useSignUp } from "@/features/auth/mutations";
+import { KAKAO_LOGIN_URL } from "@/constants/auth";
 
 const signUpSchema = z
 	.object({
@@ -26,6 +27,10 @@ type SignUpFormData = z.infer<typeof signUpSchema>;
 
 interface SignUpFormProps {
 	onSuccess: () => void;
+}
+
+function handleKakaoLogin() {
+	window.location.href = KAKAO_LOGIN_URL;
 }
 
 export function SignUpForm({ onSuccess }: SignUpFormProps) {
@@ -101,7 +106,9 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 				</div>
 				<div className="flex flex-col gap-3 md:flex-row">
 					<SocialButton social="Google">구글로 계속하기</SocialButton>
-					<SocialButton social="Kakao">카카오로 계속하기</SocialButton>
+					<SocialButton social="Kakao" onClick={handleKakaoLogin}>
+						카카오로 계속하기
+					</SocialButton>
 				</div>
 			</div>
 		</form>
