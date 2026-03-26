@@ -4,32 +4,32 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/utils/cn";
 import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
-import PickerInput, { PickerInputProps } from "../PickerField";
 import Button from "../../Buttons/Button";
 import Calendar from "./Calendar";
-
-type DatePickerProps = Omit<
-	PickerInputProps,
-	"type" | "value" | "defaultValue" | "onChange" | "iconType"
-> & {
-	value?: string;
-	onChange?: (value: string) => void;
-};
+import InputField from "../../Inputs/InputField";
+import { IcCalendarOutline } from "../../icons";
+import { DatePickerProps } from "./types";
 
 export default function DatePicker({
 	value = "",
 	onChange,
 	label,
-	required,
+	isRequired = false,
 	placeholder = "YYYY-MM-DD",
 	className,
 	readOnly,
 	disabled,
-	id,
+	isDestructive,
+	hintText,
 	...props
 }: DatePickerProps) {
+	/** 부모가 내려준 value(예: "2026-03-24")를 Date 객체로 변환한 "확정된 현재 값" */
 	const selectedDate = useMemo(() => parseDateString(value), [value]);
+
+	/** 캘린더가 지금 어떤 "월"을 보고 있는지 관리하는 상태 */
 	const [month, setMonth] = useState<Date>(selectedDate ?? getKoreanToday());
+
+	/** 패널 안에서 사용자가 임시로 고른 날짜 */
 	const [draftDate, setDraftDate] = useState<Date | undefined>(selectedDate);
 
 	useEffect(() => {
@@ -45,16 +45,17 @@ export default function DatePicker({
 			{({ close, open }) => (
 				<>
 					<div className={cn("relative w-full", className)}>
-						<PickerInput
-							id={id}
+						<InputField
 							label={label}
-							required={required}
-							iconType="calendar"
+							isRequired={isRequired}
 							value={value}
 							placeholder={placeholder}
 							readOnly
 							disabled={disabled}
-							className={cn("pr-3", open && "border-purple-500")}
+							leftIcon={<IcCalendarOutline className="size-4.5 text-gray-800 md:size-6" />}
+							hintText={hintText}
+							isDestructive={isDestructive}
+							inputClassName={cn(open && "border-purple-500")}
 							{...props}
 						/>
 
@@ -66,7 +67,10 @@ export default function DatePicker({
 									setDraftDate(selectedDate);
 									setMonth(selectedDate ?? getKoreanToday());
 								}}
-								className="absolute inset-0 cursor-pointer rounded-[0.625rem] outline-none md:rounded-xl"
+								className={cn(
+									"absolute inset-x-0 z-20 cursor-pointer rounded-[0.625rem] outline-none md:rounded-xl",
+									label ? "bottom-0 h-10 md:h-12" : "top-0 h-10 md:h-12",
+								)}
 							/>
 						)}
 					</div>

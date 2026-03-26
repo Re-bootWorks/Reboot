@@ -11,7 +11,7 @@ const meta: Meta<typeof TimePicker> = {
 			control: "text",
 			description: "라벨",
 		},
-		required: {
+		isRequired: {
 			control: "boolean",
 			description: "필수 여부",
 		},
@@ -21,7 +21,7 @@ const meta: Meta<typeof TimePicker> = {
 		},
 		value: {
 			control: "text",
-			description: "시간 값",
+			description: "시간 값 (HH:mm 형식)",
 		},
 		disabled: {
 			control: "boolean",
@@ -30,6 +30,18 @@ const meta: Meta<typeof TimePicker> = {
 		readOnly: {
 			control: "boolean",
 			description: "읽기 전용",
+		},
+		hintText: {
+			control: "text",
+			description: "힌트 문구",
+		},
+		isDestructive: {
+			control: "boolean",
+			description: "에러 상태",
+		},
+		name: {
+			control: "text",
+			description: "form 제출용 hidden input name",
 		},
 		className: {
 			control: false,
@@ -44,11 +56,13 @@ const meta: Meta<typeof TimePicker> = {
 	},
 	args: {
 		label: "모임 시간",
-		required: false,
-		placeholder: "00:00",
+		isRequired: false,
 		value: "",
 		disabled: false,
 		readOnly: false,
+		hintText: "",
+		isDestructive: false,
+		name: "",
 	},
 };
 
@@ -81,18 +95,40 @@ function ControlledTimePicker(args: ComponentProps<typeof TimePicker>) {
 
 export const Default: Story = {
 	render: (args) => <ControlledTimePicker {...args} />,
-	args: {
-		label: "모임 시간",
-		required: false,
-		placeholder: "00:00",
-	},
 };
 
 export const Required: Story = {
 	render: (args) => <ControlledTimePicker {...args} />,
 	args: {
-		label: "모임 시간",
-		required: true,
-		placeholder: "00:00",
+		isRequired: true,
+	},
+};
+
+export const WithHint: Story = {
+	render: (args) => <ControlledTimePicker {...args} />,
+	args: {
+		hintText: "저는 힌트 메시지입니다",
+	},
+};
+
+export const Destructive: Story = {
+	render: (args) => <ControlledTimePicker {...args} />,
+	args: {
+		hintText: "올바른 시간을 입력해 주세요.",
+		isDestructive: true,
+	},
+};
+
+export const Disabled: Story = {
+	render: (args) => <ControlledTimePicker {...args} />,
+	args: {
+		disabled: true,
+	},
+};
+
+export const InvalidValueFallback: Story = {
+	render: (args) => <ControlledTimePicker {...args} />,
+	args: {
+		value: "99:99",
 	},
 };

@@ -3,17 +3,24 @@
 import NextImage from "next/image";
 import { useImperativeHandle, useRef } from "react";
 import { cn } from "@/utils/cn";
+import { InputFieldWrapper } from "../InputFieldWrapper";
 import { IcImagePlus } from "../../icons";
 import DeleteButton from "../../Buttons/DeleteButton";
 import useInputImage from "@/hooks/useInputImage";
 
 interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
-	/** 식별 ID */
-	id: string;
-	/** 데이터 필드명 */
-	name: string;
 	/** 컴포넌트 제어 참조(reset) */
 	ref?: React.Ref<InputFileHandle>;
+	/** 데이터 필드명 */
+	name: string;
+	/** 라벨명 */
+	label?: string;
+	/** 필수 작성 여부 */
+	isRequired?: boolean;
+	/** 입력 필드 하단에 표시되는 힌트 또는 에러 메시지 */
+	hintText?: string;
+	/** 에러 상태 여부 */
+	isDestructive?: boolean;
 	/** 첨부 파일 타입 */
 	accept?: string;
 	/** 썸네일 이미지 크기 */
@@ -33,12 +40,15 @@ export interface InputFileHandle {
 }
 
 export default function InputFile({
+	label,
 	ref,
-	id,
 	name,
+	isRequired = false,
 	defaultUrl = null,
 	thumbSize = "large",
 	accept = "image/*",
+	hintText,
+	isDestructive = false,
 	onChange,
 	...props
 }: InputFileProps) {
@@ -50,40 +60,60 @@ export default function InputFile({
 	});
 	useImperativeHandle(ref, () => ({ reset: resetFile }));
 
+	function handleDeleteButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		e.stopPropagation();
+		resetFile();
+	}
+
 	return (
-		<div
-			className={cn(
-				"relative overflow-hidden rounded-xl bg-gray-50",
-				thumbSize === "large" && "h-[147px] w-[147px]",
-				thumbSize === "small" && "h-[114px] w-[114px]",
-			)}>
-			<label htmlFor={id} className={!previewUrl ? "cursor-pointer" : "cursor-initial"}>
-				{!previewUrl && <NoPreview thumbSize={thumbSize} />}
-				{previewUrl && (
-					<>
-						<NextImage src={previewUrl} alt="thumbnail" fill className="object-cover" />
-						<DeleteButton
-							className="absolute top-2.5 right-2.5 z-10 cursor-pointer"
-							onClick={(e) => {
-								e.preventDefault();
-								e.stopPropagation();
-								resetFile();
-							}}
+		<InputFieldWrapper
+			label={label}
+			isRequired={isRequired}
+			hintText={hintText}
+			isDestructive={isDestructive}>
+			{({ id, descriptionId }) => (
+				<div
+					className={cn(
+						"overflow-hidden rounded-xl bg-gray-50 transition-colors",
+						thumbSize === "large" && "h-[147px] w-[147px]",
+						thumbSize === "small" && "h-[114px] w-[114px]",
+						!isDestructive
+							? "border border-transparent focus-within:border-purple-500"
+							: "border-error border",
+					)}>
+					<label
+						htmlFor={id}
+						className={cn(
+							"relative block h-full w-full",
+							!previewUrl ? "cursor-pointer" : "cursor-initial",
+						)}>
+						{!previewUrl && <NoPreview thumbSize={thumbSize} />}
+						{previewUrl && (
+							<>
+								<NextImage src={previewUrl} alt="thumbnail" fill className="object-cover" />
+								<DeleteButton
+									className="absolute top-2.5 right-2.5 z-10 cursor-pointer"
+									onClick={handleDeleteButtonClick}
+								/>
+							</>
+						)}
+						<input
+							ref={inputRef}
+							id={id}
+							name={name}
+							accept={accept}
+							required={isRequired}
+							onChange={changeFile}
+							aria-describedby={hintText ? descriptionId : undefined}
+							type="file"
+							className="hidden"
+							{...props}
 						/>
-					</>
-				)}
-				<input
-					{...props}
-					ref={inputRef}
-					id={id}
-					name={name}
-					accept={accept}
-					onChange={changeFile}
-					type="file"
-					className="hidden"
-				/>
-			</label>
-		</div>
+					</label>
+				</div>
+			)}
+		</InputFieldWrapper>
 	);
 }
 
@@ -91,7 +121,7 @@ function NoPreview({ thumbSize }: Pick<InputFileProps, "thumbSize">) {
 	return (
 		<div
 			className={cn(
-				"flex h-full w-full flex-col items-center justify-center gap-y-2",
+				"flex h-full w-full cursor-pointer flex-col items-center justify-center gap-y-2",
 				thumbSize === "small" && "text-sm",
 			)}>
 			<IcImagePlus />

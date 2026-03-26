@@ -7,7 +7,7 @@ const meta: Meta<typeof DateFilter> = {
 	component: DateFilter,
 	tags: ["autodocs"],
 	parameters: {
-		layout: "centered",
+		layout: "fullscreen",
 	},
 };
 
@@ -19,8 +19,12 @@ function ControlledDateFilter() {
 	const [date, setDate] = useState("");
 
 	return (
-		<div className="w-72">
-			<DateFilter value={date} onChange={setDate} />
+		<div className="min-h-screen bg-gray-100">
+			<div className="mx-auto w-full max-w-7xl px-4 py-20 md:px-6">
+				<div className="flex justify-start">
+					<DateFilter value={date} onChange={setDate} />
+				</div>
+			</div>
 		</div>
 	);
 }

@@ -1,10 +1,9 @@
 "use client";
 
-import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
-import PageTab from "../PageTab";
-import useDragScroll from "./useDragScroll";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
 import useIndicator from "./useIndicator";
-import { cn } from "@/utils/cn";
+import PageTab from "../PageTab";
 
 interface PageTabsProps {
 	/** 초기 활성 탭 ID (마운트 시 1회만 사용) */
@@ -18,7 +17,7 @@ interface PageTabsProps {
 function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 	const listRef = useRef<HTMLUListElement>(null);
 	const [activeId, setActiveId] = useState(defaultId);
-	const { overflow, ...dragScroll } = useDragScroll();
+	const { ref, overlays, style, ...events } = useDragScroll();
 	const { indicatorRef, style: indicatorStyle, addTransition } = useIndicator(listRef, activeId);
 
 	// defaultId 가 없을 경우 첫 번째 data-id 사용
@@ -40,10 +39,8 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 
 	return (
 		<TabsContext.Provider value={{ activeId, updateActiveId, addTransition }}>
-			<div className="relative">
-				<div
-					className="w-full overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-					{...dragScroll}>
+			<div className="relative w-full">
+				<div ref={ref} className={containerStyle} style={style} {...events}>
 					<div className="relative w-fit min-w-full">
 						<ul className="flex w-full" ref={listRef} role="tablist">
 							{children}
@@ -60,17 +57,11 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 						/>
 					</div>
 				</div>
-				<div
-					className={cn(overlayStyle, "left-0 hidden bg-linear-to-r", overflow.left && "block")}
-				/>
-				<div
-					className={cn(overlayStyle, "right-0 hidden bg-linear-to-l", overflow.right && "block")}
-				/>
+				{overlays}
 			</div>
 		</TabsContext.Provider>
 	);
 }
-const overlayStyle = "pointer-events-none absolute top-0 h-full w-8 from-white to-transparent";
 
 interface TabItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	/** 식별 ID */
@@ -109,17 +100,7 @@ interface OnChangeParams {
 
 // ----- utils -----
 type ActiveId = string | null | undefined;
-type ActiveTab = HTMLLIElement | null | undefined;
 type TabList = HTMLUListElement | null | undefined;
-
-function getActiveTab(list: TabList, activeId: ActiveId): ActiveTab {
-	let tab: ActiveTab;
-	tab = list?.querySelector(`[data-id="${activeId}"]`) ?? null;
-	if (!tab) {
-		tab = list?.children[0] as HTMLLIElement;
-	}
-	return tab;
-}
 
 function getFirstDataId(list: TabList): ActiveId {
 	return list?.querySelector("[data-id]")?.getAttribute("data-id");
