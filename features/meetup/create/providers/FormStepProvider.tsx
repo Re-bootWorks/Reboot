@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryParams } from "@/hooks/useQueryParams";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { createContext, useCallback, useContext } from "react";
 
@@ -38,25 +39,21 @@ export default function FormStepProvider({
 	/** 폼 컴포넌트 */
 	children: React.ReactNode;
 }) {
+	const { set } = useQueryParams();
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	const currentStep = Number(searchParams.get("step")) || step;
+	const currentStep = Number(searchParams.get(QUERY_KEY)) || step;
 
 	const next = useCallback(() => {
-		const params = new URLSearchParams(searchParams.toString());
-
-		params.set(QUERY_KEY, String(Number(params.get(QUERY_KEY) || 1) + 1));
-		router.replace(`${pathname}?${params}`);
+		const step = Number(searchParams.get(QUERY_KEY)) || 1;
+		set({ [QUERY_KEY]: String(step + 1) });
 	}, [router, pathname, searchParams]);
 
 	const prev = useCallback(() => {
-		const params = new URLSearchParams(searchParams.toString());
-		const current = Number(params.get(QUERY_KEY) || 1);
-
-		params.set(QUERY_KEY, String(current - 1));
-		router.replace(`${pathname}?${params}`);
+		const step = Number(searchParams.get(QUERY_KEY)) || 1;
+		set({ [QUERY_KEY]: String(step - 1) });
 	}, [router, pathname, searchParams]);
 
 	return (
