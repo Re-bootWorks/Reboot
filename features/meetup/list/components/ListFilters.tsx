@@ -4,7 +4,7 @@ import TabButton from "@/components/ui/Buttons/TabButton";
 import { MEETUP_TYPES, QUERY_KEYS, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "../constants";
 import { cn } from "@/utils/cn";
 import DateFilter from "@/components/ui/Filter/DateFilter";
-import { FilterDropdown } from "@/components/ui/Dropdowns/FilterDropdown";
+import { FilterDropdown } from "@/components/ui/Filter/FilterDropdown";
 import { IcChevronDown } from "@/components/ui/icons";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";

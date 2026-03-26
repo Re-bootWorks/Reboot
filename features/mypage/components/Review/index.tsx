@@ -73,7 +73,7 @@ function Writable() {
 function Written() {
 	const initialItems: ReviewList = mockMyReviews;
 
-	const [items, setItems] = useState(initialItems); // 리뷰 수정 및 삭제 성공 시 아이템 업데이트
+	const [items] = useState(initialItems); // 리뷰 수정 및 삭제 성공 시 아이템 업데이트
 	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
 	const [reviewTarget, setReviewTarget] = useState<ReviewCardItem | null>(null);
 	// 어떤 모임에 대해 alert을 띄웠는지
