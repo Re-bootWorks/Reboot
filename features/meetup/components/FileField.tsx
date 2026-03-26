@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import InputFile, { type InputFileHandle } from "@/components/ui/Inputs/InputFile";
 import { useToast } from "@/providers/toast-provider";
-import { UploadImageFn } from "../types";
+import type { UploadImageFn } from "@/apis/images";
 
 interface FileFieldProps {
 	/** 기본 이미지 */
