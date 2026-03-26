@@ -3,6 +3,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { cn } from "@/utils/cn";
 import IcFilter from "@/components/ui/icons/IcFilter";
+import FilterTrigger from "@/components/ui/Filter/FilterTrigger";
 
 type SortDropdownItem = {
 	label: string;
@@ -16,11 +17,15 @@ type FilterDropdownProps = {
 };
 
 export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) {
+	const selectedItem = items.find((item) => item.value === value);
+
 	return (
 		<Menu as="div" className="relative inline-block">
-			<MenuButton className="flex items-center gap-1 text-sm font-semibold text-gray-800">
-				<IcFilter size="sm" className="text-gray-500" />
-				{value}
+			<MenuButton as="div">
+				<FilterTrigger isActive={!!value}>
+					<IcFilter className="h-4 w-4" />
+					<span>{selectedItem?.label ?? value}</span>
+				</FilterTrigger>
 			</MenuButton>
 
 			<MenuItems
