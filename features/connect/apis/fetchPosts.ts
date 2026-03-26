@@ -1,5 +1,7 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
+import type { Post } from "@/features/connect/types";
+
 if (!BASE_URL) {
 	throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
 }
@@ -11,7 +13,11 @@ type GetPostsParams = {
 	limit?: number;
 };
 
-export const fetchPosts = async (params: GetPostsParams) => {
+type GetPostsResponse = {
+	data: Post[];
+};
+
+export const fetchPosts = async (params: GetPostsParams): Promise<GetPostsResponse> => {
 	const query = new URLSearchParams({
 		type: params.type ?? "all",
 		sortBy: params.sortBy ?? "createdAt",
@@ -25,5 +31,5 @@ export const fetchPosts = async (params: GetPostsParams) => {
 		throw new Error("게시글 조회 실패");
 	}
 
-	return res.json();
+	return res.json() as Promise<GetPostsResponse>;
 };

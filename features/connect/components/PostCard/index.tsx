@@ -3,7 +3,7 @@ import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 import IcPerson from "@/components/ui/icons/IcPerson";
 import dayjs from "@/libs/dayjs";
 import Image from "next/image";
-import EmptyImage from "@/features/connect/ui/EmptyImage";
+import EmptyImage from "@/features/connect/components/ui/EmptyImage";
 
 type PostCardProps = {
 	id: number;
