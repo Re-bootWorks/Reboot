@@ -7,3 +7,19 @@ export interface RatingSummaryProps {
 	fourStars: number;
 	fiveStars: number;
 }
+
+export type ReviewScore = 1 | 2 | 3 | 4 | 5;
+
+export interface ReviewCardProps {
+	id: number;
+	meetingId: number;
+	meetingImage: string;
+	score: ReviewScore;
+	userImage: string | null;
+	userName: string;
+	createdAt: string;
+	comment: string;
+	meetingName: string;
+	meetingType: string;
+	userId: number;
+}
