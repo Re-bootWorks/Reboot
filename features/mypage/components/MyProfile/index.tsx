@@ -66,7 +66,7 @@ function MyProfile({ user, handleEditClick }: MyProfileProps) {
 export default function MyProfileContainer() {
 	const { isOpen, open, close } = useToggle();
 	const user = useUserStore((state) => state.user);
-	const isLoading = useUserStore((state) => state.isLoading);
+	const isLoading = useUserStore((state) => state.isPending);
 
 	if (isLoading) return <MyProfileSkeleton />;
 	if (!user) return null;
