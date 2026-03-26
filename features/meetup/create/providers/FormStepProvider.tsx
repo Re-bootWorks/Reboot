@@ -1,7 +1,8 @@
 "use client";
 
+import { useQueryParams } from "@/hooks/useQueryParams";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { createContext, useCallback, useContext, useEffect } from "react";
+import { createContext, useCallback, useContext } from "react";
 
 interface FormStepContextValue {
 	/** 현재 단계 숫자 */
@@ -27,13 +28,10 @@ export function useFormStep() {
 }
 
 export default function FormStepProvider({
-	isOpen,
 	step = 1,
 	totalSteps,
 	children,
 }: {
-	/** 모달 열기 상태 */
-	isOpen: boolean;
 	/** 현재 단계 숫자 */
 	step?: number;
 	/** 총 단계 숫자 */
@@ -41,35 +39,22 @@ export default function FormStepProvider({
 	/** 폼 컴포넌트 */
 	children: React.ReactNode;
 }) {
+	const { set } = useQueryParams();
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	const currentStep = Number(searchParams.get("step")) || step;
+	const currentStep = Number(searchParams.get(QUERY_KEY)) || step;
 
 	const next = useCallback(() => {
-		const params = new URLSearchParams(searchParams.toString());
-
-		params.set(QUERY_KEY, String(Number(params.get(QUERY_KEY) || 1) + 1));
-		router.replace(`${pathname}?${params}`);
+		const step = Number(searchParams.get(QUERY_KEY)) || 1;
+		set({ [QUERY_KEY]: String(step + 1) });
 	}, [router, pathname, searchParams]);
 
 	const prev = useCallback(() => {
-		const params = new URLSearchParams(searchParams.toString());
-		const current = Number(params.get(QUERY_KEY) || 1);
-
-		params.set(QUERY_KEY, String(current - 1));
-		router.replace(`${pathname}?${params}`);
+		const step = Number(searchParams.get(QUERY_KEY)) || 1;
+		set({ [QUERY_KEY]: String(step - 1) });
 	}, [router, pathname, searchParams]);
-
-	// 모달이 닫히면 쿼리스트링 삭제
-	useEffect(() => {
-		if (!isOpen) {
-			const params = new URLSearchParams(searchParams.toString());
-			params.delete(QUERY_KEY);
-			router.replace(`${pathname}?${params}`);
-		}
-	}, [isOpen, pathname, router, searchParams]);
 
 	return (
 		<FormStepContext.Provider value={{ currentStep, totalSteps, next, prev }}>

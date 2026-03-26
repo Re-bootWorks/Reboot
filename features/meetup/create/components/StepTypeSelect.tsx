@@ -36,7 +36,7 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 				variants={{
 					visible: { transition: { staggerChildren: 0.05 } },
 				}}>
-				{TYPES.map((type) => (
+				{CATEGORY_TYPES.map((type) => (
 					<motion.div
 						key={type.value}
 						variants={{
@@ -59,11 +59,11 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 }
 
 const DESC = "이 모임은 어떤 종류인가요?";
-const TYPES = [
-	{ value: "hobby", name: "취미/여가", imageSrc: imgHobby },
-	{ value: "study", name: "스터디", imageSrc: imgStudy },
-	{ value: "business", name: "비즈니스", imageSrc: imgBusiness },
-	{ value: "sports", name: "운동/건강", imageSrc: imgSports },
-	{ value: "family", name: "가족/육아", imageSrc: imgFamily },
-	{ value: "etc", name: "기타", imageSrc: imgEtc },
+const CATEGORY_TYPES = [
+	{ value: "자기계발", name: "자기계발", imageSrc: imgStudy },
+	{ value: "운동/스포츠", name: "운동/스포츠", imageSrc: imgSports },
+	{ value: "문화생활", name: "문화생활", imageSrc: imgHobby },
+	{ value: "여행", name: "여행", imageSrc: imgBusiness },
+	{ value: "반려동물", name: "반려동물", imageSrc: imgFamily },
+	{ value: "기타", name: "기타", imageSrc: imgEtc },
 ];
