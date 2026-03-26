@@ -1,8 +1,6 @@
 import ReviewCard from "./ReviewCard";
 import { REVIEW_CARD_MOCK_DATA } from "../../mockData";
-import Image from "next/image";
-
-const EMPTY_IMAGE_SRC = "/assets/img/img_empty.svg";
+import Empty from "@/components/layout/Empty";
 
 export default function ReviewsSection() {
 	const hasReviews = REVIEW_CARD_MOCK_DATA.length > 0;
@@ -18,17 +16,7 @@ export default function ReviewsSection() {
 					))}
 				</div>
 			) : (
-				<div className="flex flex-col items-center justify-center gap-5 py-10 md:gap-6 md:py-14 lg:py-15">
-					<Image
-						src={EMPTY_IMAGE_SRC}
-						alt=""
-						aria-hidden="true"
-						width={224}
-						height={144}
-						className="h-[4.438rem] w-30"
-					/>
-					<p className="text-sm font-medium text-gray-500 md:text-base">아직 리뷰가 없어요</p>
-				</div>
+				<Empty>아직 리뷰가 없어요</Empty>
 			)}
 		</section>
 	);

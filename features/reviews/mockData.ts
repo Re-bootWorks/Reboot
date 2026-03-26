@@ -2,31 +2,6 @@ import { RatingSummaryProps } from "./types";
 
 export const MOCK_LOGIN_USER_ID = 1;
 
-export const TAB_OPTIONS: string[] = [
-	"전체",
-	"자기계발",
-	"운동/스포츠",
-	"비즈니스",
-	"운동/건강",
-	"가족/육아",
-	"기타",
-];
-
-// 타입 추후 추가 예정
-export const SORT_OPTIONS = [
-	{ label: "빠른 모임", value: "dateTimeAsc", by: "dateTime", order: "asc" },
-	{ label: "나중 모임", value: "dateTimeDesc", by: "dateTime", order: "desc" },
-	{ label: "마감 임박", value: "registrationEndAsc", by: "registrationEnd", order: "asc" },
-	{ label: "마감 여유", value: "registrationEndDesc", by: "registrationEnd", order: "desc" },
-	{
-		label: "참여 여유",
-		value: "participantCountAsc",
-		by: "participantCount",
-		order: "asc",
-	},
-	{ label: "참여 활발", value: "participantCountDesc", by: "participantCount", order: "desc" },
-];
-
 export const RATING_SUMMARY: RatingSummaryProps = {
 	averageScore: 4.5,
 	totalReviews: 42,
