@@ -1,3 +1,9 @@
-export default function Detail() {
-	return <div>상세페이지</div>;
+import Container from "@/components/layout/Container";
+
+export default function DetailPage() {
+	return (
+		<Container narrow>
+			<div className="">내용</div>
+		</Container>
+	);
 }
