@@ -32,8 +32,22 @@ export default function Banner() {
 					"md:top-[28px] md:right-[-95px] md:h-[273px] md:w-[468px]",
 					"lg:top-2 lg:right-[84px] lg:h-[313.143px] lg:w-[536px]",
 				)}>
-				<Image src={imgBannerSmall} alt="banner" fill className="md:hidden" />
-				<Image src={imgBannerLarge} alt="banner" fill className="hidden md:block" />
+				<Image
+					fetchPriority="high"
+					src={imgBannerSmall}
+					alt="banner"
+					fill
+					className="md:hidden"
+					sizes="352px"
+				/>
+				<Image
+					fetchPriority="high"
+					src={imgBannerLarge}
+					alt="banner"
+					fill
+					className="hidden md:block"
+					sizes="(max-width: 1280px) 468px, 536px"
+				/>
 			</div>
 		</div>
 	);
