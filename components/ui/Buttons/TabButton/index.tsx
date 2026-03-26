@@ -17,7 +17,7 @@ export default function TabButton({
 			type={type}
 			aria-pressed={selected}
 			className={cn(
-				"w-fit shrink-0 px-4 font-medium transition-colors",
+				"w-fit shrink-0 px-4 font-medium whitespace-nowrap transition-colors",
 				"h-9 rounded-[0.875rem] text-sm md:h-10 md:rounded-2xl md:text-base",
 				"enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50",
 				selected ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800",

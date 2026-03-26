@@ -9,7 +9,7 @@ interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const variantStyles = {
 	default:
-		"bg-gray-50 border-none hover:bg-white hover:ring-2 hover:ring-purple-300 focus:bg-white focus:ring-2 focus:ring-purple-500",
+		"bg-gray-100 border-none hover:bg-white hover:ring-2 hover:ring-purple-300 focus:bg-white focus:ring-2 focus:ring-purple-500",
 	outlined:
 		"bg-white border border-gray-300 hover:border-purple-400 focus:border-purple-500 focus:ring-1 focus:ring-purple-500",
 } as const;
