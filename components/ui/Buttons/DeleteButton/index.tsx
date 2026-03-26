@@ -4,9 +4,10 @@ import { IcDelete } from "../../icons";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 	className?: string;
+	iconSize?: "md" | "xxs";
 };
 
-export default function DeleteButton({ className, ...props }: ButtonProps) {
+export default function DeleteButton({ className, iconSize = "xxs", ...props }: ButtonProps) {
 	return (
 		<Button
 			className={cn(
@@ -14,7 +15,7 @@ export default function DeleteButton({ className, ...props }: ButtonProps) {
 				className,
 			)}
 			{...props}>
-			<IcDelete color="gray-100" size="xxs" />
+			<IcDelete color="gray-100" size={iconSize} />
 		</Button>
 	);
 }
