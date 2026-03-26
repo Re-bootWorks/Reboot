@@ -11,15 +11,15 @@ interface CapacityFieldProps {
 	onChange: (value: number, e: React.ChangeEvent<HTMLInputElement>) => void;
 	/** 추가 클래스명 */
 	className?: string;
-	/** 필수 필드 여부 */
-	isRequired: boolean;
+	/** 필수 필드 여부 @default true */
+	isRequired?: boolean;
 }
 export default function CapacityField({
 	name = "capacity",
 	value,
 	onChange,
 	className,
-	isRequired,
+	isRequired = true,
 }: CapacityFieldProps) {
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
 		onChange(Number(e.target.value), e);

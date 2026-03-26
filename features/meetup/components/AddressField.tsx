@@ -21,8 +21,8 @@ interface AddressFieldProps {
 	setValue: React.Dispatch<React.SetStateAction<AddressValues>>;
 	/** 카카오 장소 검색 함수 */
 	getKakaoPlaceFn: getKakaoPlaceFn;
-	/** 필수 필드 여부 */
-	isRequired: boolean;
+	/** 필수 필드 여부 @default true */
+	isRequired?: boolean;
 }
 
 export type AddressValues = {
@@ -44,7 +44,7 @@ export default function AddressField({
 	value,
 	setValue,
 	getKakaoPlaceFn,
-	isRequired,
+	isRequired = true,
 }: AddressFieldProps) {
 	const [kakaoAddressData, setKakaoAddressData] = useState<KakaoPlaceItem[]>([]);
 	const { handleShowToast } = useToast();

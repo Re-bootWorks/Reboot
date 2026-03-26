@@ -11,15 +11,15 @@ interface DescFieldProps {
 	onChange: (value: string, e: React.ChangeEvent<HTMLInputElement>) => void;
 	/** 추가 클래스명 */
 	className?: string;
-	/** 필수 필드 여부 */
-	isRequired: boolean;
+	/** 필수 필드 여부 @default true */
+	isRequired?: boolean;
 }
 export default function DescField({
 	name = "description",
 	value,
 	onChange,
 	className,
-	isRequired,
+	isRequired = true,
 }: DescFieldProps) {
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
 		onChange(e.target.value, e);
