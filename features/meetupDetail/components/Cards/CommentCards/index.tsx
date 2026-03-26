@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/ui/Pagination";
-import { ReviewScore } from "@/features/reviews/components/ReviewCard";
+import { ReviewScore } from "@/types/common";
 import { Rating, Heart } from "@smastrom/react-rating";
 import { formatIsoDateWithDots } from "@/utils/date";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
@@ -78,7 +78,7 @@ export default function CommentCards({ comments }: CommentCardsProps) {
 	const hasComments = comments.length > 0;
 
 	return (
-		<div className="flex h-fit w-85.75 flex-col gap-3 md:w-174 md:gap-4 lg:w-7xl lg:gap-5">
+		<div className="flex h-fit w-full flex-col gap-3 md:gap-4 lg:gap-5">
 			<div className="flex h-fit w-full gap-2.5 pl-1.5 lg:pl-2.5">
 				<h3 className="text-base font-semibold md:text-xl lg:text-2xl">리뷰 모아보기</h3>
 			</div>
@@ -92,7 +92,7 @@ export default function CommentCards({ comments }: CommentCardsProps) {
 							))}
 						</div>
 					) : (
-						<div className="flex h-fit w-54.25 flex-col items-center gap-5 md:gap-6">
+						<div className="flex h-fit w-full flex-col items-center gap-5 md:gap-6">
 							<Image
 								src={EMPTY_IMAGE}
 								alt={"빈 이미지"}

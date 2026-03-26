@@ -1,24 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import { useModal } from "@/hooks/use-modal";
-import CreateModal from "./components/CreateModal";
-import CreateOpenButton from "./components/CreateOpenButton";
+import useToggle from "@/hooks/useToggle";
+import { useToast } from "@/providers/toast-provider";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+
+const CreateModal = dynamic(() => import("./components/CreateModal"), { ssr: false });
 
 export default function MeetUpCreate() {
-	const { isOpen, open, close } = useModal();
-	const [isPending, setIsPending] = useState(false);
+	const { handleShowToast } = useToast();
+	const router = useRouter();
+	const { isOpen, close } = useToggle(true);
 
-	async function handleSubmit() {
-		setIsPending(true);
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-		setIsPending(false);
+	function handleClickClose() {
+		close();
+		router.back();
 	}
 
-	return (
-		<>
-			<CreateOpenButton onClick={open} />
-			<CreateModal isOpen={isOpen} onClose={close} onSubmit={handleSubmit} isPending={isPending} />
-		</>
-	);
+	function redirectToDetail(id: number) {
+		handleShowToast({ message: "모임 생성이 완료되었습니다!", status: "success" });
+		setTimeout(() => {
+			close();
+			router.replace(`/meetup/${id}`);
+		}, 1000);
+	}
+
+	return <CreateModal isOpen={isOpen} onClose={handleClickClose} onSuccess={redirectToDetail} />;
 }

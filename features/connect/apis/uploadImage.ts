@@ -1,4 +1,3 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function uploadImage(file: File) {
 	// presigned URL 요청
 	const res = await fetch(
