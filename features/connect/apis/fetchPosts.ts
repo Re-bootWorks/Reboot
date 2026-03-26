@@ -20,7 +20,7 @@ export const fetchPosts = async (params: GetPostsParams) => {
 	});
 
 	const res = await fetch(`${BASE_URL}/posts?${query}`);
-
+	console.log(BASE_URL);
 	if (!res.ok) {
 		throw new Error("게시글 조회 실패");
 	}

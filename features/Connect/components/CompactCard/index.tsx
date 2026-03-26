@@ -43,7 +43,7 @@ export default function CompactCard({
 				{/* 메타 정보 영역 */}
 				<div className="mt-[0.25rem] flex items-center gap-3 text-xs text-gray-500">
 					{/* 작성일 */}
-					<span>{dayjs(createdAt).fromNow()}</span>
+					<span>{dayjs(createdAt).format("YYYY.MM.DD")}</span>
 
 					{/* 좋아요 */}
 					<div className="flex items-center gap-1">
