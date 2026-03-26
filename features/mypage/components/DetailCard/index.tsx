@@ -4,16 +4,16 @@ import UtilityButton from "@/components/ui/Buttons/UtilityButton";
 import { IcPerson } from "@/components/ui/icons";
 import { StatusLabel } from "@/components/ui/StatusLabel";
 import Image from "next/image";
-import { uiFormatDate, uiFormatTime } from "@/features/Post/utills";
 import { cn } from "@/utils/cn";
 import SendButton from "@/components/ui/Buttons/SendButton";
 import { DetailCardProps } from "./type";
+import { uiFormatDate, uiFormatTime } from "@/utils/date";
 
 const STYLE = {
 	itemBgBox: "relative overflow-hidden rounded-3xl bg-white md:flex md:gap-6 md:rounded-4xl md:p-6",
 	itemImage: "h-39 w-full object-cover md:size-47 md:rounded-3xl",
 	wishBtn: "absolute top-4 right-4 md:top-6 md:right-6",
-	itemWrapper: "flex grow flex-col justify-between gap-3 p-4 md:px-0 md:py-2.5",
+	itemWrapper: "flex min-w-0 grow flex-col justify-between gap-3 p-4 md:px-0 md:py-2.5",
 	itemContent:
 		"flex flex-col gap-5.5  md:justify-between min-[870px]:flex-row min-[870px]:items-center",
 	personInfo: "flex items-center gap-2 text-sm",
@@ -28,7 +28,7 @@ const STYLE = {
 const EMPTY_THUMBNAIL_IMAGE = "/assets/img/img_empty_purple.svg";
 
 export default function DetailCard({ item, badges, actions, wishAction }: DetailCardProps) {
-	const isWishable = !item.isCompleted && item.participantCount < item.capacity;
+	const isWishable = item.participantCount < item.capacity;
 
 	return (
 		<li className={STYLE.itemBgBox}>
@@ -52,17 +52,24 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 			</div>
 
 			<div className={STYLE.itemWrapper}>
-				<div>
+				<div className="min-w-0">
 					{badges && (
 						<div className="mb-3 flex gap-2">
 							{badges.map((badge) => (
-								<Badge key={badge.label} variant={badge.variant}>
+								<Badge
+									key={badge.label}
+									variant={badge.variant}
+									className={cn(
+										badge.variant === "completedAlt"
+											? "from-orange-100 to-orange-200 text-orange-500"
+											: "",
+									)}>
 									{badge.showStatusLabel ? <StatusLabel>{badge.label}</StatusLabel> : badge.label}
 								</Badge>
 							))}
 						</div>
 					)}
-					<h2 className="text-xl font-semibold">{item.name}</h2>
+					<h2 className="w-[90%] truncate text-xl font-semibold">{item.name}</h2>
 				</div>
 				<div className={STYLE.itemContent}>
 					<div>
