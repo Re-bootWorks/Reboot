@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchPosts } from "./apis/fetchPosts";
-import { GetPostsParams } from "./types";
+import { GetPostsParams } from "./post/types";
 
 export function usePosts(params: GetPostsParams) {
 	return useQuery({

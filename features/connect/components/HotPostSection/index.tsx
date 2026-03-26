@@ -2,7 +2,7 @@
 
 import CompactCard from "@/features/connect/components/CompactCard";
 import { getMockPosts } from "@/features/connect/apis/mockPosts";
-import type { Post } from "@/features/connect/types";
+import type { Post } from "@/features/connect/post/types";
 import { useRouter } from "next/navigation";
 
 export default function HotPostSection() {

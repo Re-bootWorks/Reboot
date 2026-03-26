@@ -1,4 +1,4 @@
-import type { Post } from "@/features/connect/types";
+import type { Post } from "@/features/connect/post/types";
 
 const now = new Date();
 

@@ -9,7 +9,7 @@ import { fetchPosts } from "../../apis/fetchPosts";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { mapPostToCard } from "@/features/connect/mappers";
+import { mapPostToCard } from "@/features/connect/post/mappers";
 
 export default function PostContainer({ page }: { page: number }) {
 	const [sortBy, setSortBy] = useState<"createdAt" | "likeCount">("likeCount");

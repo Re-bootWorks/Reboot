@@ -3,7 +3,7 @@ import PostContainer from "@/features/connect/containers/PostContainer";
 import HotPostSection from "@/features/connect/components/HotPostSection";
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { fetchPosts } from "@/features/connect/apis/fetchPosts";
-import type { GetPostsParams } from "@/features/connect/types";
+import type { GetPostsParams } from "@/features/connect/post/types";
 
 // 서버 컴포넌트
 export default async function ConnectPage({
