@@ -35,3 +35,65 @@ export const formatDateTime = (value: string): [string, string] => {
 	const d = dayjs(value).tz(KOREAN_TIMEZONE);
 	return [d.format("M월 D일"), d.format("HH:mm")];
 };
+
+// YYYY-MM-DD HH:mm:ss 문자열을 ISOString 형식("2026-01-31T23:59:59.000Z")으로 변환
+export const parseTimestamp = (date: string, time: string) => {
+	if (!date || !time) {
+		return undefined;
+	}
+
+	if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+		return undefined;
+	}
+
+	let timeStr: string;
+	if (/^\d{2}:\d{2}:\d{2}$/.test(time)) {
+		timeStr = time;
+	} else if (/^\d{2}:\d{2}$/.test(time)) {
+		timeStr = `${time}:00`;
+	} else {
+		return undefined;
+	}
+
+	const dateTimeStr = `${date} ${timeStr}`;
+	const parsed = dayjs.tz(dateTimeStr, "YYYY-MM-DD HH:mm:ss", KOREAN_TIMEZONE);
+
+	if (!parsed.isValid()) {
+		return undefined;
+	}
+	const asDate = parsed.toDate();
+	if (isNaN(asDate.getTime())) {
+		return undefined;
+	}
+
+	return parsed.toISOString();
+};
+
+// UI 표시용 "M월 D일"
+export const uiFormatDate = (date: string | Date) => {
+	return dayjs(date).tz(KOREAN_TIMEZONE).format("M월 D일");
+};
+
+// UI 표시용 "HH:mm"
+export const uiFormatTime = (date: string | Date) => {
+	return dayjs(date).tz(KOREAN_TIMEZONE).format("HH:mm");
+};
+
+// UI 표시용 "HH시"
+export const uiFormatDeadline = (date: string | Date) => {
+	const deadline = dayjs(date).tz(KOREAN_TIMEZONE);
+	const now = dayjs().tz(KOREAN_TIMEZONE);
+	const diffHours = deadline.diff(now, "hour");
+
+	if (diffHours >= 24) {
+		const diffDays = deadline.diff(now, "day");
+		return `${diffDays}일 후 마감`;
+	}
+
+	return deadline.format("오늘 HH시 마감");
+};
+
+// 마감 기간 여부
+export const isDeadlinePassed = (date: string | Date): boolean => {
+	return dayjs().tz(KOREAN_TIMEZONE).isAfter(dayjs(date).tz(KOREAN_TIMEZONE));
+};

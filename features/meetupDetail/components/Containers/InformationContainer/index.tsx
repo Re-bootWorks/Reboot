@@ -7,12 +7,7 @@ import Button from "@/components/ui/Buttons/Button";
 import UtilityButton from "@/components/ui/Buttons/UtilityButton";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { useState } from "react";
-import {
-	isDeadlinePassed,
-	uiFormatDate,
-	uiFormatDeadline,
-	uiFormatTime,
-} from "@/features/meetupDetail/utills";
+import { isDeadlinePassed, uiFormatDate, uiFormatDeadline, uiFormatTime } from "@/utils/date";
 
 interface InformationContainerProps {
 	name: string;
@@ -20,7 +15,6 @@ interface InformationContainerProps {
 	region: string;
 	dateTime: string;
 	registrationEnd: string;
-	capacity: number;
 	isHost: boolean;
 }
 

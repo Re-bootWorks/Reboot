@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FilterDropdown } from "./index";
 
 const meta: Meta<typeof FilterDropdown> = {
-	title: "Dropdowns/FilterDropdown",
+	title: "Filters/FilterDropdown",
 	component: FilterDropdown,
 	parameters: {
 		layout: "centered",

@@ -31,6 +31,14 @@ const meta: Meta<typeof DatePicker> = {
 			control: "boolean",
 			description: "읽기 전용",
 		},
+		isDestructive: {
+			control: "boolean",
+			description: "에러 상태 여부",
+		},
+		hintText: {
+			control: "text",
+			description: "힌트 텍스트",
+		},
 		className: {
 			control: false,
 		},
@@ -49,6 +57,8 @@ const meta: Meta<typeof DatePicker> = {
 		value: "",
 		disabled: false,
 		readOnly: false,
+		isDestructive: false,
+		hintText: "",
 	},
 };
 
@@ -83,6 +93,8 @@ export const Default: Story = {
 		label: "모임 일정",
 		isRequired: false,
 		placeholder: "YYYY-MM-DD",
+		isDestructive: false,
+		hintText: "",
 	},
 };
 
@@ -92,5 +104,22 @@ export const Required: Story = {
 		label: "모임 일정",
 		isRequired: true,
 		placeholder: "YYYY-MM-DD",
+		isDestructive: false,
+		hintText: "",
+	},
+};
+
+export const WithHint: Story = {
+	render: (args) => <ControlledDatePicker {...args} />,
+	args: {
+		hintText: "저는 힌트 메시지입니다.",
+	},
+};
+
+export const Destructive: Story = {
+	render: (args) => <ControlledDatePicker {...args} />,
+	args: {
+		hintText: "날짜를 선택해 주세요.",
+		isDestructive: true,
 	},
 };

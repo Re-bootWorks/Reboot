@@ -1,15 +1,18 @@
 "use client";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
 import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
+import Button from "@/components/ui/Buttons/Button";
+import FilterTrigger from "@/components/ui/Filter/FilterTrigger";
+import { useIsMd } from "@/hooks/useIsMd";
 import { cn } from "@/utils/cn";
 
 type DateFilterProps = {
-	value?: string;
-	onChange?: (value: string) => void;
+	value: string;
+	onChange: (value: string) => void;
 };
 
 function formatDisplayDate(date: Date) {
@@ -19,25 +22,31 @@ function formatDisplayDate(date: Date) {
 export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 	const [month, setMonth] = useState<Date>(getKoreanToday());
 	const [draftDate, setDraftDate] = useState<Date | undefined>();
-
+	const isMd = useIsMd();
 	const parsed = parseDateString(value);
+
+	useEffect(() => {
+		if (!draftDate) {
+			setDraftDate(parsed || undefined);
+		}
+	}, [parsed]);
 
 	return (
 		<Popover className="relative">
 			{({ close }) => (
 				<>
-					<PopoverButton
-						className={cn(
-							"flex cursor-pointer items-center gap-1 px-2 py-1 text-base font-medium whitespace-nowrap focus:outline-none",
-							parsed ? "text-gray-900" : "text-gray-600",
-						)}>
-						<span>{parsed ? formatDisplayDate(parsed) : "날짜 전체"}</span>
-						<IcChevronDown color="currentColor" />
+					<PopoverButton as="div">
+						<FilterTrigger isActive={!!parsed}>
+							<span>{parsed ? formatDisplayDate(parsed) : "날짜 전체"}</span>
+							<IcChevronDown className="h-4 w-4" />
+						</FilterTrigger>
 					</PopoverButton>
 
 					<PopoverPanel
-						anchor={{ to: "bottom start" }}
-						className="z-20 mt-2 w-80 rounded-xl border border-gray-200 bg-white p-6 shadow-xl">
+						className={cn(
+							"absolute z-20 mt-2 w-74.5 rounded-xl border border-gray-200 bg-white p-6 shadow-xl",
+							isMd ? "left-0" : "right-0",
+						)}>
 						<Calendar
 							month={month}
 							selectedDate={draftDate}
@@ -45,21 +54,26 @@ export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 							onSelectDate={setDraftDate}
 						/>
 
-						<div className="mt-3 flex gap-2">
-							<button
-								onClick={() => setDraftDate(undefined)}
-								className="flex-1 rounded-lg border border-purple-500 px-3 py-1 text-sm text-purple-500">
-								초기화
-							</button>
-
-							<button
+						<div className="mt-3 grid grid-cols-2 gap-3">
+							<Button
+								sizes="small"
+								colors="purpleBorder"
 								onClick={() => {
-									onChange?.(draftDate ? formatDateString(draftDate) : "");
+									setDraftDate(undefined);
+									onChange(""); // 부모값 초기화
+									close(); // 패널 닫기
+								}}>
+								초기화
+							</Button>
+
+							<Button
+								sizes="small"
+								onClick={() => {
+									onChange(draftDate ? formatDateString(draftDate) : "");
 									close();
-								}}
-								className="flex-1 rounded-lg bg-purple-500 px-3 py-1 text-sm text-white">
+								}}>
 								적용
-							</button>
+							</Button>
 						</div>
 					</PopoverPanel>
 				</>
