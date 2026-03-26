@@ -1,11 +1,12 @@
-import { Heart, Rating } from "@smastrom/react-rating";
+import { Rating } from "@smastrom/react-rating";
 import { RatingSummaryProps } from "../../types";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { cn } from "@/utils/cn";
+import { RATING_STYLE } from "@/constants/ratingStyle";
 
 const myStyles = {
-	itemShapes: Heart,
-	activeFillColor: "#7566E5",
+	itemShapes: RATING_STYLE.itemShapes,
+	activeFillColor: RATING_STYLE.activeFillColor,
 	inactiveFillColor: "#F6F7F9",
 };
 
@@ -40,7 +41,10 @@ export default function RatingSummary({
 	return (
 		<section
 			aria-labelledby="review-summary-heading"
-			className="bg-gradient-purple-200-lr w-full rounded-3xl border border-purple-400 px-[1.188rem] py-6 md:rounded-4xl md:px-6 md:py-[2.563rem]">
+			className={cn(
+				"bg-gradient-purple-200-lr w-full rounded-3xl border border-purple-400 px-[1.188rem] py-6 md:rounded-4xl md:px-6 md:py-[2.563rem]",
+				"my-4 md:my-6 lg:mt-8 lg:mb-6",
+			)}>
 			<h2 id="review-summary-heading" className="sr-only">
 				리뷰 평점 요약
 			</h2>

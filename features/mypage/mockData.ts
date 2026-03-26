@@ -458,6 +458,7 @@ export const mockMyCreated: CreatedList = [
 			"https://images.unsplash.com/photo-1773578639782-2046b150ce28?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		canceledAt: null,
 		confirmedAt: "2026-03-17T13:44:14.927Z",
+		isCompleted: false,
 		isFavorited: true,
 	},
 
@@ -472,6 +473,7 @@ export const mockMyCreated: CreatedList = [
 			"https://images.unsplash.com/photo-1773578639782-2046b150ce28?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		canceledAt: null,
 		confirmedAt: "2026-03-17T13:44:14.927Z",
+		isCompleted: false,
 		isFavorited: false,
 	},
 
@@ -486,6 +488,7 @@ export const mockMyCreated: CreatedList = [
 			"https://images.unsplash.com/photo-1773578639782-2046b150ce28?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		canceledAt: "2026-03-17T13:44:14.927Z",
 		confirmedAt: "2026-03-17T13:44:14.927Z",
+		isCompleted: false,
 		isFavorited: true,
 	},
 
@@ -500,6 +503,7 @@ export const mockMyCreated: CreatedList = [
 			"https://images.unsplash.com/photo-1773578639782-2046b150ce28?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		canceledAt: "2026-03-17T13:44:14.927Z",
 		confirmedAt: "2026-03-17T13:44:14.927Z",
+		isCompleted: false,
 		isFavorited: false,
 	},
 	{
@@ -513,6 +517,7 @@ export const mockMyCreated: CreatedList = [
 			"https://images.unsplash.com/photo-1529148482759-b35b25c5f217?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		canceledAt: null,
 		confirmedAt: "2026-03-17T13:44:14.927Z",
+		isCompleted: true,
 		isFavorited: false,
 	},
 
@@ -527,6 +532,7 @@ export const mockMyCreated: CreatedList = [
 			"https://images.unsplash.com/photo-1529148482759-b35b25c5f217?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		canceledAt: null,
 		confirmedAt: "2026-03-17T13:44:14.927Z",
+		isCompleted: true,
 		isFavorited: true,
 	},
 
@@ -540,6 +546,7 @@ export const mockMyCreated: CreatedList = [
 		image: null,
 		canceledAt: null,
 		confirmedAt: null,
+		isCompleted: false,
 		isFavorited: true,
 	},
 
@@ -553,6 +560,7 @@ export const mockMyCreated: CreatedList = [
 		image: null,
 		canceledAt: null,
 		confirmedAt: null,
+		isCompleted: false,
 		isFavorited: false,
 	},
 
@@ -567,6 +575,7 @@ export const mockMyCreated: CreatedList = [
 			"https://images.unsplash.com/photo-1526772662000-3f88f10405ff?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		canceledAt: null,
 		confirmedAt: null,
+		isCompleted: true,
 		isFavorited: true,
 	},
 
@@ -581,6 +590,7 @@ export const mockMyCreated: CreatedList = [
 			"https://images.unsplash.com/photo-1526772662000-3f88f10405ff?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		canceledAt: null,
 		confirmedAt: null,
+		isCompleted: true,
 		isFavorited: false,
 	},
 
@@ -594,6 +604,7 @@ export const mockMyCreated: CreatedList = [
 		image: null,
 		canceledAt: null,
 		confirmedAt: null,
+		isCompleted: true,
 		isFavorited: true,
 	},
 
@@ -607,6 +618,7 @@ export const mockMyCreated: CreatedList = [
 		image: null,
 		canceledAt: null,
 		confirmedAt: null,
+		isCompleted: true,
 		isFavorited: false,
 	},
 ];

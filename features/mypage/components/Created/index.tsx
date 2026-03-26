@@ -12,15 +12,22 @@ function meetupBadges(item: CreatedItem): DetailCardBadge[] {
 	if (item.canceledAt) {
 		return [{ label: "개설 취소", variant: "completedAlt" }];
 	}
+	if (item.isCompleted) {
+		return [{ label: "이용 완료", variant: "completed" }];
+	}
+	if (item.confirmedAt) {
+		return [{ label: "개설확정", variant: "confirmed", showStatusLabel: true }];
+	}
 
-	return [];
+	return [{ label: "개설 대기", variant: "pending" }];
 }
 
 export default function Created() {
 	const initialItems: CreatedList = mockMyCreated;
 
-	const [items, setItems] = useState(initialItems);
+	const [items, setItems] = useState(initialItems); // 모임 삭제 시 아이템 업데이트
 	const { handleWishToggle } = useMeetingFavorite(setItems);
+	// 어떤 모임에 대해 alert을 띄웠는지 타겟팅
 	const [alertTarget, setAlertTarget] = useState<CreatedItem | null>(null);
 
 	// 모임 삭제 시

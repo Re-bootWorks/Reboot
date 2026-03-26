@@ -34,15 +34,21 @@ interface GroupCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "id"
 	status: Prettify<GroupCardStatus>;
 	/** 자식 컴포넌트 */
 	children: React.ReactNode;
+	/** 컴포넌트 추가 클래스 */
+	className?: string;
 }
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
-function GroupCard({ id, href, status, children, ...props }: GroupCardProps) {
+function GroupCard({ id, href, status, children, className, ...props }: GroupCardProps) {
 	return (
 		<GroupCardContext.Provider value={status}>
 			<div
 				data-groupid={id}
-				className={cn("relative flex flex-col md:flex-row md:gap-x-5 md:p-6", containerStyle)}
+				className={cn(
+					"relative isolate flex flex-col md:flex-row md:gap-x-5 md:p-6",
+					containerStyle,
+					className,
+				)}
 				{...props}>
 				<Link href={href} className="absolute inset-0 z-1" />
 				{children}
@@ -51,7 +57,7 @@ function GroupCard({ id, href, status, children, ...props }: GroupCardProps) {
 	);
 }
 const containerStyle =
-	"h-[346px] w-[343px] md:h-[219px] lg:w-[628px] md:w-full rounded-4xl overflow-hidden bg-white";
+	"h-[346px] min-w-[343px] md:h-[219px] lg:max-w-[628px] md:w-full rounded-4xl overflow-hidden bg-white";
 
 function GroupCardSkeleton() {
 	return (
@@ -89,6 +95,7 @@ function Image({ src, alt }: GroupCardImageProps) {
 				src={src || "/assets/img/img_empty_purple.svg"}
 				alt={alt}
 				fill
+				sizes="(max-width: 744px) 100vw, 170px"
 				className={hasSrc ? "object-cover" : "bg-purple-50 object-scale-down"}
 			/>
 		</div>

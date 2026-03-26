@@ -92,7 +92,6 @@ export default function ReviewFormModal({
 
 	// 리뷰 모달 닫기
 	function handleReviewClose() {
-		reset(getReviewDefaultValues(initialValue));
 		onClose();
 	}
 
@@ -182,6 +181,8 @@ export default function ReviewFormModal({
 					</div>
 				</form>
 			</Modal>
+
+			{/* dirty 상태에서 닫으려 할 때 취소 확인용 Alert 노출 */}
 			<AlertModal isOpen={alertOpen} onClose={close} handleConfirmButton={handleReviewClose}>
 				{reviewFormTitle}을 취소하시겠습니까?
 			</AlertModal>

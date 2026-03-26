@@ -1,10 +1,12 @@
 import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 import IcPerson from "@/components/ui/icons/IcPerson";
-
 import dayjs from "@/libs/dayjs";
+import Image from "next/image";
+import EmptyImage from "@/features/connect/ui/EmptyImage";
 
 type PostCardProps = {
+	id: number;
 	title: string;
 	description: string;
 	imageUrl: string;
@@ -40,8 +42,12 @@ export default function ConnectCard({
 			</h3>
 
 			{/* 썸네일 이미지 */}
-			<div className="order-2 h-[9rem] w-[18.375rem] shrink-0 overflow-hidden rounded-xl sm:order-1 sm:h-full sm:w-[12.5rem]">
-				<img src={imageUrl} alt={title} className="h-full w-full object-cover" />
+			<div className="relative order-2 h-[9rem] w-[18.375rem] shrink-0 overflow-hidden rounded-xl sm:order-1 sm:h-full sm:w-[12.5rem]">
+				{imageUrl ? (
+					<Image src={imageUrl} alt={title} fill className="object-cover" />
+				) : (
+					<EmptyImage />
+				)}
 			</div>
 
 			{/* 텍스트 영역 */}

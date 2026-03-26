@@ -22,6 +22,7 @@ export type MeetupList = MeetupItem[];
 export type WritableReviewItem = DetailCardItem;
 export type WritableReviewList = WritableReviewItem[];
 export interface CreatedItem extends DetailCardItem {
+	isCompleted: boolean;
 	canceledAt: string | null;
 	confirmedAt: string | null;
 }
