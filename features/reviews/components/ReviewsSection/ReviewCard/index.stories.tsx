@@ -15,6 +15,7 @@ export default meta;
 type Story = StoryObj<typeof ReviewCard>;
 
 const BASE_ARGS: ReviewCardProps = {
+	id: 1,
 	meetingId: 1,
 	meetingImage:
 		"https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80",

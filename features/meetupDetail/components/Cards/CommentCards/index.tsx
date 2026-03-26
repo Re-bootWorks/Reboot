@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/ui/Pagination";
-import { ReviewScore } from "@/features/reviews/components/ReviewCard";
+import { ReviewScore } from "@/types/common";
 import { Rating, Heart } from "@smastrom/react-rating";
 import { formatIsoDateWithDots } from "@/utils/date";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
