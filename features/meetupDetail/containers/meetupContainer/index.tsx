@@ -10,6 +10,7 @@ import CompactCards from "@/features/meetupDetail/components/Cards/CompactCards"
 import { mockRelatedMeetings } from "@/features/meetupDetail/components/Cards/CompactCards/mocks";
 import type { CommentProps } from "@/features/meetupDetail/components/Cards/CommentCards";
 import KakaoMap from "@/features/meetupDetail/components/KakaoMap";
+import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
 
 // TODO: 추후 auth에서 가져올 예정
 const CURRENT_USER_ID = 1;
@@ -23,7 +24,7 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 	const { data: participantsData } = useParticipants(meetupId);
 	const { data: reviewsData } = useReviews(meetupId);
 	const [pressedMap, setPressedMap] = useState<Record<number, boolean>>({});
-
+	const { ref, style, overlays, ...dragScrollEvents } = useDragScroll<HTMLDivElement>();
 	const comments = useMemo<CommentProps[]>(
 		() =>
 			(reviewsData?.data ?? []).map((review) => ({
@@ -48,11 +49,11 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 	return (
 		<>
 			{/* 섹션 1 - 모임 소개 */}
-			<section className="flex flex-col gap-4 md:flex-row md:items-start lg:gap-5">
-				<div className="relative aspect-343/241 w-full overflow-hidden rounded-2xl md:h-83 md:w-83 lg:h-110.75 lg:w-157.5 lg:rounded-4xl">
+			<section className="flex w-full flex-col gap-4 md:flex-row lg:gap-5">
+				<div className="relative aspect-343/241 w-full overflow-hidden rounded-2xl md:aspect-auto md:self-stretch lg:rounded-4xl">
 					<Image alt={meeting.name} src={meeting.image} fill className="object-cover" priority />
 				</div>
-				<div className="flex flex-1 flex-col gap-5">
+				<div className="flex w-full flex-col gap-5">
 					<InformationContainer {...meeting} isHost={isHost} />
 					<PersonnelContainer
 						capacity={meeting.capacity}
@@ -63,7 +64,7 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 			</section>
 
 			{/* 섹션 2 - 모임 설명 */}
-			<section className="mt-10 flex h-fit w-85.75 flex-col gap-3 md:w-174 md:gap-4 lg:w-7xl lg:gap-5">
+			<section className="mt-10 flex h-fit w-full flex-col gap-3 md:gap-4 lg:gap-5">
 				<span className="pl-1.5 text-base font-semibold md:text-xl lg:pl-2.5 lg:text-2xl">
 					모임 설명
 				</span>
@@ -75,7 +76,7 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 			</section>
 
 			{/* 섹션 3 - 지도 API */}
-			<section className="mt-10 flex h-fit w-85.75 flex-col gap-3 md:mt-16 md:w-174 md:gap-4 lg:mt-20 lg:w-7xl lg:gap-5">
+			<section className="mt-10 flex h-fit w-full flex-col gap-3 md:mt-16 md:gap-4 lg:mt-20 lg:gap-5">
 				<span className="pl-1.5 text-base font-semibold md:text-xl lg:pl-2.5 lg:text-2xl">
 					모임 장소
 				</span>
@@ -87,25 +88,32 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 			</section>
 
 			{/* 섹션 4 - 리뷰 목록 */}
-			<section className="mt-10 md:mt-16 lg:mt-20">
+			<section className="mt-10 w-full md:mt-16 lg:mt-20">
 				<CommentCards comments={comments} />
 			</section>
 
 			{/* 섹션 5 - 모임 추천 */}
-			<section className="mt-17 flex h-fit w-85.75 flex-col gap-3 md:mt-18 md:w-174 md:gap-4 lg:mt-22 lg:w-7xl">
+			<section className="mt-17 flex h-fit w-full flex-col gap-3 md:mt-18 md:gap-4 lg:mt-22">
 				<div className="pl-1.5 lg:pl-2.5">
 					<h3 className="text-base font-semibold md:text-xl lg:text-2xl">이런 모임은 어떠세요?</h3>
 				</div>
-				<div className="grid grid-cols-2 gap-x-4 gap-y-6 md:flex md:gap-6 md:overflow-x-auto md:pb-4 lg:gap-8">
-					{mockRelatedMeetings.map((meet) => (
-						<div key={meet.id} className="shrink-0">
-							<CompactCards
-								{...meet}
-								isPressed={pressedMap[meet.id] ?? false}
-								onPress={() => handlePress(meet.id)}
-							/>
-						</div>
-					))}
+				<div className="relative pb-4">
+					<div
+						ref={ref}
+						style={style}
+						className={`grid grid-cols-2 gap-4 md:flex md:gap-6 lg:gap-8 ${containerStyle}`}
+						{...dragScrollEvents}>
+						{mockRelatedMeetings.map((meet) => (
+							<div key={meet.id} className="w-full shrink-0 md:w-75.5">
+								<CompactCards
+									{...meet}
+									isPressed={pressedMap[meet.id] ?? false}
+									onPress={() => handlePress(meet.id)}
+								/>
+							</div>
+						))}
+					</div>
+					{overlays}
 				</div>
 			</section>
 		</>
