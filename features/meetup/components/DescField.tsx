@@ -11,12 +11,15 @@ interface DescFieldProps {
 	onChange: (value: string, e: React.ChangeEvent<HTMLInputElement>) => void;
 	/** 추가 클래스명 */
 	className?: string;
+	/** 필수 필드 여부 */
+	isRequired: boolean;
 }
 export default function DescField({
 	name = "description",
 	value,
 	onChange,
 	className,
+	isRequired,
 }: DescFieldProps) {
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
 		onChange(e.target.value, e);
@@ -28,7 +31,7 @@ export default function DescField({
 			label="모임 설명"
 			placeholder="모임을 설명해주세요"
 			className={className}
-			isRequired
+			isRequired={isRequired}
 			value={value}
 			onChange={handleChangeInput}
 		/>

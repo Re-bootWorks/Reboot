@@ -21,6 +21,8 @@ interface AddressFieldProps {
 	setValue: React.Dispatch<React.SetStateAction<AddressValues>>;
 	/** 카카오 장소 검색 함수 */
 	getKakaoPlaceFn: getKakaoPlaceFn;
+	/** 필수 필드 여부 */
+	isRequired: boolean;
 }
 
 export type AddressValues = {
@@ -42,6 +44,7 @@ export default function AddressField({
 	value,
 	setValue,
 	getKakaoPlaceFn,
+	isRequired,
 }: AddressFieldProps) {
 	const [kakaoAddressData, setKakaoAddressData] = useState<KakaoPlaceItem[]>([]);
 	const { handleShowToast } = useToast();
@@ -102,7 +105,7 @@ export default function AddressField({
 					label="장소"
 					placeholder="건물, 지번 또는 도로명 검색"
 					rightIcon={<IcLocation color="#444" size="md" />}
-					isRequired
+					isRequired={isRequired}
 					value={value.addressName}
 					onChange={handleChangeAddress}
 					onClick={(e) => e.stopPropagation()}
@@ -117,7 +120,7 @@ export default function AddressField({
 			<Input
 				name="addressDetail"
 				placeholder="상세 주소"
-				required
+				required={isRequired}
 				onChange={handleChangeInput}
 				spellCheck={false}
 				autoComplete="off"

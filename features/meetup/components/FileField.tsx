@@ -14,12 +14,15 @@ interface FileFieldProps {
 	uploadImageFn: UploadImageFn;
 	/** 필드명 @default "imageUrl" */
 	name?: string;
+	/** 필수 필드 여부 */
+	isRequired: boolean;
 }
 export default function FileField({
 	defaultUrl,
 	name = "imageUrl",
 	onChange,
 	uploadImageFn,
+	isRequired,
 }: FileFieldProps) {
 	const { handleShowToast } = useToast();
 	const inputFileRef = useRef<InputFileHandle>(null);
@@ -53,7 +56,7 @@ export default function FileField({
 			defaultUrl={defaultUrl}
 			label="이미지"
 			name={name}
-			isRequired
+			isRequired={isRequired}
 			onChange={handleUploadImage}
 		/>
 	);

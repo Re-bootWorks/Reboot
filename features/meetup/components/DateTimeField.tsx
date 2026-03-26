@@ -21,6 +21,8 @@ interface DateTimeFieldProps {
 	timeName?: string;
 	/** 추가 클래스명 */
 	className?: string;
+	/** 필수 필드 여부 */
+	isRequired: boolean;
 }
 
 export type DateTime = {
@@ -36,6 +38,7 @@ export default function DateTimeField({
 	dateName = "date",
 	timeName = "time",
 	className,
+	isRequired,
 }: DateTimeFieldProps) {
 	return (
 		<InputFieldWrapper label={label} isRequired className={className}>
@@ -45,7 +48,7 @@ export default function DateTimeField({
 						id={id}
 						name={dateName}
 						placeholder="YYYY-MM-DD"
-						isRequired
+						isRequired={isRequired}
 						onChange={onDateChange}
 						value={date}
 						aria-labelledby={id}
@@ -53,7 +56,7 @@ export default function DateTimeField({
 					<TimePicker
 						name={timeName}
 						placeholder="00 : 00"
-						isRequired
+						isRequired={isRequired}
 						onChange={onTimeChange}
 						value={time}
 						aria-labelledby={id}
