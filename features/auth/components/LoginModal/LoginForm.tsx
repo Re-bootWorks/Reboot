@@ -9,7 +9,7 @@ import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
 import { useLogin } from "@/features/auth/mutations";
-import { KAKAO_LOGIN_URL } from "@/constants/auth";
+import { KAKAO_LOGIN_URL, GOOGLE_LOGIN_URL } from "@/constants/auth";
 
 const loginSchema = z.object({
 	email: z.email("이메일 형식이 아닙니다"),
@@ -24,6 +24,9 @@ interface LoginFormProps {
 
 function handleKakaoLogin() {
 	window.location.href = KAKAO_LOGIN_URL;
+}
+function handleGoogleLogin() {
+	window.location.href = GOOGLE_LOGIN_URL;
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
@@ -77,7 +80,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 					<hr className="flex-1 border-gray-300" />
 				</div>
 				<div className="flex flex-col gap-3 md:flex-row">
-					<SocialButton social="Google">구글로 계속하기</SocialButton>
+					<SocialButton social="Google" onClick={handleGoogleLogin}>
+						구글로 계속하기
+					</SocialButton>
 					<SocialButton social="Kakao" onClick={handleKakaoLogin}>
 						카카오로 계속하기
 					</SocialButton>
