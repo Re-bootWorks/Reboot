@@ -38,23 +38,45 @@ function TypeFilters() {
 	const { categories } = useCategoryStore();
 	const type = get(QUERY_KEYS.TYPE) ?? categories[0].name;
 
-	function handleChangeType(v: string) {
+	function handleChangeType(v: string | null) {
 		set({ [QUERY_KEYS.TYPE]: v });
 	}
 
 	return (
 		<div className="relative">
 			<ul ref={ref} className={cn(containerStyle, "flex gap-x-2.5")} {...events}>
+				<TypeFilterItem
+					key="all"
+					name="전체"
+					selected={type === "all"}
+					onClick={() => handleChangeType("all")}
+				/>
 				{categories.map((i) => (
-					<li key={i.name} className="whitespace-nowrap">
-						<TabButton selected={type === i.name} onClick={() => handleChangeType(i.name)}>
-							{i.name}
-						</TabButton>
-					</li>
+					<TypeFilterItem
+						key={i.name}
+						name={i.name}
+						selected={type === i.name}
+						onClick={() => handleChangeType(i.name)}
+					/>
 				))}
 			</ul>
 			{overlays}
 		</div>
+	);
+}
+
+interface TypeFilterItemProps {
+	name: string;
+	selected: boolean;
+	onClick: () => void;
+}
+function TypeFilterItem({ name, selected, onClick }: TypeFilterItemProps) {
+	return (
+		<li key={name} className="whitespace-nowrap">
+			<TabButton selected={selected} onClick={onClick}>
+				{name}
+			</TabButton>
+		</li>
 	);
 }
 

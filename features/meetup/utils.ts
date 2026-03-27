@@ -46,3 +46,13 @@ export function getRegion(text: string) {
 export function getAddress(name: string, detail: string) {
 	return `${name}, ${detail}`;
 }
+
+/** 모임 종류 쿼리 값 변환 */
+export function transformTypeValue(data: string | null | undefined): string | undefined {
+	return !!data && data !== "all" ? data : undefined;
+}
+
+/** 기타 쿼리 값 반환 */
+export function transformQueryValue<T extends string>(data: T | null | undefined): T | undefined {
+	return !!data ? data : undefined;
+}
