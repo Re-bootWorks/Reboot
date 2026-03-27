@@ -4,7 +4,7 @@ import HotPostSection from "@/features/connect/components/HotPostSection";
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { GetPostsParams } from "@/features/connect/types";
 import { Suspense } from "react";
-import Loading from "@/features/connect/components/ui/Loading";
+import Loading from "@/features/connect/ui/Loading";
 import { serverFetch } from "@/libs/serverFetch";
 
 // 서버 컴포넌트
