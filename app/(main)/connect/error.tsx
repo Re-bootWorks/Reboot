@@ -1,10 +1,12 @@
 "use client";
 
 export default function Error({ error, reset }: { error: Error; reset: () => void }) {
+	console.error(error);
+
 	return (
 		<div>
 			<h2>에러 발생</h2>
-			<button onClick={() => reset()}>다시 시도</button>
+			<button onClick={reset}>다시 시도</button>
 		</div>
 	);
 }
