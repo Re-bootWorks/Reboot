@@ -10,6 +10,7 @@ type GetPostsParams = {
 
 type GetPostsResponse = {
 	data: Post[];
+	total: number;
 };
 
 // 클라이언트용 fetch

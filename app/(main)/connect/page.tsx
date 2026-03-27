@@ -19,20 +19,19 @@ export default async function ConnectPage({
 	const queryClient = new QueryClient(); // 캐시저장소+ 쿼리 관리자(데이터를 담아두는 통 )
 
 	const sortBy = "likeCount";
-
-	const params: GetPostsParams = {
-		type: "all",
-		sortBy: "createdAt",
-		offset: (page - 1) * 10,
-		limit: 10,
-	};
+	const LIMIT = 10;
 
 	await queryClient.prefetchQuery({
 		queryKey: ["posts", page, sortBy],
 		queryFn: async () => {
-			const res = await serverFetch(
-				`/posts?type=all&sortBy=${sortBy}&offset=${(page - 1) * 10}&limit=10`,
-			);
+			const queryParams = new URLSearchParams({
+				type: "all",
+				sortBy,
+				offset: String((page - 1) * LIMIT),
+				limit: String(LIMIT),
+			});
+
+			const res = await serverFetch(`/posts?${queryParams.toString()}`);
 
 			if (!res.ok) {
 				throw new Error("게시글 조회 실패");
