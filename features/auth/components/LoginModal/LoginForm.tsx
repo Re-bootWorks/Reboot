@@ -22,16 +22,11 @@ interface LoginFormProps {
 	onSuccess: () => void;
 }
 
-function handleKakaoLogin() {
-	window.location.href = KAKAO_LOGIN_URL;
-}
-function handleGoogleLogin() {
-	window.location.href = GOOGLE_LOGIN_URL;
-}
-
 export function LoginForm({ onSuccess }: LoginFormProps) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-	const { mutate: login } = useLogin(onSuccess);
+	const { mutate: login, isPending } = useLogin(onSuccess);
+	const [isSocialPending, setIsSocialPending] = useState(false);
+
 	const {
 		register,
 		handleSubmit,
@@ -44,6 +39,15 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 	const onSubmit = (data: LoginFormData) => {
 		login({ email: data.email, password: data.password });
 	};
+
+	function handleKakaoLogin() {
+		setIsSocialPending(true);
+		window.location.href = KAKAO_LOGIN_URL;
+	}
+	function handleGoogleLogin() {
+		setIsSocialPending(true);
+		window.location.href = GOOGLE_LOGIN_URL;
+	}
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
@@ -68,7 +72,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 					isDestructive={!!errors.password}
 				/>
 				<div className="pb-2 md:pb-4">
-					<Button type="submit" disabled={!isValid}>
+					<Button type="submit" disabled={!isValid || isSocialPending} isPending={isPending}>
 						로그인
 					</Button>
 				</div>
@@ -80,10 +84,16 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 					<hr className="flex-1 border-gray-300" />
 				</div>
 				<div className="flex flex-col gap-3 md:flex-row">
-					<SocialButton social="Google" onClick={handleGoogleLogin}>
+					<SocialButton
+						social="Google"
+						onClick={handleGoogleLogin}
+						disabled={isSocialPending || isPending}>
 						구글로 계속하기
 					</SocialButton>
-					<SocialButton social="Kakao" onClick={handleKakaoLogin}>
+					<SocialButton
+						social="Kakao"
+						onClick={handleKakaoLogin}
+						disabled={isSocialPending || isPending}>
 						카카오로 계속하기
 					</SocialButton>
 				</div>
