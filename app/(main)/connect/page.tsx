@@ -2,7 +2,6 @@ import Container from "@/components/layout/Container";
 import PostContainer from "@/features/connect/containers/PostContainer";
 import HotPostSection from "@/features/connect/components/HotPostSection";
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import type { GetPostsParams } from "@/features/connect/types";
 import { Suspense } from "react";
 import Loading from "@/features/connect/ui/Loading";
 import { serverFetch } from "@/libs/serverFetch";
