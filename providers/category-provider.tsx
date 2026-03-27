@@ -10,9 +10,9 @@ export default function CategoryInitializer({ data }: { data: MeetingTypeRespons
 		if (initialized.current) return;
 		initialized.current = true;
 
-		if (data) {
+		if (data?.length) {
 			const categories = generateCategories(data);
-			useCategoryStore.getState().set(categories);
+			if (categories?.length) useCategoryStore.getState().set(categories);
 		}
 	}, []);
 
