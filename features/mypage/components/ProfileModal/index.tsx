@@ -20,8 +20,8 @@ const STYLE = {
 };
 
 const profileSchema = z.object({
-	name: z.string().trim().min(1, "이름은 필수 입력 항목입니다.").optional(),
-	email: z.email("이메일 형식이 아닙니다.").optional(),
+	name: z.string().trim().min(1, "이름은 필수 입력 항목입니다."),
+	email: z.email("이메일 형식이 아닙니다."),
 	image: z.string().nullable().optional(),
 });
 
