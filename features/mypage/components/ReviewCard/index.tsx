@@ -7,11 +7,12 @@ import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { formatIsoDateWithDots } from "@/utils/date";
 
 const STYLE = {
-	itemBox: "flex flex-col gap-3 md:flex-row md:items-center md:gap-8",
+	itemBox: "flex flex-col gap-3 md:flex-row md:items-center md:gap-8 group",
 	itemImage: "h-39 w-full rounded-xl object-cover md:size-47 md:rounded-3xl",
-	itemWrapper: "flex grow flex-col gap-3 border-b border-gray-200 pb-6 md:py-6",
+	itemWrapper:
+		"flex grow flex-col gap-3 border-b border-gray-200 pb-6 md:py-6 group-last-of-type:border-none",
 	ratingWrapper: "flex w-full items-center justify-between",
-	profileWrapper: "mt-1.5 flex items-center gap-1.5 md:mt-3.5",
+	profileWrapper: "mt-1.5 flex items-center gap-1.5",
 	profileImage: "size-6 rounded-full border border-gray-200 object-cover",
 	caption: "text-xs text-gray-500 md:text-sm",
 };

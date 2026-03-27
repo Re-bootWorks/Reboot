@@ -49,7 +49,7 @@ export default function InformationContainer({
 	];
 
 	return (
-		<div className="flex h-50 w-85.75 flex-col gap-7 rounded-[20px] bg-white px-6 pt-5 pb-6 lg:h-70.5 lg:w-157.5 lg:gap-10 lg:rounded-4xl lg:px-10 lg:pt-8.5 lg:pb-8">
+		<div className="flex w-full flex-col gap-7 rounded-[20px] bg-white px-6 pt-5 pb-6 lg:gap-10 lg:rounded-4xl lg:px-10 lg:pt-8.5 lg:pb-8">
 			<div className="flex w-full flex-col gap-4 lg:gap-6">
 				<div className={`flex w-full items-center gap-2 ${isHost ? "justify-between" : ""}`}>
 					<div className="flex items-center gap-2">

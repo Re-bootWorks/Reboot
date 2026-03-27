@@ -1,28 +1,20 @@
+"use client";
+
 import { cn } from "@/utils/cn";
 import Image from "next/image";
-import { Rating, Heart } from "@smastrom/react-rating";
+import { Rating } from "@smastrom/react-rating";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { formatIsoDateWithDots } from "@/utils/date";
+import { RATING_STYLE } from "@/constants/ratingStyle";
+import { ReviewCardProps } from "@/features/reviews/types";
+import { MOCK_LOGIN_USER_ID } from "@/features/reviews/mockData";
+import Link from "next/link";
 
-export type ReviewScore = 1 | 2 | 3 | 4 | 5;
-
-export interface ReviewCardProps {
-	meetingImage: string;
-	score: ReviewScore;
-	userImage: string | null;
-	userName: string;
-	createdAt: string;
-	comment: string;
-	meetingName: string;
-	meetingType: string;
-	userId: number;
-}
-
-const MOCK_LOGIN_USER_ID = 1; // 삭제 예정
 const EMPTY_THUMBNAIL_SRC = "/assets/img/img_empty_purple.svg";
 const EMPTY_PROFILE_SRC = "/assets/img/img_profile.svg";
 
 export default function ReviewCard({
+	meetingId,
 	meetingImage,
 	score,
 	userImage,
@@ -34,16 +26,6 @@ export default function ReviewCard({
 	userId,
 }: ReviewCardProps) {
 	const isMyReview = userId === MOCK_LOGIN_USER_ID;
-
-	const myStyles = {
-		itemShapes: Heart,
-		activeFillColor: "#7566E5",
-		inactiveFillColor: "#DDD",
-	};
-
-	const handleMeetingClick = () => {
-		// TODO: 모임 상세 페이지 이동 추후 구현 예정
-	};
 
 	const handleEditButtonClick = () => {
 		// TODO: 리뷰 수정 기능 추후 구현 예정
@@ -60,19 +42,18 @@ export default function ReviewCard({
 	return (
 		<article className="flex w-full flex-col gap-3 md:flex-row md:gap-8">
 			{/* 모임 이미지 */}
-			<button
-				type="button"
-				onClick={handleMeetingClick}
+			<Link
+				href={`/meetup/${meetingId}`}
 				className={cn(
-					meetingImage ? "relative" : "flex items-center justify-center",
-					"h-36 cursor-pointer rounded-xl bg-purple-50 select-none md:size-46 md:shrink-0",
+					meetingImage ? "group relative overflow-hidden" : "flex items-center justify-center",
+					"h-36 rounded-xl bg-purple-50 select-none md:size-46 md:shrink-0",
 				)}>
 				{meetingImage ? (
 					<Image
 						src={meetingImage}
 						alt={`${meetingName} 모임 이미지`}
 						fill
-						className="rounded-xl object-cover"
+						className="rounded-xl object-cover transition-transform duration-450 ease-out group-hover:scale-107"
 					/>
 				) : (
 					<Image
@@ -83,7 +64,7 @@ export default function ReviewCard({
 						className="object-contain"
 					/>
 				)}
-			</button>
+			</Link>
 
 			{/* 본문 */}
 			<div className="flex w-full flex-col gap-3 border-b border-b-gray-200 pb-6 md:gap-0">
@@ -94,7 +75,7 @@ export default function ReviewCard({
 							<Rating
 								value={score}
 								readOnly
-								itemStyles={myStyles}
+								itemStyles={RATING_STYLE}
 								className="max-w-25 md:max-w-30"
 							/>
 
@@ -151,13 +132,17 @@ export default function ReviewCard({
 					</div>
 
 					{/* 리뷰 내용 */}
-					<p className="text-sm whitespace-pre-line text-gray-700 md:mb-2 md:text-lg">{comment}</p>
+					<Link href={`/meetup/${meetingId}`}>
+						<p className="text-sm whitespace-pre-line text-gray-700 md:mb-2 md:text-lg">
+							{comment}
+						</p>
+					</Link>
 				</div>
 				{/* 모임명 / 카테고리 */}
 				<div className="space-x-0.5 text-xs font-medium text-gray-500 md:text-sm">
-					<button type="button" onClick={handleMeetingClick} className="cursor-pointer select-none">
+					<Link href={`/meetup/${meetingId}`} className="select-none">
 						{meetingName}
-					</button>
+					</Link>
 					<span aria-hidden="true" className="select-none">
 						·
 					</span>
