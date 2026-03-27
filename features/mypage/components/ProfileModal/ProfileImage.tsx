@@ -45,7 +45,6 @@ function validateImageFile(file: File): ValidationResult {
 	if (result.success) {
 		return { success: true };
 	}
-	console.log(result.error.issues[0]?.message);
 	return {
 		success: false,
 		error: result.error.issues[0]?.message ?? "이미지 업로드에 실패했습니다.",

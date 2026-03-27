@@ -9,8 +9,6 @@ import InputField from "@/components/ui/Inputs/InputField";
 import { Modal } from "@/components/ui/Modals";
 import { UserProfile } from "@/features/mypage/type";
 import useToggle from "@/hooks/useToggle";
-import { useToast } from "@/providers/toast-provider";
-import { useUserStore } from "@/store/user.store";
 import Alert from "@/components/ui/Modals/AlertModal";
 import ProfileImage from "./ProfileImage";
 import { PatchUserProfilePayload } from "../../apis";
@@ -66,11 +64,9 @@ function buildProfilePayload(data: ProfileFormValues, user: UserProfile): PatchU
 	return payload;
 }
 
-// 프로필 수정 모달 본체로 폼 상태와 저장/취소 흐름을 관리한다.
+// 프로필 폼 상태와 저장/취소
 export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProps) {
 	const { isOpen: alertOpen, open, close } = useToggle();
-	const { handleShowToast } = useToast();
-	const setUser = useUserStore((state) => state.setUser);
 	const { mutate, isPending } = useUserProfileUpdate();
 	const profileFormId = useId();
 
