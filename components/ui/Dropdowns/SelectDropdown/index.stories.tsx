@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import RegionDropdown from ".";
+import SelectDropdown from ".";
 
 const REGION_OPTIONS = ["강남구", "강동구", "강북구", "강서구", "관악구"];
 
-const meta: Meta<typeof RegionDropdown> = {
-	title: "Dropdowns/RegionDropdown",
-	component: RegionDropdown,
+const meta: Meta<typeof SelectDropdown> = {
+	title: "Dropdowns/SelectDropdown",
+	component: SelectDropdown,
 	tags: ["autodocs"],
 	parameters: {
 		layout: "centered",
@@ -65,12 +65,12 @@ const meta: Meta<typeof RegionDropdown> = {
 
 export default meta;
 
-type Story = StoryObj<typeof RegionDropdown>;
+type Story = StoryObj<typeof SelectDropdown>;
 
 export const Default: Story = {
 	render: (args) => (
 		<div className="h-75 w-md bg-white p-10">
-			<RegionDropdown {...args} />
+			<SelectDropdown {...args} />
 		</div>
 	),
 };
@@ -81,7 +81,7 @@ export const WithDefaultValue: Story = {
 	},
 	render: (args) => (
 		<div className="h-75 w-md bg-white p-10">
-			<RegionDropdown {...args} />
+			<SelectDropdown {...args} />
 		</div>
 	),
 };
@@ -92,7 +92,7 @@ export const WithValue: Story = {
 	},
 	render: (args) => (
 		<div className="h-75 w-md bg-white p-10">
-			<RegionDropdown {...args} />
+			<SelectDropdown {...args} />
 		</div>
 	),
 };
@@ -104,7 +104,7 @@ export const Disabled: Story = {
 	},
 	render: (args) => (
 		<div className="h-75 w-md bg-white p-10">
-			<RegionDropdown {...args} />
+			<SelectDropdown {...args} />
 		</div>
 	),
 };

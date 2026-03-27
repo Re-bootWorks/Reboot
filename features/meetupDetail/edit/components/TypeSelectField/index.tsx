@@ -1,8 +1,8 @@
 "use client";
 
 import { InputFieldWrapper } from "@/components/ui/Inputs/InputFieldWrapper";
-import RegionDropdown from "@/components/ui/Dropdowns/RegionDropdown";
 import { MEETUP_TYPES } from "@/features/meetup/list/constants";
+import SelectDropdown from "@/components/ui/Dropdowns/SelectDropdown";
 
 interface TypeSelectFieldProps {
 	value: string;
@@ -17,7 +17,7 @@ export default function TypeSelectField({ value, onChange }: TypeSelectFieldProp
 	return (
 		<InputFieldWrapper label="모임 종류">
 			{({ id }) => (
-				<RegionDropdown
+				<SelectDropdown
 					triggerLabel="모임 종류를 선택해 주세요"
 					options={MEETUP_TYPE_OPTIONS}
 					value={value}

@@ -52,10 +52,10 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 		<>
 			{/* 섹션 1 - 모임 소개 */}
 			<section className="flex w-full flex-col gap-4 md:flex-row lg:gap-5">
-				<div className="relative aspect-343/241 w-full overflow-hidden rounded-2xl md:aspect-auto md:self-stretch lg:rounded-4xl">
+				<div className="relative aspect-343/241 w-full overflow-hidden rounded-2xl md:aspect-auto md:w-1/2 md:self-stretch lg:rounded-4xl">
 					<Image alt={meeting.name} src={meeting.image} fill className="object-cover" priority />
 				</div>
-				<div className="flex flex-1 flex-col gap-5">
+				<div className="flex w-full flex-col gap-5 md:w-1/2">
 					<InformationContainer {...meeting} isHost={isHost} editInitialData={editInitialData} />
 					<PersonnelContainer
 						capacity={meeting.capacity}
