@@ -29,6 +29,7 @@ export default function InputTextarea({
 	placeholder,
 	defaultValue,
 	isResizeable = false,
+	className,
 	...props
 }: InputTextareaProps) {
 	return (
@@ -50,6 +51,7 @@ export default function InputTextarea({
 						!isDestructive
 							? "border border-transparent focus-within:border-purple-500"
 							: "border-error border",
+						className,
 					)}
 					aria-describedby={hintText ? descriptionId : undefined}
 					{...props}

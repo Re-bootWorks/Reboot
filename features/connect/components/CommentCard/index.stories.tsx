@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import CommentCard from "./index";
 
 const meta: Meta<typeof CommentCard> = {
-	title: " Features/connect/CommentCard",
+	title: "Connect/CommentCard",
 	component: CommentCard,
 };
 
