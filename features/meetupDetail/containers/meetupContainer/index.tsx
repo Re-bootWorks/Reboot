@@ -11,6 +11,7 @@ import { mockRelatedMeetings } from "@/features/meetupDetail/components/Cards/Co
 import type { CommentProps } from "@/features/meetupDetail/components/Cards/CommentCards";
 import KakaoMap from "@/features/meetupDetail/components/KakaoMap";
 import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
+import { toMeetupEditData } from "@/features/meetupDetail/edit/utils";
 
 // TODO: 추후 auth에서 가져올 예정
 const CURRENT_USER_ID = 1;
@@ -39,6 +40,7 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 
 	if (!meeting) return null;
 
+	const editInitialData = toMeetupEditData(meeting);
 	const isHost = meeting.hostId === CURRENT_USER_ID;
 	const participants = participantsData?.data ?? [];
 
@@ -50,11 +52,11 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 		<>
 			{/* 섹션 1 - 모임 소개 */}
 			<section className="flex w-full flex-col gap-4 md:flex-row lg:gap-5">
-				<div className="relative aspect-343/241 w-full overflow-hidden rounded-2xl md:aspect-auto md:self-stretch lg:rounded-4xl">
+				<div className="relative aspect-343/241 w-full overflow-hidden rounded-2xl md:aspect-auto md:w-1/2 md:self-stretch lg:rounded-4xl">
 					<Image alt={meeting.name} src={meeting.image} fill className="object-cover" priority />
 				</div>
-				<div className="flex w-full flex-col gap-5">
-					<InformationContainer {...meeting} isHost={isHost} />
+				<div className="flex w-full flex-col gap-5 md:w-1/2">
+					<InformationContainer {...meeting} isHost={isHost} editInitialData={editInitialData} />
 					<PersonnelContainer
 						capacity={meeting.capacity}
 						participantCount={meeting.participantCount}

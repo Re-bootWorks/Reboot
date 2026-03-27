@@ -30,6 +30,11 @@ export const formatIsoDateWithDots = (value: string) => {
 	return dayjs(value).tz(KOREAN_TIMEZONE).format("YYYY.MM.DD");
 };
 
+// ISO 날짜 문자열을 "YYYY-MM-DD" 형식으로 변환
+export const formatIsoDateToInput = (value: string) => {
+	return dayjs(value).tz(KOREAN_TIMEZONE).format("YYYY-MM-DD");
+};
+
 // ISO 날짜 문자열을 [날짜, 시간]으로 반환 — "M월 D일", "HH:mm" (한국 시간)
 export const formatDateTime = (value: string): [string, string] => {
 	const d = dayjs(value).tz(KOREAN_TIMEZONE);
