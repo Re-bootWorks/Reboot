@@ -27,7 +27,7 @@ export function useQueryParams() {
 				}
 			});
 
-			router.push(`?${newParams.toString()}`);
+			router.replace(`?${newParams.toString()}`);
 		},
 		[searchParams, router],
 	);
