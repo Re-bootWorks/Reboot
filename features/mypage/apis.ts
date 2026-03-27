@@ -4,6 +4,7 @@ import {
 	mockMyReviews,
 	mockMyWritableReview,
 } from "@/features/mypage/mockData";
+import { User } from "@/features/auth/types";
 import { ReviewList } from "@/features/mypage/components/ReviewCard/type";
 import { CreatedList, MeetupList, WritableReviewList } from "@/features/mypage/type";
 import { clientFetch } from "@/libs/clientFetch";
@@ -25,6 +26,12 @@ type MeetingStatus = "CONFIRMED" | "CANCELED";
 interface ReviewPayload {
 	score: number;
 	comment: string;
+}
+
+export interface PatchUserProfilePayload {
+	name?: string;
+	email?: string;
+	image?: string;
 }
 
 export async function getMeetingJoined(): Promise<CursorPageResponse<MeetupList>> {
@@ -135,11 +142,12 @@ export async function deleteMeetingFavorite(meetingId: number): Promise<void> {
 // image 관련 api
 export async function uploadProfileImage(file: File): Promise<string> {
 	// presigned URL
-	const presignedResponse = await clientFetch("/images", {
+	const presignedResponse = await clientFetch("/images/presigned", {
 		method: "POST",
 		body: JSON.stringify({
 			fileName: file.name,
 			contentType: file.type,
+			folder: "meetings",
 		}),
 	});
 
@@ -163,4 +171,18 @@ export async function uploadProfileImage(file: File): Promise<string> {
 	}
 
 	return publicUrl;
+}
+
+// 유저 프로필
+export async function patchUserProfile(user: PatchUserProfilePayload): Promise<User> {
+	const response = await clientFetch("/users/me", {
+		method: "PATCH",
+		body: JSON.stringify(user),
+	});
+
+	if (!response.ok) {
+		throw new Error("프로필 수정에 실패했습니다.");
+	}
+
+	return response.json();
 }
