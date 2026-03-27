@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { MeetupCreateData } from "../../types";
+import { MeetupCreateRequest } from "../../types";
 
 interface FormDataContextValue {
 	/** 단계 유효성 조회 */
@@ -11,9 +11,9 @@ interface FormDataContextValue {
 	/** 단계 유효성 설정 */
 	setStepValid: (step: number, isValid: boolean) => void;
 	/** 데이터 조회 */
-	data: MeetupCreateData;
+	data: MeetupCreateRequest;
 	/** 데이터 설정 */
-	setData: React.Dispatch<React.SetStateAction<MeetupCreateData>>;
+	setData: React.Dispatch<React.SetStateAction<MeetupCreateRequest>>;
 }
 
 const FormDataContext = createContext<FormDataContextValue | null>(null);
@@ -26,7 +26,7 @@ export function useFormData() {
 	return ctx;
 }
 
-const initialData: MeetupCreateData = {
+const initialData: MeetupCreateRequest = {
 	name: "",
 	type: "",
 	region: "",
@@ -50,7 +50,7 @@ export default function FormDataProvider({
 	children: React.ReactNode;
 }) {
 	const [isStepValid, setIsStepValid] = useState<boolean[]>(() => Array(totalSteps).fill(false));
-	const [data, setData] = useState<MeetupCreateData>(initialData);
+	const [data, setData] = useState<MeetupCreateRequest>(initialData);
 
 	const getStepValid = useCallback((step: number) => isStepValid[step - 1], [isStepValid]);
 

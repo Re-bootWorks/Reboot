@@ -12,8 +12,8 @@ export default function MeetupListPage() {
 			<div className="my-12 flex flex-col gap-y-5 px-4 md:gap-y-4 md:px-0 lg:gap-y-6">
 				<Suspense fallback={null}>
 					<ListFilters />
+					<MeetupCardList />
 				</Suspense>
-				<MeetupCardList />
 			</div>
 			<Suspense fallback={null}>
 				<CreateOpenButton className="fixed right-4 bottom-6 md:right-5.5 md:bottom-5.5 lg:right-[85px] lg:bottom-14" />

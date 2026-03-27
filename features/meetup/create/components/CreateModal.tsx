@@ -2,7 +2,7 @@
 
 import { Modal } from "@/components/ui/Modals";
 import { cn } from "@/utils/cn";
-import { MeetupCreateData } from "../../types";
+import { MeetupCreateRequest } from "../../types";
 import { getKakaoPlace } from "../../apis";
 import { uploadImage } from "@/apis/images";
 import FormStepProvider, { useFormStep } from "../providers/FormStepProvider";
@@ -23,7 +23,7 @@ export default function CreateModal({ isOpen, onClose, onSuccess }: CreateModalP
 		</FormStepProvider>
 	);
 }
-export type OnSubmit = (data: MeetupCreateData) => Promise<void>;
+export type OnSubmit = (data: MeetupCreateRequest) => Promise<void>;
 export type OnSuccess = (id: number) => void;
 
 interface CreateModalProps {
