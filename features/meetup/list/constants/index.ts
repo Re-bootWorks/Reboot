@@ -6,7 +6,7 @@ export const MEETUP_TYPES = [
 	{ value: "health", label: "운동/건강" },
 	{ value: "family", label: "가족/육아" },
 	{ value: "etc", label: "기타" },
-];
+]; // TODO: 삭제 예정, category.store 로 변경 필요
 
 export const QUERY_KEYS = {
 	/** 모임 종류 */
