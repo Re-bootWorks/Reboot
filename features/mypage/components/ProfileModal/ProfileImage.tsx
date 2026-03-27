@@ -17,7 +17,7 @@ const STYLE = {
 	profileImage: "size-11 rounded-full border border-gray-200 object-cover md:size-28",
 	profileImageEdit: "flex items-center justify-center rounded-full border border-gray-200 bg-white",
 	profileButton: "absolute right-0 bottom-0 size-10 cursor-pointer",
-	inputHint: "px-1 text-xs font-medium text-gray-500 md:text-sm",
+	inputHint: "mt-3 px-1 text-xs font-medium text-gray-500 md:text-sm",
 };
 
 interface ProfileImageProps {
@@ -161,8 +161,7 @@ export default function ProfileImage({
 			</div>
 
 			<p className={STYLE.inputHint}>
-				* 이미지 파일 최대 용량은 1MB 입니다.
-				{isPending && " 업로드 중입니다."}
+				{isPending ? "업로드 중입니다." : "* 이미지 파일 최대 용량은 1MB 입니다."}
 			</p>
 			{error && <p className={cn(STYLE.inputHint, "text-error")}>{error}</p>}
 		</div>

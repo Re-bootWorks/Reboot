@@ -8,6 +8,13 @@ export function useUploadProfileImage() {
 	return useMutation({
 		mutationFn: uploadProfileImage,
 
+		onSuccess: () => {
+			handleShowToast({
+				message: "이미지가 업로드되었습니다.",
+				status: "success",
+			});
+		},
+
 		onError: () => {
 			handleShowToast({
 				message: "이미지 업로드에 실패했습니다.\n잠시 후 다시 시도해주세요.",
