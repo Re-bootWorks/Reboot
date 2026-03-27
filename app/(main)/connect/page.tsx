@@ -2,8 +2,10 @@ import Container from "@/components/layout/Container";
 import PostContainer from "@/features/connect/containers/PostContainer";
 import HotPostSection from "@/features/connect/components/HotPostSection";
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { fetchPosts } from "@/features/connect/apis/fetchPosts";
 import type { GetPostsParams } from "@/features/connect/types";
+import { Suspense } from "react";
+import Loading from "@/features/connect/components/ui/Loading";
+import { serverFetch } from "@/libs/serverFetch";
 
 // 서버 컴포넌트
 export default async function ConnectPage({
@@ -16,6 +18,8 @@ export default async function ConnectPage({
 
 	const queryClient = new QueryClient(); // 캐시저장소+ 쿼리 관리자(데이터를 담아두는 통 )
 
+	const sortBy = "likeCount";
+
 	const params: GetPostsParams = {
 		type: "all",
 		sortBy: "createdAt",
@@ -24,8 +28,18 @@ export default async function ConnectPage({
 	};
 
 	await queryClient.prefetchQuery({
-		queryKey: ["posts", params],
-		queryFn: () => fetchPosts(params),
+		queryKey: ["posts", page, sortBy],
+		queryFn: async () => {
+			const res = await serverFetch(
+				`/posts?type=all&sortBy=${sortBy}&offset=${(page - 1) * 10}&limit=10`,
+			);
+
+			if (!res.ok) {
+				throw new Error("게시글 조회 실패");
+			}
+
+			return res.json();
+		},
 		staleTime: 1000 * 60,
 	});
 
@@ -49,8 +63,9 @@ export default async function ConnectPage({
 				<div className="mt-[98px] pb-[140px]">
 					{/* 게시글 영역 */}
 					<div className="-mx-4">
-						{/* 검색 h-[44px] max-w-[1280px] */}
-						<PostContainer page={page} />
+						<Suspense fallback={<Loading />}>
+							<PostContainer page={page} />
+						</Suspense>
 					</div>
 				</div>
 			</Container>

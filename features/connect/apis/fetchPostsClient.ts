@@ -1,10 +1,5 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
+import { clientFetch } from "@/libs/clientFetch";
 import type { Post } from "@/features/connect/types";
-
-if (!BASE_URL) {
-	throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
-}
 
 type GetPostsParams = {
 	type?: "all" | "best";
@@ -17,7 +12,8 @@ type GetPostsResponse = {
 	data: Post[];
 };
 
-export const fetchPosts = async (params: GetPostsParams): Promise<GetPostsResponse> => {
+// 클라이언트용 fetch
+export const fetchPostsClient = async (params: GetPostsParams): Promise<GetPostsResponse> => {
 	const query = new URLSearchParams({
 		type: params.type ?? "all",
 		sortBy: params.sortBy ?? "createdAt",
@@ -25,11 +21,11 @@ export const fetchPosts = async (params: GetPostsParams): Promise<GetPostsRespon
 		limit: String(params.limit ?? 10),
 	});
 
-	const res = await fetch(`${BASE_URL}/posts?${query}`);
-	console.log(BASE_URL);
+	const res = await clientFetch(`/posts?${query}`);
+
 	if (!res.ok) {
 		throw new Error("게시글 조회 실패");
 	}
 
-	return res.json() as Promise<GetPostsResponse>;
+	return res.json();
 };
