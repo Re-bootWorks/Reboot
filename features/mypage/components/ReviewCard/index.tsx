@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn";
 import Image from "next/image";
-import { ReviewCardProps } from "./type";
+import { ReviewCardProps } from "@/features/mypage/types";
 import { Rating } from "@smastrom/react-rating";
 import { RATING_STYLE } from "@/constants/ratingStyle";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
@@ -24,14 +24,11 @@ export default function ReviewCard({ user, item, handleEdit, handleDelete }: Rev
 	return (
 		<li className={STYLE.itemBox}>
 			<Image
-				src={item.meeting.image ?? EMPTY_THUMBNAIL_IMAGE}
+				src={item.meetingImage ?? EMPTY_THUMBNAIL_IMAGE}
 				alt="모임 대표 이미지"
 				width={343}
 				height={343}
-				className={cn(
-					STYLE.itemImage,
-					!!item.meeting.image ? "" : "bg-purple-50 object-scale-down",
-				)}
+				className={cn(STYLE.itemImage, !!item.meetingImage ? "" : "bg-purple-50 object-scale-down")}
 			/>
 			<ul className={STYLE.itemWrapper}>
 				<li>
@@ -56,12 +53,12 @@ export default function ReviewCard({ user, item, handleEdit, handleDelete }: Rev
 							height={24}
 						/>
 						<div className={STYLE.caption}>{user.name}</div>
-						<div className={STYLE.caption}>{formatIsoDateWithDots(item.dateTime)}</div>
+						<div className={STYLE.caption}>{formatIsoDateWithDots(item.meetingDateTime)}</div>
 					</div>
 				</li>
 				<li className="text-sm text-gray-700 md:text-lg">{item.comment}</li>
 				<li className={STYLE.caption}>
-					{item.meeting.name} · {item.meeting.type}
+					{item.meetingName} · {item.meetingType}
 				</li>
 			</ul>
 		</li>

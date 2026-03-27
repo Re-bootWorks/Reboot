@@ -2,12 +2,12 @@
 import { useState } from "react";
 import DetailCard from "../DetailCard";
 import ReviewFormModal, { ReviewFormValues } from "../ReviewFormModal";
-import { WritableReviewItem, WritableReviewList } from "@/features/mypage/type";
+import { WritableReviewItem, WritableReviewList } from "@/features/mypage/types";
 import { mockMyReviews, mockMyWritableReview, mockUserProfile } from "../../mockData";
 import useMeetingFavorite from "../../hooks/useMeetingFavorite";
 import TabButton from "@/components/ui/Buttons/TabButton";
 import ReviewCard from "../ReviewCard";
-import { ReviewCardItem, ReviewList } from "../ReviewCard/type";
+import { ReviewCardItem, ReviewList } from "@/features/mypage/types";
 import AlertModal from "@/components/ui/Modals/AlertModal";
 
 type ReviewTabId = "writable" | "written";

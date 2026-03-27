@@ -1,6 +1,6 @@
-import { CreatedList, UserProfile } from "@/features/mypage/type";
-import { ReviewList } from "./components/ReviewCard/type";
-import { MeetupList } from "@/features/mypage/type";
+import { CreatedList, UserProfile } from "@/features/mypage/types";
+import { ReviewList } from "@/features/mypage/types";
+import { MeetupList } from "@/features/mypage/types";
 
 export const mockUserProfile: UserProfile = {
 	id: 1333,
@@ -422,27 +422,21 @@ export const mockMyReviews: ReviewList = [
 		score: 5,
 		comment: "정말 좋은 모임이었습니다!",
 		meetingId: 708,
-		meeting: {
-			id: 708,
-			type: "달램핏",
-			name: "달램핏 모임",
-			image:
-				"https://images.unsplash.com/photo-1773578639782-2046b150ce28?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-		},
-		dateTime: "2026-03-17T22:30:00.000Z",
+		meetingType: "달램핏",
+		meetingName: "달램핏 모임",
+		meetingImage:
+			"https://images.unsplash.com/photo-1773578639782-2046b150ce28?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		meetingDateTime: "2026-03-17T22:30:00.000Z",
 	},
 	{
 		id: 350,
 		score: 1,
 		comment: "정말 좋은 모임이었습니다!",
 		meetingId: 708,
-		meeting: {
-			id: 708,
-			type: "달램핏",
-			name: "달램핏 모임",
-			image: null,
-		},
-		dateTime: "2026-03-17T22:30:00.000Z",
+		meetingType: "달램핏",
+		meetingName: "달램핏 모임",
+		meetingImage: null,
+		meetingDateTime: "2026-03-17T22:30:00.000Z",
 	},
 ];
 

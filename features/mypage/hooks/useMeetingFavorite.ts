@@ -1,7 +1,7 @@
 "use client";
 
 import { Dispatch, SetStateAction } from "react";
-import { DetailCardItem } from "../components/DetailCard/type";
+import { DetailCardItem } from "@/features/mypage/types";
 
 export default function useMeetingFavorite<T extends DetailCardItem>(
 	setItems: Dispatch<SetStateAction<T[]>>,

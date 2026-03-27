@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import PageTabs from "@/components/ui/PageTabs";
-import { TabId } from "@/features/mypage/type";
+import { TabId } from "@/features/mypage/types";
 import Meetup from "../Meetup";
 import Review from "../Review";
 import Created from "../Created";

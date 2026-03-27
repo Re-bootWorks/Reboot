@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import DetailCard from "../DetailCard";
-import { DetailCardBadge } from "../DetailCard/type";
-import { CreatedItem, CreatedList } from "@/features/mypage/type";
+import { DetailCardBadge } from "@/features/mypage/types";
+import { CreatedItem, CreatedList } from "@/features/mypage/types";
 import { mockMyCreated } from "../../mockData";
 import AlertModal from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/features/mypage/hooks/useMeetingFavorite";

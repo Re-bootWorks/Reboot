@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import DetailCard from "../DetailCard";
-import { DetailCardAction, DetailCardBadge } from "../DetailCard/type";
+import { DetailCardAction, DetailCardBadge } from "@/features/mypage/types";
 import ReviewFormModal, { ReviewFormValues } from "../ReviewFormModal";
-import { MeetupItem, MeetupList } from "@/features/mypage/type";
+import { MeetupItem, MeetupList } from "@/features/mypage/types";
 import { mockMyMeetups } from "../../mockData";
 import AlertModal from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/features/mypage/hooks/useMeetingFavorite";
