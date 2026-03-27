@@ -10,6 +10,7 @@ import { useEditFormData } from "@/features/meetupDetail/edit/providers/EditForm
 import { MeetupEditData } from "@/features/meetupDetail/edit/types";
 import { useAddressField } from "@/features/meetupDetail/edit/hooks/useAddressField";
 import { uploadImage } from "@/apis/images";
+import DescField from "@/features/meetup/components/DescField";
 
 export default function TabBasicInfo() {
 	const { data, setData } = useEditFormData();
@@ -35,6 +36,10 @@ export default function TabBasicInfo() {
 				defaultUrl={data.image}
 				onChange={(value) => updateField({ image: value })}
 				uploadImageFn={uploadImage}
+			/>
+			<DescField
+				value={data.description}
+				onChange={(value) => updateField({ description: value })}
 			/>
 		</fieldset>
 	);

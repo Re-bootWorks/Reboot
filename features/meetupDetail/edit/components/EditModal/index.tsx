@@ -66,12 +66,10 @@ function EditForm({ onClose, isOpen, onSubmit, isPending }: EditFormProps) {
 			handleShowToast({ message: "모임이 수정되었습니다.", status: "success" });
 			onClose();
 		} catch (error) {
-			if (error) {
-				handleShowToast({
-					message: error instanceof Error ? error.message : "수정 중 오류가 발생했습니다.",
-					status: "error",
-				});
-			}
+			handleShowToast({
+				message: error instanceof Error ? error.message : "수정 중 오류가 발생했습니다.",
+				status: "error",
+			});
 		}
 	}
 
