@@ -48,13 +48,9 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 		signUp({ email: data.email, password: data.password, name: data.name });
 	};
 
-	function handleKakaoLogin() {
+	function handleSocialLogin(url: string) {
 		setIsSocialPending(true);
-		window.location.href = KAKAO_LOGIN_URL;
-	}
-	function handleGoogleLogin() {
-		setIsSocialPending(true);
-		window.location.href = GOOGLE_LOGIN_URL;
+		window.location.href = url;
 	}
 
 	return (
@@ -113,13 +109,13 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 				<div className="flex flex-col gap-3 md:flex-row">
 					<SocialButton
 						social="Google"
-						onClick={handleGoogleLogin}
+						onClick={() => handleSocialLogin(GOOGLE_LOGIN_URL)}
 						disabled={isSocialPending || isPending}>
 						구글로 계속하기
 					</SocialButton>
 					<SocialButton
 						social="Kakao"
-						onClick={handleKakaoLogin}
+						onClick={() => handleSocialLogin(KAKAO_LOGIN_URL)}
 						disabled={isSocialPending || isPending}>
 						카카오로 계속하기
 					</SocialButton>

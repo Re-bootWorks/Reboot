@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE, COOKIE_OPTIONS } from "@/constants/auth";
 
 export async function POST(request: NextRequest) {
-	const { accessToken, refreshToken } = await request.json();
-
 	try {
+		const { accessToken, refreshToken } = await request.json();
+
+		if (!accessToken || !refreshToken) {
+			return NextResponse.json(
+				{ message: "accessToken과 refreshToken이 필요합니다." },
+				{ status: 400 },
+			);
+		}
+
 		const res = NextResponse.json({ success: true }, { status: 200 });
 
 		res.cookies.set("accessToken", accessToken, {
