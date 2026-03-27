@@ -1,20 +1,24 @@
 import Button from "@/components/ui/Buttons/Button";
 import { useFormStep } from "../providers/FormStepProvider";
 import { useFormData } from "../providers/FormDataProvider";
-import { OnSubmit } from "./CreateModal";
+import { postMeetup } from "../../apis";
+import { useState } from "react";
+import { useToast } from "@/providers/toast-provider";
+import type { OnSuccess } from "./CreateModal";
 
 interface FormFooterProps {
 	/** 닫기 버튼 클릭 시 호출 */
 	onClose: () => void;
-	/** 제출 버튼 클릭 시 호출 */
-	onSubmit: OnSubmit;
-	/** 제출 버튼 로딩 상태 */
-	isPending: boolean;
+	/** 모임 생성 성공 시 호출 */
+	onSuccess: OnSuccess;
 }
 
-export default function FormFooter({ onClose, onSubmit, isPending }: FormFooterProps) {
+export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
+	const { handleShowToast } = useToast();
 	const { currentStep, totalSteps, prev, next } = useFormStep();
 	const { checkAllStepValid, getStepValid, data } = useFormData();
+	const [isPending, setIsPending] = useState(false);
+
 	const isFirstStep = currentStep === 1;
 	const isLastStep = currentStep === totalSteps;
 	const prevLabel = isFirstStep ? "취소" : "이전";
@@ -31,13 +35,19 @@ export default function FormFooter({ onClose, onSubmit, isPending }: FormFooterP
 	async function handleClickNext() {
 		if (isLastStep) {
 			try {
-				await onSubmit(data);
-				onClose();
+				setIsPending(true);
+				const res = await postMeetup(data);
+				if ("id" in res) {
+					onSuccess(res.id);
+				} else {
+					handleShowToast({ message: res.message, status: "error" });
+				}
+				setIsPending(false);
 			} catch (error) {
 				if (error instanceof Error) {
-					// TODO: 토스트 에러 표시
-					console.error(error.message);
+					handleShowToast({ message: error.message, status: "error" });
 				}
+				setIsPending(false);
 			}
 		} else {
 			next();
@@ -45,13 +55,13 @@ export default function FormFooter({ onClose, onSubmit, isPending }: FormFooterP
 	}
 
 	return (
-		<div className="flex justify-between gap-x-4">
-			<Button colors="grayBorder" className="flex-1" onClick={handleClickPrev}>
+		<div className="grid grid-cols-2 gap-x-4">
+			<Button colors="grayBorder" className="min-w-0" onClick={handleClickPrev}>
 				{prevLabel}
 			</Button>
 			<Button
 				disabled={isLastStep ? !checkAllStepValid() : !getStepValid(currentStep)}
-				className="flex-1"
+				className="min-w-0"
 				isPending={isPending}
 				onClick={handleClickNext}>
 				{nextLabel}

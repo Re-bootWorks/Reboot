@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { GetKakaoAddressFn, UploadImageFn } from "../../types";
-import { getAddress, getRegion } from "../../utils";
+import type { getKakaoPlaceFn } from "../../types";
+import type { UploadImageFn } from "@/apis/images";
+import { getAddress } from "../../utils";
 import { useFormData } from "../providers/FormDataProvider";
 import AddressField, { AddressValues } from "../../components/AddressField";
 import NameField from "../../components/NameField";
@@ -12,16 +13,15 @@ interface StepInfoProps {
 	/** 단계 숫자 */
 	step: number;
 	uploadImageFn: UploadImageFn;
-	getKakaoAddressFn: GetKakaoAddressFn;
+	getKakaoPlaceFn: getKakaoPlaceFn;
 }
-export default function StepInfo({ step, uploadImageFn, getKakaoAddressFn }: StepInfoProps) {
+export default function StepInfo({ step, uploadImageFn, getKakaoPlaceFn }: StepInfoProps) {
 	const { setStepValid, setData } = useFormData();
 	const [isComboOpened, setIsComboOpened] = useState(false);
 	const [addressValues, setAddressValues] = useState<AddressValues>({
 		latitude: 0,
 		longitude: 0,
-		regionFirst: "",
-		regionSecond: "",
+		region: "",
 		addressName: "",
 		addressDetail: "",
 	});
@@ -30,9 +30,8 @@ export default function StepInfo({ step, uploadImageFn, getKakaoAddressFn }: Ste
 
 	// 유효성 검사 및 데이터 업데이트
 	useEffect(() => {
-		const { latitude, longitude, addressName, addressDetail, regionFirst, regionSecond } =
-			addressValues;
-		const isLocationValid = !!(addressName && addressDetail && regionFirst && regionSecond);
+		const { latitude, longitude, addressName, addressDetail, region } = addressValues;
+		const isLocationValid = !!(addressName && addressDetail && region);
 		const isValid = !!(name && image && isLocationValid);
 
 		setStepValid(step, isValid);
@@ -41,7 +40,7 @@ export default function StepInfo({ step, uploadImageFn, getKakaoAddressFn }: Ste
 			name,
 			latitude,
 			longitude,
-			region: getRegion(regionFirst, regionSecond),
+			region,
 			address: getAddress(addressName, addressDetail),
 			image,
 		}));
@@ -55,7 +54,7 @@ export default function StepInfo({ step, uploadImageFn, getKakaoAddressFn }: Ste
 				setIsComboOpened={setIsComboOpened}
 				value={addressValues}
 				setValue={setAddressValues}
-				getKakaoAddressFn={getKakaoAddressFn}
+				getKakaoPlaceFn={getKakaoPlaceFn}
 			/>
 			<FileField defaultUrl={image} onChange={setImage} uploadImageFn={uploadImageFn} />
 		</fieldset>

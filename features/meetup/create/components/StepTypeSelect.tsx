@@ -9,12 +9,16 @@ import imgBusiness from "../assets/img_business.png";
 import imgSports from "../assets/img_sports.png";
 import imgFamily from "../assets/img_family.png";
 import imgEtc from "../assets/img_etc.png";
+import imgDefault from "@/public/assets/img/img_empty.svg";
+import { useCategoryStore, type CategoryName } from "@/store/category.store";
+import type { StaticImageData } from "next/image";
 
 interface StepTypeSelectProps {
 	/** 단계 숫자 */
 	step: number;
 }
 export default function StepTypeSelect({ step }: StepTypeSelectProps) {
+	const { categories } = useCategoryStore();
 	const { data, setData, setStepValid } = useFormData();
 
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -36,19 +40,19 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 				variants={{
 					visible: { transition: { staggerChildren: 0.05 } },
 				}}>
-				{TYPES.map((type) => (
+				{categories.map((type) => (
 					<motion.div
-						key={type.value}
+						key={type.id}
 						variants={{
 							hidden: { opacity: 0, y: 10 },
 							visible: { opacity: 1, y: 0 },
 						}}>
 						<CategoryTab
 							title={type.name}
-							imageSrc={type.imageSrc}
+							imageSrc={CATEGORY_IMAGES[type.name] ?? imgDefault}
 							name="type"
-							value={type.value}
-							checked={data.type === type.value}
+							value={type.name}
+							checked={data.type === type.name}
 							onChange={handleChangeInput}
 						/>
 					</motion.div>
@@ -59,11 +63,11 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 }
 
 const DESC = "이 모임은 어떤 종류인가요?";
-const TYPES = [
-	{ value: "hobby", name: "취미/여가", imageSrc: imgHobby },
-	{ value: "study", name: "스터디", imageSrc: imgStudy },
-	{ value: "business", name: "비즈니스", imageSrc: imgBusiness },
-	{ value: "sports", name: "운동/건강", imageSrc: imgSports },
-	{ value: "family", name: "가족/육아", imageSrc: imgFamily },
-	{ value: "etc", name: "기타", imageSrc: imgEtc },
-];
+const CATEGORY_IMAGES = {
+	자기계발: imgStudy,
+	"운동/스포츠": imgSports,
+	문화생활: imgHobby,
+	여행: imgBusiness,
+	반려동물: imgFamily,
+	기타: imgEtc,
+} satisfies Record<CategoryName, StaticImageData>;

@@ -11,8 +11,16 @@ interface NameFieldProps {
 	onChange: (value: string, e: React.ChangeEvent<HTMLInputElement>) => void;
 	/** 추가 클래스명 */
 	className?: string;
+	/** 필수 필드 여부 @default true */
+	isRequired?: boolean;
 }
-export default function NameField({ name = "name", value, onChange, className }: NameFieldProps) {
+export default function NameField({
+	name = "name",
+	value,
+	onChange,
+	className,
+	isRequired = true,
+}: NameFieldProps) {
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
 		onChange(e.target.value, e);
 	}
@@ -22,7 +30,7 @@ export default function NameField({ name = "name", value, onChange, className }:
 			label="모임 이름"
 			placeholder="모임 이름을 입력해 주세요"
 			className={className}
-			isRequired
+			isRequired={isRequired}
 			value={value}
 			onChange={handleChangeInput}
 		/>

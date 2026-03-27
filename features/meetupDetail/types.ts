@@ -1,4 +1,4 @@
-import type { ReviewScore } from "@/features/reviews/components/ReviewCard";
+import type { ReviewScore } from "@/types/common";
 
 export type User = {
 	id: number;

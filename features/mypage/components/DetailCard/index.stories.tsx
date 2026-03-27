@@ -40,7 +40,6 @@ export const Pending: Story = {
 	args: {
 		item: {
 			...baseItem,
-			confirmedAt: null,
 			participantCount: 7,
 		},
 		badges: [
@@ -56,8 +55,6 @@ export const Completed: Story = {
 	args: {
 		item: {
 			...baseItem,
-			isCompleted: true,
-			isReviewed: false,
 			participantCount: 14,
 		},
 		badges: [{ label: "이용 완료", variant: "completed" }],
@@ -70,7 +67,6 @@ export const Host: Story = {
 	args: {
 		item: {
 			...baseItem,
-			confirmedAt: null,
 			participantCount: 20,
 		},
 		actions: [

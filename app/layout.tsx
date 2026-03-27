@@ -4,6 +4,8 @@ import localFont from "next/font/local";
 import Header from "@/components/layout/Header";
 import QueryProvider from "@/providers/query-provider";
 import { MemberProvider } from "@/providers/member-provider";
+import CategoryInitializer from "@/providers/category-provider";
+import { initMeetingTypes } from "@/apis/meetingTypes";
 
 const pretendard = localFont({
 	src: "../public/assets/fonts/PretendardVariable.woff2",
@@ -28,14 +30,17 @@ const pretendard = localFont({
 	],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const categories = await initMeetingTypes();
+
 	return (
 		<html lang="ko">
 			<body className={pretendard.className}>
+				<CategoryInitializer data={categories} />
 				<QueryProvider>
 					<ToastProvider>
 						<MemberProvider>
