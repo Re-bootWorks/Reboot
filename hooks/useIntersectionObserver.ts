@@ -22,15 +22,20 @@ interface UseIntersectionObserverProps {
 	onIntersect: () => void;
 	/** 옵저버 활성화 여부 */
 	isEnabled: boolean;
+	/** IntersectionObserver의 threshold 값 (기본값: 0.1) */
+	threshold?: number;
 }
 
 export function useIntersectionObserver({
 	targetRef,
 	onIntersect,
 	isEnabled,
+	threshold = 0.1,
 }: UseIntersectionObserverProps) {
 	useEffect(() => {
-		if (!isEnabled) return; // 비활성화면 감시 자체를 안 함
+		// 비활성화면 감시 자체를 안 하도록
+		const currentElement = targetRef.current;
+		if (!isEnabled || !currentElement) return;
 
 		// 특정 요소가 뷰포트에 들어오는지 감시하는 객체
 		const observer = new IntersectionObserver(
@@ -39,11 +44,13 @@ export function useIntersectionObserver({
 					onIntersect(); // 요소가 화면에 보이고 있는지 확인
 				}
 			},
-			{ threshold: 0.1 }, // 요소가 10% 이상 화면에 보일 때 감지
+			{ threshold }, // 요소가 해당 값 이상 화면에 보일 때 감지
 		);
 
-		if (targetRef.current) observer.observe(targetRef.current);
+		observer.observe(currentElement);
 
 		return () => observer.disconnect();
-	}, [targetRef, onIntersect, isEnabled]);
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [targetRef.current, onIntersect, isEnabled]);
 }
