@@ -3,12 +3,13 @@ import imgBannerLarge from "../assets/img_banner_large.svg";
 import imgBannerSmall from "../assets/img_banner_small.svg";
 import { cn } from "@/utils/cn";
 
-export default function Banner() {
+export default function Banner({ className }: { className?: string }) {
 	return (
 		<div
 			className={cn(
 				"relative h-48 w-full overflow-hidden bg-purple-100",
 				"md:h-[244px] md:rounded-3xl lg:rounded-4xl",
+				className,
 			)}>
 			<div className="absolute top-1/2 left-4 z-1 -translate-y-1/2 md:left-10 lg:left-14">
 				<p
