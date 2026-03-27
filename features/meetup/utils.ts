@@ -1,3 +1,5 @@
+import { RegionFilterValue } from "./list/components/ListFilters";
+
 /** 텍스트 유효성 검사 */
 export function validateText(value: string) {
 	return !!value.trim();
@@ -47,12 +49,28 @@ export function getAddress(name: string, detail: string) {
 	return `${name}, ${detail}`;
 }
 
-/** 모임 종류 쿼리 값 변환 */
+/** 모임 종류 쿼리 값 -> 요청 파라미터 변환 */
 export function transformTypeValue(data: string | null | undefined): string | undefined {
 	return !!data && data !== "all" ? data : undefined;
 }
 
-/** 기타 쿼리 값 반환 */
+/** 기타 쿼리 값 -> 요청 파라미터 변환 */
 export function transformQueryValue<T extends string>(data: T | null | undefined): T | undefined {
 	return !!data ? data : undefined;
+}
+
+/** 지역 (region) 쿼리 값 -> dropdown 데이터로 변환 */
+export function transformRegionData(data: string | null | undefined): RegionFilterValue {
+	if (!data) {
+		return {
+			region: null,
+			district: null,
+		};
+	} else {
+		const [region, district] = data.split(" ");
+		return {
+			region: { value: region, label: region },
+			district: { value: district, label: district },
+		};
+	}
 }
