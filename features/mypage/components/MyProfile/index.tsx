@@ -3,8 +3,6 @@
 import { IcEditOutline } from "@/components/ui/icons";
 import Image from "next/image";
 import { UserProfile } from "@/features/mypage/types";
-import { mockUserProfile } from "@/features/mypage/mockData";
-import { ProfileModal } from "../ProfileModal";
 import useToggle from "@/hooks/useToggle";
 import { useUserStore } from "@/store/user.store";
 import Skeleton from "react-loading-skeleton";

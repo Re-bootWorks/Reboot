@@ -7,12 +7,11 @@ import { z } from "zod";
 import Button from "@/components/ui/Buttons/Button";
 import InputField from "@/components/ui/Inputs/InputField";
 import { Modal } from "@/components/ui/Modals";
-import { UserProfile } from "@/features/mypage/type";
 import useToggle from "@/hooks/useToggle";
 import Alert from "@/components/ui/Modals/AlertModal";
 import ProfileImage from "./ProfileImage";
-import { PatchUserProfilePayload } from "../../apis";
 import { useUserProfileUpdate } from "../../mutations";
+import { PatchUserProfilePayload, UserProfile } from "../../types";
 
 const STYLE = {
 	modal: "min-h-100 w-[calc(100%-32px)] max-w-136 p-6 pt-8 md:w-full md:p-12",
