@@ -11,7 +11,6 @@ export interface Comment {
 	content: string;
 	createdAt: string;
 	author: Author;
-	likeCount: number;
 }
 
 // UI 타입
@@ -20,7 +19,6 @@ export interface CommentCardItem {
 	content: string;
 	authorName: string;
 	date: number;
-	likeCount: number;
 }
 
 // 컴포넌트 Props

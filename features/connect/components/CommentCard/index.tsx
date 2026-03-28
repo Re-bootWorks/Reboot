@@ -1,7 +1,14 @@
 import type { CommentCardProps } from "@/features/connect/comment/types";
-import dayjs from "@/libs/dayjs";
+import { useEffect, useState } from "react";
+import RelativeTime from "@/features/connect/ui/RelativeTime";
 
 export default function CommentCard({ content, authorName, date }: CommentCardProps) {
+	const [mounted, setMounted] = useState(false);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
 	return (
 		<div className="flex min-h-[96px] w-full flex-col gap-2 border-b border-gray-200">
 			<div className="pt-[8px] pb-[24px] md:pt-[16px]">
@@ -14,7 +21,7 @@ export default function CommentCard({ content, authorName, date }: CommentCardPr
 				<div className="flex items-center gap-2 text-xs text-gray-500">
 					<span>{authorName}</span>
 					<span>·</span>
-					<span>{dayjs(date).tz("Asia/Seoul").fromNow()}</span>
+					<RelativeTime date={date} fallback="date" />
 				</div>
 			</div>
 		</div>

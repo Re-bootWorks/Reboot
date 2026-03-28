@@ -7,21 +7,85 @@ import CommentCard from "@/features/connect/components/CommentCard";
 import { mapCommentToCard } from "@/features/connect/comment/mappers";
 import type { Comment } from "@/features/connect/comment/types";
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createComment } from "@/features/connect/apis/createComment";
+import { useQuery } from "@tanstack/react-query";
+import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
 
 interface CommentSectionProps {
-	comments: Comment[];
+	postId: number;
 }
 
-export default function CommentSection({ comments }: CommentSectionProps) {
+export default function CommentSection({ postId }: CommentSectionProps) {
 	const [comment, setComment] = useState("");
+	const queryClient = useQueryClient();
+
+	const { data } = useQuery<{ comments: Comment[] }>({
+		queryKey: ["postDetail", postId],
+		queryFn: () => getPostDetailClient(String(postId)),
+	});
+
+	const mutation = useMutation({
+		mutationFn: createComment,
+
+		onMutate: async (newComment: { postId: number; content: string }) => {
+			await queryClient.cancelQueries({ queryKey: ["postDetail", postId] });
+
+			const previousData = queryClient.getQueryData(["postDetail", postId]);
+
+			queryClient.setQueryData(
+				["postDetail", postId],
+				(old: { comments?: Comment[] } | undefined) => ({
+					//old:기존 캐시 데이터
+					...old, // 기존 데이터 유지 + comments만 덮어쓰기
+					comments: [
+						...(old?.comments ?? []),
+						{
+							//임시 데이터 (fake 데이터)
+							id: Date.now(),
+							content: newComment.content,
+							author: { name: "나" },
+							createdAt: new Date().toISOString(),
+							// 1. Optimistic으로 "나" 표시
+							// 2. 서버 응답 도착
+							// 3. invalidateQueries 실행
+							// 4. 진짜 데이터로 교체됨
+						},
+					],
+				}),
+			);
+
+			return { previousData }; //새로운 캐시 데이터
+		},
+
+		onError: (_err, _newComment, context) => {
+			if (context?.previousData) {
+				queryClient.setQueryData(["postDetail", postId], context.previousData);
+			}
+		},
+
+		onSuccess: () => {
+			setComment(""); // 입력 비워줘버리기~
+		},
+
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: ["postDetail", postId] }); //캐시를 무효화해서 데이터를 다시 불러오게 만드는 함수
+		},
+	});
+
+	if (!data) return null;
+
+	const comments = data?.comments ?? [];
 
 	const handleSubmit = () => {
 		if (!comment.trim()) return;
 
-		console.log("댓글:", comment);
-
-		setComment(""); // 입력 초기화
+		mutation.mutate({
+			postId,
+			content: comment,
+		}); // 뮤테이션 실행함수
 	};
+
 	return (
 		<section>
 			{/* 댓글 개수 */}
@@ -32,11 +96,11 @@ export default function CommentSection({ comments }: CommentSectionProps) {
 
 			{/* 댓글 입력 영역 */}
 			<div className="mt-3 flex items-center md:mt-4 lg:mt-8">
-				<div className="pr-1">
+				<div className="pr-4">
 					<Image src="/assets/img/img_profile.svg" alt="profile" width={54} height={54} />
 				</div>
 
-				<div className="flex flex-1 items-center gap-2.5 rounded-2xl bg-gray-100 p-[6px] pl-3">
+				<div className="flex flex-1 items-center gap-2.5 rounded-2xl bg-gray-100 px-[10px] py-[10px]">
 					<InputTextarea
 						name="comment"
 						placeholder="여기에 댓글을 남겨보세요"
@@ -46,7 +110,7 @@ export default function CommentSection({ comments }: CommentSectionProps) {
 					/>
 					<Button
 						onClick={handleSubmit}
-						className="w-10 rounded-[10px] px-4 text-base font-semibold">
+						className="r-[10px] h-12 w-8 rounded-[0.75rem] px-6 py-2 text-base font-semibold">
 						등록
 					</Button>
 				</div>

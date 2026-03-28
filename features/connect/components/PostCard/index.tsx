@@ -4,6 +4,7 @@ import IcPerson from "@/components/ui/icons/IcPerson";
 import dayjs from "@/libs/dayjs";
 import Image from "next/image";
 import EmptyImage from "@/features/connect/ui/EmptyImage";
+import RelativeTime from "@/features/connect/ui/RelativeTime";
 
 type PostCardProps = {
 	id: number;
@@ -70,7 +71,7 @@ export default function ConnectCard({
 
 					{/* 시간 + 좋아요 + 댓글 */}
 					<div className="flex items-center gap-2">
-						<span>{dayjs(date).fromNow()}</span>
+						<RelativeTime date={date} />
 
 						<div className="flex items-center gap-1">
 							<IcThumbOutline color="gray-400" />

@@ -19,7 +19,7 @@ export type PostCardItem = {
 	id: number;
 	title: string;
 	description: string;
-	imageUrl: string;
+	imageUrl?: string;
 	author: string;
 	date: number;
 	likeCount: number;
