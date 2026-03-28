@@ -4,7 +4,7 @@ import Container from "@/components/layout/Container";
 import dayjs from "@/libs/dayjs";
 
 const meta: Meta<typeof CompactCard> = {
-	title: "Post/CompactCard",
+	title: "Connect/CompactCard",
 	component: CompactCard,
 	tags: ["autodocs"],
 	parameters: {
