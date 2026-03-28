@@ -1,8 +1,7 @@
 "use client";
 
 import CompactCard from "@/features/connect/components/CompactCard";
-import type { Post } from "@/features/connect/types";
-
+import type { Post } from "@/features/connect/post/types";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPostsClient } from "@/features/connect/apis/fetchPostsClient";

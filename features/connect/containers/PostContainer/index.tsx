@@ -9,7 +9,7 @@ import { fetchPostsClient } from "@/features/connect/apis/fetchPostsClient";
 //import { keepPreviousData } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { mapPostToCard } from "@/features/connect/mappers";
+import { mapPostToCard } from "@/features/connect/post/mappers";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 export default function PostContainer({ page }: { page: number }) {
