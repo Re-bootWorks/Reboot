@@ -6,8 +6,12 @@ import { IcCrownOutline, IcLocation } from "@/components/ui/icons";
 import Button from "@/components/ui/Buttons/Button";
 import UtilityButton from "@/components/ui/Buttons/UtilityButton";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
-import { useState } from "react";
 import { isDeadlinePassed, uiFormatDate, uiFormatDeadline, uiFormatTime } from "@/utils/date";
+import { useGetMe } from "@/features/auth/queries";
+import useToggle from "@/hooks/useToggle";
+import EditMeetup from "@/features/meetupDetail/edit";
+import { MeetupEditData } from "@/features/meetupDetail/edit/types";
+import Alert from "@/components/ui/Modals/AlertModal";
 
 interface InformationContainerProps {
 	name: string;
@@ -16,6 +20,7 @@ interface InformationContainerProps {
 	dateTime: string;
 	registrationEnd: string;
 	isHost: boolean;
+	editInitialData: MeetupEditData;
 }
 
 export default function InformationContainer({
@@ -25,75 +30,122 @@ export default function InformationContainer({
 	dateTime,
 	registrationEnd,
 	isHost,
+	editInitialData,
 }: InformationContainerProps) {
-	const [isJoined, setIsJoined] = useState(false);
+	const { data: me } = useGetMe();
+	const isLoggedIn = !!me;
+
+	const { isOpen: isJoined, toggle: toggleJoin } = useToggle();
+	const { isOpen: isLoginModalOpen, open: openLoginModal, close: closeLoginModal } = useToggle();
+	const { isOpen: isEditModalOpen, open: openEditModal, close: closeEditModal } = useToggle();
+	const { isOpen: isDeleteModalOpen, open: openDeleteModal, close: closeDeleteModal } = useToggle();
+
 	const isClosed = isDeadlinePassed(registrationEnd);
 
 	const handleJoinClick = () => {
-		setIsJoined((prev) => !prev);
+		if (!isLoggedIn) {
+			openLoginModal();
+			return;
+		}
+		toggleJoin();
 	};
 
 	const handleShareClick = () => {
 		navigator.clipboard.writeText(window.location.href);
 	};
 
+	const handleLoginConfirm = () => {
+		closeLoginModal();
+	};
+
+	const handleDeleteConfirm = () => {
+		// TODO: 추후 실제 삭제 API 연동 예정
+		closeDeleteModal();
+	};
+
 	const actionItems = [
 		{
 			label: "수정하기",
-			onClick: () => {},
+			onClick: openEditModal,
 		},
 		{
 			label: "삭제하기",
-			onClick: () => {},
+			onClick: openDeleteModal,
 		},
 	];
 
 	return (
-		<div className="flex h-50 w-85.75 flex-col gap-7 rounded-[20px] bg-white px-6 pt-5 pb-6 lg:h-70.5 lg:w-157.5 lg:gap-10 lg:rounded-4xl lg:px-10 lg:pt-8.5 lg:pb-8">
-			<div className="flex w-full flex-col gap-4 lg:gap-6">
-				<div className={`flex w-full items-center gap-2 ${isHost ? "justify-between" : ""}`}>
-					<div className="flex items-center gap-2">
-						{!isClosed && (
-							<DeadlineTag size="sm" className="md:h-6 md:text-sm">
-								{uiFormatDeadline(registrationEnd)}
-							</DeadlineTag>
-						)}
-						<TimeTag size="sm" className="md:h-6 md:text-sm">
-							{uiFormatDate(dateTime)}
-						</TimeTag>
-						<TimeTag size="sm" className="md:h-6 md:text-sm">
-							{uiFormatTime(dateTime)}
-						</TimeTag>
+		<>
+			<div className="flex w-full flex-col gap-7 rounded-[20px] bg-white px-6 pt-5 pb-6 lg:gap-10 lg:rounded-4xl lg:px-10 lg:pt-8.5 lg:pb-8">
+				<div className="flex w-full flex-col gap-4 lg:gap-6">
+					<div className={`flex w-full items-center gap-2 ${isHost ? "justify-between" : ""}`}>
+						<div className="flex items-center gap-2">
+							{!isClosed && (
+								<DeadlineTag size="sm" className="md:h-6 md:text-sm">
+									{uiFormatDeadline(registrationEnd)}
+								</DeadlineTag>
+							)}
+							<TimeTag size="sm" className="md:h-6 md:text-sm">
+								{uiFormatDate(dateTime)}
+							</TimeTag>
+							<TimeTag size="sm" className="md:h-6 md:text-sm">
+								{uiFormatTime(dateTime)}
+							</TimeTag>
+						</div>
+						{isHost && <ActionDropdown items={actionItems} />}
 					</div>
-					{isHost && <ActionDropdown items={actionItems} />}
+
+					<div className="flex w-full flex-col gap-1 overflow-hidden lg:gap-3">
+						<div className="flex items-center gap-1.5 overflow-hidden">
+							<h1 className="truncate text-lg lg:text-5xl">{name}</h1>
+							{isHost && <IcCrownOutline size="md" className="shrink-0 lg:h-8 lg:w-8" />}
+						</div>
+
+						<div className="flex items-center gap-0.5 overflow-hidden text-sm">
+							<IcLocation className="h-4 w-4 shrink-0 lg:h-6 lg:w-6" />
+							<span>
+								{region}·{type}
+							</span>
+						</div>
+					</div>
 				</div>
 
-				<div className="flex w-full flex-col gap-1 overflow-hidden lg:gap-3">
-					<div className="flex items-center gap-1.5 overflow-hidden">
-						<h1 className="truncate text-lg lg:text-5xl">{name}</h1>
-						{isHost && <IcCrownOutline size="md" className="shrink-0 lg:h-8 lg:w-8" />}
-					</div>
-
-					<div className="flex items-center gap-0.5 overflow-hidden text-sm">
-						<IcLocation className="h-4 w-4 shrink-0 lg:h-6 lg:w-6" />
-						<span>
-							{region}·{type}
-						</span>
-					</div>
+				<div className="flex w-full items-center gap-4">
+					<UtilityButton sizes="small" className="lg:size-15" />
+					<Button
+						sizes="small"
+						colors={isJoined ? "purpleBorder" : "purple"}
+						disabled={!isHost && isClosed}
+						onClick={isHost ? handleShareClick : handleJoinClick}
+						className="flex-1 lg:h-15 lg:rounded-2xl lg:px-7.5 lg:text-xl">
+						{isHost ? "공유하기" : isJoined ? "참여 취소하기" : "참여하기"}
+					</Button>
 				</div>
 			</div>
 
-			<div className="flex w-full items-center gap-4">
-				<UtilityButton sizes="small" className="lg:size-15" />
-				<Button
-					sizes="small"
-					colors={isJoined ? "purpleBorder" : "purple"}
-					disabled={!isHost && isClosed}
-					onClick={isHost ? handleShareClick : handleJoinClick}
-					className="flex-1 lg:h-15 lg:rounded-2xl lg:px-7.5 lg:text-xl">
-					{isHost ? "공유하기" : isJoined ? "참여 취소하기" : "참여하기"}
-				</Button>
-			</div>
-		</div>
+			{/* 로그인 필요 모달 */}
+			<Alert
+				isOpen={isLoginModalOpen}
+				onClose={closeLoginModal}
+				confirmLabel="로그인"
+				handleConfirmButton={handleLoginConfirm}>
+				로그인이 필요한 서비스입니다.
+			</Alert>
+
+			{/* 모임 수정 모달 */}
+			<EditMeetup isOpen={isEditModalOpen} onClose={closeEditModal} initialData={editInitialData} />
+
+			{/* 모임 삭제 모달 */}
+			<Alert
+				isOpen={isDeleteModalOpen}
+				onClose={closeDeleteModal}
+				confirmLabel="삭제하기"
+				handleConfirmButton={handleDeleteConfirm}>
+				<p>모임을 정말 삭제하시겠어요?</p>
+				<p className="mt-1 text-sm font-normal text-gray-500 md:text-base">
+					삭제 후에는 되돌릴 수 없습니다.
+				</p>
+			</Alert>
+		</>
 	);
 }

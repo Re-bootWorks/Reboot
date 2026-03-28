@@ -5,9 +5,9 @@ import { REGION_DATA } from "@/constants/region";
 import IcDelete from "@/components/ui/icons/IcDelete";
 import IcCheck from "@/components/ui/icons/IcCheck";
 import { cn } from "@/utils/cn";
-import RegionDropdown from "@/components/ui/Dropdowns/RegionDropdown";
 import Button from "@/components/ui/Buttons/Button";
 import { Option } from "./option";
+import SelectDropdown from "@/components/ui/Dropdowns/SelectDropdown";
 
 interface RegionModalProps {
 	isOpen: boolean; // 모달 열림 여부
@@ -100,7 +100,7 @@ export default function RegionModal({
 
 					{/* 시/도 리스트 */}
 					{REGION_DATA.map((region) => (
-						<RegionDropdown
+						<SelectDropdown
 							key={region.value}
 							triggerLabel={region.label}
 							options={region.districts.map((d) => d.label)}

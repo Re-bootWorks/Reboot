@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import CommentCards, { CommentProps } from "./index";
-import { ReviewScore } from "@/features/reviews/components/ReviewCard";
+import { ReviewScore } from "@/types/common";
 
 const meta: Meta<typeof CommentCards> = {
 	title: "Features/MeetupDetail/CommentCards",

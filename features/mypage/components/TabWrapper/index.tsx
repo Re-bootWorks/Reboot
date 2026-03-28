@@ -1,7 +1,10 @@
 "use client";
-import PageTabs from "@/components/ui/PageTabs";
 import { useState } from "react";
+import PageTabs from "@/components/ui/PageTabs";
 import { TabId } from "@/features/mypage/type";
+import Meetup from "../Meetup";
+import Review from "../Review";
+import Created from "../Created";
 
 export default function TabWrapper() {
 	const [activeTab, setActiveTab] = useState<TabId>("meetup");
@@ -13,7 +16,7 @@ export default function TabWrapper() {
 	};
 
 	return (
-		<div className="grow">
+		<div className="min-w-0 grow">
 			<PageTabs defaultId={"meetup"} onChange={({ id }) => setActiveTab(id as TabId)}>
 				<PageTabs.Item id="meetup">나의 모임</PageTabs.Item>
 				<PageTabs.Item id="review">나의 리뷰</PageTabs.Item>
@@ -23,16 +26,4 @@ export default function TabWrapper() {
 			{tabContents[activeTab]}
 		</div>
 	);
-}
-
-function Meetup() {
-	return <div>Meetup</div>;
-}
-
-function Review() {
-	return <div>Reviews</div>;
-}
-
-function Created() {
-	return <div>Created</div>;
 }
