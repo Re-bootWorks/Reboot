@@ -23,5 +23,6 @@ export interface CommentCardItem {
 
 // 컴포넌트 Props
 export interface CommentCardProps extends CommentCardItem {
-	isLiked?: boolean;
+	authorId: number;
+	currentUserId: number | null;
 }

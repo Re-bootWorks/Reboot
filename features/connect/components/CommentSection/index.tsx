@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createComment } from "@/features/connect/apis/createComment";
 import { useQuery } from "@tanstack/react-query";
 import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
+import { useUserStore } from "@/store/user.store";
 
 interface CommentSectionProps {
 	postId: number;
@@ -19,6 +20,8 @@ interface CommentSectionProps {
 export default function CommentSection({ postId }: CommentSectionProps) {
 	const [comment, setComment] = useState("");
 	const queryClient = useQueryClient();
+	const { user } = useUserStore();
+	const currentUserId = user?.id;
 
 	const { data } = useQuery<{ comments: Comment[] }>({
 		queryKey: ["postDetail", postId],
@@ -39,18 +42,21 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 					//old:기존 캐시 데이터
 					...old, // 기존 데이터 유지 + comments만 덮어쓰기
 					comments: [
-						...(old?.comments ?? []),
 						{
 							//임시 데이터 (fake 데이터)
 							id: Date.now(),
 							content: newComment.content,
-							author: { name: "나" },
+							author: {
+								id: currentUserId,
+								name: "나",
+							},
 							createdAt: new Date().toISOString(),
 							// 1. Optimistic으로 "나" 표시
 							// 2. 서버 응답 도착
 							// 3. invalidateQueries 실행
 							// 4. 진짜 데이터로 교체됨
 						},
+						...(old?.comments ?? []),
 					],
 				}),
 			);
@@ -66,10 +72,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
 		onSuccess: () => {
 			setComment(""); // 입력 비워줘버리기~
-		},
-
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: ["postDetail", postId] }); //캐시를 무효화해서 데이터를 다시 불러오게 만드는 함수
+			queryClient.invalidateQueries({ queryKey: ["postDetail", postId] });
+			//캐시를 무효화해서 데이터를 다시 불러오게 만드는 함수
 		},
 	});
 
@@ -118,15 +122,21 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
 			{/* 댓글 리스트 */}
 			<ul className="mt-6 flex flex-col gap-2 md:mt-8">
-				{comments.map((comment) => {
-					const mapped = mapCommentToCard(comment);
+				{[...comments]
+					.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+					.map((comment) => {
+						const mapped = mapCommentToCard(comment);
 
-					return (
-						<li key={mapped.id}>
-							<CommentCard {...mapped} />
-						</li>
-					);
-				})}
+						return (
+							<li key={mapped.id}>
+								<CommentCard
+									{...mapped}
+									authorId={comment.author.id}
+									currentUserId={user?.id ?? null}
+								/>
+							</li>
+						);
+					})}
 			</ul>
 		</section>
 	);
