@@ -38,15 +38,21 @@ export function getRegion(text: string) {
 	const prefix = text.substring(0, dong.index).trim();
 	if (!prefix) return text.trim();
 	// 세종시 주소 예외 처리
-	if (/세종/.test(prefix)) {
-		return (prefix + " " + dong[0]).trim();
-	}
+	// if (/세종/.test(prefix)) {
+	// 	return (prefix + " " + dong[0]).trim();
+	// }
 	return prefix;
 }
 
 /** 주소 address 반환 */
 export function getAddress(name: string, detail: string) {
 	return `${name}, ${detail}`;
+}
+
+/** 주소 address 를 addressName, addressDetail 로 분리 */
+export function splitAddress(address: string) {
+	const [addressName, addressDetail] = address.split(", ");
+	return { addressName, addressDetail };
 }
 
 /** 모임 종류 쿼리 값 -> 요청 파라미터 변환 */

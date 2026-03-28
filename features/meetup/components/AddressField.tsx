@@ -17,12 +17,18 @@ interface AddressFieldProps {
 	setIsComboOpened: React.Dispatch<React.SetStateAction<boolean>>;
 	/** 주소 입력 값 */
 	value: AddressValues;
+	/** 주소 입력 값 변경 시 호출 */
+	onValuesChange?: (values: AddressValues) => void;
 	/** 주소 입력 값 변경 함수 */
-	setValue: React.Dispatch<React.SetStateAction<AddressValues>>;
+	setValue?: React.Dispatch<React.SetStateAction<AddressValues>>;
 	/** 카카오 장소 검색 함수 */
 	getKakaoPlaceFn: getKakaoPlaceFn;
 	/** 필수 필드 여부 @default true */
 	isRequired?: boolean;
+	/** 첫 번째 주소 필드 이름 @default "addressName" */
+	firstName?: string;
+	/** 두 번째 주소 필드 이름 @default "addressDetail" */
+	secondName?: string;
 }
 
 export type AddressValues = {
@@ -32,10 +38,8 @@ export type AddressValues = {
 	longitude: number;
 	/** 시/도 시/군/구 */
 	region: string;
-	/** 기본 주소 */
-	addressName: KakaoPlaceItem["address_name"];
-	/** 사용자 입력 상세 주소 */
-	addressDetail: string;
+	/** `firstName` / `secondName` 에 맞는 문자열 필드 */
+	[key: string]: string | number;
 };
 
 export default function AddressField({
@@ -43,8 +47,11 @@ export default function AddressField({
 	setIsComboOpened,
 	value,
 	setValue,
+	onValuesChange,
 	getKakaoPlaceFn,
 	isRequired = true,
+	firstName = "addressName",
+	secondName = "addressDetail",
 }: AddressFieldProps) {
 	const [kakaoAddressData, setKakaoAddressData] = useState<KakaoPlaceItem[]>([]);
 	const { handleShowToast } = useToast();
@@ -70,29 +77,35 @@ export default function AddressField({
 	);
 
 	function handleChangeAddress(e: React.ChangeEvent<HTMLInputElement>) {
-		const value = e.target.value;
-		setValue((prev) => ({ ...prev, addressName: value }));
-		if (!validateText(value)) {
+		const inputValue = e.target.value;
+		const next: AddressValues = { ...value, [firstName]: inputValue };
+		setValue?.(next);
+		onValuesChange?.(next);
+		if (!validateText(inputValue)) {
 			setKakaoAddressData([]);
 			return;
 		}
-		if (!validatePlaceSearch(value)) return;
-		fetchAddressesDebounced(value);
+		if (!validatePlaceSearch(inputValue)) return;
+		fetchAddressesDebounced(inputValue);
 	}
 
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
-		const { name, value } = e.target;
-		setValue((prev) => ({ ...prev, [name]: value }));
+		const { name, value: inputValue } = e.target;
+		const next: AddressValues = { ...value, [name]: inputValue };
+		setValue?.(next);
+		onValuesChange?.(next);
 	}
 
 	function handleClickStreet(data: KakaoPlaceItem) {
-		setValue((prev) => ({
-			...prev,
+		const next: AddressValues = {
+			...value,
 			latitude: Number(data.y),
 			longitude: Number(data.x),
 			region: getRegion(data.address_name),
-			addressName: data.address_name,
-		}));
+			[firstName]: data.address_name,
+		};
+		setValue?.(next);
+		onValuesChange?.(next);
 		setIsComboOpened(false);
 	}
 
@@ -100,12 +113,12 @@ export default function AddressField({
 		<div role="group" aria-labelledby="address-label" className="flex flex-col gap-y-2">
 			<div className="relative">
 				<InputField
-					name="addressName"
+					name={firstName}
 					label="장소"
 					placeholder="건물, 지번 또는 도로명 검색"
 					rightIcon={<IcLocation color="#444" size="md" />}
 					isRequired={isRequired}
-					value={value.addressName}
+					value={String(value[firstName] ?? "")}
 					onChange={handleChangeAddress}
 					onClick={(e) => e.stopPropagation()}
 					onFocus={() => setIsComboOpened(true)}
@@ -117,9 +130,10 @@ export default function AddressField({
 				)}
 			</div>
 			<Input
-				name="addressDetail"
+				name={secondName}
 				placeholder="상세 주소"
 				required={isRequired}
+				value={String(value[secondName] ?? "")}
 				onChange={handleChangeInput}
 				spellCheck={false}
 				autoComplete="off"

@@ -1,21 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { parseTimestamp } from "@/utils/date";
-import { validateCapacity, validateDateTime } from "../../utils";
+import { useEffect } from "react";
 import { useFormData } from "../providers/FormDataProvider";
 import CapacityField from "../../components/CapacityField";
-import DateTimeField, { DateTime } from "../../components/DateTimeField";
+import DateTimeField from "../../components/DateTimeField";
+import { validateCapacity, validateDateTime } from "../../utils";
 
 interface StepScheduleProps {
 	/** 단계 숫자 */
 	step: number;
 }
 export default function StepSchedule({ step }: StepScheduleProps) {
-	const { setStepValid, setData } = useFormData();
-	const [dateTime, setDateTime] = useState<DateTime>({ date: "", time: "" });
-	const [regEnd, setRegEnd] = useState<DateTime>({ date: "", time: "" });
-	const [capacity, setCapacity] = useState<number>(0);
+	const { setStepValid, setData, data } = useFormData();
 
 	function handleChangeSchedule(
 		key: typeof DATE_TIME_KEY | typeof REG_END_KEY,
@@ -23,54 +19,50 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 		value: string,
 	) {
 		if (key === DATE_TIME_KEY) {
-			setDateTime((prev) => ({ ...prev, [type]: value }));
+			setData((prev) => ({ ...prev, _dateTime: { ...prev._dateTime, [type]: value } }));
 		}
 		if (key === REG_END_KEY) {
-			setRegEnd((prev) => ({ ...prev, [type]: value }));
+			setData((prev) => ({
+				...prev,
+				_registrationEnd: { ...prev._registrationEnd, [type]: value },
+			}));
 		}
 	}
 
-	// 유효성 검사
+	function handleChangeCapacity(value: number) {
+		setData((prev) => ({ ...prev, capacity: value }));
+	}
+
+	// 데이터 유효성 검사
 	useEffect(() => {
-		const isDateTimeValid = validateDateTime(dateTime.date, dateTime.time);
-		const isRegEndValid = validateDateTime(regEnd.date, regEnd.time);
-		const isCapacityValid = validateCapacity(capacity);
+		const isDateTimeValid = validateDateTime(data._dateTime.date, data._dateTime.time);
+		const isRegEndValid = validateDateTime(data._registrationEnd.date, data._registrationEnd.time);
+		const isCapacityValid = validateCapacity(data.capacity);
 		const isValid = isDateTimeValid && isRegEndValid && isCapacityValid;
-
 		setStepValid(step, isValid);
-	}, [step, dateTime, regEnd, capacity, setStepValid]);
-
-	// 실시간 변환 및 데이터 저장
-	useEffect(() => {
-		setData((prev) => ({
-			...prev,
-			capacity,
-			dateTime: parseTimestamp(dateTime.date, dateTime.time) ?? prev.dateTime,
-			registrationEnd: parseTimestamp(regEnd.date, regEnd.time) ?? prev.registrationEnd,
-		}));
-	}, [dateTime, regEnd, capacity, setData]);
+	}, [data, setStepValid, step]);
 
 	return (
 		<fieldset className="flex flex-col gap-y-4 md:gap-y-6">
 			<DateTimeField
 				label="모임 일정"
-				date={dateTime.date}
-				time={dateTime.time}
+				date={data._dateTime.date}
+				time={data._dateTime.time}
 				onDateChange={(v) => handleChangeSchedule(DATE_TIME_KEY, DATE_KEY, v)}
 				onTimeChange={(v) => handleChangeSchedule(DATE_TIME_KEY, TIME_KEY, v)}
 			/>
 			<DateTimeField
 				label="모집 마감 날짜"
-				date={regEnd.date}
-				time={regEnd.time}
+				date={data._registrationEnd.date}
+				time={data._registrationEnd.time}
 				onDateChange={(v) => handleChangeSchedule(REG_END_KEY, DATE_KEY, v)}
 				onTimeChange={(v) => handleChangeSchedule(REG_END_KEY, TIME_KEY, v)}
 			/>
-			<CapacityField name="capacity" value={capacity} onChange={setCapacity} />
+			<CapacityField name="capacity" value={data.capacity} onChange={handleChangeCapacity} />
 		</fieldset>
 	);
 }
-const DATE_TIME_KEY = "dateTime";
-const REG_END_KEY = "regEnd";
+const DATE_TIME_KEY = "_dateTime";
+const REG_END_KEY = "_registrationEnd";
 const DATE_KEY = "date";
 const TIME_KEY = "time";
