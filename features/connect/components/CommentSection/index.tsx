@@ -42,7 +42,7 @@ export default function CommentSection({ comments }: CommentSectionProps) {
 						placeholder="여기에 댓글을 남겨보세요"
 						value={comment}
 						onChange={(e) => setComment(e.target.value)}
-						className="max-h-13 min-h-12 min-w-0 flex-1 bg-gray-100"
+						className="max-h-[3.25rem] min-h-12 min-w-0 flex-1 bg-gray-100"
 					/>
 					<Button
 						onClick={handleSubmit}

@@ -1,5 +1,5 @@
 import { clientFetch } from "@/libs/clientFetch";
-import type { Post } from "@/features/connect/types";
+import type { Post } from "@/features/connect/post/types";
 
 type GetPostsParams = {
 	type?: "all" | "best";
