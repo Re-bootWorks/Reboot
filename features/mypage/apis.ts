@@ -4,8 +4,10 @@ import {
 	mockMyReviews,
 	mockMyWritableReview,
 } from "@/features/mypage/mockData";
+import { User } from "@/features/auth/types";
 import { ReviewList } from "@/features/mypage/components/ReviewCard/type";
 import { CreatedList, MeetupList, WritableReviewList } from "@/features/mypage/type";
+import { clientFetch } from "@/libs/clientFetch";
 
 const MOCK_DELAY_MS = 150;
 
@@ -13,17 +15,23 @@ function delay(ms = MOCK_DELAY_MS) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export interface CursorPageResponse<T> {
+interface CursorPageResponse<T> {
 	data: T;
 	nextCursor: string | null;
 	hasMore: boolean;
 }
 
-export type MeetingStatus = "CONFIRMED" | "CANCELED";
+type MeetingStatus = "CONFIRMED" | "CANCELED";
 
-export interface ReviewPayload {
+interface ReviewPayload {
 	score: number;
 	comment: string;
+}
+
+export interface PatchUserProfilePayload {
+	name?: string;
+	email?: string;
+	image?: string;
 }
 
 export async function getMeetingJoined(): Promise<CursorPageResponse<MeetupList>> {
@@ -129,4 +137,52 @@ export async function deleteMeetingFavorite(meetingId: number): Promise<void> {
 	// DELETE/{teamId}/meetings/{meetingId}/favorites
 	await delay();
 	console.log("찜 해제 성공", meetingId);
+}
+
+// image 관련 api
+export async function uploadProfileImage(file: File): Promise<string> {
+	// presigned URL
+	const presignedResponse = await clientFetch("/images/presigned", {
+		method: "POST",
+		body: JSON.stringify({
+			fileName: file.name,
+			contentType: file.type,
+			folder: "meetings",
+		}),
+	});
+
+	if (!presignedResponse.ok) {
+		throw new Error("이미지 업로드 URL 발급에 실패했습니다.");
+	}
+
+	// public URL
+	const { presignedUrl, publicUrl } = await presignedResponse.json();
+
+	const uploadResponse = await fetch(presignedUrl, {
+		method: "PUT",
+		headers: {
+			"Content-Type": file.type,
+		},
+		body: file,
+	});
+
+	if (!uploadResponse.ok) {
+		throw new Error("이미지 업로드에 실패했습니다.");
+	}
+
+	return publicUrl;
+}
+
+// 유저 프로필
+export async function patchUserProfile(user: PatchUserProfilePayload): Promise<User> {
+	const response = await clientFetch("/users/me", {
+		method: "PATCH",
+		body: JSON.stringify(user),
+	});
+
+	if (!response.ok) {
+		throw new Error("프로필 수정에 실패했습니다.");
+	}
+
+	return response.json();
 }

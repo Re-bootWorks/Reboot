@@ -17,10 +17,6 @@ type PostCardProps = {
 	onClick?: () => void;
 };
 
-function getTimeAgo(timestamp: number) {
-	return dayjs(timestamp).fromNow();
-}
-
 export default function ConnectCard({
 	title,
 	description,
@@ -74,7 +70,7 @@ export default function ConnectCard({
 
 					{/* 시간 + 좋아요 + 댓글 */}
 					<div className="flex items-center gap-2">
-						<span>{getTimeAgo(date)}</span>
+						<span>{dayjs(date).fromNow()}</span>
 
 						<div className="flex items-center gap-1">
 							<IcThumbOutline color="gray-400" />

@@ -5,26 +5,27 @@ import SearchInput from "@/components/ui/SearchInput";
 import FilterButton from "@/components/ui/Buttons/FilterButton";
 import PostCard from "@/features/connect/components/PostCard";
 import Pagination from "@/components/ui/Pagination";
-import { fetchPosts } from "../../apis/fetchPosts";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { fetchPostsClient } from "@/features/connect/apis/fetchPostsClient";
+//import { keepPreviousData } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { mapPostToCard } from "@/features/connect/mappers";
+import { mapPostToCard } from "@/features/connect/post/mappers";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export default function PostContainer({ page }: { page: number }) {
 	const [sortBy, setSortBy] = useState<"createdAt" | "likeCount">("likeCount");
 
-	const { data, isLoading, error } = useQuery({
+	const { data } = useSuspenseQuery({
 		queryKey: ["posts", page, sortBy],
 		queryFn: () =>
-			fetchPosts({
+			fetchPostsClient({
 				type: "all",
 				sortBy,
 				offset: (page - 1) * 10,
 				limit: 10,
 			}),
 		staleTime: 1000 * 60,
-		placeholderData: keepPreviousData,
+		//placeholderData: keepPreviousData, // 페이지/필터 바뀌어도 깜빡임 없음 ,나중에 infiniteQuery에서 다시 사용
 	});
 
 	const posts = data?.data ?? [];
@@ -33,14 +34,6 @@ export default function PostContainer({ page }: { page: number }) {
 	const containerRef = useRef<HTMLDivElement | null>(null);
 
 	const mappedPosts = posts.map(mapPostToCard) as ReturnType<typeof mapPostToCard>[];
-
-	if (isLoading) {
-		return <div>로딩중...</div>;
-	}
-
-	if (error) {
-		return <div>에러 발생</div>;
-	}
 
 	if (!mappedPosts.length) {
 		return <div>게시글이 없습니다</div>;
