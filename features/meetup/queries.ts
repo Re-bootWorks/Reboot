@@ -6,7 +6,13 @@ import {
 	deleteMeetingsJoin,
 	postMeetingsFavorite,
 	postMeetingsJoin,
+	SuccessResponse,
 } from "@/apis/meetings";
+
+type MutationCallbacks<TData> = Omit<
+	UseMutationOptions<TData, Error, number>,
+	"mutationKey" | "mutationFn"
+>;
 
 export const meetupQueryKeys = {
 	getMeetups: (params: MeetupListRequest) => ["meetup", params] as const,
@@ -36,9 +42,7 @@ export function usePostMeetup(data: MeetupCreateRequest) {
 }
 
 /** 모임 찜 추가 */
-export function usePostMeetingsFavorite(
-	...options: UseMutationOptions<MeetupItemResponse, Error, number>[]
-) {
+export function usePostMeetingsFavorite(options?: MutationCallbacks<MeetupItemResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.postMeetingsFavorite,
 		mutationFn: (meetingId: number) => postMeetingsFavorite({ meetingId }),
@@ -47,9 +51,7 @@ export function usePostMeetingsFavorite(
 }
 
 /** 모임 찜 해제 */
-export function useDeleteMeetingsFavorite(
-	...options: UseMutationOptions<MeetupItemResponse, Error, number>[]
-) {
+export function useDeleteMeetingsFavorite(options?: MutationCallbacks<SuccessResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.deleteMeetingsFavorite,
 		mutationFn: (meetingId: number) => deleteMeetingsFavorite({ meetingId }),
@@ -58,9 +60,7 @@ export function useDeleteMeetingsFavorite(
 }
 
 /** 모임 참여 */
-export function usePostMeetingsJoin(
-	...options: UseMutationOptions<MeetupItemResponse, Error, number>[]
-) {
+export function usePostMeetingsJoin(options?: MutationCallbacks<SuccessResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.postMeetingsJoin,
 		mutationFn: (meetingId: number) => postMeetingsJoin({ meetingId }),
@@ -69,9 +69,7 @@ export function usePostMeetingsJoin(
 }
 
 /** 모임 참여 취소 */
-export function useDeleteMeetingsJoin(
-	...options: UseMutationOptions<MeetupItemResponse, Error, number>[]
-) {
+export function useDeleteMeetingsJoin(options?: MutationCallbacks<SuccessResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.deleteMeetingsJoin,
 		mutationFn: (meetingId: number) => deleteMeetingsJoin({ meetingId }),
