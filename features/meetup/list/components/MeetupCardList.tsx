@@ -13,6 +13,9 @@ import {
 import MeetupCard from "@/features/meetup/list/components/MeetupCard";
 import GroupCard from "@/components/ui/GroupCard";
 import Empty from "./Emtpy";
+import { useRef } from "react";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import LoaderDots from "@/components/ui/LoaderDots";
 
 export default function MeetupCardList() {
 	const { get } = useQueryParams();
@@ -25,6 +28,12 @@ export default function MeetupCardList() {
 		sortOrder: transformSortOrderQuery(get(QUERY_KEYS.SORT_ORDER)),
 		size,
 	});
+	const loadMoreRef = useRef<HTMLDivElement>(null);
+	useIntersectionObserver({
+		targetRef: loadMoreRef,
+		onIntersect: fetchNextPage,
+		isEnabled: hasNextPage && !isFetchingNextPage,
+	});
 
 	return (
 		<ul className="grid flex-1 justify-items-stretch gap-4 md:gap-6 lg:grid-cols-2">
@@ -36,16 +45,25 @@ export default function MeetupCardList() {
 					{isFetchingNextPage && <MeetupCardSkeletonList size={size} />}
 				</>
 			)}
-			{/* TODO: intersection observer 적용, 스타일링 */}
 			{hasNextPage && (
-				<li className="col-span-full">
-					<button type="button" className="w-full cursor-pointer" onClick={() => fetchNextPage()}>
-						{isFetchingNextPage ? "로딩 중..." : "더 보기"}
-					</button>
-				</li>
+				<LastItem ref={loadMoreRef}>{isFetchingNextPage && <LoaderDots size="lg" />}</LastItem>
 			)}
-			{error && <div>에러가 발생했습니다.</div>}
+			{error && <LastItem>에러가 발생했습니다.</LastItem>}
 		</ul>
+	);
+}
+
+interface LastItemProps {
+	ref?: React.RefObject<HTMLDivElement | null>;
+	children: React.ReactNode;
+}
+function LastItem({ ref, children }: LastItemProps) {
+	return (
+		<li className="col-span-full py-4">
+			<div className="flex w-full items-center justify-center" ref={ref}>
+				{children}
+			</div>
+		</li>
 	);
 }
 
