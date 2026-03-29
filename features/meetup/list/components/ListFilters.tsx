@@ -12,7 +12,7 @@ import type { Option } from "@/components/ui/Filter/RegionFilter/option";
 import { FilterDropdown } from "@/components/ui/Filter/FilterDropdown";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
-import { transformRegionData } from "../../utils";
+import { transformRegionData } from "../utils";
 
 interface ListFiltersProps {
 	/** 최상위 컨테이너 클래스 */

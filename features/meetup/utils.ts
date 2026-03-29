@@ -1,5 +1,3 @@
-import { RegionFilterValue } from "./list/components/ListFilters";
-
 /** 텍스트 유효성 검사 */
 export function validateText(value: string) {
 	return !!value.trim();
@@ -37,7 +35,7 @@ export function getRegion(text: string) {
 	// 매칭되는 문자열 전까지 반환
 	const prefix = text.substring(0, dong.index).trim();
 	if (!prefix) return text.trim();
-	// 세종시 주소 예외 처리
+	// 세종시 주소 예외 처리(필요할 경우 주석 해제)
 	// if (/세종/.test(prefix)) {
 	// 	return (prefix + " " + dong[0]).trim();
 	// }
@@ -53,30 +51,4 @@ export function getAddress(name: string, detail: string) {
 export function splitAddress(address: string) {
 	const [addressName, addressDetail] = address.split(", ");
 	return { addressName, addressDetail };
-}
-
-/** 모임 종류 쿼리 값 -> 요청 파라미터 변환 */
-export function transformTypeValue(data: string | null | undefined): string | undefined {
-	return !!data && data !== "all" ? data : undefined;
-}
-
-/** 기타 쿼리 값 -> 요청 파라미터 변환 */
-export function transformQueryValue<T extends string>(data: T | null | undefined): T | undefined {
-	return !!data ? data : undefined;
-}
-
-/** 지역 (region) 쿼리 값 -> dropdown 데이터로 변환 */
-export function transformRegionData(data: string | null | undefined): RegionFilterValue {
-	if (!data) {
-		return {
-			region: null,
-			district: null,
-		};
-	} else {
-		const [region, district] = data.split(" ");
-		return {
-			region: { value: region, label: region },
-			district: { value: district, label: district },
-		};
-	}
 }

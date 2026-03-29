@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { MeetupCreateRequest } from "../../types";
 import { createSessionStore } from "../utils";
 
@@ -52,10 +52,6 @@ const initialData: MeetupCreateFormData = {
 	_addressDetail: "",
 };
 
-function isMeetupFormInitial(data: MeetupCreateFormData): boolean {
-	return JSON.stringify(data) === JSON.stringify(initialData);
-}
-
 export default function FormDataProvider({
 	totalSteps,
 	children,
@@ -67,6 +63,7 @@ export default function FormDataProvider({
 }) {
 	const [isStepValid, setIsStepValid] = useState<boolean[]>(() => Array(totalSteps).fill(false));
 	const [data, setData] = useState<MeetupCreateFormData>(initialData);
+	const isInitialMount = useRef(true);
 
 	const getStepValid = useCallback((step: number) => isStepValid[step - 1], [isStepValid]);
 
@@ -82,17 +79,20 @@ export default function FormDataProvider({
 		});
 	}, []);
 
-	// 세션 데이터 로드
+	// 세션 복원
 	useEffect(() => {
 		const stored = createSessionStore.get();
-		if (stored) {
-			setData(stored);
+		if (stored && typeof stored === "object") {
+			setData({ ...initialData, ...stored } as MeetupCreateFormData);
 		}
-	}, [setData]);
+	}, []);
 
-	// 세션 실시간 저장(초기값과 같을 때는 저장하지 않음)
+	// 세션 실시간 저장(최초 mount 시점 외)
 	useEffect(() => {
-		if (isMeetupFormInitial(data)) return;
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
+		}
 		createSessionStore.set(data);
 	}, [data]);
 

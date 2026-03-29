@@ -1,13 +1,17 @@
 "use client";
 
-import MeetupCard from "@/features/meetup/list/components/MeetupCard";
 import { useGetMeetups } from "@/features/meetup/queries";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { QUERY_KEYS } from "../constants";
-import { transformQueryValue, transformTypeValue } from "../../utils";
-import { SortBy, SortOrder } from "../../types";
-import GroupCard from "@/components/ui/GroupCard";
 import { Meeting } from "../types";
+import {
+	transformQueryValue,
+	transformTypeValue,
+	transformSortByQuery,
+	transformSortOrderQuery,
+} from "../utils";
+import MeetupCard from "@/features/meetup/list/components/MeetupCard";
+import GroupCard from "@/components/ui/GroupCard";
 
 export default function MeetupCardList() {
 	const { get } = useQueryParams();
@@ -16,8 +20,8 @@ export default function MeetupCardList() {
 		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
 		region: transformQueryValue(get(QUERY_KEYS.REGION)),
 		date: transformQueryValue(get(QUERY_KEYS.DATE)),
-		sortBy: transformQueryValue<SortBy>(get(QUERY_KEYS.SORT_BY) as SortBy | null),
-		sortOrder: transformQueryValue<SortOrder>(get(QUERY_KEYS.SORT_ORDER) as SortOrder | null),
+		sortBy: transformSortByQuery(get(QUERY_KEYS.SORT_BY)),
+		sortOrder: transformSortOrderQuery(get(QUERY_KEYS.SORT_ORDER)),
 		size,
 	});
 
