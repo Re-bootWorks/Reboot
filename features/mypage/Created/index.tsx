@@ -1,11 +1,14 @@
 "use client";
-import { useState } from "react";
-import DetailCard from "../DetailCard";
+import { useRef, useState } from "react";
+import DetailCard from "../components/DetailCard";
 import { DetailCardBadge } from "@/features/mypage/types";
-import { CreatedItem, CreatedList } from "@/features/mypage/types";
-import { mockMyCreated } from "../../mockData";
+import { CreatedItem } from "@/features/mypage/types";
 import AlertModal from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/features/mypage/hooks/useMeetingFavorite";
+import Empty from "@/components/layout/Empty";
+import { useMyCreatedInfinite } from "../queries";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import Loading from "../components/Loading";
 
 // 모임 배지 상태
 function meetupBadges(item: CreatedItem): DetailCardBadge[] {
@@ -23,18 +26,31 @@ function meetupBadges(item: CreatedItem): DetailCardBadge[] {
 }
 
 export default function Created() {
-	const initialItems: CreatedList = mockMyCreated;
-
-	const [items, setItems] = useState(initialItems); // 모임 삭제 시 아이템 업데이트
-	const { handleWishToggle } = useMeetingFavorite(setItems);
+	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 alert을 띄웠는지 타겟팅
 	const [alertTarget, setAlertTarget] = useState<CreatedItem | null>(null);
+
+	const {
+		data: meetupData,
+		fetchNextPage,
+		hasNextPage,
+		isFetchingNextPage,
+	} = useMyCreatedInfinite();
+	const items = meetupData.pages.flatMap((page) => page.data) ?? [];
+	const observerRef = useRef<HTMLDivElement>(null);
+	useIntersectionObserver({
+		targetRef: observerRef,
+		onIntersect: fetchNextPage,
+		isEnabled: !!hasNextPage && !isFetchingNextPage,
+	});
 
 	// 모임 삭제 시
 	async function handleAlertConfirm() {
 		if (!alertTarget) return;
 		console.log("모임 삭제 API", alertTarget.id);
 	}
+
+	if (items.length === 0) return <Empty>아직 내가 만든 모임이 없어요</Empty>;
 
 	return (
 		<>
@@ -56,12 +72,16 @@ export default function Created() {
 							wishAction={{
 								isWished: item.isFavorited,
 								isPending: false,
-								handleWishClick: () => handleWishToggle(item.id),
+								handleWishClick: () => handleWishToggle(item.id, item.isFavorited),
 							}}
 						/>
 					);
 				})}
 			</ul>
+
+			<div ref={observerRef} className="h-4" />
+			{isFetchingNextPage && <Loading />}
+
 			<AlertModal
 				isOpen={!!alertTarget}
 				onClose={() => setAlertTarget(null)}

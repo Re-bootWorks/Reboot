@@ -84,6 +84,12 @@ export interface MeetingsMyApiRes {
 
 export type MeetingStatus = "CONFIRMED" | "CANCELED";
 
+export interface PatchUserProfilePayload {
+	name?: string;
+	email?: string;
+	image?: string;
+}
+
 export interface ReviewPayload {
 	score: number;
 	comment: string;

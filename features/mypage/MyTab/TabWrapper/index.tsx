@@ -1,19 +1,29 @@
 "use client";
 import PageTabs from "@/components/ui/PageTabs";
 import { TabId } from "@/features/mypage/types";
-import Meetup from "../Meetup";
-import Review from "../Review";
-import Created from "../Created";
+import Meetup from "../../Meetup";
+import Review from "../../Review";
+import Created from "../../Created";
 import { useQueryParams } from "@/hooks/useQueryParams";
+import { Suspense } from "react";
+import DetailCardSkeleton from "../../components/DetailCard/DetailCardSkeleton";
 
 export default function TabWrapper() {
 	const { get, set } = useQueryParams();
 	const activeTab = (get("tab") as TabId) ?? "meetup";
 
 	const tabContents: Record<TabId, React.ReactNode> = {
-		meetup: <Meetup />,
+		meetup: (
+			<Suspense fallback={<DetailCardSkeleton />}>
+				<Meetup />
+			</Suspense>
+		),
 		review: <Review />,
-		created: <Created />,
+		created: (
+			<Suspense fallback={<DetailCardSkeleton />}>
+				<Created />
+			</Suspense>
+		),
 	};
 
 	return (
