@@ -6,6 +6,5 @@ export function mapCommentToCard(comment: Comment): CommentCardItem {
 		content: comment.content,
 		authorName: comment.author.name,
 		date: new Date(comment.createdAt).getTime(),
-		likeCount: comment.likeCount,
 	};
 }
