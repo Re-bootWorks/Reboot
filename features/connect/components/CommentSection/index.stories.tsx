@@ -25,6 +25,6 @@ const comments = [
 
 export const Default: Story = {
 	args: {
-		comments,
+		postId: 1,
 	},
 };
