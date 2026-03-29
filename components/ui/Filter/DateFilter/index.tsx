@@ -1,7 +1,7 @@
 "use client";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
 import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
