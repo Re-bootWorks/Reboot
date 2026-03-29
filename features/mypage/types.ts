@@ -103,8 +103,6 @@ export interface UserProfile {
 	image: string | null;
 }
 
-export type TabId = "meetup" | "review" | "created";
-
 export interface DetailCardItem {
 	id: number;
 	name: string;
