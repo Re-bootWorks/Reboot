@@ -1,6 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "motion/react";
+import type { StaticImageData } from "next/image";
+import imgDefault from "@/public/assets/img/img_empty.svg";
+import { useCategoryStore, type CategoryName } from "@/store/category.store";
 import CategoryTab from "@/components/ui/CategoryTab";
 import { useFormData } from "../providers/FormDataProvider";
 import imgHobby from "../assets/img_hobby.png";
@@ -9,9 +13,6 @@ import imgBusiness from "../assets/img_business.png";
 import imgSports from "../assets/img_sports.png";
 import imgFamily from "../assets/img_family.png";
 import imgEtc from "../assets/img_etc.png";
-import imgDefault from "@/public/assets/img/img_empty.svg";
-import { useCategoryStore, type CategoryName } from "@/store/category.store";
-import type { StaticImageData } from "next/image";
 
 interface StepTypeSelectProps {
 	/** 단계 숫자 */
@@ -24,8 +25,12 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target;
 		setData((prev) => ({ ...prev, [name]: value }));
-		setStepValid(step, true);
 	}
+
+	// 유효성 검사
+	useEffect(() => {
+		setStepValid(step, true);
+	}, [data.type, setStepValid, step]);
 
 	return (
 		<fieldset>

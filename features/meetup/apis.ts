@@ -1,5 +1,11 @@
 import { clientFetch } from "@/libs/clientFetch";
-import { ErrorResponse, MeetupCreateData, MeetupDetailData } from "./types";
+import {
+	ErrorResponse,
+	MeetupCreateRequest,
+	MeetupItemResponse,
+	MeetupListRequest,
+	MeetupListResponse,
+} from "./types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,11 +26,28 @@ export async function getKakaoPlace(query: string) {
 	return documents;
 }
 
-/** 모임 생성 */
 const ROUTE_MEETINGS = "/meetings";
+/** 모임 찾기 */
+export async function getMeetups(params: MeetupListRequest): Promise<MeetupListResponse> {
+	const queryParams = new URLSearchParams();
+	for (const [key, value] of Object.entries(params)) {
+		if (value != null) {
+			queryParams.append(key, String(value));
+		}
+	}
+
+	const res = await clientFetch(`${ROUTE_MEETINGS}?${queryParams}`, {
+		method: "GET",
+		headers: { "Content-Type": "application/json" },
+	});
+
+	return res.json();
+}
+
+/** 모임 생성 */
 export async function postMeetup(
-	data: MeetupCreateData,
-): Promise<MeetupDetailData | ErrorResponse> {
+	data: MeetupCreateRequest,
+): Promise<MeetupItemResponse | ErrorResponse> {
 	const res = await clientFetch(ROUTE_MEETINGS, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },

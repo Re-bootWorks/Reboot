@@ -1,15 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
 import { serverFetch } from "@/libs/serverFetch";
+import { NextResponse } from "next/server";
 
-const ROUTE_MEETINGS = "/meetings";
+const ROUTE_MEETINGS_JOIN = (meetingId: string) => `/meetings/${meetingId}/join`;
 
-/** 모임 목록 조회 */
-export async function GET(request: NextRequest) {
-	const queryParams = request.nextUrl.searchParams.toString();
+type Params = Promise<{ meetingId: string }>;
 
+/** 모임 참여 */
+export async function POST(_request: Request, { params }: { params: Params }) {
 	try {
-		const response = await serverFetch(`${ROUTE_MEETINGS}?${queryParams}`, {
-			method: "GET",
+		const { meetingId } = await params;
+
+		const route = ROUTE_MEETINGS_JOIN(meetingId);
+		const response = await serverFetch(route, {
+			method: "POST",
 			headers: { "Content-Type": "application/json" },
 		});
 
@@ -25,14 +28,15 @@ export async function GET(request: NextRequest) {
 	}
 }
 
-/** 모임 생성 */
-export async function POST(request: NextRequest) {
+/** 모임 참여 취소 */
+export async function DELETE(_request: Request, { params }: { params: Params }) {
 	try {
-		const body = await request.json();
-		const response = await serverFetch(ROUTE_MEETINGS, {
-			method: "POST",
+		const { meetingId } = await params;
+
+		const route = ROUTE_MEETINGS_JOIN(meetingId);
+		const response = await serverFetch(route, {
+			method: "DELETE",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(body),
 		});
 
 		if (!response.ok) {

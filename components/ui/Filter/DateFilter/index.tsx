@@ -1,7 +1,7 @@
 "use client";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
 import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
@@ -21,15 +21,9 @@ function formatDisplayDate(date: Date) {
 
 export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 	const [month, setMonth] = useState<Date>(getKoreanToday());
-	const [draftDate, setDraftDate] = useState<Date | undefined>();
 	const isMd = useIsMd();
 	const parsed = parseDateString(value);
-
-	useEffect(() => {
-		if (!draftDate) {
-			setDraftDate(parsed || undefined);
-		}
-	}, [parsed]);
+	const [draftDate, setDraftDate] = useState<Date | undefined>(parsed || undefined); // 초기값으로 바로 설정
 
 	return (
 		<Popover className="relative">

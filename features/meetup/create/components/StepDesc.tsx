@@ -1,6 +1,7 @@
 import { useFormData } from "../providers/FormDataProvider";
 import DescField from "../../components/DescField";
 import { validateText } from "../../utils";
+import { useEffect } from "react";
 
 interface StepDescProps {
 	/** 단계 숫자 */
@@ -12,8 +13,12 @@ export default function StepDesc({ step }: StepDescProps) {
 	function handleChangeInput(_: string, e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target;
 		setData((prev) => ({ ...prev, [name]: value }));
-		setStepValid(step, validateText(value));
 	}
+
+	// 유효성 검사
+	useEffect(() => {
+		setStepValid(step, validateText(data.description));
+	}, [data.description, setStepValid, step]);
 
 	return (
 		<fieldset>

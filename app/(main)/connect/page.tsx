@@ -15,7 +15,7 @@ export default async function ConnectPage({
 	const { page: pageParam } = await searchParams;
 	const page = Number(pageParam ?? 1);
 
-	const queryClient = new QueryClient(); // 캐시저장소+ 쿼리 관리자(데이터를 담아두는 통 )
+	const queryClient = new QueryClient(); // 모든 쿼리/캐시가 여기에 저장
 
 	const sortBy = "likeCount";
 	const LIMIT = 10;
@@ -42,6 +42,7 @@ export default async function ConnectPage({
 	});
 
 	return (
+		// 서버에서 전달받은 캐시를 클라이언트 QueryClient에 주입
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<Container>
 				<div className="mt-12">

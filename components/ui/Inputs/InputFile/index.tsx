@@ -1,7 +1,7 @@
 "use client";
 
 import NextImage from "next/image";
-import { useImperativeHandle, useRef } from "react";
+import { useEffect, useImperativeHandle, useRef } from "react";
 import { cn } from "@/utils/cn";
 import { InputFieldWrapper } from "../InputFieldWrapper";
 import { IcImagePlus } from "../../icons";
@@ -53,12 +53,18 @@ export default function InputFile({
 	...props
 }: InputFileProps) {
 	const inputRef = useRef<HTMLInputElement>(null);
-	const { previewUrl, resetFile, changeFile } = useInputImage({
+	const { previewUrl, setPreviewUrl, resetFile, changeFile } = useInputImage({
 		inputRef,
 		defaultUrl,
 		onChange,
 	});
 	useImperativeHandle(ref, () => ({ reset: resetFile }));
+
+	useEffect(() => {
+		if (defaultUrl) {
+			setPreviewUrl(defaultUrl);
+		}
+	}, [defaultUrl, setPreviewUrl]);
 
 	function handleDeleteButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();

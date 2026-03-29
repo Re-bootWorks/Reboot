@@ -32,8 +32,13 @@ export interface KakaoPlaceResponse {
 	meta: KakaoPlaceMeta;
 }
 
-// 모임 생성/수정
-export interface MeetupCreateData {
+export interface ErrorResponse {
+	code: string;
+	message: string;
+}
+
+/** 모임 생성 요청 */
+export interface MeetupCreateRequest {
 	/** 모임 이름 */
 	name: string;
 	/** 모임 종류 */
@@ -64,8 +69,8 @@ export interface Host {
 	image: string;
 }
 
-// 모임 상세
-export interface MeetupDetailData {
+/** 모임 생성 응답 */
+export interface MeetupItemResponse {
 	id: number;
 	teamId: string;
 	name: string;
@@ -92,7 +97,40 @@ export interface MeetupDetailData {
 	isCompleted: boolean;
 }
 
-export interface ErrorResponse {
-	code: string;
-	message: string;
+/** 모임 목록 조회 요청 */
+export type SortBy = "dateTime" | "registrationEnd" | "participantCount";
+export type SortOrder = "asc" | "desc";
+export interface MeetupListRequest {
+	/** 모임 ID */
+	id?: number;
+	/** 모임 종류 */
+	type?: string;
+	/** 모임 지역 */
+	region?: string;
+	/** 모임 날짜 */
+	date?: string;
+	/** 모임 호스트 사용자 ID */
+	createdBy?: number;
+	/** 모임 정렬 기준:
+	 * dateTime(모임 일시)
+	 * registrationEnd(모집 마감일)
+	 * participantCount(참가자 수)
+	 * @default "dateTime" */
+	sortBy?: SortBy;
+	/** 모임 정렬 순서:
+	 * asc(오름차순)
+	 * desc(내림차순)
+	 * @default "asc" */
+	sortOrder?: SortOrder;
+	/** 다음 페이지를 위한 커서 */
+	cursor?: string;
+	/** 페이지 크기 @default 10 */
+	size?: number;
+}
+
+/** 모임 목록 조회 응답 */
+export interface MeetupListResponse {
+	data: MeetupItemResponse[];
+	nextCursor: string;
+	hasMore: boolean;
 }
