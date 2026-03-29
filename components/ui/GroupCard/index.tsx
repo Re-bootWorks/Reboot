@@ -57,12 +57,16 @@ function GroupCard({ id, href, status, children, className, ...props }: GroupCar
 	);
 }
 const containerStyle =
-	"h-[346px]  min-w-[343px] md:h-[219px] w-full rounded-4xl overflow-hidden bg-white";
+	"h-[346px] min-w-[343px] md:h-[219px] w-full rounded-4xl overflow-hidden bg-white";
 
 function GroupCardSkeleton() {
 	return (
 		<div className={containerStyle}>
-			<Skeleton className="h-full" />
+			<Skeleton
+				height="100%"
+				containerClassName="block h-full w-full leading-none"
+				borderRadius={0}
+			/>
 		</div>
 	);
 }
