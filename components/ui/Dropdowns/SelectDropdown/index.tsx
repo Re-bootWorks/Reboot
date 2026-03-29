@@ -46,7 +46,7 @@ const optionContentVariants = cva(
 	},
 );
 
-interface RegionDropdownProps {
+interface SelectDropdownProps {
 	/** 선택 전 트리거 버튼에 표시할 기본 문구 */
 	triggerLabel: string;
 	/** 드롭다운에 표시할 옵션 목록 */
@@ -73,7 +73,7 @@ interface RegionDropdownProps {
 
 const normalizeText = (value?: string) => value?.trim() ?? "";
 
-export default function RegionDropdown({
+export default function SelectDropdown({
 	triggerLabel,
 	options,
 	value,
@@ -85,7 +85,7 @@ export default function RegionDropdown({
 	optionsClassName,
 	optionClassName,
 	onChange,
-}: RegionDropdownProps) {
+}: SelectDropdownProps) {
 	const normalizedTriggerLabel = normalizeText(triggerLabel);
 
 	const normalizedOptions = useMemo(
