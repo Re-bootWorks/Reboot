@@ -1,9 +1,9 @@
 import { serverFetch } from "@/libs/serverFetch";
 import { NextResponse } from "next/server";
 
-const ROUTE_MEETINGS_JOIN = (meetingId: number) => `/meetings/${meetingId}/join`;
+const ROUTE_MEETINGS_JOIN = (meetingId: string) => `/meetings/${meetingId}/join`;
 
-type Params = Promise<{ meetingId: number }>;
+type Params = Promise<{ meetingId: string }>;
 
 /** 모임 참여 */
 export async function POST(_request: Request, { params }: { params: Params }) {

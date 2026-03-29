@@ -1,9 +1,9 @@
 import { serverFetch } from "@/libs/serverFetch";
 import { NextResponse } from "next/server";
 
-const ROUTE_MEETINGS_FAVORITES = (meetingId: number) => `/meetings/${meetingId}/favorites`;
+const ROUTE_MEETINGS_FAVORITES = (meetingId: string) => `/meetings/${meetingId}/favorites`;
 
-type Params = Promise<{ meetingId: number }>;
+type Params = Promise<{ meetingId: string }>;
 
 /** 모임 찜 추가 */
 export async function POST(_request: Request, { params }: { params: Params }) {
