@@ -5,8 +5,7 @@ import { nextJsonResponse } from "@/utils/api";
 // 내가 작성한 리뷰 목록
 export async function GET(request: NextRequest) {
 	try {
-		const searchParams = request.nextUrl.searchParams.toString();
-		const endpoint = searchParams ? `/users/me/reviews?${searchParams}` : "/users/me/reviews";
+		const endpoint = `/users/me/reviews${request.nextUrl.search}`;
 
 		const res = await serverFetch(endpoint);
 		return nextJsonResponse(res);
