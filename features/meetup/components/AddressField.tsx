@@ -10,39 +10,42 @@ import { debounce } from "@/utils/performance";
 import { useToast } from "@/providers/toast-provider";
 import { getRegion, validatePlaceSearch, validateText } from "../utils";
 
-interface AddressFieldProps {
+interface AddressFieldProps<N extends string = "addressName", D extends string = "addressDetail"> {
 	/** 주소 검색 콤보박스 열림 여부 */
 	isComboOpened: boolean;
 	/** 주소 검색 콤보박스 열림 여부 설정 */
 	setIsComboOpened: React.Dispatch<React.SetStateAction<boolean>>;
 	/** 주소 입력 값 */
-	value: AddressValues;
+	value: AddressValues<N, D>;
 	/** 주소 입력 값 변경 시 호출 */
-	onValuesChange?: (values: AddressValues) => void;
+	onValuesChange?: (values: AddressValues<N, D>) => void;
 	/** 주소 입력 값 변경 함수 */
-	setValue?: React.Dispatch<React.SetStateAction<AddressValues>>;
+	setValue?: React.Dispatch<React.SetStateAction<AddressValues<N, D>>>;
 	/** 카카오 장소 검색 함수 */
 	getKakaoPlaceFn: getKakaoPlaceFn;
 	/** 필수 필드 여부 @default true */
 	isRequired?: boolean;
 	/** 첫 번째 주소 필드 이름 @default "addressName" */
-	firstName?: string;
+	firstName?: N;
 	/** 두 번째 주소 필드 이름 @default "addressDetail" */
-	secondName?: string;
+	secondName?: D;
 }
+const DEFAULT_FIRST = "addressName";
+const DEFAULT_SECOND = "addressDetail";
+type DefaultFirst = typeof DEFAULT_FIRST;
+type DefaultSecond = typeof DEFAULT_SECOND;
 
-export type AddressValues = {
-	/** 위도 */
+export type AddressValues<N extends string = DefaultFirst, D extends string = DefaultSecond> = {
 	latitude: number;
-	/** 경도 */
 	longitude: number;
-	/** 시/도 시/군/구 */
 	region: string;
-	/** `firstName` / `secondName` 에 맞는 문자열 필드 */
-	[key: string]: string | number;
-};
+} & Record<N, string> &
+	Record<D, string>;
 
-export default function AddressField({
+export default function AddressField<
+	const N extends string = DefaultFirst,
+	const D extends string = DefaultSecond,
+>({
 	isComboOpened,
 	setIsComboOpened,
 	value,
@@ -50,9 +53,9 @@ export default function AddressField({
 	onValuesChange,
 	getKakaoPlaceFn,
 	isRequired = true,
-	firstName = "addressName",
-	secondName = "addressDetail",
-}: AddressFieldProps) {
+	firstName = DEFAULT_FIRST as N,
+	secondName = DEFAULT_SECOND as D,
+}: AddressFieldProps<N, D>) {
 	const [kakaoAddressData, setKakaoAddressData] = useState<KakaoPlaceItem[]>([]);
 	const { handleShowToast } = useToast();
 
@@ -78,7 +81,7 @@ export default function AddressField({
 
 	function handleChangeAddress(e: React.ChangeEvent<HTMLInputElement>) {
 		const inputValue = e.target.value;
-		const next: AddressValues = { ...value, [firstName]: inputValue };
+		const next: AddressValues<N, D> = { ...value, ...makeRecord(firstName, inputValue) };
 		setValue?.(next);
 		onValuesChange?.(next);
 		if (!validateText(inputValue)) {
@@ -91,18 +94,18 @@ export default function AddressField({
 
 	function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value: inputValue } = e.target;
-		const next: AddressValues = { ...value, [name]: inputValue };
+		const next = { ...value, ...makeRecord(name as N | D, inputValue) };
 		setValue?.(next);
 		onValuesChange?.(next);
 	}
 
 	function handleClickStreet(data: KakaoPlaceItem) {
-		const next: AddressValues = {
+		const next: AddressValues<N, D> = {
 			...value,
 			latitude: Number(data.y),
 			longitude: Number(data.x),
 			region: getRegion(data.address_name),
-			[firstName]: data.address_name,
+			...makeRecord(firstName, data.address_name),
 		};
 		setValue?.(next);
 		onValuesChange?.(next);
@@ -118,7 +121,7 @@ export default function AddressField({
 					placeholder="건물, 지번 또는 도로명 검색"
 					rightIcon={<IcLocation color="#444" size="md" />}
 					isRequired={isRequired}
-					value={String(value[firstName] ?? "")}
+					value={value[firstName]}
 					onChange={handleChangeAddress}
 					onClick={(e) => e.stopPropagation()}
 					onFocus={() => setIsComboOpened(true)}
@@ -133,7 +136,7 @@ export default function AddressField({
 				name={secondName}
 				placeholder="상세 주소"
 				required={isRequired}
-				value={String(value[secondName] ?? "")}
+				value={value[secondName]}
 				onChange={handleChangeInput}
 				spellCheck={false}
 				autoComplete="off"
@@ -178,3 +181,8 @@ const optionContentVariants = [
 	"hover:bg-gray-50 focus:bg-gray-50",
 	"disabled:cursor-not-allowed disabled:text-gray-300",
 ];
+
+// computed key를 제네릭 Record로 안전하게 생성
+function makeRecord<K extends string>(key: K, val: string): Record<K, string> {
+	return { [key]: val } as Record<K, string>;
+}
