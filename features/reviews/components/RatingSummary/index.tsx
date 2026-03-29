@@ -1,8 +1,11 @@
+"use client";
+
 import { Rating } from "@smastrom/react-rating";
-import { RatingSummaryProps } from "../../types";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { cn } from "@/utils/cn";
 import { RATING_STYLE } from "@/constants/ratingStyle";
+import { useReviewsCategoriesStatistics, useReviewsStatistics } from "../../queries/queries";
+import { ReviewCategoryStatistics } from "../../types";
 
 const myStyles = {
 	itemShapes: RATING_STYLE.itemShapes,
@@ -10,25 +13,47 @@ const myStyles = {
 	inactiveFillColor: "#F6F7F9",
 };
 
-export default function RatingSummary({
-	averageScore,
-	totalReviews,
-	oneStar,
-	twoStars,
-	threeStars,
-	fourStars,
-	fiveStars,
-}: RatingSummaryProps) {
+type Props = {
+	type?: string;
+};
+
+function getSelectedCategoryStats(
+	statistics: ReviewCategoryStatistics | undefined,
+	selectedType?: string,
+) {
+	if (!statistics) return null;
+	if (!selectedType) return null;
+
+	return statistics.find((item) => item.type === selectedType) ?? null;
+}
+
+export default function RatingSummary({ type }: Props) {
+	const { data } = useReviewsStatistics();
+	const { data: categoriesStatistics } = useReviewsCategoriesStatistics();
+
+	const selectedStats = getSelectedCategoryStats(categoriesStatistics, type);
+
+	const averageScore = selectedStats?.averageScore ?? data?.averageScore ?? 0;
+	const totalReviews = selectedStats?.totalReviews ?? data?.totalReviews ?? 0;
+
+	// 카테고리 통계 API에는 별점 분포 데이터(oneStar~fiveStars)가 없음
+	// type 선택 시 우선 분포 영역은 전체 통계 데이터를 그대로 사용 -> 추후 수정 가능성 있음
+	const oneStar = data?.oneStar ?? 0;
+	const twoStars = data?.twoStars ?? 0;
+	const threeStars = data?.threeStars ?? 0;
+	const fourStars = data?.fourStars ?? 0;
+	const fiveStars = data?.fiveStars ?? 0;
+
 	const safeAverageScore = totalReviews > 0 ? averageScore : 0;
-	const displayAverageScore = Number(safeAverageScore ?? 0).toFixed(1);
+	const displayAverageScore = Number(safeAverageScore).toFixed(1);
 	const hasReviews = totalReviews > 0;
 
 	const starCounts: [number, number, number, number, number] = [
-		oneStar ?? 0,
-		twoStars ?? 0,
-		threeStars ?? 0,
-		fourStars ?? 0,
-		fiveStars ?? 0,
+		oneStar,
+		twoStars,
+		threeStars,
+		fourStars,
+		fiveStars,
 	];
 
 	const ratingItems = [5, 4, 3, 2, 1].map((score) => ({
@@ -57,7 +82,7 @@ export default function RatingSummary({
 						</p>
 
 						<Rating
-							value={safeAverageScore ?? 0}
+							value={safeAverageScore}
 							readOnly
 							itemStyles={myStyles}
 							className="max-w-25 md:max-w-47.5"

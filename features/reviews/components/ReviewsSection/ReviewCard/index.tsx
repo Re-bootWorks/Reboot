@@ -7,8 +7,8 @@ import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { formatIsoDateWithDots } from "@/utils/date";
 import { RATING_STYLE } from "@/constants/ratingStyle";
 import { ReviewCardProps } from "@/features/reviews/types";
-import { MOCK_LOGIN_USER_ID } from "@/features/reviews/mockData";
 import Link from "next/link";
+import { useUserStore } from "@/store/user.store";
 
 const EMPTY_THUMBNAIL_SRC = "/assets/img/img_empty_purple.svg";
 const EMPTY_PROFILE_SRC = "/assets/img/img_profile.svg";
@@ -25,7 +25,8 @@ export default function ReviewCard({
 	meetingType,
 	userId,
 }: ReviewCardProps) {
-	const isMyReview = userId === MOCK_LOGIN_USER_ID;
+	const loggedInUserId = useUserStore((state) => state.user?.id);
+	const isMyReview = userId === loggedInUserId;
 
 	const handleEditButtonClick = () => {
 		// TODO: 리뷰 수정 기능 추후 구현 예정

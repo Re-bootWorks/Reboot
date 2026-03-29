@@ -1,5 +1,6 @@
 import { REGION_DATA } from "@/constants/region";
 import { Option } from "@/components/ui/Filter/RegionFilter/option";
+import { ReviewsListRequest } from "./types";
 
 export interface RegionFilterValue {
 	region: Option | null;
@@ -39,4 +40,28 @@ export function buildRegionParam(region: Option | null, district: Option | null)
 	}
 
 	return `${region.label} ${district.label}`;
+}
+
+/** 객체를 API 요청 쿼리 스트링 문자열 만들기 */
+export function buildQuery(params: Record<string, string | number | undefined | null>) {
+	const queryParams = new URLSearchParams();
+	for (const [key, value] of Object.entries(params)) {
+		if (value === undefined || value === null || value === "") continue;
+		queryParams.append(key, String(value));
+	}
+	return queryParams.toString();
+}
+
+/** 상태 코드별 리뷰 목록 에러 메시지 반환 */
+export function getErrorMessage(status: number) {
+	switch (status) {
+		case 400:
+			return "잘못된 요청입니다";
+		case 401:
+			return "인증이 필요합니다";
+		case 404:
+			return "요청한 정보를 찾을 수 없습니다";
+		default:
+			return "조회 실패";
+	}
 }
