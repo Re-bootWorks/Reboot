@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
 import CommentSection from "@/features/connect/components/CommentSection";
-import PostDetailCard from "@/features/connect/components/PostDeatilCard";
+import PostDetailCard from "@/features/connect/components/PostDetailCard";
 import Container from "@/components/layout/Container";
 
 export default function PostDetailContainer({ id }: { id: string }) {

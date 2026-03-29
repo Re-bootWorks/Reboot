@@ -12,6 +12,7 @@ import { createComment } from "@/features/connect/apis/createComment";
 import { useQuery } from "@tanstack/react-query";
 import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
 import { useUserStore } from "@/store/user.store";
+import { useToast } from "@/providers/toast-provider";
 
 interface CommentSectionProps {
 	postId: number;
@@ -22,6 +23,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 	const queryClient = useQueryClient();
 	const { user } = useUserStore();
 	const currentUserId = user?.id;
+	const { handleShowToast } = useToast();
 
 	const { data } = useQuery<{ comments: Comment[] }>({
 		queryKey: ["postDetail", postId],
@@ -47,8 +49,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 							id: Date.now(),
 							content: newComment.content,
 							author: {
-								id: currentUserId,
-								name: "나",
+								id: currentUserId!,
+								name: user?.name ?? "사용자",
 							},
 							createdAt: new Date().toISOString(),
 							// 1. Optimistic으로 "나" 표시
@@ -68,6 +70,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 			if (context?.previousData) {
 				queryClient.setQueryData(["postDetail", postId], context.previousData);
 			}
+			handleShowToast({ message: "댓글 등록에 실패했습니다.", status: "error" });
 		},
 
 		onSuccess: () => {
@@ -83,11 +86,11 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
 	const handleSubmit = () => {
 		if (!comment.trim()) return;
-
-		mutation.mutate({
-			postId,
-			content: comment,
-		}); // 뮤테이션 실행함수
+		if (!currentUserId) {
+			handleShowToast({ message: "로그인이 필요합니다.", status: "error" });
+			return;
+		}
+		mutation.mutate({ postId, content: comment });
 	};
 
 	return (

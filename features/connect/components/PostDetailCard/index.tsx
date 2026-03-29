@@ -4,6 +4,7 @@ import Image from "next/image";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
+import RelativeTime from "@/features/connect/ui/RelativeTime";
 import dayjs from "@/libs/dayjs";
 
 interface Props {
@@ -15,10 +16,6 @@ interface Props {
 	likeCount: number;
 	commentCount: number;
 	date: number;
-}
-
-function getTimeAgo(timestamp: number) {
-	return dayjs(timestamp).fromNow();
 }
 
 export default function PostDeatilCard({
@@ -56,7 +53,7 @@ export default function PostDeatilCard({
 			<div className="mt-3 flex items-center gap-2 text-sm text-gray-500 md:mt-5">
 				<img src="/assets/img/img_profile.svg" alt="profile" className="h-4 w-4" />
 				<span>
-					{author} {createdAt}
+					{author} · {dayjs(createdAt).format("YYYY.MM.DD")}
 				</span>
 			</div>
 			{/* 내용 */}
@@ -74,7 +71,7 @@ export default function PostDeatilCard({
 			)}
 			{/* 하단 정보 */}
 			<div className="mt-10 flex items-center gap-2 text-sm tracking-[-0.28px] text-gray-500 md:mt-12">
-				<span>{getTimeAgo(date)}</span>
+				<RelativeTime date={date} />
 
 				<div className="flex items-center gap-1">
 					<IcThumbOutline color="gray-400" />

@@ -14,7 +14,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 		const data = await res.json();
 
 		return NextResponse.json(data, { status: res.status });
-	} catch (error) {
+	} catch (_error) {
 		return NextResponse.json({ message: "댓글 생성 실패" }, { status: 500 });
 	}
 }

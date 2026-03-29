@@ -4,15 +4,12 @@ import PostDetailContainer from "@/features/connect/containers/PostDetailContain
 
 export default async function DetailPage({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;
-
 	const queryClient = new QueryClient();
 
 	await queryClient.prefetchQuery({
 		queryKey: ["postDetail", id],
 		queryFn: () => getPostDetailServer(id),
 	});
-
-	const data = await getPostDetailServer(id);
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
