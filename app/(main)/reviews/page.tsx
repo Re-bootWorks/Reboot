@@ -46,13 +46,18 @@ export default async function ReviewsPage({ searchParams }: Props) {
 				<PageIntro />
 			</header>
 
+			{/* ListFilters 수정중 */}
 			<Suspense fallback={<></>}>
 				<ListControls />
 			</Suspense>
 
-			<HydrationBoundary state={dehydrate(queryClient)}>
-				<RatingSummary type={params.type} />
-			</HydrationBoundary>
+			<SectionErrorBoundary fallback={<div>에러 바운더리 css 추후 작업</div>}>
+				<HydrationBoundary state={dehydrate(queryClient)}>
+					<Suspense fallback={<div>스켈레톤 작업 예정</div>}>
+						<RatingSummary type={params.type} />
+					</Suspense>
+				</HydrationBoundary>
+			</SectionErrorBoundary>
 
 			<SectionErrorBoundary fallback={<div>에러 바운더리 css 추후 작업</div>}>
 				<HydrationBoundary state={dehydrate(queryClient)}>
