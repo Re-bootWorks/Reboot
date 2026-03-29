@@ -6,8 +6,8 @@ import { StatusLabel } from "@/components/ui/StatusLabel";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
 import SendButton from "@/components/ui/Buttons/SendButton";
-import { DetailCardProps } from "./type";
 import { uiFormatDate, uiFormatTime } from "@/utils/date";
+import { DetailCardProps } from "@/features/mypage/types";
 
 const STYLE = {
 	itemBgBox: "relative overflow-hidden rounded-3xl bg-white md:flex md:gap-6 md:rounded-4xl md:p-6",

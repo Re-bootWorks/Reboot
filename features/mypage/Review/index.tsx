@@ -1,25 +1,42 @@
 "use client";
-import { useState } from "react";
-import DetailCard from "../DetailCard";
-import ReviewFormModal, { ReviewFormValues } from "../ReviewFormModal";
-import { WritableReviewItem, WritableReviewList } from "@/features/mypage/type";
-import { mockMyReviews, mockMyWritableReview, mockUserProfile } from "../../mockData";
-import useMeetingFavorite from "../../hooks/useMeetingFavorite";
+import { Suspense, useRef, useState } from "react";
+import DetailCard from "../components/DetailCard";
+import ReviewFormModal, { ReviewFormValues } from "../components/ReviewFormModal";
+import { WritableReviewItem } from "@/features/mypage/types";
+import useMeetingFavorite from "../hooks/useMeetingFavorite";
 import TabButton from "@/components/ui/Buttons/TabButton";
-import ReviewCard from "../ReviewCard";
-import { ReviewCardItem, ReviewList } from "../ReviewCard/type";
+import ReviewCard from "../components/ReviewCard";
+import { ReviewCardItem } from "@/features/mypage/types";
 import AlertModal from "@/components/ui/Modals/AlertModal";
+import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
+import ReviewCardSkeleton from "../components/ReviewCard/ReviewCardSkeleton";
+import { useMyMeetupInfinite, useMyReviewInfinite } from "../queries";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import Loading from "../components/Loading";
+import Empty from "@/components/layout/Empty";
+import { useUserStore } from "@/store/user.store";
 
 type ReviewTabId = "writable" | "written";
 
 // 작성 가능한 리뷰 탭
 function Writable() {
-	const initialItems: WritableReviewList = mockMyWritableReview;
-
-	const [items, setItems] = useState(initialItems); // 리뷰 성공 시 아이템 업데이트
-	const { handleWishToggle } = useMeetingFavorite(setItems);
+	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
 	const [reviewTarget, setReviewTarget] = useState<WritableReviewItem | null>(null);
+
+	const {
+		data: meetupData,
+		fetchNextPage,
+		hasNextPage,
+		isFetchingNextPage,
+	} = useMyMeetupInfinite({ completed: true, reviewed: false });
+	const items = meetupData.pages.flatMap((page) => page.data) ?? [];
+	const observerRef = useRef<HTMLDivElement>(null);
+	useIntersectionObserver({
+		targetRef: observerRef,
+		onIntersect: fetchNextPage,
+		isEnabled: !!hasNextPage && !isFetchingNextPage,
+	});
 
 	// review modal 닫기
 	function closeReviewModal() {
@@ -33,6 +50,7 @@ function Writable() {
 
 		closeReviewModal();
 	}
+	if (items.length === 0) return <Empty>아직 참여한 모임이 없어요</Empty>;
 
 	return (
 		<>
@@ -52,12 +70,14 @@ function Writable() {
 							wishAction={{
 								isWished: item.isFavorited,
 								isPending: false,
-								handleWishClick: () => handleWishToggle(item.id),
+								handleWishClick: () => handleWishToggle(item.id, item.isFavorited),
 							}}
 						/>
 					);
 				})}
 			</ul>
+			<div ref={observerRef} className="h-4" />
+			{isFetchingNextPage && <Loading />}
 
 			<ReviewFormModal
 				mode="create"
@@ -71,13 +91,26 @@ function Writable() {
 
 // 작성한 리뷰 탭
 function Written() {
-	const initialItems: ReviewList = mockMyReviews;
+	const user = useUserStore((state) => state.user);
 
-	const [items] = useState(initialItems); // 리뷰 수정 및 삭제 성공 시 아이템 업데이트
 	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
 	const [reviewTarget, setReviewTarget] = useState<ReviewCardItem | null>(null);
 	// 어떤 모임에 대해 alert을 띄웠는지
 	const [alertTarget, setAlertTarget] = useState<ReviewCardItem | null>(null);
+
+	const {
+		data: reviewData,
+		fetchNextPage,
+		hasNextPage,
+		isFetchingNextPage,
+	} = useMyReviewInfinite();
+	const items = reviewData.pages.flatMap((page) => page.data) ?? [];
+	const observerRef = useRef<HTMLDivElement>(null);
+	useIntersectionObserver({
+		targetRef: observerRef,
+		onIntersect: fetchNextPage,
+		isEnabled: !!hasNextPage && !isFetchingNextPage,
+	});
 
 	// alert modal 닫기
 	function closeAlert() {
@@ -113,19 +146,26 @@ function Written() {
 		closeAlert();
 	}
 
+	if (!user) return null;
+	if (items.length === 0) return <Empty>아직 작성한 리뷰가 없어요</Empty>;
+
 	return (
 		<>
 			<ul className="flex flex-col gap-4 rounded-3xl bg-white px-6 py-4 md:rounded-4xl md:py-6 lg:gap-6 lg:p-8">
 				{items.map((reviewItem) => (
 					<ReviewCard
 						key={reviewItem.id}
-						user={mockUserProfile}
+						user={user}
 						item={reviewItem}
 						handleEdit={() => setReviewTarget(reviewItem)}
 						handleDelete={() => setAlertTarget(reviewItem)}
 					/>
 				))}
 			</ul>
+
+			<div ref={observerRef} className="h-4" />
+			{isFetchingNextPage && <Loading />}
+
 			<AlertModal
 				isOpen={!!alertTarget}
 				onClose={closeAlert}
@@ -149,8 +189,16 @@ export default function Review() {
 	const [activeTab, setActiveTab] = useState<ReviewTabId>("writable");
 
 	const tabContents: Record<ReviewTabId, React.ReactNode> = {
-		writable: <Writable />,
-		written: <Written />,
+		writable: (
+			<Suspense fallback={<DetailCardSkeleton showBadge={false} />}>
+				<Writable />
+			</Suspense>
+		),
+		written: (
+			<Suspense fallback={<ReviewCardSkeleton />}>
+				<Written />
+			</Suspense>
+		),
 	};
 	return (
 		<>

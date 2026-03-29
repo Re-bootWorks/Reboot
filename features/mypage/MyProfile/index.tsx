@@ -2,12 +2,12 @@
 
 import { IcEditOutline } from "@/components/ui/icons";
 import Image from "next/image";
-import { UserProfile } from "@/features/mypage/type";
+import { UserProfile } from "@/features/mypage/types";
 import useToggle from "@/hooks/useToggle";
 import { useUserStore } from "@/store/user.store";
 import Skeleton from "react-loading-skeleton";
 import { cn } from "@/utils/cn";
-import ProfileModal from "../ProfileModal";
+import ProfileModal from "../components/ProfileModal";
 
 interface MyProfileProps {
 	user: UserProfile;
