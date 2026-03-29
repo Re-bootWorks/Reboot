@@ -8,9 +8,6 @@ const meta: Meta<typeof CreateOpenButton> = {
 		layout: "centered",
 		nextjs: { appDirectory: true },
 	},
-	argTypes: {
-		onClick: { action: "clicked" },
-	},
 };
 
 export default meta;

@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { MeetupCreateData } from "../../types";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { MeetupCreateRequest } from "../../types";
+import { createSessionStore } from "../utils";
 
 interface FormDataContextValue {
 	/** 단계 유효성 조회 */
@@ -11,9 +12,9 @@ interface FormDataContextValue {
 	/** 단계 유효성 설정 */
 	setStepValid: (step: number, isValid: boolean) => void;
 	/** 데이터 조회 */
-	data: MeetupCreateData;
+	data: MeetupCreateFormData;
 	/** 데이터 설정 */
-	setData: React.Dispatch<React.SetStateAction<MeetupCreateData>>;
+	setData: React.Dispatch<React.SetStateAction<MeetupCreateFormData>>;
 }
 
 const FormDataContext = createContext<FormDataContextValue | null>(null);
@@ -26,7 +27,14 @@ export function useFormData() {
 	return ctx;
 }
 
-const initialData: MeetupCreateData = {
+export interface MeetupCreateFormData extends MeetupCreateRequest {
+	_dateTime: { date: string; time: string };
+	_registrationEnd: { date: string; time: string };
+	_addressName: string;
+	_addressDetail: string;
+}
+
+const initialData: MeetupCreateFormData = {
 	name: "",
 	type: "",
 	region: "",
@@ -38,6 +46,10 @@ const initialData: MeetupCreateData = {
 	capacity: 0,
 	image: "",
 	description: "",
+	_dateTime: { date: "", time: "" },
+	_registrationEnd: { date: "", time: "" },
+	_addressName: "",
+	_addressDetail: "",
 };
 
 export default function FormDataProvider({
@@ -50,7 +62,8 @@ export default function FormDataProvider({
 	children: React.ReactNode;
 }) {
 	const [isStepValid, setIsStepValid] = useState<boolean[]>(() => Array(totalSteps).fill(false));
-	const [data, setData] = useState<MeetupCreateData>(initialData);
+	const [data, setData] = useState<MeetupCreateFormData>(initialData);
+	const isInitialMount = useRef(true);
 
 	const getStepValid = useCallback((step: number) => isStepValid[step - 1], [isStepValid]);
 
@@ -66,13 +79,22 @@ export default function FormDataProvider({
 		});
 	}, []);
 
-	// 모달이 닫히면 데이터, 유효성 초기화
+	// 세션 복원
 	useEffect(() => {
-		return () => {
-			setIsStepValid(Array(totalSteps).fill(false));
-			setData(initialData);
-		};
+		const stored = createSessionStore.get();
+		if (stored && typeof stored === "object") {
+			setData({ ...initialData, ...stored } as MeetupCreateFormData);
+		}
 	}, []);
+
+	// 세션 실시간 저장(최초 mount 시점 외)
+	useEffect(() => {
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
+		}
+		createSessionStore.set(data);
+	}, [data]);
 
 	return (
 		<FormDataContext.Provider

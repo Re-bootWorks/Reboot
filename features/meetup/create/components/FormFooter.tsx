@@ -5,6 +5,7 @@ import { postMeetup } from "../../apis";
 import { useState } from "react";
 import { useToast } from "@/providers/toast-provider";
 import type { OnSuccess } from "./CreateModal";
+import { extractMeetupData } from "../utils";
 
 interface FormFooterProps {
 	/** 닫기 버튼 클릭 시 호출 */
@@ -36,7 +37,8 @@ export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
 		if (isLastStep) {
 			try {
 				setIsPending(true);
-				const res = await postMeetup(data);
+				const meetupData = extractMeetupData(data);
+				const res = await postMeetup(meetupData);
 				if ("id" in res) {
 					onSuccess(res.id);
 				} else {

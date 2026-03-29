@@ -4,6 +4,7 @@ import useToggle from "@/hooks/useToggle";
 import { useToast } from "@/providers/toast-provider";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { createSessionStore } from "./utils";
 
 const CreateModal = dynamic(() => import("./components/CreateModal"), { ssr: false });
 
@@ -18,6 +19,7 @@ export default function MeetUpCreate() {
 	}
 
 	function redirectToDetail(id: number) {
+		createSessionStore.remove();
 		handleShowToast({ message: "모임 생성이 완료되었습니다!", status: "success" });
 		setTimeout(() => {
 			close();

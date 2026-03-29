@@ -35,14 +35,20 @@ export function getRegion(text: string) {
 	// 매칭되는 문자열 전까지 반환
 	const prefix = text.substring(0, dong.index).trim();
 	if (!prefix) return text.trim();
-	// 세종시 주소 예외 처리
-	if (/세종/.test(prefix)) {
-		return (prefix + " " + dong[0]).trim();
-	}
+	// 세종시 주소 예외 처리(필요할 경우 주석 해제)
+	// if (/세종/.test(prefix)) {
+	// 	return (prefix + " " + dong[0]).trim();
+	// }
 	return prefix;
 }
 
 /** 주소 address 반환 */
 export function getAddress(name: string, detail: string) {
 	return `${name}, ${detail}`;
+}
+
+/** 주소 address 를 addressName, addressDetail 로 분리 */
+export function splitAddress(address: string) {
+	const [addressName, addressDetail] = address.split(", ");
+	return { addressName, addressDetail };
 }
