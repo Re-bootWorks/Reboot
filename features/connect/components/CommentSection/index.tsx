@@ -53,7 +53,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 								name: user?.name ?? "사용자",
 							},
 							createdAt: new Date().toISOString(),
-							// 1. Optimistic으로 "나" 표시
+							// 1. Optimistic으로 유저이름 표시
 							// 2. 서버 응답 도착
 							// 3. invalidateQueries 실행
 							// 4. 진짜 데이터로 교체됨
