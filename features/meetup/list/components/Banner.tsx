@@ -7,7 +7,7 @@ export default function Banner({ className }: { className?: string }) {
 	return (
 		<div
 			className={cn(
-				"relative h-48 w-full overflow-hidden bg-purple-100",
+				"relative h-48 w-full shrink-0 overflow-hidden bg-purple-100",
 				"md:h-[244px] md:rounded-3xl lg:rounded-4xl",
 				className,
 			)}>

@@ -7,9 +7,9 @@ import MeetupCardList from "@/features/meetup/list/components/MeetupCardList";
 
 export default function MeetupListPage() {
 	return (
-		<Container className="px-0 md:p-6 lg:p-0 lg:pt-[27px]">
+		<Container className="flex min-h-[calc(100vh-48px)] flex-col px-0 md:min-h-[calc(100vh-88px)] md:p-6 lg:p-0 lg:pt-[27px]">
 			<Banner />
-			<div className="my-12 flex flex-col gap-y-5 px-4 md:gap-y-4 md:px-0 lg:gap-y-6">
+			<div className="my-6 flex flex-1 flex-col gap-y-5 px-4 md:my-10 md:gap-y-4 md:px-0 lg:my-12 lg:gap-y-6">
 				<Suspense fallback={null}>
 					<ListFilters />
 					<MeetupCardList />

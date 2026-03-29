@@ -12,6 +12,7 @@ import {
 } from "../utils";
 import MeetupCard from "@/features/meetup/list/components/MeetupCard";
 import GroupCard from "@/components/ui/GroupCard";
+import Empty from "./Emtpy";
 
 export default function MeetupCardList() {
 	const { get } = useQueryParams();
@@ -26,7 +27,7 @@ export default function MeetupCardList() {
 	});
 
 	return (
-		<ul className="grid justify-items-stretch gap-4 md:gap-6 lg:grid-cols-2">
+		<ul className="grid flex-1 justify-items-stretch gap-4 md:gap-6 lg:grid-cols-2">
 			{isLoading ? (
 				<MeetupCardSkeletonList size={size} />
 			) : (
@@ -49,6 +50,9 @@ export default function MeetupCardList() {
 }
 
 function MeetupCardLoadedList({ data }: { data: Meeting[] | undefined }) {
+	if (data?.length === 0) {
+		return <Empty />;
+	}
 	return data?.map((item) => (
 		<li key={item.id} className="w-full">
 			<MeetupCard data={item} />
