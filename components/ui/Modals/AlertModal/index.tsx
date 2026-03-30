@@ -39,11 +39,6 @@ export default function Alert({
 	className,
 	children,
 }: AlertModalProps) {
-	const handleConfirmAction = async () => {
-		await handleConfirmButton();
-		onClose();
-	};
-
 	return (
 		<Modal
 			className={STYLE.modal}
@@ -64,7 +59,7 @@ export default function Alert({
 						sizes="medium"
 						isPending={isPending}
 						className={STYLE.modalButton}
-						onClick={handleConfirmAction}>
+						onClick={handleConfirmButton}>
 						{confirmLabel}
 					</Button>
 				</div>

@@ -4,11 +4,11 @@ import DetailCard from "../components/DetailCard";
 import { DetailCardBadge } from "@/features/mypage/types";
 import { CreatedItem } from "@/features/mypage/types";
 import AlertModal from "@/components/ui/Modals/AlertModal";
-import useMeetingFavorite from "@/features/mypage/hooks/useMeetingFavorite";
+import useMeetingFavorite from "@/hooks/useMeetingFavorite";
 import Empty from "@/components/layout/Empty";
 import { useMyCreatedInfinite } from "../queries";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import Loading from "../components/Loading";
+import Loading from "@/components/ui/Loading";
 
 // 모임 배지 상태
 function meetupBadges(item: CreatedItem): DetailCardBadge[] {

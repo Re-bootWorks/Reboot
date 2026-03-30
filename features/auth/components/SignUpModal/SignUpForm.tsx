@@ -9,6 +9,7 @@ import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
 import { useSignUp } from "@/features/auth/mutations";
+import { KAKAO_LOGIN_URL, GOOGLE_LOGIN_URL } from "@/constants/auth";
 
 const signUpSchema = z
 	.object({
@@ -31,7 +32,8 @@ interface SignUpFormProps {
 export function SignUpForm({ onSuccess }: SignUpFormProps) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] = useState(false);
-	const { mutate: signUp } = useSignUp(onSuccess);
+	const { mutate: signUp, isPending } = useSignUp(onSuccess);
+	const [isSocialPending, setIsSocialPending] = useState(false);
 
 	const {
 		register,
@@ -45,6 +47,11 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 	const onSubmit = (data: SignUpFormData) => {
 		signUp({ email: data.email, password: data.password, name: data.name });
 	};
+
+	function handleSocialLogin(url: string) {
+		setIsSocialPending(true);
+		window.location.href = url;
+	}
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
@@ -90,7 +97,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 					isDestructive={!!errors.passwordConfirm}
 				/>
 				<div className="pb-2 md:pb-4">
-					<Button type="submit" disabled={!isValid}>
+					<Button type="submit" disabled={!isValid || isSocialPending} isPending={isPending}>
 						회원가입
 					</Button>
 				</div>
@@ -100,8 +107,18 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 					<hr className="flex-1 border-gray-300" />
 				</div>
 				<div className="flex flex-col gap-3 md:flex-row">
-					<SocialButton social="Google">구글로 계속하기</SocialButton>
-					<SocialButton social="Kakao">카카오로 계속하기</SocialButton>
+					<SocialButton
+						social="Google"
+						onClick={() => handleSocialLogin(GOOGLE_LOGIN_URL)}
+						disabled={isSocialPending || isPending}>
+						구글로 계속하기
+					</SocialButton>
+					<SocialButton
+						social="Kakao"
+						onClick={() => handleSocialLogin(KAKAO_LOGIN_URL)}
+						disabled={isSocialPending || isPending}>
+						카카오로 계속하기
+					</SocialButton>
 				</div>
 			</div>
 		</form>

@@ -2,14 +2,14 @@
 import { useRef, useState } from "react";
 import DetailCard from "../components/DetailCard";
 import { DetailCardAction, DetailCardBadge } from "@/features/mypage/types";
-import ReviewFormModal, { ReviewFormValues } from "../components/ReviewFormModal";
+import ReviewFormModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
 import { MeetupItem } from "@/features/mypage/types";
 import AlertModal from "@/components/ui/Modals/AlertModal";
-import useMeetingFavorite from "@/features/mypage/hooks/useMeetingFavorite";
+import useMeetingFavorite from "@/hooks/useMeetingFavorite";
 import { useMyMeetupInfinite } from "@/features/mypage/queries";
 import Empty from "@/components/layout/Empty";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import Loading from "../components/Loading";
+import Loading from "@/components/ui/Loading";
 import { useDeleteMeeting, useDeleteMeetingJoin, usePatchMeetingStatus } from "../mutations";
 
 interface MeetupActionHandlers {
