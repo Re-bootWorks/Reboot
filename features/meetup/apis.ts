@@ -32,6 +32,7 @@ export async function getKakaoPlace(query: string) {
 const ROUTE_MEETINGS = "/meetings";
 /** 모임 찾기 */
 export async function getMeetups(params: MeetupListRequest): Promise<MeetupListResponse> {
+	// encodeURIComponent 자동 적용
 	const queryParams = new URLSearchParams();
 	for (const [key, value] of Object.entries(params)) {
 		if (value != null) {

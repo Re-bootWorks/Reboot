@@ -104,8 +104,10 @@ export interface MeetupListRequest {
 	type?: string;
 	/** 모임 지역 */
 	region?: string;
-	/** 모임 날짜 */
-	date?: string;
+	/** 모임 날짜 시작(ISO 형식, KST 시간대) */
+	dateStart?: string;
+	/** 모임 날짜 종료(ISO 형식, KST 시간대) */
+	dateEnd?: string;
 	/** 모임 호스트 사용자 ID */
 	createdBy?: number;
 	/** 모임 정렬 기준:

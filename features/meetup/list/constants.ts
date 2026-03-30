@@ -11,16 +11,16 @@ export const MEETUP_TYPES = [
 export const QUERY_KEYS = {
 	/** 모임 종류 */
 	TYPE: "type",
-	/** 현재 페이지 */
-	PAGE: "p",
+	/** 모임 날짜 시작(ISO 형식, KST 시간대) */
+	DATE_START: "dateStart",
+	/** 모임 날짜 종료(ISO 형식, KST 시간대) */
+	DATE_END: "dateEnd",
 	/** 정렬 기준 */
 	SORT_BY: "sort",
 	/** 정렬 순서(오름차, 내림차) */
 	SORT_ORDER: "order",
 	/** 지역 */
 	REGION: "region",
-	/** 모임 날짜 */
-	DATE: "date",
 };
 
 /** 정렬 기준 항목 */

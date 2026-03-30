@@ -9,6 +9,8 @@ import {
 	transformTypeValue,
 	transformSortByQuery,
 	transformSortOrderQuery,
+	transformDateStartQuery,
+	transformDateEndQuery,
 } from "../utils";
 import MeetupCard from "@/features/meetup/list/components/MeetupCard";
 import GroupCard from "@/components/ui/GroupCard";
@@ -22,7 +24,8 @@ export default function MeetupCardItems({ size }: { size: number }) {
 	const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = useGetMeetups({
 		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
 		region: transformQueryValue(get(QUERY_KEYS.REGION)),
-		date: transformQueryValue(get(QUERY_KEYS.DATE)),
+		dateStart: transformDateStartQuery(get(QUERY_KEYS.DATE_START)),
+		dateEnd: transformDateEndQuery(get(QUERY_KEYS.DATE_END)),
 		sortBy: transformSortByQuery(get(QUERY_KEYS.SORT_BY)),
 		sortOrder: transformSortOrderQuery(get(QUERY_KEYS.SORT_ORDER)),
 		size,
