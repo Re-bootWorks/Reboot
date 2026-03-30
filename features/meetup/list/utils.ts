@@ -1,6 +1,6 @@
 import { isDeadlinePassed } from "@/utils/date";
 import { SortBy, SortOrder } from "../types";
-import { SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "./constants";
+import { CATEGORY_TYPE_ALL, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "./constants";
 import { RegionFilterValue } from "../list/components/ListFilters";
 
 /** 정렬 기준 항목 조회 */
@@ -30,7 +30,7 @@ export function checkIsRegClosed(
 
 /** 모임 종류 쿼리 값 -> 요청 파라미터 변환 */
 export function transformTypeValue(data: string | null | undefined): string | undefined {
-	return !!data && data !== "all" ? data : undefined;
+	return !!data && data !== CATEGORY_TYPE_ALL.name ? data : undefined;
 }
 
 /** 기타 쿼리 값 -> 요청 파라미터 변환 */

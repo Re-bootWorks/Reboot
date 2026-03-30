@@ -35,3 +35,10 @@ export const SORT_ORDER_OPTIONS = [
 	{ value: "asc", label: "오름차순" },
 	{ value: "desc", label: "내림차순" },
 ];
+
+/** 기본 모임 타입 */
+export const CATEGORY_TYPE_ALL = {
+	id: "all", // 중복 방지를 위해 number 대신 string 사용
+	name: "전체",
+	description: "모든 모임 종류입니다.",
+};

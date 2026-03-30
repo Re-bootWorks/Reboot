@@ -1,7 +1,7 @@
 "use client";
 
 import { useCategoryStore } from "@/store/category.store";
-import { QUERY_KEYS, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "../constants";
+import { CATEGORY_TYPE_ALL, QUERY_KEYS, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "../constants";
 import { getSortByItem, getSortOrderItem } from "../utils";
 import { cn } from "@/utils/cn";
 import TabButton from "@/components/ui/Buttons/TabButton";
@@ -39,7 +39,7 @@ function TypeFilters() {
 	const { ref, overlays, ...events } = useDragScroll<HTMLUListElement>();
 	const { get, set } = useQueryParams();
 	const { categories } = useCategoryStore();
-	const type = get(QUERY_KEYS.TYPE) ?? categories[0].name;
+	const type = get(QUERY_KEYS.TYPE) ?? CATEGORY_TYPE_ALL.name;
 
 	function handleChangeType(v: string | null) {
 		set({ [QUERY_KEYS.TYPE]: v });
@@ -49,14 +49,14 @@ function TypeFilters() {
 		<div className="relative">
 			<ul ref={ref} className={cn(containerStyle, "flex gap-x-2.5")} {...events}>
 				<TypeFilterItem
-					key="all"
-					name="전체"
-					selected={type === "all"}
-					onClick={() => handleChangeType("all")}
+					key={CATEGORY_TYPE_ALL.id}
+					name={CATEGORY_TYPE_ALL.name}
+					selected={type === CATEGORY_TYPE_ALL.name}
+					onClick={() => handleChangeType(CATEGORY_TYPE_ALL.name)}
 				/>
 				{categories.map((i) => (
 					<TypeFilterItem
-						key={i.name}
+						key={i.id}
 						name={i.name}
 						selected={type === i.name}
 						onClick={() => handleChangeType(i.name)}
