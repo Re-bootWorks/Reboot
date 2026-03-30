@@ -35,6 +35,7 @@ export type Meeting = {
 	updatedAt: string;
 	host: Host;
 	isJoined: boolean;
+	isFavorited: boolean;
 };
 
 export type Participant = {
