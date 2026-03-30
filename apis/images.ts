@@ -10,23 +10,17 @@ export interface ErrorResponse {
 	code: string;
 	message: string;
 }
-export type UploadImageFn = (file: File) => Promise<string | ErrorResponse>;
+export type UploadImageFn = typeof uploadImage;
 export interface PresignedUrlResponse {
 	presignedUrl: string;
 	publicUrl: string;
 }
 
 /** 이미지 업로드 */
-export async function uploadImage(file: File): Promise<string | ErrorResponse> {
-	try {
-		const { presignedUrl, publicUrl } = await getPresignedUrl(file.name, file.type);
-		await uploadToS3(presignedUrl, file);
-		return publicUrl;
-	} catch (error) {
-		const message =
-			error instanceof Error ? error.message : "이미지 업로드 중 알 수 없는 오류가 발생했습니다.";
-		return { code: "UPLOAD_ERROR", message };
-	}
+export async function uploadImage(file: File): Promise<string> {
+	const { presignedUrl, publicUrl } = await getPresignedUrl(file.name, file.type);
+	await uploadToS3(presignedUrl, file);
+	return publicUrl;
 }
 
 /** 이미지 업로드 Step1: presigned URL 발급 */
@@ -42,7 +36,12 @@ async function getPresignedUrl(
 		body: JSON.stringify({ fileName, contentType, folder }),
 	});
 
-	if (!res.ok) throw new Error(`이미지 업로드 주소 생성에 실패했습니다. (${res.status})`);
+	if (!res.ok) {
+		const error: ErrorResponse = await res
+			.json()
+			.catch(() => ({ code: "UNKNOWN_ERROR", message: "이미지 업로드 주소 생성에 실패했습니다." }));
+		throw new Error(error.message);
+	}
 	return res.json();
 }
 
@@ -54,5 +53,10 @@ async function uploadToS3(presignedUrl: string, file: File): Promise<void> {
 		body: file,
 	});
 
-	if (!res.ok) throw new Error(`이미지 업로드에 실패했습니다. (${res.status})`);
+	if (!res.ok) {
+		const error: ErrorResponse = await res
+			.json()
+			.catch(() => ({ code: "UNKNOWN_ERROR", message: "이미지 업로드에 실패했습니다." }));
+		throw new Error(error.message);
+	}
 }

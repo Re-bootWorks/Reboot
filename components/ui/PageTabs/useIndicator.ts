@@ -39,7 +39,7 @@ export default function useIndicator(
 				timer = null;
 			}
 		};
-	}, [activeId]);
+	}, [activeId, listRef]);
 
 	// 버튼 클릭 직후부터 transition 적용
 	function addTransition() {
