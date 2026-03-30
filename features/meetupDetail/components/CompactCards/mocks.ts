@@ -24,6 +24,7 @@ export const mockRelatedMeetings: Meeting[] = [
 		updatedAt: "2026-02-01T10:00:00.000Z",
 		host: { id: 1, name: "홍길동", image: "/assets/img/img_profile.svg" },
 		isJoined: false,
+		isFavorited: false,
 	},
 	{
 		id: 3,
@@ -48,6 +49,7 @@ export const mockRelatedMeetings: Meeting[] = [
 		updatedAt: "2026-02-01T10:00:00.000Z",
 		host: { id: 1, name: "홍길동", image: "/assets/img/img_profile.svg" },
 		isJoined: false,
+		isFavorited: false,
 	},
 	{
 		id: 4,
@@ -72,6 +74,7 @@ export const mockRelatedMeetings: Meeting[] = [
 		updatedAt: "2026-02-01T10:00:00.000Z",
 		host: { id: 1, name: "홍길동", image: "/assets/img/img_profile.svg" },
 		isJoined: false,
+		isFavorited: false,
 	},
 	{
 		id: 5,
@@ -96,5 +99,6 @@ export const mockRelatedMeetings: Meeting[] = [
 		updatedAt: "2026-02-01T10:00:00.000Z",
 		host: { id: 1, name: "홍길동", image: "/assets/img/img_profile.svg" },
 		isJoined: false,
+		isFavorited: false,
 	},
 ];
