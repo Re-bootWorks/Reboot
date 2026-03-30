@@ -1,6 +1,6 @@
 import { REGION_DATA } from "@/constants/region";
 import { Option } from "@/components/ui/Filter/RegionFilter/option";
-import { ReviewsListRequest } from "./types";
+import { ReviewsSortBy, ReviewsSortOrder } from "./types";
 
 export interface RegionFilterValue {
 	region: Option | null;
@@ -64,4 +64,19 @@ export function getErrorMessage(status: number) {
 		default:
 			return "조회 실패";
 	}
+}
+
+export function isReviewsSortBy(value: string | null): value is ReviewsSortBy {
+	return value === "dateTime" || value === "registrationEnd" || value === "participantCount";
+}
+
+export function isReviewsSortOrder(value: string | null): value is ReviewsSortOrder {
+	return value === "asc" || value === "desc";
+}
+
+export function toOptionalNumber(value: string | null): number | undefined {
+	if (!value) return undefined;
+
+	const numberValue = Number(value);
+	return Number.isNaN(numberValue) ? undefined : numberValue;
 }

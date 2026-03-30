@@ -12,6 +12,6 @@ export function useReviewsCategoriesStatistics() {
 	return useQuery<ReviewCategoryStatistics>({
 		queryKey: queryKeys.reviews.categories.statistics,
 		queryFn: getReviewsCategoriesStatistics,
-		staleTime: 30 * 1000,
+		staleTime: 60 * 1000,
 	});
 }

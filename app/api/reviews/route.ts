@@ -1,21 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getReviews } from "@/features/reviews/apis/server";
-import type { ReviewsSortBy, ReviewsSortOrder } from "@/features/reviews/types";
-
-function isReviewsSortBy(value: string | null): value is ReviewsSortBy {
-	return value === "dateTime" || value === "registrationEnd" || value === "participantCount";
-}
-
-function isReviewsSortOrder(value: string | null): value is ReviewsSortOrder {
-	return value === "asc" || value === "desc";
-}
-
-function toOptionalNumber(value: string | null): number | undefined {
-	if (!value) return undefined;
-
-	const numberValue = Number(value);
-	return Number.isNaN(numberValue) ? undefined : numberValue;
-}
+import { isReviewsSortBy, isReviewsSortOrder, toOptionalNumber } from "@/features/reviews/utils";
 
 export async function GET(request: NextRequest) {
 	const searchParams = request.nextUrl.searchParams;

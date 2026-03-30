@@ -1,24 +1,15 @@
-// app/.../page.tsx
 import { Suspense } from "react";
 import PageIntro from "@/components/ui/PageIntro";
 import ListControls from "@/features/reviews/components/ListControls";
 import RatingSummary from "@/features/reviews/components/RatingSummary";
 import ReviewsSection from "@/features/reviews/components/ReviewsSection";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
-import { ReviewsListRequest, ReviewsSortBy, ReviewsSortOrder } from "@/features/reviews/types";
+import { ReviewsListRequest } from "@/features/reviews/types";
 import {
 	prefetchReviewsStatistics,
 	prefetchReviews,
 } from "@/features/reviews/queries/prefetchQueries";
 import SectionErrorBoundary from "@/features/reviews/components/ErrorBoundary";
-
-function isReviewsSortBy(value: string | undefined): value is ReviewsSortBy {
-	return value === "dateTime" || value === "registrationEnd" || value === "participantCount";
-}
-
-function isReviewsSortOrder(value: string | undefined): value is ReviewsSortOrder {
-	return value === "asc" || value === "desc";
-}
 
 type Props = {
 	searchParams: Promise<ReviewsListRequest>;
@@ -32,8 +23,8 @@ export default async function ReviewsPage({ searchParams }: Props) {
 		type: params.type,
 		region: params.region,
 		date: params.date,
-		sortBy: isReviewsSortBy(params.sortBy) ? params.sortBy : undefined,
-		sortOrder: isReviewsSortOrder(params.sortOrder) ? params.sortOrder : undefined,
+		sortBy: params.sortBy,
+		sortOrder: params.sortOrder,
 		size: params.size,
 	};
 

@@ -30,7 +30,7 @@ export async function getReviews(params: ReviewsListRequest): Promise<ReviewsLis
 		throw new Error(`${getErrorMessage(response.status)} ${response.status} 에러`);
 	}
 
-	return await response.json();
+	return response.json();
 }
 
 /** 리뷰 전체 통계 조회 */

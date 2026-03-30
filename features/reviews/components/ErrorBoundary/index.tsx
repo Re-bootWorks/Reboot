@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/utils/cn";
 import { type ReactNode, Component } from "react";
 
 interface Props {
@@ -29,8 +30,7 @@ export default class SectionErrorBoundary extends Component<Props, { hasError: b
 	render() {
 		if (this.state.hasError) {
 			return (
-				<div
-					className={`rounded-lg border bg-red-50 p-4 text-red-700 ${this.props.className || ""}`}>
+				<div className={cn("rounded-lg border bg-red-50 p-4 text-red-700", this.props.className)}>
 					{this.props.fallback}
 					<button
 						onClick={this.resetError}
