@@ -27,7 +27,7 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 		if (firstDataId) {
 			setActiveId(firstDataId);
 		}
-	}, []);
+	}, [defaultId]);
 
 	function updateActiveId({ id, label }: OnChangeParams) {
 		setActiveId(id);

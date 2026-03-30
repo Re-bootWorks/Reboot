@@ -1,5 +1,5 @@
-import MyProfileContainer from "@/features/mypage/components/MyProfile";
-import TabWrapper from "@/features/mypage/components/TabWrapper";
+import MyProfileContainer from "@/features/mypage/MyProfile";
+import MyTab from "@/features/mypage/MyTab";
 
 export default async function My() {
 	return (
@@ -10,7 +10,7 @@ export default async function My() {
 				</h1>
 				<MyProfileContainer />
 			</div>
-			<TabWrapper />
+			<MyTab />
 		</>
 	);
 }

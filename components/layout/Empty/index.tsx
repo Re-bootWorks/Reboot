@@ -13,7 +13,7 @@ export default function Empty({ section = false, className, children }: EmptyPro
 	return (
 		<section
 			className={cn(
-				"md:py-14. flex flex-col px-6 py-10",
+				"flex flex-col px-6 py-10 md:py-14",
 				section ? sectionStyle : pageStyle,
 				className,
 			)}>

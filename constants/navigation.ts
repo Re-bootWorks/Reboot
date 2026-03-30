@@ -1,9 +1,4 @@
 export const GNB_MENU_ITEMS = [
-	{
-		href: "#",
-		label: "모임 찾기",
-		key: "meetings",
-	},
 	{ href: "/meetup/list", label: "모임 찾기", key: "meetup-list" },
 	{
 		href: "/favorites",

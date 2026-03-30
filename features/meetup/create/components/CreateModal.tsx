@@ -2,9 +2,9 @@
 
 import { Modal } from "@/components/ui/Modals";
 import { cn } from "@/utils/cn";
-import { MeetupCreateData } from "../../types";
+import { MeetupCreateRequest } from "../../types";
 import { getKakaoPlace } from "../../apis";
-import { uploadImage } from "@/apis/images";
+import { useUploadMeetupImage } from "../../queries";
 import FormStepProvider, { useFormStep } from "../providers/FormStepProvider";
 import FormDataProvider from "../providers/FormDataProvider";
 import FormHeader from "./FormHeader";
@@ -23,7 +23,7 @@ export default function CreateModal({ isOpen, onClose, onSuccess }: CreateModalP
 		</FormStepProvider>
 	);
 }
-export type OnSubmit = (data: MeetupCreateData) => Promise<void>;
+export type OnSubmit = (data: MeetupCreateRequest) => Promise<void>;
 export type OnSuccess = (id: number) => void;
 
 interface CreateModalProps {
@@ -36,6 +36,19 @@ interface CreateModalProps {
 }
 function CreateForm({ isOpen, onClose, onSuccess }: CreateModalProps) {
 	const { currentStep } = useFormStep();
+	const uploadImage = useUploadMeetupImage();
+
+	const STEP_COMPS = [
+		<StepTypeSelect key="type" step={1} />,
+		<StepInfo
+			key="info"
+			step={2}
+			uploadImageFn={uploadImage.mutateAsync}
+			getKakaoPlaceFn={getKakaoPlace}
+		/>,
+		<StepDesc key="desc" step={3} />,
+		<StepSchedule key="schedule" step={4} />,
+	];
 
 	return (
 		<Modal
@@ -62,9 +75,3 @@ function CreateForm({ isOpen, onClose, onSuccess }: CreateModalProps) {
 
 const TITLE = "모임 만들기";
 const TOTAL_STEPS = 4;
-const STEP_COMPS = [
-	<StepTypeSelect key="type" step={1} />,
-	<StepInfo key="info" step={2} uploadImageFn={uploadImage} getKakaoPlaceFn={getKakaoPlace} />,
-	<StepDesc key="desc" step={3} />,
-	<StepSchedule key="schedule" step={4} />,
-];

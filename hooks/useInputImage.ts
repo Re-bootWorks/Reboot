@@ -81,6 +81,7 @@ export default function useInputImage({ inputRef, defaultUrl = null, onChange }:
 
 	return {
 		previewUrl,
+		setPreviewUrl,
 		resetFile,
 		changeFile,
 	};

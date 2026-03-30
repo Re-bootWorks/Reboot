@@ -57,12 +57,16 @@ function GroupCard({ id, href, status, children, className, ...props }: GroupCar
 	);
 }
 const containerStyle =
-	"h-[346px] min-w-[343px] md:h-[219px] lg:max-w-[628px] md:w-full rounded-4xl overflow-hidden bg-white";
+	"h-[346px] min-w-[343px] md:h-[219px] w-full rounded-4xl overflow-hidden bg-white";
 
 function GroupCardSkeleton() {
 	return (
 		<div className={containerStyle}>
-			<Skeleton className="h-full" />
+			<Skeleton
+				height="100%"
+				containerClassName="block h-full w-full leading-none"
+				borderRadius={0}
+			/>
 		</div>
 	);
 }
@@ -159,7 +163,7 @@ interface BadgeGroupProp {
 	date: string;
 	/** 모임 시간 */
 	time: string;
-	/** 모집 마감 텍스트 */
+	/** 모집 마감 텍스트: 오늘 nn시 마감 | n일 후 마감 */
 	deadlineText?: string;
 }
 function BadgeGroup({ date, time, deadlineText }: BadgeGroupProp) {
