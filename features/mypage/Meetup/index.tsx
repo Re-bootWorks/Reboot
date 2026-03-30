@@ -6,11 +6,11 @@ import ReviewFormModal, { ReviewFormValues } from "../components/ReviewFormModal
 import { MeetupItem } from "@/features/mypage/types";
 import AlertModal from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/features/mypage/hooks/useMeetingFavorite";
-import { useUserStore } from "@/store/user.store";
 import { useMyMeetupInfinite } from "@/features/mypage/queries";
 import Empty from "@/components/layout/Empty";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "../components/Loading";
+import { useDeleteMeeting, useDeleteMeetingJoin, usePatchMeetingStatus } from "../mutations";
 
 interface MeetupActionHandlers {
 	/** 모임 확정 */
@@ -118,9 +118,7 @@ function meetupActions(
 	];
 }
 
-export default function Meetup() {
-	const userId = useUserStore((state) => state.user?.id);
-
+export default function Meetup({ userId }: { userId: number }) {
 	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
 	const [reviewTarget, setReviewTarget] = useState<MeetupItem | null>(null);
@@ -129,6 +127,7 @@ export default function Meetup() {
 	// alert이 어떤 행동을 할것인지
 	const [alertAction, setAlertAction] = useState<AlertAction | null>(null);
 
+	// 모임 목록 불러오기
 	const {
 		data: meetupData,
 		fetchNextPage,
@@ -142,6 +141,18 @@ export default function Meetup() {
 		onIntersect: fetchNextPage,
 		isEnabled: !!hasNextPage && !isFetchingNextPage,
 	});
+
+	// 모임 상태 변경하기
+	const { mutate: patchMeetingStatus, isPending: isStatusPending } = usePatchMeetingStatus();
+
+	// 모임 삭제하기
+	const { mutate: deleteMeeting, isPending: isDeletePending } = useDeleteMeeting();
+
+	// 모임 예약 취소하기
+	const { mutate: deleteMeetingJoin, isPending: isJoinCancelPending } = useDeleteMeetingJoin();
+
+	// 어떤 액션이든 하나라도 pending이면 true
+	const isAlertPending = isStatusPending || isDeletePending || isJoinCancelPending;
 
 	// alert modal 닫기
 	function closeAlert() {
@@ -185,18 +196,39 @@ export default function Meetup() {
 	}
 
 	// Alert 확인 시 api 연결
-	async function handleAlertConfirm() {
+	function handleAlertConfirm() {
 		if (!alertTarget || !alertAction) return;
 
 		const actionHandlers: Record<AlertAction, () => void> = {
-			confirm: () => console.log("모임 확정 API", alertTarget.id),
-			delete: () => console.log("모임 삭제 API", alertTarget.id),
-			cancelMeetup: () => console.log("모임 취소 API", alertTarget.id),
-			cancelReservation: () => console.log("모임 예약 취소 API", alertTarget.id),
+			// 모임 확정
+			confirm: () =>
+				patchMeetingStatus(
+					{ meetingId: alertTarget.id, status: "CONFIRMED" },
+					{ onSuccess: closeAlert, onError: closeAlert },
+				),
+			// 모임 취소
+			cancelMeetup: () =>
+				patchMeetingStatus(
+					{ meetingId: alertTarget.id, status: "CANCELED" },
+					{ onSuccess: closeAlert, onError: closeAlert },
+				),
+			// 모임 삭제
+			delete: () =>
+				deleteMeeting(
+					{ meetingId: alertTarget.id },
+					{ onSuccess: closeAlert, onError: closeAlert },
+				),
+			// 모임 예약 취소
+			cancelReservation: () =>
+				deleteMeetingJoin(
+					{ meetingId: alertTarget.id },
+					{ onSuccess: closeAlert, onError: closeAlert },
+				),
 		};
 
 		actionHandlers[alertAction]();
 	}
+
 	// 리뷰 제출 시
 	async function handleReviewSubmit(reviewFormValues: ReviewFormValues) {
 		if (!reviewTarget) return;
@@ -204,8 +236,6 @@ export default function Meetup() {
 
 		closeReviewModal();
 	}
-
-	if (!userId) return null;
 
 	if (items.length === 0) return <Empty>아직 참여한 모임이 없어요</Empty>;
 	return (
@@ -234,6 +264,7 @@ export default function Meetup() {
 
 			<AlertModal
 				isOpen={!!alertTarget}
+				isPending={isAlertPending}
 				onClose={closeAlert}
 				handleConfirmButton={handleAlertConfirm}>
 				{alertAction ? ALERT_MESSAGE[alertAction] : ""}

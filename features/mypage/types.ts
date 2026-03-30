@@ -36,9 +36,9 @@ export interface MeetingJoinedApiRes {
 	updatedAt: string;
 	host: Host;
 	isFavorited: boolean;
+	isCompleted: boolean;
 	joinedAt: string;
 	isReviewed: boolean;
-	isCompleted: boolean;
 }
 
 export interface MeReviewsApiRes {
@@ -56,43 +56,29 @@ export interface MeReviewsApiRes {
 	createdAt: string;
 }
 
-export interface MeetingsMyApiRes {
-	id: number;
-	teamId: string;
-	name: string;
-	type: string;
-	region: string;
-	address: string;
-	latitude: number;
-	longitude: number;
-	dateTime: string;
-	registrationEnd: string;
-	capacity: number;
-	participantCount: number;
-	image: string;
-	description: string;
-	canceledAt: string;
-	confirmedAt: string;
-	hostId: number;
-	createdBy: number;
-	createdAt: string;
-	updatedAt: string;
-	host: Host;
-	isFavorited: boolean;
-	isCompleted: boolean;
-}
+export type MeetingsMyApiRes = Omit<MeetingJoinedApiRes, "joinedAt" | "isReviewed">;
+
+export type MeetingStatusApiRes = Omit<
+	MeetingJoinedApiRes,
+	"isFavorited" | "isCompleted" | "joinedAt" | "isReviewed"
+>;
 
 export type MeetingStatus = "CONFIRMED" | "CANCELED";
+
+export type PatchMeetingStatusParams = {
+	meetingId: number;
+	status: MeetingStatus;
+};
+
+export interface ReviewPayload {
+	score: number;
+	comment: string;
+}
 
 export interface PatchUserProfilePayload {
 	name?: string;
 	email?: string;
 	image?: string;
-}
-
-export interface ReviewPayload {
-	score: number;
-	comment: string;
 }
 
 /* ------- component ------- */
