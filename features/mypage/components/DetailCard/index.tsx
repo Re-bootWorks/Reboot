@@ -17,7 +17,7 @@ const STYLE = {
 	itemContent:
 		"flex flex-col gap-5.5  md:justify-between min-[870px]:flex-row min-[870px]:items-center",
 	personInfo: "flex items-center gap-2 text-sm",
-	itemInfoList: "mt-1.5 flex gap-2.5 md:mt-2.5",
+	itemInfoList: "mt-1.5 flex flex-wrap gap-2.5 md:mt-2.5",
 	itemInfoLabel: "pr-1.5 text-gray-500",
 	itemInfo:
 		"text-xs text-gray-600 after:pl-2.5 after:text-gray-300 after:content-['|'] last:after:hidden sm:text-sm",

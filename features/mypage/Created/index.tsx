@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import DetailCard from "../components/DetailCard";
 import { DetailCardBadge } from "@/features/mypage/types";
 import { CreatedItem } from "@/features/mypage/types";
@@ -9,6 +9,8 @@ import Empty from "@/components/layout/Empty";
 import { useMyCreatedInfinite } from "../queries";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
+import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
+import { useDeleteMeeting } from "../mutations";
 
 // 모임 배지 상태
 function meetupBadges(item: CreatedItem): DetailCardBadge[] {
@@ -25,7 +27,7 @@ function meetupBadges(item: CreatedItem): DetailCardBadge[] {
 	return [{ label: "개설 대기", variant: "pending" }];
 }
 
-export default function Created() {
+function Created() {
 	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 alert을 띄웠는지 타겟팅
 	const [alertTarget, setAlertTarget] = useState<CreatedItem | null>(null);
@@ -44,10 +46,17 @@ export default function Created() {
 		isEnabled: !!hasNextPage && !isFetchingNextPage,
 	});
 
+	// 모임 삭제하기
+	const { mutate: deleteMeeting, isPending: isDeletePending } = useDeleteMeeting();
 	// 모임 삭제 시
-	async function handleAlertConfirm() {
+	function handleAlertConfirm() {
 		if (!alertTarget) return;
-		console.log("모임 삭제 API", alertTarget.id);
+		deleteMeeting({ meetingId: alertTarget.id }, { onSuccess: closeAlert, onError: closeAlert });
+	}
+
+	// alert modal 닫기
+	function closeAlert() {
+		setAlertTarget(null);
 	}
 
 	if (items.length === 0) return <Empty>아직 내가 만든 모임이 없어요</Empty>;
@@ -84,10 +93,19 @@ export default function Created() {
 
 			<AlertModal
 				isOpen={!!alertTarget}
-				onClose={() => setAlertTarget(null)}
+				isPending={isDeletePending}
+				onClose={closeAlert}
 				handleConfirmButton={handleAlertConfirm}>
 				모임을 삭제하시겠습니까?
 			</AlertModal>
 		</>
+	);
+}
+
+export default function CreatedWrapper() {
+	return (
+		<Suspense fallback={<DetailCardSkeleton />}>
+			<Created />
+		</Suspense>
 	);
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import DetailCard from "../components/DetailCard";
 import { DetailCardAction, DetailCardBadge } from "@/features/mypage/types";
 import ReviewFormModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
@@ -11,6 +11,8 @@ import Empty from "@/components/layout/Empty";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
 import { useDeleteMeeting, useDeleteMeetingJoin, usePatchMeetingStatus } from "../mutations";
+import { useUserStore } from "@/store/user.store";
+import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
 
 interface MeetupActionHandlers {
 	/** 모임 확정 */
@@ -89,17 +91,16 @@ function meetupActions(
 				},
 				{
 					label: "모임 취소하기",
-					variant: "purpleBorder",
+					variant: "grayBorder",
 					handleCardButtonClick: handlers.onCancelMeetup,
 				},
 			];
 		}
 		return [
 			{
-				label: "모임 삭제하기",
+				label: "모임 취소하기",
 				variant: "grayBorder",
-				handleCardButtonClick: handlers.onDeleteMeetup,
-				isDestructive: true,
+				handleCardButtonClick: handlers.onCancelMeetup,
 			},
 			{
 				label: "모임 확정하기",
@@ -118,7 +119,9 @@ function meetupActions(
 	];
 }
 
-export default function Meetup({ userId }: { userId: number }) {
+function Meetup() {
+	const userId = useUserStore((state) => state.user?.id);
+
 	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
 	const [reviewTarget, setReviewTarget] = useState<MeetupItem | null>(null);
@@ -237,6 +240,8 @@ export default function Meetup({ userId }: { userId: number }) {
 		closeReviewModal();
 	}
 
+	if (!userId) return null;
+
 	if (items.length === 0) return <Empty>아직 참여한 모임이 없어요</Empty>;
 	return (
 		<>
@@ -283,5 +288,12 @@ export default function Meetup({ userId }: { userId: number }) {
 				handleFormSubmit={handleReviewSubmit}
 			/>
 		</>
+	);
+}
+export default function MeetupWrapper() {
+	return (
+		<Suspense fallback={<DetailCardSkeleton />}>
+			<Meetup />
+		</Suspense>
 	);
 }

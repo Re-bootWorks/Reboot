@@ -10,7 +10,7 @@ import { Modal } from "@/components/ui/Modals";
 import useToggle from "@/hooks/useToggle";
 import Alert from "@/components/ui/Modals/AlertModal";
 import ProfileImage from "./ProfileImage";
-import { useUserProfileUpdate } from "../../mutations";
+import { usePatchUserProfile } from "../../mutations";
 import { PatchUserProfilePayload, UserProfile } from "../../types";
 
 const STYLE = {
@@ -66,7 +66,7 @@ function buildProfilePayload(data: ProfileFormValues, user: UserProfile): PatchU
 // 프로필 폼 상태와 저장/취소
 export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProps) {
 	const { isOpen: alertOpen, open, close } = useToggle();
-	const { mutate, isPending } = useUserProfileUpdate();
+	const { mutate, isPending } = usePatchUserProfile();
 	const profileFormId = useId();
 
 	// RHF으로 이름, 이메일, 이미지 필드 관리
