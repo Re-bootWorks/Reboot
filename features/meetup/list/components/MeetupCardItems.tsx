@@ -39,7 +39,7 @@ export default function MeetupCardItems({ size }: { size: number }) {
 
 	return (
 		<>
-			<MeetupCardLoadedItems data={data?.pages.flatMap((page) => page.data)} />
+			<MeetupCardLoadedItems data={data?.pages?.flatMap((page) => page?.data) ?? []} />
 			{hasNextPage &&
 				(isFetchingNextPage ? (
 					<LastItem>
