@@ -51,3 +51,10 @@ export async function postLogout() {
 		method: "POST",
 	});
 }
+
+export async function postSocialLogin(data: { accessToken: string; refreshToken: string }) {
+	return clientFetch("/auth/socialLogin", {
+		method: "POST",
+		body: JSON.stringify(data),
+	});
+}

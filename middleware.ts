@@ -1,22 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // 로그인 필요한 페이지
-const PROTECTED_ROUTES = ["/mypage"];
+const PROTECTED_ROUTES = [
+	"/mypage",
+	"/connect/write",
+	"/connect/edit/",
+	"/meetup/create",
+	"/favorites",
+];
 
 // 로그인한 유저가 접근하면 홈으로 리다이렉트
-const AUTH_ROUTES = ["/login", "/signup"];
+const AUTH_ROUTES = ["/login", "/signup", "/oauth"];
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 	const accessToken = request.cookies.get("accessToken")?.value;
 
-	// 로그인 한 유저가 로그인 및 회원가입 URL로 진입시: 홈으로 리다이렉트
+	// 로그인 한 유저가 진입시 -> 홈으로 리다이렉트
 	if (AUTH_ROUTES.some((route) => pathname.startsWith(route)) && accessToken) {
 		return NextResponse.redirect(new URL("/", request.url));
 	}
 
-	// 인증되지 않은 유저가 인증이 필요한 URL로 진입시:로그인페이지로이동
-	if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route)) && !accessToken) {
+	// 인증되지 않은 유저가 인증이 필요한 URL로 진입시 -> 로그인페이지로이동
+	if (
+		(PROTECTED_ROUTES.some((route) => pathname.startsWith(route)) ||
+			(pathname.startsWith("/meetup/") && pathname.endsWith("/edit"))) &&
+		!accessToken
+	) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
 
