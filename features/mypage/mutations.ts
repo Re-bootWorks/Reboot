@@ -2,12 +2,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
 	deleteMeeting,
 	deleteMeetingJoin,
+	deleteReviews,
 	patchMeetingStatus,
+	patchReviews,
 	patchUserProfile,
+	postMeetingsReviews,
 	uploadProfileImage,
 } from "./apis";
 import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/providers/toast-provider";
+import { mypageQueryKeys } from "./queries";
 
 export function useUploadProfileImage() {
 	const { handleShowToast } = useToast();
@@ -70,8 +74,8 @@ export function usePatchMeetingStatus() {
 				message: `모임이 ${isConfirmed ? "확정" : "취소"}되었습니다.`,
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
 		},
 
 		onError: (_error, variables) => {
@@ -97,8 +101,8 @@ export function useDeleteMeeting() {
 				message: "모임이 삭제 되었습니다.",
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
 		},
 
 		onError: () => {
@@ -122,13 +126,88 @@ export function useDeleteMeetingJoin() {
 				message: "모임 예약이 취소 되었습니다.",
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
 		},
 
 		onError: () => {
 			handleShowToast({
 				message: "모임 예약 취소에 실패했습니다.\n잠시 후 다시 시도해주세요.",
+				status: "error",
+			});
+		},
+	});
+}
+
+export function usePostMeetingsReviews() {
+	const queryClient = useQueryClient();
+	const { handleShowToast } = useToast();
+
+	return useMutation({
+		mutationFn: postMeetingsReviews,
+
+		onSuccess: () => {
+			handleShowToast({
+				message: `리뷰가 작성 되었습니다.`,
+				status: "success",
+			});
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.reviews });
+		},
+
+		onError: () => {
+			handleShowToast({
+				message: `리뷰 작성에 실패했습니다.\n잠시 후 다시 시도해주세요.`,
+				status: "error",
+			});
+		},
+	});
+}
+
+export function usePatchMeetingsReviews() {
+	const queryClient = useQueryClient();
+	const { handleShowToast } = useToast();
+
+	return useMutation({
+		mutationFn: patchReviews,
+
+		onSuccess: () => {
+			handleShowToast({
+				message: `리뷰가 수정 되었습니다.`,
+				status: "success",
+			});
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.reviews });
+		},
+
+		onError: () => {
+			handleShowToast({
+				message: `리뷰 수정에 실패했습니다.\n잠시 후 다시 시도해주세요.`,
+				status: "error",
+			});
+		},
+	});
+}
+
+export function useDeleteMeetingsReviews() {
+	const queryClient = useQueryClient();
+	const { handleShowToast } = useToast();
+
+	return useMutation({
+		mutationFn: deleteReviews,
+
+		onSuccess: () => {
+			handleShowToast({
+				message: `리뷰가 삭제 되었습니다.`,
+				status: "success",
+			});
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.reviews });
+		},
+
+		onError: () => {
+			handleShowToast({
+				message: `리뷰 삭제에 실패했습니다.\n잠시 후 다시 시도해주세요.`,
 				status: "error",
 			});
 		},

@@ -10,7 +10,12 @@ import { useMyMeetupInfinite } from "@/features/mypage/queries";
 import Empty from "@/components/layout/Empty";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
-import { useDeleteMeeting, useDeleteMeetingJoin, usePatchMeetingStatus } from "../mutations";
+import {
+	useDeleteMeeting,
+	useDeleteMeetingJoin,
+	usePatchMeetingStatus,
+	usePostMeetingsReviews,
+} from "../mutations";
 import { useUserStore } from "@/store/user.store";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
 
@@ -33,7 +38,7 @@ type AlertAction = "confirm" | "delete" | "cancelMeetup" | "cancelReservation";
 const ALERT_MESSAGE = {
 	confirm: "모임을 확정하시겠습니까?",
 	delete: "모임을 삭제하시겠습니까?",
-	cancelMeetup: "모임 취소하시겠습니까?",
+	cancelMeetup: "모임 취소하시겠습니까? \n 	취소한 모임은 모임 이용이 불가능 합니다.",
 	cancelReservation: "모임 예약을 취소하시겠습니까?",
 } satisfies Record<AlertAction, string>;
 
@@ -157,6 +162,9 @@ function Meetup() {
 	// 어떤 액션이든 하나라도 pending이면 true
 	const isAlertPending = isStatusPending || isDeletePending || isJoinCancelPending;
 
+	// 모임 리뷰 작성하기
+	const { mutate: postMeetingReview, isPending: isMeetingReviewPending } = usePostMeetingsReviews();
+
 	// alert modal 닫기
 	function closeAlert() {
 		setAlertTarget(null);
@@ -233,11 +241,12 @@ function Meetup() {
 	}
 
 	// 리뷰 제출 시
-	async function handleReviewSubmit(reviewFormValues: ReviewFormValues) {
+	function handleReviewSubmit(reviewFormValues: ReviewFormValues) {
 		if (!reviewTarget) return;
-		console.log("리뷰 작성 API", reviewTarget.id, reviewFormValues);
-
-		closeReviewModal();
+		postMeetingReview(
+			{ meetingId: reviewTarget.id, reviewFormValues },
+			{ onSuccess: closeReviewModal, onError: closeReviewModal },
+		);
 	}
 
 	if (!userId) return null;
@@ -273,12 +282,6 @@ function Meetup() {
 				onClose={closeAlert}
 				handleConfirmButton={handleAlertConfirm}>
 				{alertAction ? ALERT_MESSAGE[alertAction] : ""}
-				{alertAction === "cancelMeetup" && (
-					<>
-						<br />
-						재확정이 불가능 합니다.
-					</>
-				)}
 			</AlertModal>
 
 			<ReviewFormModal
@@ -286,6 +289,7 @@ function Meetup() {
 				isOpen={!!reviewTarget}
 				onClose={closeReviewModal}
 				handleFormSubmit={handleReviewSubmit}
+				isPending={isMeetingReviewPending}
 			/>
 		</>
 	);

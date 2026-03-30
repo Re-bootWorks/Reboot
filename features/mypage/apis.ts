@@ -3,17 +3,19 @@ import { User } from "@/features/auth/types";
 import {
 	CursorPageResponse,
 	MeetupList,
-	MeetingStatus,
-	ReviewPayload,
 	ReviewList,
 	CreatedList,
 	PatchUserProfilePayload,
 	MeetingJoinedApiRes,
 	MeReviewsApiRes,
 	MeetingsMyApiRes,
+	PatchMeetingStatusParams,
+	PostReviewPayload,
+	PatchReviewPayload,
 } from "@/features/mypage/types";
 import { clientFetch } from "@/libs/clientFetch";
 import { mapJoinedMeeting, mapMeetingsMy, mapMeReviews } from "./mapper";
+import { throwApiError } from "@/utils/api";
 
 export interface BaseListParams {
 	sortBy?: string;
@@ -106,51 +108,66 @@ export async function getMeetingsMy(
 }
 
 // 모임 상태 변경 하기
-export async function patchMeetingStatus(meetingId: number, status: MeetingStatus): Promise<void> {
-	// PATCH/{teamId}/meetings/{meetingId}/status
+export async function patchMeetingStatus({
+	meetingId,
+	status,
+}: PatchMeetingStatusParams): Promise<void> {
+	const res = await clientFetch(`/meetings/${meetingId}/status`, {
+		method: "PATCH",
+		body: JSON.stringify({ status }),
+	});
 
-	console.log(status === "CONFIRMED" ? "모임 확정 성공" : "모임 취소 성공", meetingId);
+	await throwApiError(res, "모임 상태 변경에 실패했습니다.");
 }
 
 // 모임 삭제 하기
-export async function deleteMeeting(meetingId: number): Promise<void> {
-	// DELETE/{teamId}/meetings/{meetingId}
+export async function deleteMeeting({ meetingId }: { meetingId: number }): Promise<void> {
+	const res = await clientFetch(`/meetings/${meetingId}`, {
+		method: "DELETE",
+	});
 
-	console.log("모임 삭제 성공", meetingId);
+	await throwApiError(res, "모임 삭제에 실패했습니다.");
 }
 
 // 모임 참여 취소 하기
-export async function deleteMeetingJoin(meetingId: number): Promise<void> {
-	// DELETE/{teamId}/meetings/{meetingId}/join
+export async function deleteMeetingJoin({ meetingId }: { meetingId: number }): Promise<void> {
+	const res = await clientFetch(`/meetings/${meetingId}/join`, {
+		method: "DELETE",
+	});
 
-	console.log("예약 취소 성공", meetingId);
+	await throwApiError(res, "모임 예약 취소에 실패했습니다.");
 }
 
 // 리뷰 작성 하기
-export async function postReview(
-	meetingId: number,
-	reviewFormValues: ReviewPayload,
-): Promise<void> {
-	// POST/{teamId}/meetings/{meetingId}/reviews
-
-	console.log("리뷰 작성 성공", meetingId, reviewFormValues);
+export async function postMeetingsReviews({
+	meetingId,
+	reviewFormValues,
+}: PostReviewPayload): Promise<void> {
+	const res = await clientFetch(`/meetings/${meetingId}/reviews`, {
+		method: "POST",
+		body: JSON.stringify(reviewFormValues),
+	});
+	await throwApiError(res, "리뷰 작성에 실패했습니다.");
 }
 
 // 리뷰 수정 하기
-export async function patchReview(
-	reviewId: number,
-	reviewFormValues: ReviewPayload,
-): Promise<void> {
-	// PATCH/{teamId}/reviews/{reviewId}
-
-	console.log("리뷰 수정 성공", reviewId, reviewFormValues);
+export async function patchReviews({
+	reviewId,
+	reviewFormValues,
+}: PatchReviewPayload): Promise<void> {
+	const res = await clientFetch(`/reviews/${reviewId}`, {
+		method: "PATCH",
+		body: JSON.stringify(reviewFormValues),
+	});
+	await throwApiError(res, "리뷰 수정에 실패했습니다.");
 }
 
 // 리뷰 삭제 하기
-export async function deleteReview(reviewId: number): Promise<void> {
-	// DELETE/{teamId}/reviews/{reviewId}
-
-	console.log("리뷰 삭제 성공", reviewId);
+export async function deleteReviews({ reviewId }: { reviewId: number }): Promise<void> {
+	const res = await clientFetch(`/reviews/${reviewId}`, {
+		method: "DELETE",
+	});
+	await throwApiError(res, "리뷰 수정에 실패했습니다.");
 }
 
 // 찜 추가
@@ -158,10 +175,7 @@ export async function postMeetingFavorite(meetingId: number): Promise<void> {
 	const res = await clientFetch(`/meetings/${meetingId}/favorites`, {
 		method: "POST",
 	});
-	if (!res.ok) {
-		throw new Error("찜 추가에 실패했습니다.");
-	}
-	return res.json();
+	await throwApiError(res, "찜 추가에 실패했습니다.");
 }
 
 // 찜 해제
@@ -169,10 +183,7 @@ export async function deleteMeetingFavorite(meetingId: number): Promise<void> {
 	const res = await clientFetch(`/meetings/${meetingId}/favorites`, {
 		method: "DELETE",
 	});
-	if (!res.ok) {
-		throw new Error("찜 해제에 실패했습니다.");
-	}
-	return res.json();
+	await throwApiError(res, "찜 해제에 실패했습니다.");
 }
 
 // image 업로드
@@ -187,9 +198,7 @@ export async function uploadProfileImage(file: File): Promise<string> {
 		}),
 	});
 
-	if (!presignedResponse.ok) {
-		throw new Error("이미지 업로드 URL 발급에 실패했습니다.");
-	}
+	await throwApiError(presignedResponse, "이미지 업로드 URL 발급에 실패했습니다.");
 
 	// public URL
 	const { presignedUrl, publicUrl } = await presignedResponse.json();
@@ -211,14 +220,11 @@ export async function uploadProfileImage(file: File): Promise<string> {
 
 // 유저 프로필
 export async function patchUserProfile(user: PatchUserProfilePayload): Promise<User> {
-	const response = await clientFetch("/users/me", {
+	const res = await clientFetch("/users/me", {
 		method: "PATCH",
 		body: JSON.stringify(user),
 	});
+	await throwApiError(res, "프로필 수정에 실패했습니다.");
 
-	if (!response.ok) {
-		throw new Error("프로필 수정에 실패했습니다.");
-	}
-
-	return response.json();
+	return res.json();
 }

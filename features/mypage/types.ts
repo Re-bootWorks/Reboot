@@ -58,11 +58,6 @@ export interface MeReviewsApiRes {
 
 export type MeetingsMyApiRes = Omit<MeetingJoinedApiRes, "joinedAt" | "isReviewed">;
 
-export type MeetingStatusApiRes = Omit<
-	MeetingJoinedApiRes,
-	"isFavorited" | "isCompleted" | "joinedAt" | "isReviewed"
->;
-
 export type MeetingStatus = "CONFIRMED" | "CANCELED";
 
 export type PatchMeetingStatusParams = {
@@ -73,6 +68,16 @@ export type PatchMeetingStatusParams = {
 export interface ReviewPayload {
 	score: number;
 	comment: string;
+}
+
+export interface PostReviewPayload {
+	meetingId: number;
+	reviewFormValues: ReviewPayload;
+}
+
+export interface PatchReviewPayload {
+	reviewId: number;
+	reviewFormValues: ReviewPayload;
 }
 
 export interface PatchUserProfilePayload {
