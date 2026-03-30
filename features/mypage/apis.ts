@@ -167,7 +167,7 @@ export async function deleteReviews({ reviewId }: { reviewId: number }): Promise
 	const res = await clientFetch(`/reviews/${reviewId}`, {
 		method: "DELETE",
 	});
-	await throwApiError(res, "리뷰 수정에 실패했습니다.");
+	await throwApiError(res, "리뷰 삭제에 실패했습니다.");
 }
 
 // 찜 추가
