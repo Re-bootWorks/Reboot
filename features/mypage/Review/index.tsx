@@ -15,11 +15,7 @@ import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
 import Empty from "@/components/layout/Empty";
 import { useUserStore } from "@/store/user.store";
-import {
-	useDeleteMeetingsReviews,
-	usePatchMeetingsReviews,
-	usePostMeetingsReviews,
-} from "../mutations";
+import { useDeleteReviews, usePatchReviews, usePostMeetingsReviews } from "../mutations";
 
 type ReviewTabId = "writable" | "written";
 
@@ -127,10 +123,10 @@ function Written() {
 	});
 
 	// 리뷰 수정하기
-	const { mutate: patchReviews, isPending: isPatchReviewsPending } = usePatchMeetingsReviews();
+	const { mutate: patchReviews, isPending: isPatchReviewsPending } = usePatchReviews();
 
 	// 리뷰 삭제하기
-	const { mutate: deleteReviews, isPending: isDeleteReviewsPending } = useDeleteMeetingsReviews();
+	const { mutate: deleteReviews, isPending: isDeleteReviewsPending } = useDeleteReviews();
 
 	// alert modal 닫기
 	function closeAlert() {

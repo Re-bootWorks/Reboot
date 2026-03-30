@@ -11,9 +11,9 @@ import Empty from "@/components/layout/Empty";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
 import {
-	useDeleteMeeting,
-	useDeleteMeetingJoin,
-	usePatchMeetingStatus,
+	useDeleteMeetings,
+	useDeleteMeetingsJoin,
+	usePatchMeetingsStatus,
 	usePostMeetingsReviews,
 } from "../mutations";
 import { useUserStore } from "@/store/user.store";
@@ -151,13 +151,13 @@ function Meetup() {
 	});
 
 	// 모임 상태 변경하기
-	const { mutate: patchMeetingStatus, isPending: isStatusPending } = usePatchMeetingStatus();
+	const { mutate: patchMeetingsStatus, isPending: isStatusPending } = usePatchMeetingsStatus();
 
 	// 모임 삭제하기
-	const { mutate: deleteMeeting, isPending: isDeletePending } = useDeleteMeeting();
+	const { mutate: deleteMeetings, isPending: isDeletePending } = useDeleteMeetings();
 
 	// 모임 예약 취소하기
-	const { mutate: deleteMeetingJoin, isPending: isJoinCancelPending } = useDeleteMeetingJoin();
+	const { mutate: deleteMeetingsJoin, isPending: isJoinCancelPending } = useDeleteMeetingsJoin();
 
 	// 어떤 액션이든 하나라도 pending이면 true
 	const isAlertPending = isStatusPending || isDeletePending || isJoinCancelPending;
@@ -213,25 +213,25 @@ function Meetup() {
 		const actionHandlers: Record<AlertAction, () => void> = {
 			// 모임 확정
 			confirm: () =>
-				patchMeetingStatus(
+				patchMeetingsStatus(
 					{ meetingId: alertTarget.id, status: "CONFIRMED" },
 					{ onSuccess: closeAlert, onError: closeAlert },
 				),
 			// 모임 취소
 			cancelMeetup: () =>
-				patchMeetingStatus(
+				patchMeetingsStatus(
 					{ meetingId: alertTarget.id, status: "CANCELED" },
 					{ onSuccess: closeAlert, onError: closeAlert },
 				),
 			// 모임 삭제
 			delete: () =>
-				deleteMeeting(
+				deleteMeetings(
 					{ meetingId: alertTarget.id },
 					{ onSuccess: closeAlert, onError: closeAlert },
 				),
 			// 모임 예약 취소
 			cancelReservation: () =>
-				deleteMeetingJoin(
+				deleteMeetingsJoin(
 					{ meetingId: alertTarget.id },
 					{ onSuccess: closeAlert, onError: closeAlert },
 				),

@@ -10,7 +10,7 @@ import { useMyCreatedInfinite } from "../queries";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
-import { useDeleteMeeting } from "../mutations";
+import { useDeleteMeetings } from "../mutations";
 
 // 모임 배지 상태
 function meetupBadges(item: CreatedItem): DetailCardBadge[] {
@@ -47,11 +47,11 @@ function Created() {
 	});
 
 	// 모임 삭제하기
-	const { mutate: deleteMeeting, isPending: isDeletePending } = useDeleteMeeting();
+	const { mutate: deleteMeetings, isPending: isDeletePending } = useDeleteMeetings();
 	// 모임 삭제 시
 	function handleAlertConfirm() {
 		if (!alertTarget) return;
-		deleteMeeting({ meetingId: alertTarget.id }, { onSuccess: closeAlert, onError: closeAlert });
+		deleteMeetings({ meetingId: alertTarget.id }, { onSuccess: closeAlert, onError: closeAlert });
 	}
 
 	// alert modal 닫기

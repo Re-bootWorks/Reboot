@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-	deleteMeeting,
-	deleteMeetingJoin,
+	deleteMeetings,
+	deleteMeetingsJoin,
 	deleteReviews,
-	patchMeetingStatus,
+	patchMeetingsStatus,
 	patchReviews,
-	patchUserProfile,
+	patchUsersMe,
 	postMeetingsReviews,
 	uploadProfileImage,
 } from "./apis";
@@ -34,13 +34,13 @@ export function useUploadProfileImage() {
 	});
 }
 
-export function usePatchUserProfile() {
+export function usePatchUsersMe() {
 	const queryClient = useQueryClient();
 	const setUser = useUserStore((state) => state.setUser);
 	const { handleShowToast } = useToast();
 
 	return useMutation({
-		mutationFn: patchUserProfile,
+		mutationFn: patchUsersMe,
 
 		onSuccess: (updatedUser) => {
 			setUser(updatedUser);
@@ -60,12 +60,12 @@ export function usePatchUserProfile() {
 	});
 }
 
-export function usePatchMeetingStatus() {
+export function usePatchMeetingsStatus() {
 	const queryClient = useQueryClient();
 	const { handleShowToast } = useToast();
 
 	return useMutation({
-		mutationFn: patchMeetingStatus,
+		mutationFn: patchMeetingsStatus,
 
 		onSuccess: (_data, variables) => {
 			const isConfirmed = variables.status === "CONFIRMED";
@@ -89,12 +89,12 @@ export function usePatchMeetingStatus() {
 	});
 }
 
-export function useDeleteMeeting() {
+export function useDeleteMeetings() {
 	const queryClient = useQueryClient();
 	const { handleShowToast } = useToast();
 
 	return useMutation({
-		mutationFn: deleteMeeting,
+		mutationFn: deleteMeetings,
 
 		onSuccess: () => {
 			handleShowToast({
@@ -114,12 +114,12 @@ export function useDeleteMeeting() {
 	});
 }
 
-export function useDeleteMeetingJoin() {
+export function useDeleteMeetingsJoin() {
 	const queryClient = useQueryClient();
 	const { handleShowToast } = useToast();
 
 	return useMutation({
-		mutationFn: deleteMeetingJoin,
+		mutationFn: deleteMeetingsJoin,
 
 		onSuccess: () => {
 			handleShowToast({
@@ -164,7 +164,7 @@ export function usePostMeetingsReviews() {
 	});
 }
 
-export function usePatchMeetingsReviews() {
+export function usePatchReviews() {
 	const queryClient = useQueryClient();
 	const { handleShowToast } = useToast();
 
@@ -189,7 +189,7 @@ export function usePatchMeetingsReviews() {
 	});
 }
 
-export function useDeleteMeetingsReviews() {
+export function useDeleteReviews() {
 	const queryClient = useQueryClient();
 	const { handleShowToast } = useToast();
 
