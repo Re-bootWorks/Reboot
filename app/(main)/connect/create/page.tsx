@@ -1,9 +1,5 @@
-import Container from "@/components/layout/Container";
+import PostCreateContainer from "@/features/connect/containers/PostCreateContainer";
 
-export default function ConnectCreatePage() {
-	return (
-		<Container>
-			<></>
-		</Container>
-	);
+export default function CreatePage() {
+	return <PostCreateContainer />;
 }
