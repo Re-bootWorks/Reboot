@@ -163,7 +163,7 @@ interface BadgeGroupProp {
 	date: string;
 	/** 모임 시간 */
 	time: string;
-	/** 모집 마감 텍스트 */
+	/** 모집 마감 텍스트: 오늘 nn시 마감 | n일 후 마감 */
 	deadlineText?: string;
 }
 function BadgeGroup({ date, time, deadlineText }: BadgeGroupProp) {

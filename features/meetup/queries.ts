@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useMutation, UseMutationOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getMeetups, postMeetup } from "./apis";
 import { MeetupCreateRequest, MeetupItemResponse, MeetupListRequest } from "./types";
 import {
@@ -25,11 +25,12 @@ export const meetupQueryKeys = {
 
 /** 모임 목록 조회 */
 export function useGetMeetups(params: MeetupListRequest) {
-	return useInfiniteQuery({
+	return useSuspenseInfiniteQuery({
 		queryKey: meetupQueryKeys.getMeetups(params),
 		queryFn: ({ pageParam }) => getMeetups({ ...params, cursor: pageParam }),
 		getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
 		initialPageParam: undefined as string | undefined,
+		refetchOnWindowFocus: false,
 	});
 }
 
