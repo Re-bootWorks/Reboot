@@ -4,7 +4,7 @@ import { useState } from "react";
 import Button from "@/components/ui/Buttons/Button";
 
 const meta: Meta<typeof ReviewFormModal> = {
-	title: "Features/My/ReviewFormModal",
+	title: "UI/Modal/ReviewFormModal",
 	component: ReviewFormModal,
 	parameters: {
 		layout: "centered",
