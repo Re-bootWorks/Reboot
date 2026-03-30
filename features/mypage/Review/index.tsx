@@ -3,7 +3,7 @@ import { Suspense, useRef, useState } from "react";
 import DetailCard from "../components/DetailCard";
 import ReviewFormModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
 import { WritableReviewItem } from "@/features/mypage/types";
-import useMeetingFavorite from "../../../hooks/useMeetingFavorite";
+import useMeetingFavorite from "@/hooks/useMeetingFavorite";
 import TabButton from "@/components/ui/Buttons/TabButton";
 import ReviewCard from "../components/ReviewCard";
 import { ReviewCardItem } from "@/features/mypage/types";
