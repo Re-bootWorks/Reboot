@@ -14,10 +14,10 @@ const AUTH_ROUTES = ["/login", "/signup", "/oauth"];
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
-	const accessToken = request.cookies.get("accessToken")?.value;
+	const refreshToken = request.cookies.get("refreshToken")?.value;
 
 	// 로그인 한 유저가 진입시 -> 홈으로 리다이렉트
-	if (AUTH_ROUTES.some((route) => pathname.startsWith(route)) && accessToken) {
+	if (AUTH_ROUTES.some((route) => pathname.startsWith(route)) && refreshToken) {
 		return NextResponse.redirect(new URL("/", request.url));
 	}
 
@@ -25,7 +25,7 @@ export function middleware(request: NextRequest) {
 	if (
 		(PROTECTED_ROUTES.some((route) => pathname.startsWith(route)) ||
 			(pathname.startsWith("/meetup/") && pathname.endsWith("/edit"))) &&
-		!accessToken
+		!refreshToken
 	) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
