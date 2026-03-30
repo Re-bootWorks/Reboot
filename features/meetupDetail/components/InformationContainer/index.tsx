@@ -17,7 +17,7 @@ import {
 	useDeleteMeetingMutation,
 	useJoinMutation,
 } from "@/features/meetupDetail/mutations";
-import useMeetingFavorite from "@/features/mypage/hooks/useMeetingFavorite";
+import useMeetingFavorite from "@/hooks/useMeetingFavorite";
 import { useToast } from "@/providers/toast-provider";
 
 interface InformationContainerProps {
