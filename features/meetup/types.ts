@@ -1,6 +1,3 @@
-// 카카오 장소 검색: 키워드로 장소 검색
-export type getKakaoPlaceFn = (query: string) => Promise<KakaoPlaceItem[]>;
-
 export interface KakaoPlaceItem {
 	address_name: string;
 	category_group_code: string;

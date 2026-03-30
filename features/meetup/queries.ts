@@ -8,6 +8,7 @@ import {
 	postMeetingsJoin,
 	SuccessResponse,
 } from "@/apis/meetings";
+import { uploadImage } from "@/apis/images";
 
 type MutationCallbacks<TData> = Omit<
 	UseMutationOptions<TData, Error, void>,
@@ -15,8 +16,9 @@ type MutationCallbacks<TData> = Omit<
 >;
 
 export const meetupQueryKeys = {
-	getMeetups: (params: MeetupListRequest) => ["meetup", params] as const,
 	postMeetup: ["meetup", "post"] as const,
+	uploadMeetupImage: ["meetup", "image", "upload"] as const,
+	getMeetups: (params: MeetupListRequest) => ["meetup", params] as const,
 	postMeetingsFavorite: ["meetings", "favorite", "post"] as const,
 	deleteMeetingsFavorite: ["meetings", "favorite", "delete"] as const,
 	postMeetingsJoin: ["meetings", "join", "post"] as const,
@@ -35,10 +37,18 @@ export function useGetMeetups(params: MeetupListRequest) {
 }
 
 /** 모임 생성 */
-export function usePostMeetup(data: MeetupCreateRequest) {
+export function usePostMeetup() {
 	return useMutation({
 		mutationKey: meetupQueryKeys.postMeetup,
-		mutationFn: () => postMeetup(data),
+		mutationFn: (data: MeetupCreateRequest) => postMeetup(data),
+	});
+}
+
+/** 모임 이미지 업로드 */
+export function useUploadMeetupImage() {
+	return useMutation({
+		mutationKey: meetupQueryKeys.uploadMeetupImage,
+		mutationFn: (file: File) => uploadImage(file),
 	});
 }
 
