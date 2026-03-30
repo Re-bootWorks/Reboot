@@ -54,7 +54,7 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 			{/* 섹션 5 - 관련 모임 */}
 			<Suspense fallback={null}>
 				{/* TODO: fallback={<CompactCardsSkeleton />} */}
-				<MeetupRelatedSection />
+				<MeetupRelatedSection meetupId={meetupId} />
 			</Suspense>
 		</>
 	);
@@ -154,8 +154,13 @@ function MeetupReviewSection({ meetupId }: { meetupId: number }) {
 	);
 }
 
-function MeetupRelatedSection() {
-	const { data: relatedData } = useRelatedMeetings();
+function MeetupRelatedSection({ meetupId }: { meetupId: number }) {
+	const { data: meeting } = useMeetingDetail(meetupId);
+	const { data: relatedData } = useRelatedMeetings(
+		meetupId,
+		meeting?.region ?? "",
+		meeting?.type ?? "",
+	);
 	const relatedMeetings = relatedData?.data ?? [];
 	const [pressedMap, setPressedMap] = useState<Record<number, boolean>>({});
 	const { ref, style, overlays, ...dragScrollEvents } = useDragScroll<HTMLDivElement>();
@@ -163,6 +168,8 @@ function MeetupRelatedSection() {
 	const handlePress = (id: number) => {
 		setPressedMap((prev) => ({ ...prev, [id]: !prev[id] }));
 	};
+
+	if (relatedMeetings.length === 0) return null;
 
 	return (
 		<section className="mt-17 flex h-fit w-full flex-col gap-3 md:mt-18 md:gap-4 lg:mt-22">

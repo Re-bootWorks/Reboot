@@ -40,10 +40,10 @@ export function useReviews(meetingId: number, cursor?: string) {
 	});
 }
 
-export function useRelatedMeetings() {
+export function useRelatedMeetings(meetingId: number, region: string, type: string) {
 	return useQuery({
-		queryKey: ["meetupDetail", "related"] as const,
-		queryFn: getRelatedMeetings,
+		queryKey: ["meetupDetail", "related", meetingId, region, type] as const,
+		queryFn: () => getRelatedMeetings(meetingId, region, type),
 		staleTime: 1000 * 60 * 5,
 	});
 }

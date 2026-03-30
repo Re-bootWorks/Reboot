@@ -3,6 +3,7 @@ import { clientFetch } from "@/libs/clientFetch";
 import { MeetupEditData } from "@/features/meetupDetail/edit/types";
 import { MeetupListResponse } from "@/features/meetup/types";
 import { getMeetups } from "@/features/meetup/apis";
+import { filterRelatedMeetings } from "@/features/meetupDetail/util";
 
 /** 모임 상세 조회 */
 export async function getMeetingDetail(meetingId: number): Promise<Meeting> {
@@ -70,8 +71,22 @@ export async function deleteMeeting(meetingId: number) {
 	}
 }
 
-// TODO: 추후 4개를 어떻게 가져올지 팀과 논의 예정, 현재는 마감기한 임박순 4개로 임시 적용함.
 /** 관련 모임 목록 조회 (4개) */
-export async function getRelatedMeetings(): Promise<MeetupListResponse> {
-	return getMeetups({ size: 4, sortBy: "registrationEnd", sortOrder: "asc" });
+export async function getRelatedMeetings(
+	meetingId: number,
+	region: string,
+	type: string,
+): Promise<MeetupListResponse> {
+	const res = await getMeetups({
+		size: 5,
+		region,
+		type,
+		sortBy: "participantCount",
+		sortOrder: "desc",
+	});
+
+	return {
+		...res,
+		data: filterRelatedMeetings(res.data, meetingId).slice(0, 4),
+	};
 }

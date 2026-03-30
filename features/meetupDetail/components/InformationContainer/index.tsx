@@ -17,6 +17,8 @@ import {
 	useDeleteMeetingMutation,
 	useJoinMutation,
 } from "@/features/meetupDetail/mutations";
+import useMeetingFavorite from "@/features/mypage/hooks/useMeetingFavorite";
+import { useToast } from "@/providers/toast-provider";
 
 interface InformationContainerProps {
 	id: number;
@@ -28,6 +30,7 @@ interface InformationContainerProps {
 	canceledAt: string | null;
 	isHost: boolean;
 	isJoined: boolean;
+	isFavorited: boolean;
 	editInitialData: MeetupEditData;
 	participantCount: number;
 }
@@ -43,6 +46,7 @@ export default function InformationContainer({
 	participantCount,
 	isHost,
 	isJoined,
+	isFavorited,
 	editInitialData,
 }: InformationContainerProps) {
 	const { data: me } = useGetMe();
@@ -55,6 +59,9 @@ export default function InformationContainer({
 	const { mutate: join, isPending: isJoinPending } = useJoinMutation(id);
 	const { mutate: cancelJoin, isPending: isCancelPending } = useCancelJoinMutation(id);
 	const { mutate: deleteMeeting, isPending: isDeletePending } = useDeleteMeetingMutation(id);
+	const { handleWishToggle } = useMeetingFavorite();
+	const { handleShowToast } = useToast();
+
 	const isJoinPendingAny = isJoinPending || isCancelPending;
 
 	const isClosed = isDeadlinePassed(registrationEnd);
@@ -132,7 +139,18 @@ export default function InformationContainer({
 				</div>
 
 				<div className="flex w-full items-center gap-4">
-					<UtilityButton sizes="small" className="lg:size-15" />
+					<UtilityButton
+						sizes="small"
+						className="lg:size-15"
+						pressed={isFavorited}
+						onClick={() => {
+							handleWishToggle(id, isFavorited);
+							handleShowToast({
+								message: isFavorited ? "모임이 찜 해제되었습니다." : "모임이 찜 추가되었습니다.",
+								status: "success",
+							});
+						}}
+					/>
 					<Button
 						sizes="small"
 						colors={isJoined ? "purpleBorder" : "purple"}
