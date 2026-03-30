@@ -47,7 +47,10 @@ const SORT_ORDER_VALUES = ["asc", "desc"];
 export function transformSortOrderQuery(value: string | null | undefined): SortOrder | undefined {
 	if (value && SORT_ORDER_VALUES.includes(value)) {
 		return value as SortOrder;
-	} else return undefined;
+	} else {
+		// 서버 기본값: asc, 클라이언트 기본값: desc
+		return SORT_ORDER_OPTIONS[0].value as SortOrder;
+	}
 }
 
 /** 모임 날짜 시작 YYYY-MM-DD -> ISO 형식(KST 시간대) 요청 파라미터 변환 */
