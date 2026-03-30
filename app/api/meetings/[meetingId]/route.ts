@@ -13,7 +13,8 @@ export async function DELETE(
 		});
 
 		return nextJsonResponse(res);
-	} catch {
+	} catch (error) {
+		console.error(error);
 		return NextResponse.json({ message: "서버 오류가 발생했습니다." }, { status: 500 });
 	}
 }
