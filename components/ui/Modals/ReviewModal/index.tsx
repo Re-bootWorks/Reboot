@@ -92,13 +92,13 @@ export default function ReviewFormModal({
 
 	// 리뷰 모달 닫기
 	function handleReviewClose() {
+		close();
 		onClose();
 	}
 
 	// 리뷰 제출
 	const handleReviewSubmit = handleSubmit(async (reviewFormValues) => {
 		await handleFormSubmit(reviewFormValues);
-		handleReviewClose();
 	});
 
 	const reviewFormTitle = mode === "create" ? "리뷰 작성" : "리뷰 수정";
