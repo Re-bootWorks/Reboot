@@ -30,3 +30,25 @@ export const fetchPostsClient = async (params: GetPostsParams): Promise<GetPosts
 
 	return res.json();
 };
+
+// 좋아요 추가
+export const toggleConnectLike = async (postId: string) => {
+	const res = await clientFetch(`/posts/${postId}/like`, {
+		method: "POST",
+	});
+
+	if (!res.ok) {
+		throw new Error("좋아요 요청 실패");
+	}
+};
+
+// 좋아요 취소
+export const deleteConnectLike = async (postId: string) => {
+	const res = await clientFetch(`/posts/${postId}/like`, {
+		method: "DELETE",
+	});
+
+	if (!res.ok) {
+		throw new Error("좋아요 취소 실패");
+	}
+};
