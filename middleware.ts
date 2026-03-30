@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const PROTECTED_ROUTES = [
 	"/mypage",
 	"/connect/write",
-	"/connect/edit/",
+	"/connect/edit",
 	"/meetup/create",
 	"/favorites",
 ];
@@ -24,7 +24,11 @@ export function middleware(request: NextRequest) {
 	// 인증되지 않은 유저가 인증이 필요한 URL로 진입시 -> 로그인페이지로이동
 	if (
 		(PROTECTED_ROUTES.some((route) => pathname.startsWith(route)) ||
-			(pathname.startsWith("/meetup/") && pathname.endsWith("/edit"))) &&
+			(pathname.startsWith("/meetup/") &&
+				pathname
+					.split("/")
+					.filter((p) => p)
+					.pop() === "edit")) &&
 		!refreshToken
 	) {
 		return NextResponse.redirect(new URL("/login", request.url));
