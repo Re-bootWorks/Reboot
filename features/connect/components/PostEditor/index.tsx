@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditor, EditorContent, Editor } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "@/features/connect/components/PostEditor/Toolbar";
 import Underline from "@tiptap/extension-underline";
