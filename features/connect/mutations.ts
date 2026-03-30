@@ -47,7 +47,6 @@ export function useToggleConnectLike(postId: string) {
 
 export function useCreatePost() {
 	const queryClient = useQueryClient();
-	const router = useRouter();
 
 	return useMutation({
 		mutationFn: createPost,
@@ -55,9 +54,6 @@ export function useCreatePost() {
 		onSuccess: () => {
 			// 목록 갱신
 			queryClient.invalidateQueries({ queryKey: ["posts"] });
-
-			// 페이지 이동
-			router.push("/connect");
 		},
 	});
 }

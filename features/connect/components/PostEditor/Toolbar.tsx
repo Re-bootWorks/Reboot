@@ -82,16 +82,18 @@ export default function Toolbar({ editor }: Props) {
 						const file = input.files?.[0];
 						if (!file) return;
 
-						const result = await uploadImage(file);
+						try {
+							const url = await uploadImage(file);
 
-						if (typeof result !== "string") {
-							alert(result.message);
-							return;
+							editor.chain().focus().setImage({ src: url }).run();
+						} catch (error) {
+							if (error instanceof Error) {
+								alert(error.message);
+							} else {
+								alert("이미지 업로드 실패");
+							}
 						}
-
-						editor.chain().focus().setImage({ src: result }).run();
 					};
-
 					input.click();
 				}}
 				className={btnClass()}>

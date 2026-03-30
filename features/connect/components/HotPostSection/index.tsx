@@ -8,11 +8,11 @@ import { fetchPostsClient } from "@/features/connect/apis/fetchPostsClient";
 
 export default function HotPostSection() {
 	const { data, isLoading } = useQuery({
-		queryKey: ["hotPosts"],
+		queryKey: ["hotPosts", { type: "best", size: 4 }],
 		queryFn: () =>
 			fetchPostsClient({
 				type: "best",
-				limit: 4,
+				size: 4,
 			}),
 		staleTime: 1000 * 60 * 5, // 5분 캐싱
 		retry: 1, // 과한 재요청 방지
