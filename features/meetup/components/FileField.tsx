@@ -33,11 +33,7 @@ export default function FileField({
 
 		try {
 			const res = await uploadImageFn(file);
-			if (typeof res === "string") {
-				onChange(res, e);
-			} else {
-				handleShowToast({ message: res.message, status: "error" });
-			}
+			onChange(res, e);
 		} catch (error) {
 			let message: string;
 			if (error instanceof Error) {

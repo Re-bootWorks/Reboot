@@ -50,13 +50,13 @@ export function transformSortOrderQuery(value: string | null | undefined): SortO
 	} else return undefined;
 }
 
-/** 모임 날짜 시작 YYYY-MM-DD -> ISO 형식(KST 시간대) 인코딩된 문자열로 요청 파라미터 변환 */
+/** 모임 날짜 시작 YYYY-MM-DD -> ISO 형식(KST 시간대) 요청 파라미터 변환 */
 export function transformDateStartQuery(value: string | null | undefined): string | undefined {
 	const isoValue = parseDateStringToISO(value);
 	return isoValue ?? undefined;
 }
 
-/** 모임 날짜 종료 YYYY-MM-DD -> ISO 형식(KST 시간대) 인코딩된 문자열로 요청 파라미터 변환 */
+/** 모임 날짜 종료 YYYY-MM-DD -> ISO 형식(KST 시간대) 요청 파라미터 변환 */
 export function transformDateEndQuery(value: string | null | undefined): string | undefined {
 	const isoValue = parseDateStringToISO(value, true);
 	return isoValue ?? undefined;

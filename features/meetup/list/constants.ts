@@ -21,6 +21,8 @@ export const QUERY_KEYS = {
 	SORT_ORDER: "order",
 	/** 지역 */
 	REGION: "region",
+	/** 모임 날짜: TODO: 삭제 예정 */
+	DATE: "date",
 };
 
 /** 정렬 기준 항목 */
