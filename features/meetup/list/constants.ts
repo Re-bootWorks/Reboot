@@ -32,8 +32,8 @@ export const SORT_BY_OPTIONS = [
 
 /** 정렬 순서 항목 */
 export const SORT_ORDER_OPTIONS = [
-	{ value: "asc", label: "오름차순" },
 	{ value: "desc", label: "내림차순" },
+	{ value: "asc", label: "오름차순" },
 ];
 
 /** 기본 모임 타입 */

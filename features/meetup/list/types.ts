@@ -4,7 +4,7 @@ export interface Host {
 	image: string;
 }
 
-export interface Meeting {
+export interface MeetupItem {
 	/** 모임 ID */
 	id: number;
 	/** 팀 ID */
@@ -55,8 +55,8 @@ export interface Meeting {
 	isCompleted: boolean;
 }
 
-export interface MeetingListResponse {
-	data: Meeting[];
+export interface MeetupListResponse {
+	data: MeetupItem[];
 	nextCursor: string;
 	hasMore: boolean;
 }

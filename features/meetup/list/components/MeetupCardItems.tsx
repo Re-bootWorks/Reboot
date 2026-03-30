@@ -3,7 +3,7 @@
 import { useGetMeetups } from "@/features/meetup/queries";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { QUERY_KEYS } from "../constants";
-import { Meeting } from "../types";
+import { MeetupItem } from "../types";
 import {
 	transformQueryValue,
 	transformTypeValue,
@@ -72,7 +72,7 @@ function LastItem({ ref, children }: LastItemProps) {
 	);
 }
 
-function MeetupCardLoadedItems({ data }: { data: Meeting[] | undefined }) {
+function MeetupCardLoadedItems({ data }: { data: MeetupItem[] | undefined }) {
 	if (data?.length === 0) {
 		return <Empty />;
 	}

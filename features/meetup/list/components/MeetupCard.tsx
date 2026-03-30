@@ -2,23 +2,25 @@
 
 import GroupCard from "@/components/ui/GroupCard";
 import { formatDateTime, isDeadlinePassed, uiFormatDeadline } from "@/utils/date";
-import { Meeting } from "../types";
+import { MeetupItem } from "../types";
 import { checkIsConfirmed, checkIsRegClosed } from "../utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/providers/toast-provider";
 import {
-	useDeleteMeetingsFavorite,
-	useDeleteMeetingsJoin,
-	usePostMeetingsFavorite,
-	usePostMeetingsJoin,
+	useDeleteMeetupFavorite,
+	useDeleteMeetupJoin,
+	usePostMeetupFavorite,
+	usePostMeetupJoin,
 } from "../../queries";
 
-export default function MeetupCard({ data }: { data: Meeting }) {
+export default function MeetupCard({ data }: { data: MeetupItem }) {
 	const { handleShowToast } = useToast();
 	const queryClient = useQueryClient();
 
 	function invalidateMeetups() {
 		queryClient.invalidateQueries({ queryKey: ["meetup"] });
+		queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
+		queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
 	}
 	function onSuccess(message: string) {
 		handleShowToast({ message, status: "success" });
@@ -28,22 +30,21 @@ export default function MeetupCard({ data }: { data: Meeting }) {
 		handleShowToast({ message: error.message, status: "error" });
 	}
 
-	const { mutate: postFavoriteMutation, isPending: isFavoritePosting } = usePostMeetingsFavorite({
+	const postFavoriteMutation = usePostMeetupFavorite(data.id, {
 		onSuccess: () => onSuccess("모임이 찜 추가되었습니다."),
 		onError,
 	});
-	const { mutate: deleteFavoriteMutation, isPending: isFavoriteDeleting } =
-		useDeleteMeetingsFavorite({
-			onSuccess: () => onSuccess("모임이 찜 해제되었습니다."),
-			onError,
-		});
+	const deleteFavoriteMutation = useDeleteMeetupFavorite(data.id, {
+		onSuccess: () => onSuccess("모임이 찜 해제되었습니다."),
+		onError,
+	});
 
-	const { mutate: postJoinMutation, isPending: isJoinPosting } = usePostMeetingsJoin({
+	const postJoinMutation = usePostMeetupJoin(data.id, {
 		onSuccess: () => onSuccess("모임에 참여되었습니다."),
 		onError,
 	});
 
-	const { mutate: deleteJoinMutation, isPending: isJoinDeleting } = useDeleteMeetingsJoin({
+	const deleteJoinMutation = useDeleteMeetupJoin(data.id, {
 		onSuccess: () => onSuccess("모임 참여가 취소되었습니다."),
 		onError,
 	});
@@ -59,17 +60,17 @@ export default function MeetupCard({ data }: { data: Meeting }) {
 
 	function handleJoinClick() {
 		if (!data.isJoined) {
-			postJoinMutation(data.id);
+			postJoinMutation.mutate();
 		} else {
-			deleteJoinMutation(data.id);
+			deleteJoinMutation.mutate();
 		}
 	}
 
 	function handleFavoriteClick() {
 		if (!data.isFavorited) {
-			postFavoriteMutation(data.id);
+			postFavoriteMutation.mutate();
 		} else {
-			deleteFavoriteMutation(data.id);
+			deleteFavoriteMutation.mutate();
 		}
 	}
 
@@ -94,11 +95,11 @@ export default function MeetupCard({ data }: { data: Meeting }) {
 				/>
 				<GroupCard.JoinButton
 					onClick={handleJoinClick}
-					isPending={isJoinPosting || isJoinDeleting}
+					isPending={postJoinMutation.isPending || deleteJoinMutation.isPending}
 				/>
 				<GroupCard.LikeButton
 					onClick={handleFavoriteClick}
-					isPending={isFavoritePosting || isFavoriteDeleting}
+					isPending={postFavoriteMutation.isPending || deleteFavoriteMutation.isPending}
 				/>
 			</GroupCard.Content>
 		</GroupCard>

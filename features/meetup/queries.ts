@@ -10,7 +10,7 @@ import {
 } from "@/apis/meetings";
 
 type MutationCallbacks<TData> = Omit<
-	UseMutationOptions<TData, Error, number>,
+	UseMutationOptions<TData, Error, void>,
 	"mutationKey" | "mutationFn"
 >;
 
@@ -43,37 +43,37 @@ export function usePostMeetup(data: MeetupCreateRequest) {
 }
 
 /** 모임 찜 추가 */
-export function usePostMeetingsFavorite(options?: MutationCallbacks<MeetupItemResponse>) {
+export function usePostMeetupFavorite(id: number, options?: MutationCallbacks<MeetupItemResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.postMeetingsFavorite,
-		mutationFn: (meetingId: number) => postMeetingsFavorite({ meetingId }),
+		mutationFn: () => postMeetingsFavorite({ meetingId: id }),
 		...options,
 	});
 }
 
 /** 모임 찜 해제 */
-export function useDeleteMeetingsFavorite(options?: MutationCallbacks<SuccessResponse>) {
+export function useDeleteMeetupFavorite(id: number, options?: MutationCallbacks<SuccessResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.deleteMeetingsFavorite,
-		mutationFn: (meetingId: number) => deleteMeetingsFavorite({ meetingId }),
+		mutationFn: () => deleteMeetingsFavorite({ meetingId: id }),
 		...options,
 	});
 }
 
 /** 모임 참여 */
-export function usePostMeetingsJoin(options?: MutationCallbacks<SuccessResponse>) {
+export function usePostMeetupJoin(id: number, options?: MutationCallbacks<SuccessResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.postMeetingsJoin,
-		mutationFn: (meetingId: number) => postMeetingsJoin({ meetingId }),
+		mutationFn: () => postMeetingsJoin({ meetingId: id }),
 		...options,
 	});
 }
 
 /** 모임 참여 취소 */
-export function useDeleteMeetingsJoin(options?: MutationCallbacks<SuccessResponse>) {
+export function useDeleteMeetupJoin(id: number, options?: MutationCallbacks<SuccessResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.deleteMeetingsJoin,
-		mutationFn: (meetingId: number) => deleteMeetingsJoin({ meetingId }),
+		mutationFn: () => deleteMeetingsJoin({ meetingId: id }),
 		...options,
 	});
 }
