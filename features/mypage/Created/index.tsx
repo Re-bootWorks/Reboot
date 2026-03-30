@@ -3,7 +3,7 @@ import { Suspense, useRef, useState } from "react";
 import DetailCard from "../components/DetailCard";
 import { DetailCardBadge } from "@/features/mypage/types";
 import { CreatedItem } from "@/features/mypage/types";
-import AlertModal from "@/components/ui/Modals/AlertModal";
+import Alert from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/hooks/useMeetingFavorite";
 import Empty from "@/components/layout/Empty";
 import { useMyCreatedInfinite } from "../queries";
@@ -91,13 +91,13 @@ function Created() {
 			<div ref={observerRef} className="h-4" />
 			{isFetchingNextPage && <Loading />}
 
-			<AlertModal
+			<Alert
 				isOpen={!!alertTarget}
 				isPending={isDeletePending}
 				onClose={closeAlert}
 				handleConfirmButton={handleAlertConfirm}>
 				모임을 삭제하시겠습니까?
-			</AlertModal>
+			</Alert>
 		</>
 	);
 }

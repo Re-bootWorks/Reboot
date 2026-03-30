@@ -1,13 +1,13 @@
 "use client";
 import { Suspense, useRef, useState } from "react";
 import DetailCard from "../components/DetailCard";
-import ReviewFormModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
+import ReviewModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
 import { WritableReviewItem } from "@/features/mypage/types";
 import useMeetingFavorite from "@/hooks/useMeetingFavorite";
 import TabButton from "@/components/ui/Buttons/TabButton";
 import ReviewCard from "../components/ReviewCard";
 import { ReviewCardItem } from "@/features/mypage/types";
-import AlertModal from "@/components/ui/Modals/AlertModal";
+import Alert from "@/components/ui/Modals/AlertModal";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
 import ReviewCardSkeleton from "../components/ReviewCard/ReviewCardSkeleton";
 import { useMyMeetupInfinite, useMyReviewInfinite } from "../queries";
@@ -88,7 +88,7 @@ function Writable() {
 			<div ref={observerRef} className="h-4" />
 			{isFetchingNextPage && <Loading />}
 
-			<ReviewFormModal
+			<ReviewModal
 				mode="create"
 				isOpen={!!reviewTarget}
 				onClose={closeReviewModal}
@@ -194,15 +194,15 @@ function Written() {
 			<div ref={observerRef} className="h-4" />
 			{isFetchingNextPage && <Loading />}
 
-			<AlertModal
+			<Alert
 				isOpen={!!alertTarget}
 				isPending={isDeleteReviewsPending}
 				onClose={closeAlert}
 				handleConfirmButton={handleReviewDelete}>
 				리뷰를 삭제하시겠습니까?
-			</AlertModal>
+			</Alert>
 
-			<ReviewFormModal
+			<ReviewModal
 				mode="edit"
 				initialValue={reviewInitialValue}
 				isOpen={!!reviewTarget}

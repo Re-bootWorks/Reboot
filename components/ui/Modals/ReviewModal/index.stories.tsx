@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import ReviewFormModal from ".";
+import ReviewModal from ".";
 import { useState } from "react";
 import Button from "@/components/ui/Buttons/Button";
 
-const meta: Meta<typeof ReviewFormModal> = {
-	title: "UI/Modal/ReviewFormModal",
-	component: ReviewFormModal,
+const meta: Meta<typeof ReviewModal> = {
+	title: "UI/Modal/ReviewModal",
+	component: ReviewModal,
 	parameters: {
 		layout: "centered",
 	},
 };
 export default meta;
 
-type Story = StoryObj<typeof ReviewFormModal>;
+type Story = StoryObj<typeof ReviewModal>;
 
 export const Default: Story = {
 	render: () => {
@@ -22,7 +22,7 @@ export const Default: Story = {
 				<Button onClick={() => setIsOpen(true)} sizes="large">
 					리뷰 모달 열기
 				</Button>
-				<ReviewFormModal
+				<ReviewModal
 					mode="create"
 					isOpen={isOpen}
 					onClose={() => setIsOpen(false)}
