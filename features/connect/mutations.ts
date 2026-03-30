@@ -2,7 +2,7 @@ import type { ConnectPost } from "@/features/connect/post/types";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { toggleConnectLike, deleteConnectLike } from "./apis/fetchPostsClient";
 import { createPost } from "@/features/connect/apis/createPost";
-import { useRouter } from "next/navigation";
+
 export function useToggleConnectLike(postId: string) {
 	const queryClient = useQueryClient();
 
