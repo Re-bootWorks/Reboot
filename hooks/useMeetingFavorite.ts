@@ -2,7 +2,7 @@
 
 import { CreatedList, CursorPageResponse, MeetupList } from "@/features/mypage/types";
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteMeetingFavorite, postMeetingFavorite } from "../apis";
+import { deleteMeetingFavorite, postMeetingFavorite } from "../features/mypage/apis";
 
 /**
  * 찜 추가 시 낙관적 업데이트 및 롤백 하는 훅
