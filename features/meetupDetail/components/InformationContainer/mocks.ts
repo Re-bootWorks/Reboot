@@ -23,6 +23,7 @@ export const mockInformationData: Meeting[] = [
 		createdAt: "2026-03-21T14:00:00.000Z",
 		updatedAt: "2026-03-21T14:00:00.000Z",
 		host: { id: 1, name: "홍길동", image: "/assets/img/img_profile.svg" },
+		isJoined: false,
 	},
 	{
 		id: 2,
@@ -47,6 +48,7 @@ export const mockInformationData: Meeting[] = [
 		createdAt: "2026-03-25T10:00:00.000Z",
 		updatedAt: "2026-03-25T10:00:00.000Z",
 		host: { id: 2, name: "김영희", image: "/assets/img/img_profile.svg" },
+		isJoined: false,
 	},
 	{
 		id: 3,
@@ -71,6 +73,7 @@ export const mockInformationData: Meeting[] = [
 		createdAt: "2026-03-28T09:00:00.000Z",
 		updatedAt: "2026-03-28T09:00:00.000Z",
 		host: { id: 3, name: "박민준", image: "/assets/img/img_profile.svg" },
+		isJoined: false,
 	},
 	{
 		id: 4,
@@ -95,6 +98,7 @@ export const mockInformationData: Meeting[] = [
 		createdAt: "2026-03-30T11:00:00.000Z",
 		updatedAt: "2026-03-30T11:00:00.000Z",
 		host: { id: 4, name: "이수진", image: "/assets/img/img_profile.svg" },
+		isJoined: false,
 	},
 	{
 		id: 5,
@@ -119,5 +123,6 @@ export const mockInformationData: Meeting[] = [
 		createdAt: "2026-04-01T08:00:00.000Z",
 		updatedAt: "2026-04-01T08:00:00.000Z",
 		host: { id: 5, name: "최동현", image: "/assets/img/img_profile.svg" },
+		isJoined: false,
 	},
 ];
