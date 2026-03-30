@@ -1,7 +1,7 @@
 "use client";
 
 import GroupCard from "@/components/ui/GroupCard";
-import { formatDateTime } from "@/utils/date";
+import { formatDateTime, isDeadlinePassed, uiFormatDeadline } from "@/utils/date";
 import { Meeting } from "../types";
 import { checkIsConfirmed, checkIsRegClosed } from "../utils";
 import { useQueryClient } from "@tanstack/react-query";
@@ -79,7 +79,15 @@ export default function MeetupCard({ data }: { data: Meeting }) {
 			<GroupCard.Content>
 				<GroupCard.Title name={data.name} />
 				<GroupCard.SubTitle type={data.type} region={data.region} />
-				<GroupCard.BadgeGroup date={date} time={time} />
+				<GroupCard.BadgeGroup
+					date={date}
+					time={time}
+					deadlineText={
+						!isDeadlinePassed(data.registrationEnd)
+							? uiFormatDeadline(data.registrationEnd)
+							: undefined
+					}
+				/>
 				<GroupCard.ParticipantBar
 					capacity={data.capacity}
 					participantCount={data.participantCount}
