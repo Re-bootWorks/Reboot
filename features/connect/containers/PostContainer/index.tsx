@@ -1,6 +1,5 @@
 "use client";
 
-import Container from "@/components/layout/Container";
 import SearchInput from "@/components/ui/SearchInput";
 import FilterButton from "@/components/ui/Buttons/FilterButton";
 import PostCard from "@/features/connect/components/PostCard";
@@ -16,23 +15,21 @@ export default function PostContainer({ page }: { page: number }) {
 	const [sortBy, setSortBy] = useState<"createdAt" | "likeCount">("likeCount");
 
 	const { data } = useSuspenseQuery({
-		queryKey: ["posts", page, sortBy],
+		queryKey: ["posts", page, sortBy, 5],
 		queryFn: () =>
 			fetchPostsClient({
 				type: "all",
 				sortBy,
-				offset: (page - 1) * 10,
-				limit: 10,
+				offset: (page - 1) * 5,
+				limit: 5,
 			}),
 		staleTime: 1000 * 60,
 		//placeholderData: keepPreviousData, // 페이지/필터 바뀌어도 깜빡임 없음 ,나중에 infiniteQuery에서 다시 사용
 	});
 
-	const posts = data?.data ?? [];
-
+	const posts = (data?.data ?? []).slice(0, 5);
 	const router = useRouter();
 	const containerRef = useRef<HTMLDivElement | null>(null);
-
 	const mappedPosts = posts.map(mapPostToCard) as ReturnType<typeof mapPostToCard>[];
 
 	if (!mappedPosts.length) {
@@ -40,7 +37,7 @@ export default function PostContainer({ page }: { page: number }) {
 	}
 
 	return (
-		<Container>
+		<div>
 			{/* 검색 + 정렬 */}
 			<div className="-mx-4 flex items-center justify-between pb-4">
 				<SearchInput placeholder="궁금한 내용을 검색해보세요." />
@@ -74,6 +71,6 @@ export default function PostContainer({ page }: { page: number }) {
 					}}
 				/>
 			</div>
-		</Container>
+		</div>
 	);
 }

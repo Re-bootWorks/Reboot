@@ -19,7 +19,7 @@ export const fetchPostsClient = async (params: GetPostsParams): Promise<GetPosts
 		type: params.type ?? "all",
 		sortBy: params.sortBy ?? "createdAt",
 		offset: String(params.offset ?? 0),
-		limit: String(params.limit ?? 10),
+		limit: String(params.limit ?? 5),
 	});
 
 	const res = await clientFetch(`/posts?${query}`);
@@ -32,7 +32,7 @@ export const fetchPostsClient = async (params: GetPostsParams): Promise<GetPosts
 };
 
 // 좋아요 추가
-export const toggleConnectLike = async (postId: string) => {
+export const toggleConnectLike = async (postId: number) => {
 	const res = await clientFetch(`/posts/${postId}/like`, {
 		method: "POST",
 	});
@@ -43,7 +43,7 @@ export const toggleConnectLike = async (postId: string) => {
 };
 
 // 좋아요 취소
-export const deleteConnectLike = async (postId: string) => {
+export const deleteConnectLike = async (postId: number) => {
 	const res = await clientFetch(`/posts/${postId}/like`, {
 		method: "DELETE",
 	});

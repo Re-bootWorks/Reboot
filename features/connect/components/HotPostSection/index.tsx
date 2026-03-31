@@ -25,19 +25,21 @@ export default function HotPostSection() {
 	}
 
 	if (!posts.length) {
-		return null; // 나중에 스켈레톤 ui 추가
+		return null;
 	}
 	return (
-		<section>
-			<div className="flex gap-6">
-				{posts.map((post) => (
+		<section className="mt-[81px]">
+			{/* 제목 */}
+			<h2 className="text-2xl leading-8 font-semibold tracking-[-0.03rem] whitespace-nowrap">
+				이번주 HOT 게시물!
+			</h2>
+
+			{/* 카드 영역 */}
+			<div className="mt-6 flex gap-6">
+				{posts.slice(0, 4).map((post) => (
 					<CompactCard
 						key={post.id}
-						id={post.id}
-						title={post.title}
-						image={post.image}
-						createdAt={post.createdAt}
-						likeCount={post.likeCount}
+						{...post}
 						commentCount={post._count.comments}
 						onClick={() => router.push(`/connect/${post.id}`)}
 					/>

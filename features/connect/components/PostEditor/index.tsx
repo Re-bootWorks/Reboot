@@ -6,6 +6,7 @@ import Toolbar from "@/features/connect/components/PostEditor/Toolbar";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
+import { useEffect } from "react";
 
 interface Props {
 	content: string;
@@ -34,6 +35,11 @@ export default function PostEditor({ content, onChange }: Props) {
 			onChange(editor.getHTML());
 		},
 	});
+	useEffect(() => {
+		if (editor && content) {
+			editor.commands.setContent(content);
+		}
+	}, [editor, content]);
 
 	if (!editor) return null;
 

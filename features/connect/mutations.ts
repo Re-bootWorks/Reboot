@@ -2,8 +2,11 @@ import type { ConnectPost } from "@/features/connect/post/types";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { toggleConnectLike, deleteConnectLike } from "./apis/fetchPostsClient";
 import { createPost } from "@/features/connect/apis/createPost";
+import { deletePost } from "@/features/connect/apis/deletePost";
+import { useRouter } from "next/navigation";
+import { updatePost } from "@/features/connect/apis/updatePost";
 
-export function useToggleConnectLike(postId: string) {
+export function useToggleConnectLike(postId: number) {
 	const queryClient = useQueryClient();
 
 	return useMutation({
@@ -53,6 +56,33 @@ export function useCreatePost() {
 
 		onSuccess: () => {
 			// 목록 갱신
+			queryClient.invalidateQueries({ queryKey: ["posts"] });
+		},
+	});
+}
+
+export function useDeletePost(postId: number) {
+	const queryClient = useQueryClient();
+	const router = useRouter();
+
+	return useMutation({
+		mutationFn: () => deletePost(postId),
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["posts"] });
+			router.replace("/connect");
+		},
+	});
+}
+
+export function useUpdatePost(postId: number) {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: (data: { title: string; content: string }) => updatePost(postId, data),
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["postDetail", postId] });
 			queryClient.invalidateQueries({ queryKey: ["posts"] });
 		},
 	});

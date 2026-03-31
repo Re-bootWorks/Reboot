@@ -1,7 +1,7 @@
 import { clientFetch } from "@/libs/clientFetch";
 
 // 클라용
-export async function getPostDetailClient(id: string) {
+export async function getPostDetailClient(id: number) {
 	const res = await clientFetch(`/posts/${id}`);
 
 	if (!res.ok) {

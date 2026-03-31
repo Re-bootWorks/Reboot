@@ -6,8 +6,11 @@ import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 import RelativeTime from "@/features/connect/ui/RelativeTime";
 import dayjs from "@/libs/dayjs";
+import { useRouter } from "next/navigation";
+import { useDeletePost } from "@/features/connect/mutations";
 
 interface Props {
+	id: number;
 	title: string;
 	content: string;
 	imageUrl: string;
@@ -19,6 +22,7 @@ interface Props {
 }
 
 export default function PostDeatilCard({
+	id,
 	title,
 	content,
 	imageUrl,
@@ -28,6 +32,8 @@ export default function PostDeatilCard({
 	commentCount,
 	date,
 }: Props) {
+	const router = useRouter();
+	const { mutate: deletePost } = useDeletePost(id);
 	return (
 		<div className="w-full rounded-[48px] bg-white px-6 pt-6 pb-5 md:px-10 md:pt-10 md:pb-9 lg:px-16 lg:pt-16 lg:pb-14">
 			{/* 제목 */}
@@ -39,11 +45,15 @@ export default function PostDeatilCard({
 					items={[
 						{
 							label: "수정하기",
-							onClick: () => console.log("edit"),
+							onClick: () => router.push(`/connect/edit/${id}`),
 						},
 						{
 							label: "삭제하기",
-							onClick: () => console.log("delete"),
+							onClick: () => {
+								if (confirm("정말 삭제하시겠습니까?")) {
+									deletePost();
+								}
+							},
 							danger: true,
 						},
 					]}
