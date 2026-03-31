@@ -32,7 +32,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 	const { handleShowToast } = useToast();
 
 	const { data, isLoading } = useQuery<ConnectPost>({
-		queryKey: ["postComments", postId],
+		queryKey: ["postDetail", postId],
 		queryFn: () => getPostDetailClient(postId),
 	});
 
@@ -64,12 +64,12 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 		mutationFn: createComment,
 
 		onMutate: async (newComment: { postId: number; content: string }) => {
-			await queryClient.cancelQueries({ queryKey: ["postComments", postId] });
+			await queryClient.cancelQueries({ queryKey: ["postDetail", postId] });
 
-			const previousData = queryClient.getQueryData(["postComments", postId]);
+			const previousData = queryClient.getQueryData(["postDetail", postId]);
 
 			queryClient.setQueryData(
-				["postComments", postId],
+				["postDetail", postId],
 				(old: { comments?: Comment[] } | undefined) => ({
 					//old:기존 캐시 데이터
 					...old, // 기존 데이터 유지 + comments만 덮어쓰기

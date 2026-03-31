@@ -103,10 +103,10 @@ export function useUpdateComment({
 		mutationFn: updateComment,
 
 		onMutate: async ({ commentId, content }) => {
-			await queryClient.cancelQueries({ queryKey: ["postComments", postId] });
-			const previousData = queryClient.getQueryData(["postComments", postId]);
+			await queryClient.cancelQueries({ queryKey: ["postDetail", postId] });
+			const previousData = queryClient.getQueryData(["postDetail", postId]);
 
-			queryClient.setQueryData(["postComments", postId], (old: ConnectPost | undefined) => {
+			queryClient.setQueryData(["postDetail", postId], (old: ConnectPost | undefined) => {
 				if (!old) return old;
 				return {
 					...old,
@@ -121,13 +121,13 @@ export function useUpdateComment({
 
 		onError: (_err, _vars, context) => {
 			if (context?.previousData) {
-				queryClient.setQueryData(["postComments", postId], context.previousData);
+				queryClient.setQueryData(["postDetail", postId], context.previousData);
 			}
 			handleShowToast({ message: "댓글 수정에 실패했습니다.", status: "error" });
 		},
 
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["postComments", postId] });
+			queryClient.invalidateQueries({ queryKey: ["postDetail", postId] });
 		},
 	});
 }
@@ -140,10 +140,10 @@ export function useDeleteComment(postId: number) {
 		mutationFn: (commentId: number) => deleteComment({ postId, commentId }),
 
 		onMutate: async (commentId) => {
-			await queryClient.cancelQueries({ queryKey: ["postComments", postId] });
-			const previousData = queryClient.getQueryData(["postComments", postId]);
+			await queryClient.cancelQueries({ queryKey: ["postDetail", postId] });
+			const previousData = queryClient.getQueryData(["postDetail", postId]);
 
-			queryClient.setQueryData(["postComments", postId], (old: ConnectPost | undefined) => {
+			queryClient.setQueryData(["postDetail", postId], (old: ConnectPost | undefined) => {
 				if (!old) return old;
 				return {
 					...old,
@@ -157,13 +157,13 @@ export function useDeleteComment(postId: number) {
 
 		onError: (_err, _vars, context) => {
 			if (context?.previousData) {
-				queryClient.setQueryData(["postComments", postId], context.previousData);
+				queryClient.setQueryData(["postDetail", postId], context.previousData);
 			}
 			handleShowToast({ message: "댓글 삭제에 실패했습니다.", status: "error" });
 		},
 
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["postComments", postId] });
+			queryClient.invalidateQueries({ queryKey: ["postDetail", postId] });
 		},
 	});
 }

@@ -36,7 +36,7 @@ export default function PostEditor({ content, onChange }: Props) {
 		},
 	});
 	useEffect(() => {
-		if (editor && content) {
+		if (editor && content && !editor.isFocused) {
 			editor.commands.setContent(content);
 		}
 	}, [editor, content]);

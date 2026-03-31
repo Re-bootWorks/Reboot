@@ -7,17 +7,12 @@ import { useUpdatePost } from "@/features/connect/mutations";
 import PostEditor from "@/features/connect/components/PostEditor";
 import Container from "@/components/layout/Container";
 import Button from "@/components/ui/Buttons/Button";
-import Toast from "@/components/ui/Toast";
 import { useRouter } from "next/navigation";
-
-type ToastType = {
-	id: number;
-	message: string;
-	status?: "success" | "error";
-};
+import { useToast } from "@/providers/toast-provider";
 
 export default function EditPostContainer({ id }: { id: number }) {
 	const router = useRouter();
+	const { handleShowToast } = useToast();
 
 	const { data } = useQuery({
 		queryKey: ["postDetail", id],
@@ -28,7 +23,6 @@ export default function EditPostContainer({ id }: { id: number }) {
 
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("");
-	const [toasts, setToasts] = useState<ToastType[]>([]);
 
 	const getTextLength = (html: string) => {
 		const plainText = html.replace(/<[^>]*>/g, "");
@@ -36,16 +30,6 @@ export default function EditPostContainer({ id }: { id: number }) {
 			withSpace: plainText.length,
 			withoutSpace: plainText.replace(/\s/g, "").length,
 		};
-	};
-
-	const addToast = (message: string, status?: "success" | "error") => {
-		const id = Date.now();
-
-		setToasts((prev) => [...prev, { id, message, status }]);
-
-		setTimeout(() => {
-			setToasts((prev) => prev.filter((t) => t.id !== id));
-		}, 2000);
 	};
 
 	const { withSpace, withoutSpace } = getTextLength(content);
@@ -61,12 +45,12 @@ export default function EditPostContainer({ id }: { id: number }) {
 		const isEmptyContent = content.replace(/<[^>]*>/g, "").trim().length === 0;
 
 		if (!title.trim()) {
-			addToast("제목을 입력해주세요", "error");
+			handleShowToast({ message: "제목을 입력해주세요", status: "error" }); // ✅
 			return;
 		}
 
 		if (isEmptyContent) {
-			addToast("내용을 입력해주세요", "error");
+			handleShowToast({ message: "내용을 입력해주세요", status: "error" }); // ✅
 			return;
 		}
 
@@ -74,13 +58,13 @@ export default function EditPostContainer({ id }: { id: number }) {
 			{ title, content },
 			{
 				onSuccess: () => {
-					addToast("게시글이 수정되었습니다", "success");
+					handleShowToast({ message: "게시글이 수정되었습니다", status: "success" }); // ✅
 					setTimeout(() => {
 						router.replace(`/connect/${id}`);
 					}, 800);
 				},
 				onError: () => {
-					addToast("게시글 수정 실패", "error");
+					handleShowToast({ message: "게시글 수정 실패", status: "error" }); // ✅
 				},
 			},
 		);
@@ -130,8 +114,6 @@ export default function EditPostContainer({ id }: { id: number }) {
 					</div>
 				</div>
 			</div>
-
-			<Toast toasts={toasts} />
 		</Container>
 	);
 }

@@ -17,13 +17,13 @@ export async function PATCH(
 		const data = await res.json();
 
 		return NextResponse.json(data, { status: res.status });
-	} catch (_error) {
+	} catch {
 		return NextResponse.json({ message: "댓글 수정 실패" }, { status: 500 });
 	}
 }
 
 export async function DELETE(
-	req: NextRequest,
+	_: NextRequest,
 	{ params }: { params: Promise<{ id: string; commentId: string }> },
 ) {
 	try {
@@ -35,7 +35,7 @@ export async function DELETE(
 
 		const data = await res.json();
 		return NextResponse.json(data, { status: res.status });
-	} catch (_error) {
+	} catch {
 		return NextResponse.json({ message: "댓글 삭제 실패" }, { status: 500 });
 	}
 }
