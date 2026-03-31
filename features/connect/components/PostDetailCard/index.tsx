@@ -93,7 +93,9 @@ export default function PostDetailCard({
 
 				<div className="flex items-center gap-3">
 					{/* 좋아요 */}
-					<button onClick={() => toggleLike()} className="flex items-center gap-1 text-gray-500">
+					<button
+						onClick={() => toggleLike(isLiked)}
+						className="flex items-center gap-1 text-gray-500">
 						<IcThumbOutline color={isLiked ? "purple-500" : "gray-400"} />
 						<span className={isLiked ? "text-purple-500" : ""}>{likeCount}</span>
 					</button>

@@ -4,6 +4,7 @@ export type Post = {
 	title: string;
 	content: string;
 	image: string;
+	imageUrl?: string;
 	likeCount: number;
 	createdAt: string;
 	author: {
@@ -11,6 +12,17 @@ export type Post = {
 	};
 	_count: {
 		comments: number;
+	};
+};
+
+export type PostComment = {
+	id: number;
+	content: string;
+	createdAt: string;
+	author: {
+		id: number;
+		name: string;
+		image?: string;
 	};
 };
 
@@ -27,16 +39,7 @@ export type ConnectPost = Post & {
 		image?: string;
 		email?: string;
 	};
-	comments: {
-		id: number;
-		content: string;
-		createdAt: string;
-		author: {
-			id: number;
-			name: string;
-			image?: string;
-		};
-	}[];
+	comments: PostComment[];
 };
 // UI 타입 (PostCard용)
 export type PostCardItem = {

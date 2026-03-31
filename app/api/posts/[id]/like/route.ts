@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverFetch } from "@/libs/serverFetch";
 
-export async function POST(_: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 	try {
-		const { id } = params;
-		const TEAM_ID = process.env.NEXT_PUBLIC_TEAM_ID;
+		const { id } = await params;
 
-		const res = await serverFetch(`/${TEAM_ID}/posts/${id}/like`, {
+		const res = await serverFetch(`/posts/${id}/like`, {
 			method: "POST",
 		});
 
@@ -20,12 +19,11 @@ export async function POST(_: NextRequest, { params }: { params: { id: string } 
 	}
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 	try {
-		const { id } = params;
-		const TEAM_ID = process.env.NEXT_PUBLIC_TEAM_ID;
+		const { id } = await params;
 
-		const res = await serverFetch(`/${TEAM_ID}/posts/${id}/like`, {
+		const res = await serverFetch(`/posts/${id}/like`, {
 			method: "DELETE",
 		});
 

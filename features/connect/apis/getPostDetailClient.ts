@@ -1,7 +1,7 @@
 import { clientFetch } from "@/libs/clientFetch";
+import type { ConnectPost } from "@/features/connect/post/types";
 
-// 클라용
-export async function getPostDetailClient(id: number) {
+export async function getPostDetailClient(id: number): Promise<ConnectPost> {
 	const res = await clientFetch(`/posts/${id}`);
 
 	if (!res.ok) {

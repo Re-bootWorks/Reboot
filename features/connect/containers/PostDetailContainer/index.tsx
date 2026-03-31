@@ -12,7 +12,6 @@ export default function PostDetailContainer({ id }: { id: number }) {
 		queryKey: ["postDetail", id],
 		queryFn: () => getPostDetailClient(id),
 	});
-
 	const { user } = useUserStore();
 	const isAuthor = !!user && user.id === data?.authorId;
 
@@ -25,13 +24,14 @@ export default function PostDetailContainer({ id }: { id: number }) {
 					id={data.id}
 					title={data.title}
 					content={data.content}
-					imageUrl={data.imageUrl}
+					imageUrl={data.image}
 					author={data.author.name}
 					createdAt={data.createdAt}
 					likeCount={data.likeCount}
 					commentCount={data._count?.comments ?? 0}
 					date={new Date(data.createdAt).getTime()}
 					isAuthor={isAuthor}
+					isLiked={data.isLiked ?? false}
 				/>
 
 				<CommentSection postId={data.id} />

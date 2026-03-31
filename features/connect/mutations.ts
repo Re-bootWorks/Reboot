@@ -5,22 +5,23 @@ import { createPost } from "@/features/connect/apis/createPost";
 import { deletePost } from "@/features/connect/apis/deletePost";
 import { useRouter } from "next/navigation";
 import { updatePost } from "@/features/connect/apis/updatePost";
+import { updateComment } from "@/features/connect/apis/updateComment";
+import { useToast } from "@/providers/toast-provider";
+import { deleteComment } from "@/features/connect/apis/deleteComment";
 
 export function useToggleConnectLike(postId: number) {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async () => {
-			const current = queryClient.getQueryData<ConnectPost>(["postDetail", postId]);
-			// isLiked 상태에 따라 POST/DELETE 분기
-			if (current?.isLiked) {
+		mutationFn: async (isLiked: boolean) => {
+			if (isLiked) {
 				return deleteConnectLike(postId);
 			} else {
 				return toggleConnectLike(postId);
 			}
 		},
 
-		onMutate: async () => {
+		onMutate: async (isLiked: boolean) => {
 			await queryClient.cancelQueries({ queryKey: ["postDetail", postId] });
 			const previous = queryClient.getQueryData<ConnectPost>(["postDetail", postId]);
 
@@ -84,6 +85,86 @@ export function useUpdatePost(postId: number) {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["postDetail", postId] });
 			queryClient.invalidateQueries({ queryKey: ["posts"] });
+		},
+	});
+}
+
+export function useUpdateComment({
+	postId,
+	onSuccess,
+}: {
+	postId: number;
+	onSuccess?: () => void;
+}) {
+	const queryClient = useQueryClient();
+	const { handleShowToast } = useToast();
+
+	return useMutation({
+		mutationFn: updateComment,
+
+		onMutate: async ({ commentId, content }) => {
+			await queryClient.cancelQueries({ queryKey: ["postComments", postId] });
+			const previousData = queryClient.getQueryData(["postComments", postId]);
+
+			queryClient.setQueryData(["postComments", postId], (old: ConnectPost | undefined) => {
+				if (!old) return old;
+				return {
+					...old,
+					comments: old.comments.map((c) => (c.id === commentId ? { ...c, content } : c)),
+				};
+			});
+
+			onSuccess?.();
+
+			return { previousData };
+		},
+
+		onError: (_err, _vars, context) => {
+			if (context?.previousData) {
+				queryClient.setQueryData(["postComments", postId], context.previousData);
+			}
+			handleShowToast({ message: "댓글 수정에 실패했습니다.", status: "error" });
+		},
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["postComments", postId] });
+			handleShowToast({ message: "댓글이 수정되었습니다.", status: "success" });
+		},
+	});
+}
+
+export function useDeleteComment(postId: number) {
+	const queryClient = useQueryClient();
+	const { handleShowToast } = useToast();
+
+	return useMutation({
+		mutationFn: (commentId: number) => deleteComment({ postId, commentId }),
+
+		onMutate: async (commentId) => {
+			await queryClient.cancelQueries({ queryKey: ["postComments", postId] });
+			const previousData = queryClient.getQueryData(["postComments", postId]);
+
+			queryClient.setQueryData(["postComments", postId], (old: ConnectPost | undefined) => {
+				if (!old) return old;
+				return {
+					...old,
+					comments: old.comments.filter((c) => c.id !== commentId),
+				};
+			});
+
+			return { previousData };
+		},
+
+		onError: (_err, _vars, context) => {
+			if (context?.previousData) {
+				queryClient.setQueryData(["postComments", postId], context.previousData);
+			}
+			handleShowToast({ message: "댓글 삭제에 실패했습니다.", status: "error" });
+		},
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["postComments", postId] });
+			handleShowToast({ message: "댓글이 삭제되었습니다.", status: "success" });
 		},
 	});
 }

@@ -8,11 +8,16 @@ export interface Author {
 // API
 export interface Comment {
 	id: number;
+	teamId: string;
+	postId: number;
+	authorId: number;
+
 	content: string;
 	createdAt: string;
+	updatedAt: string;
+
 	author: Author;
 }
-
 // UI 타입
 export interface CommentCardItem {
 	id: number;
@@ -23,6 +28,19 @@ export interface CommentCardItem {
 
 // 컴포넌트 Props
 export interface CommentCardProps extends CommentCardItem {
+	postId: number;
 	authorId: number;
 	currentUserId: number | null;
+}
+
+export interface GetCommentsParams {
+	postId: number;
+	cursor?: string;
+	size?: number;
+}
+
+export interface GetCommentsResponse {
+	data: Comment[];
+	nextCursor: string | null;
+	hasMore: boolean;
 }
