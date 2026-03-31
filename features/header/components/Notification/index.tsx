@@ -151,10 +151,12 @@ export default function Notification() {
 		threshold: 1.0,
 	});
 	// 알람 개별 읽음
-	const { mutateAsync: putNotificationsRead } = usePutNotificationsRead();
+	const { mutate: putNotificationsRead } = usePutNotificationsRead();
 
-	async function handleNotificationClick(item: NotificationCardItem, popoverClose: () => void) {
-		await putNotificationsRead({ notificationId: item.id });
+	function handleNotificationClick(item: NotificationCardItem, popoverClose: () => void) {
+		if (!item.isRead) {
+			putNotificationsRead({ notificationId: item.id });
+		}
 
 		popoverClose();
 
@@ -165,12 +167,14 @@ export default function Notification() {
 
 		router.push(`/meetup/${item.meetingId}`);
 	}
+
 	// 알람 전체 읽음
 	const { mutate: putNotificationsReadAll, isPending: isAllReadPending } =
 		usePutNotificationsReadAll();
 	function handleReadAllClick() {
 		putNotificationsReadAll();
 	}
+
 	// 알람 개별 삭제
 	const { mutateAsync: deleteNotifications } = useDeleteNotifications();
 	async function handleDeleteClick(notificationId: number) {
