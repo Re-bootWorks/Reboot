@@ -117,8 +117,8 @@ const POPOVER_STYLE = {
 	popoverButton: "cursor-pointer focus:outline-transparent",
 	popoverBackdrop: "bg-black-50 fixed inset-0 md:bg-transparent",
 	popoverPanel:
-		"fixed inset-0 ml-auto flex h-full w-11/12 max-w-xl flex-col rounded-l-3xl bg-white py-6 shadow-lg md:absolute md:top-[calc(100%+1rem)] md:-right-5 md:h-fit md:w-80 md:rounded-r-3xl",
-	title: "flex items-center justify-between px-6 pb-4 text-base font-semibold",
+		"fixed inset-0 ml-auto flex h-full w-11/12 max-w-xl flex-col gap-4 rounded-l-3xl bg-white py-6 shadow-lg md:absolute md:top-[calc(100%+1rem)] md:-right-5 md:h-fit md:w-80 md:rounded-r-3xl",
+	title: "flex items-center justify-between px-6 text-base font-semibold",
 	notificationList: "scrollbar overflow-y-auto md:max-h-90",
 	empty: "px-6 py-14 text-center text-sm text-gray-500",
 	textButton: "py-1 text-xs font-semibold",
@@ -139,12 +139,16 @@ export default function Notification() {
 	const items = notificationsData?.pages.flatMap((page) => page.data) ?? [];
 	const isEmpty = items.length === 0;
 	const unreadCount = items.filter((item) => !item.isRead).length;
+
 	// 무한스크롤 적용
+	const listRef = useRef<HTMLDivElement>(null);
 	const observerRef = useRef<HTMLDivElement>(null);
 	useIntersectionObserver({
 		targetRef: observerRef,
 		onIntersect: fetchNextPage,
 		isEnabled: !!hasNextPage && !isFetchingNextPage,
+		root: listRef.current,
+		threshold: 1.0,
 	});
 	// 알람 개별 읽음
 	const { mutateAsync: putNotificationsRead } = usePutNotificationsRead();
@@ -208,7 +212,7 @@ export default function Notification() {
 							<div className={POPOVER_STYLE.empty}>아직 알림이 없어요</div>
 						) : (
 							<>
-								<div className={POPOVER_STYLE.notificationList}>
+								<div ref={listRef} className={POPOVER_STYLE.notificationList}>
 									{items.map((item) => (
 										<NotificationCard
 											key={item.id}
@@ -223,9 +227,9 @@ export default function Notification() {
 											}}
 										/>
 									))}
+									<div ref={observerRef} className="h-4" />
 								</div>
 								<div>
-									<div ref={observerRef} className="h-4" />
 									{isFetchingNextPage && <Loading size="md" />}
 									<div className="flex justify-end gap-4 px-6">
 										{!isEmpty && (
