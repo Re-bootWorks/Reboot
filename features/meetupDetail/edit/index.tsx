@@ -1,27 +1,28 @@
 "use client";
 
-import { useState } from "react";
 import EditModal from "./components/EditModal";
 import { MeetupEditData } from "@/features/meetupDetail/edit/types";
+import { useEditMeetingMutation } from "@/features/meetupDetail/mutations";
 
 interface EditMeetupProps {
+	meetingId: number;
+	participantCount: number;
 	initialData: MeetupEditData;
 	isOpen: boolean;
 	onClose: () => void;
 }
 
-export default function EditMeetup({ initialData, isOpen, onClose }: EditMeetupProps) {
-	const [isPending, setIsPending] = useState(false);
+export default function EditMeetup({
+	meetingId,
+	participantCount,
+	initialData,
+	isOpen,
+	onClose,
+}: EditMeetupProps) {
+	const { mutateAsync, isPending } = useEditMeetingMutation(meetingId);
 
-	async function handleSubmit(_data: MeetupEditData) {
-		setIsPending(true);
-
-		try {
-			// TODO: 추후 실제 수정 API 연동 예정
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-		} finally {
-			setIsPending(false);
-		}
+	async function handleSubmit(data: MeetupEditData) {
+		await mutateAsync(data);
 	}
 
 	return (
@@ -30,6 +31,7 @@ export default function EditMeetup({ initialData, isOpen, onClose }: EditMeetupP
 			onClose={onClose}
 			onSubmit={handleSubmit}
 			isPending={isPending}
+			participantCount={participantCount}
 			initialData={initialData}
 		/>
 	);

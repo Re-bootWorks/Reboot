@@ -14,6 +14,30 @@ export type Post = {
 	};
 };
 
+// Connect 상세용 (Post 확장)
+export type ConnectPost = Post & {
+	teamId: string;
+	authorId: number;
+	viewCount: number;
+	isLiked: boolean;
+	updatedAt: string;
+	author: {
+		id: number;
+		name: string;
+		image?: string;
+		email?: string;
+	};
+	comments: {
+		id: number;
+		content: string;
+		createdAt: string;
+		author: {
+			id: number;
+			name: string;
+			image?: string;
+		};
+	}[];
+};
 // UI 타입 (PostCard용)
 export type PostCardItem = {
 	id: number;
@@ -23,7 +47,14 @@ export type PostCardItem = {
 	author: string;
 	date: number;
 	likeCount: number;
+	isLiked?: boolean;
 	commentCount: number;
+};
+
+// UI 컴포넌트 Props 타입
+export type PostCardProps = PostCardItem & {
+	onClick?: () => void;
+	onLikeClick?: (e: React.MouseEvent) => void;
 };
 
 // HOT 게시판용

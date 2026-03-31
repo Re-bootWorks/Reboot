@@ -11,6 +11,12 @@ import EditFormDataProvider, {
 	useEditFormData,
 } from "@/features/meetupDetail/edit/providers/EditFormDataProvider";
 import { useToast } from "@/providers/toast-provider";
+import {
+	EDIT_VALIDATIONS,
+	TAB_IDS,
+	TabId,
+	validateCapacityOverParticipants,
+} from "@/features/meetupDetail/edit/utils";
 
 interface EditModalProps {
 	isOpen: boolean;
@@ -18,6 +24,7 @@ interface EditModalProps {
 	onSubmit: (data: MeetupEditData) => Promise<void>;
 	isPending: boolean;
 	initialData: MeetupEditData;
+	participantCount: number;
 }
 
 interface EditFormProps {
@@ -25,14 +32,8 @@ interface EditFormProps {
 	onClose: () => void;
 	onSubmit: (data: MeetupEditData) => Promise<void>;
 	isPending: boolean;
+	participantCount: number;
 }
-
-const TAB_IDS = {
-	BASIC: "basic",
-	SCHEDULE: "schedule",
-} as const;
-
-type TabId = (typeof TAB_IDS)[keyof typeof TAB_IDS];
 
 export default function EditModal({
 	isOpen,
@@ -40,15 +41,22 @@ export default function EditModal({
 	onSubmit,
 	isPending,
 	initialData,
+	participantCount,
 }: EditModalProps) {
 	return (
 		<EditFormDataProvider isOpen={isOpen} initialData={initialData}>
-			<EditForm isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} isPending={isPending} />
+			<EditForm
+				participantCount={participantCount}
+				isOpen={isOpen}
+				onClose={onClose}
+				onSubmit={onSubmit}
+				isPending={isPending}
+			/>
 		</EditFormDataProvider>
 	);
 }
 
-function EditForm({ onClose, isOpen, onSubmit, isPending }: EditFormProps) {
+function EditForm({ onClose, isOpen, onSubmit, isPending, participantCount }: EditFormProps) {
 	const { data } = useEditFormData();
 	const [activeTab, setActiveTab] = useState<TabId>(TAB_IDS.BASIC);
 
@@ -61,6 +69,20 @@ function EditForm({ onClose, isOpen, onSubmit, isPending }: EditFormProps) {
 	}, [isOpen]);
 
 	async function handleSubmit() {
+		const failed = EDIT_VALIDATIONS.find(({ test }) => !test(data));
+
+		if (failed) {
+			handleShowToast({ message: failed.message, status: "error" });
+			setActiveTab(failed.tab);
+			return;
+		}
+
+		if (!validateCapacityOverParticipants(data.capacity, participantCount)) {
+			handleShowToast({ message: "정원은 현재 참가자 수보다 적을 수 없습니다.", status: "error" });
+			setActiveTab(TAB_IDS.SCHEDULE);
+			return;
+		}
+
 		try {
 			await onSubmit(data);
 			handleShowToast({ message: "모임이 수정되었습니다.", status: "success" });
