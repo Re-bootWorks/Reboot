@@ -4,7 +4,7 @@ export default function NotFound() {
 	return (
 		<main className="min-h-screen bg-gray-50 px-4 pt-20 pb-16 md:px-6 md:pt-24 md:pb-20 lg:px-10 lg:pt-28">
 			<div className="mx-auto flex w-full max-w-7xl items-center justify-center">
-				<section className="shadow-base relative flex w-full max-w-180 flex-col items-center justify-center overflow-hidden rounded-4xl bg-white p-8 text-center md:rounded-[40px] md:px-14 md:py-16">
+				<section className="shadow-base relative flex w-full max-w-[45rem] flex-col items-center justify-center overflow-hidden rounded-4xl bg-white p-8 text-center md:rounded-[40px] md:px-14 md:py-16">
 					<div className="pointer-events-none absolute -top-10 -left-10 h-24 w-24 rounded-full bg-purple-100 opacity-80 blur-2xl md:h-32 md:w-32" />
 					<div className="pointer-events-none absolute -right-10 -bottom-10 h-24 w-24 rounded-full bg-purple-100 opacity-60 blur-2xl md:h-36 md:w-36" />
 
@@ -12,7 +12,7 @@ export default function NotFound() {
 					<div className="pointer-events-none absolute top-[30%] right-[18%] h-2 w-2 rounded-full bg-green-400 md:h-2.5 md:w-2.5" />
 					<div className="pointer-events-none absolute bottom-[22%] left-[20%] h-2 w-2 rounded-full bg-purple-200 md:h-2.5 md:w-2.5" />
 
-					<div className="bg-gradient-purple-100-lr relative mx-auto flex h-34 w-34 shrink-0 flex-col items-center justify-center rounded-full md:h-40 md:w-40">
+					<div className="bg-gradient-purple-100-lr relative mx-auto flex h-32 w-32 shrink-0 flex-col items-center justify-center rounded-full md:h-40 md:w-40">
 						<span className="text-[10px] font-semibold tracking-[0.24em] whitespace-nowrap text-purple-500 uppercase md:text-xs">
 							not found
 						</span>
