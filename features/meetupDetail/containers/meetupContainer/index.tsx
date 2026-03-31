@@ -18,6 +18,13 @@ import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
 import { toMeetupEditData } from "@/features/meetupDetail/edit/utils";
 import { useCursorPagination } from "@/hooks/useCursorPagination";
 import { useGetMe } from "@/features/auth/queries";
+import MeetupIntroSkeleton from "@/features/meetupDetail/components/Skeletons/MeetupIntroSkeleton";
+import MeetupDescSkeleton from "@/features/meetupDetail/components/Skeletons/MeetupDescSkeleton";
+import MeetupMapSkeleton from "@/features/meetupDetail/components/Skeletons/MeetupMapSkeleton";
+import MeetupRelatedSkeleton from "@/features/meetupDetail/components/Skeletons/MeetupRelatedSkeleton";
+import MeetupReviewSkeleton from "@/features/meetupDetail/components/Skeletons/MeetupReviewSkeleton";
+import SectionErrorFallback from "@/features/meetupDetail/components/SectionErrorFallback";
+import { ErrorBoundary } from "react-error-boundary";
 
 interface MeetupDetailClientProps {
 	meetupId: number;
@@ -27,35 +34,35 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 	return (
 		<>
 			{/* 섹션 1 - 모임 소개 */}
-			<Suspense fallback={null}>
-				{" "}
-				{/* TODO: fallback={<Section1Skeleton />} */}
-				<MeetupIntroSection meetupId={meetupId} />
-			</Suspense>
-
+			<ErrorBoundary fallback={<SectionErrorFallback />}>
+				<Suspense fallback={<MeetupIntroSkeleton />}>
+					<MeetupIntroSection meetupId={meetupId} />
+				</Suspense>
+			</ErrorBoundary>
 			{/* 섹션 2 - 모임 설명 */}
-			<Suspense fallback={null}>
-				{/* TODO: fallback={<DescriptionSkeleton />} */}
-				<MeetupDescSection meetupId={meetupId} />
-			</Suspense>
-
+			<ErrorBoundary fallback={<SectionErrorFallback />}>
+				<Suspense fallback={<MeetupDescSkeleton />}>
+					<MeetupDescSection meetupId={meetupId} />
+				</Suspense>
+			</ErrorBoundary>
 			{/* 섹션 3 - 지도 */}
-			<Suspense fallback={null}>
-				{/* TODO: fallback={<MapSkeleton />} */}
-				<MeetupMapSection meetupId={meetupId} />
-			</Suspense>
-
+			<ErrorBoundary fallback={<SectionErrorFallback />}>
+				<Suspense fallback={<MeetupMapSkeleton />}>
+					<MeetupMapSection meetupId={meetupId} />
+				</Suspense>
+			</ErrorBoundary>
 			{/* 섹션 4 - 리뷰 목록 */}
-			<Suspense fallback={null}>
-				{/* TODO: fallback={<CommentCardsSkeleton />} */}
-				<MeetupReviewSection meetupId={meetupId} />
-			</Suspense>
-
+			<ErrorBoundary fallback={<SectionErrorFallback />}>
+				<Suspense fallback={<MeetupReviewSkeleton />}>
+					<MeetupReviewSection meetupId={meetupId} />
+				</Suspense>
+			</ErrorBoundary>
 			{/* 섹션 5 - 관련 모임 */}
-			<Suspense fallback={null}>
-				{/* TODO: fallback={<CompactCardsSkeleton />} */}
-				<MeetupRelatedSection meetupId={meetupId} />
-			</Suspense>
+			<ErrorBoundary fallback={<SectionErrorFallback />}>
+				<Suspense fallback={<MeetupRelatedSkeleton />}>
+					<MeetupRelatedSection meetupId={meetupId} />
+				</Suspense>
+			</ErrorBoundary>
 		</>
 	);
 }
@@ -64,8 +71,6 @@ function MeetupIntroSection({ meetupId }: { meetupId: number }) {
 	const { data: meeting } = useMeetingDetail(meetupId);
 	const { data: participantsData } = useParticipants(meetupId);
 	const { data: me } = useGetMe();
-
-	if (!meeting) return null;
 
 	const isHost = meeting.hostId === me?.id;
 	const editInitialData = toMeetupEditData(meeting);
@@ -92,8 +97,6 @@ function MeetupIntroSection({ meetupId }: { meetupId: number }) {
 function MeetupDescSection({ meetupId }: { meetupId: number }) {
 	const { data: meeting } = useMeetingDetail(meetupId);
 
-	if (!meeting) return null;
-
 	return (
 		<section className="mt-10 flex h-fit w-full flex-col gap-3 md:gap-4 lg:gap-5">
 			<span className="pl-1.5 text-base font-semibold md:text-xl lg:pl-2.5 lg:text-2xl">
@@ -108,8 +111,6 @@ function MeetupDescSection({ meetupId }: { meetupId: number }) {
 
 function MeetupMapSection({ meetupId }: { meetupId: number }) {
 	const { data: meeting } = useMeetingDetail(meetupId);
-
-	if (!meeting) return null;
 
 	return (
 		<section className="mt-10 flex h-fit w-full flex-col gap-3 md:mt-16 md:gap-4 lg:mt-20 lg:gap-5">
@@ -128,7 +129,7 @@ function MeetupMapSection({ meetupId }: { meetupId: number }) {
 function MeetupReviewSection({ meetupId }: { meetupId: number }) {
 	const { currentPage, currentCursor, handlePageChange } = useCursorPagination();
 	const { data: reviewsData } = useReviews(meetupId, currentCursor);
-	const hasMoreReviews = reviewsData?.hasMore ?? false;
+	const hasMoreReviews = reviewsData.hasMore;
 
 	const comments = useMemo<CommentProps[]>(
 		() =>
@@ -156,11 +157,7 @@ function MeetupReviewSection({ meetupId }: { meetupId: number }) {
 
 function MeetupRelatedSection({ meetupId }: { meetupId: number }) {
 	const { data: meeting } = useMeetingDetail(meetupId);
-	const { data: relatedData } = useRelatedMeetings(
-		meetupId,
-		meeting?.region ?? "",
-		meeting?.type ?? "",
-	);
+	const { data: relatedData } = useRelatedMeetings(meetupId, meeting.region, meeting.type);
 	const relatedMeetings = relatedData?.data ?? [];
 	const [pressedMap, setPressedMap] = useState<Record<number, boolean>>({});
 	const { ref, style, overlays, ...dragScrollEvents } = useDragScroll<HTMLDivElement>();

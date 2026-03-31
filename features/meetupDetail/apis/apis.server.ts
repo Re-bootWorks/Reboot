@@ -1,5 +1,7 @@
 import { serverFetch } from "@/libs/serverFetch";
 import { Meeting, ParticipantsResponse, ReviewsResponse } from "@/features/meetupDetail/types";
+import { MeetupListResponse } from "@/features/meetup/types";
+import { filterRelatedMeetings } from "@/features/meetupDetail/util";
 
 export async function getMeetingDetailServer(meetingId: number): Promise<Meeting> {
 	const res = await serverFetch(`/meetings/${meetingId}`);
@@ -17,4 +19,27 @@ export async function getReviewsServer(meetingId: number): Promise<ReviewsRespon
 	const res = await serverFetch(`/meetings/${meetingId}/reviews?size=4`);
 	if (!res.ok) throw new Error("리뷰 목록을 불러오지 못했습니다.");
 	return res.json();
+}
+
+export async function getRelatedMeetingsServer(
+	meetingId: number,
+	region: string,
+	type: string,
+): Promise<MeetupListResponse> {
+	const params = new URLSearchParams({
+		size: "5",
+		region,
+		type,
+		sortBy: "participantCount",
+		sortOrder: "desc",
+	});
+
+	const res = await serverFetch(`/meetings?${params}`);
+	if (!res.ok) throw new Error("관련 모임을 불러오지 못했습니다.");
+	const data: MeetupListResponse = await res.json();
+
+	return {
+		...data,
+		data: filterRelatedMeetings(data.data, meetingId).slice(0, 4),
+	};
 }
