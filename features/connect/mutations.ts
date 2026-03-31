@@ -115,7 +115,7 @@ export function useUpdateComment({
 			});
 
 			onSuccess?.();
-
+			handleShowToast({ message: "댓글이 수정되었습니다.", status: "success" });
 			return { previousData };
 		},
 
@@ -128,7 +128,6 @@ export function useUpdateComment({
 
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["postComments", postId] });
-			handleShowToast({ message: "댓글이 수정되었습니다.", status: "success" });
 		},
 	});
 }
@@ -151,6 +150,7 @@ export function useDeleteComment(postId: number) {
 					comments: old.comments.filter((c) => c.id !== commentId),
 				};
 			});
+			handleShowToast({ message: "댓글이 삭제되었습니다.", status: "success" });
 
 			return { previousData };
 		},
@@ -164,7 +164,6 @@ export function useDeleteComment(postId: number) {
 
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["postComments", postId] });
-			handleShowToast({ message: "댓글이 삭제되었습니다.", status: "success" });
 		},
 	});
 }

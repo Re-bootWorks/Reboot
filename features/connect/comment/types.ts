@@ -31,6 +31,7 @@ export interface CommentCardProps extends CommentCardItem {
 	postId: number;
 	authorId: number;
 	currentUserId: number | null;
+	isPending?: boolean;
 }
 
 export interface GetCommentsParams {

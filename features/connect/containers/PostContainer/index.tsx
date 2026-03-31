@@ -1,11 +1,10 @@
 "use client";
 
 import SearchInput from "@/components/ui/SearchInput";
-import FilterButton from "@/components/ui/Buttons/FilterButton";
+import { FilterDropdown } from "@/components/ui/Filter/FilterDropdown";
 import PostCard from "@/features/connect/components/PostCard";
 import Pagination from "@/components/ui/Pagination";
 import { fetchPostsClient } from "@/features/connect/apis/fetchPostsClient";
-//import { keepPreviousData } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
 import { mapPostToCard } from "@/features/connect/post/mappers";
@@ -13,8 +12,16 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/providers/toast-provider";
 
+const SORT_OPTIONS = [
+	{ label: "최신순", value: "createdAt" },
+	{ label: "좋아요순", value: "likeCount" },
+	{ label: "조회수순", value: "viewCount" },
+	{ label: "댓글 많은순", value: "commentCount" },
+];
 export default function PostContainer({ page }: { page: number }) {
-	const [sortBy, setSortBy] = useState<"createdAt" | "likeCount">("likeCount");
+	const [sortBy, setSortBy] = useState<"createdAt" | "likeCount" | "viewCount" | "commentCount">(
+		"createdAt",
+	);
 	const searchParams = useSearchParams();
 	const { handleShowToast } = useToast();
 	const deletedHandled = useRef(false);
@@ -44,7 +51,6 @@ export default function PostContainer({ page }: { page: number }) {
 				limit: 5,
 			}),
 		staleTime: 1000 * 60,
-		//placeholderData: keepPreviousData, // 페이지/필터 바뀌어도 깜빡임 없음 ,나중에 infiniteQuery에서 다시 사용
 	});
 
 	const handleSearch = () => {
@@ -74,17 +80,24 @@ export default function PostContainer({ page }: { page: number }) {
 					onSearchClick={handleSearch}
 					placeholder="궁금한 내용을 검색해보세요."
 				/>
-				<FilterButton
-					label={sortBy === "createdAt" ? "최신순" : "좋아요순"}
-					onClick={() => setSortBy((prev) => (prev === "createdAt" ? "likeCount" : "createdAt"))}
-					className="pr-4"
+				<FilterDropdown
+					value={sortBy}
+					items={SORT_OPTIONS}
+					onChange={(value) => setSortBy(value as typeof sortBy)}
 				/>
 			</div>
 
 			{/* 게시글 목록 */}
 			<div ref={containerRef} className="-mx-4 flex flex-col gap-12 rounded-3xl bg-white px-8 py-8">
 				{mappedPosts.length === 0 ? (
-					<div className="py-20 text-center text-gray-400">검색 결과가 없습니다</div>
+					<div className="flex flex-col items-center justify-center gap-4 py-20">
+						<img
+							src="/assets/img/img_empty.svg"
+							alt="게시물 없음"
+							className="h-[120px] w-[120px]"
+						/>
+						<p className="text-sm text-gray-400">아직 게시물이 없어요</p>
+					</div>
 				) : (
 					mappedPosts.map((post) => (
 						<PostCard key={post.id} {...post} onClick={() => router.push(`/connect/${post.id}`)} />

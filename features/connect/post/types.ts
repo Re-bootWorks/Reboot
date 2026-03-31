@@ -19,6 +19,7 @@ export type PostComment = {
 	id: number;
 	content: string;
 	createdAt: string;
+	isPending?: boolean;
 	author: {
 		id: number;
 		name: string;

@@ -78,6 +78,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 							//임시 데이터 (fake 데이터)
 							id: Date.now(),
 							content: newComment.content,
+							isPending: true,
 							author: {
 								id: currentUserId!,
 								name: user?.name ?? "사용자",
@@ -175,6 +176,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 								postId={postId}
 								authorId={comment.author.id}
 								currentUserId={user?.id ?? null}
+								isPending={comment.isPending}
 							/>
 						</li>
 					);

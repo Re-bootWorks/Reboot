@@ -15,24 +15,50 @@ interface CommentEditFormProps {
 	onChange: (value: string) => void;
 	onCancel: () => void;
 	onSubmit: () => void;
+	authorName: string;
+	date: number;
 }
 
-function CommentEditForm({ value, onChange, onCancel, onSubmit }: CommentEditFormProps) {
+function CommentEditForm({
+	value,
+	onChange,
+	onCancel,
+	onSubmit,
+	authorName,
+	date,
+}: CommentEditFormProps) {
 	return (
-		<div className="flex flex-col gap-2 border-b border-gray-200 py-2">
-			<InputTextarea
-				name="edit-comment"
-				value={value}
-				onChange={(e) => onChange(e.target.value)}
-				className="rounded-2xl bg-gray-100 px-3 py-2"
-			/>
-			<div className="flex justify-end gap-2">
-				<Button
-					onClick={onCancel}
-					className="h-10 rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-700">
-					취소
-				</Button>
-				<Button onClick={onSubmit}>수정</Button>
+		<div className="flex min-h-[96px] w-full flex-col gap-2 border-b border-gray-200">
+			<div className="pt-2 pb-6 md:pt-4">
+				{/* textarea */}
+				<InputTextarea
+					name="edit-comment"
+					value={value}
+					onChange={(e) => onChange(e.target.value)}
+					className="w-full rounded-2xl border border-purple-500 bg-gray-100 px-3 py-2 text-sm text-gray-700 md:text-lg"
+				/>
+
+				{/* 메타 + 버튼 영역 */}
+				<div className="flex items-center justify-between pt-2">
+					{/* 작성자 + 날짜 */}
+					<div className="flex items-center gap-2 text-xs text-gray-500">
+						<span>{authorName}</span>
+						<span>·</span>
+						<RelativeTime date={date} fallback="date" />
+					</div>
+
+					{/* 버튼 */}
+					<div className="flex gap-2">
+						<Button
+							onClick={onCancel}
+							className="h-10 w-[4.5rem] rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-700">
+							취소
+						</Button>
+						<Button onClick={onSubmit} className="h-10 w-[4.5rem] rounded-xl px-4 text-sm">
+							수정
+						</Button>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
@@ -45,6 +71,7 @@ export default function CommentCard({
 	authorId,
 	currentUserId,
 	postId,
+	isPending = false,
 }: CommentCardProps) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValue, setEditValue] = useState(content);
@@ -81,6 +108,8 @@ export default function CommentCard({
 				onChange={setEditValue}
 				onCancel={handleCancel}
 				onSubmit={handleSubmit}
+				authorName={authorName}
+				date={date}
 			/>
 		);
 	}
@@ -94,7 +123,7 @@ export default function CommentCard({
 						<div className="text-sm leading-[28px] font-normal tracking-[-0.36px] text-gray-700 md:text-lg">
 							{content}
 						</div>
-						{isMine && (
+						{isMine && !isPending && (
 							<ActionDropdown
 								items={[
 									{ label: "수정하기", onClick: handleEdit },
