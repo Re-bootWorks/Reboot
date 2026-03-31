@@ -10,16 +10,24 @@ interface AvatarProps {
 	height: number;
 	/** 반응형 Size 추가 */
 	className?: string;
+	/** 이미지 설명 */
+	alt?: string;
 }
 const DEFAULT_AVATAR_IMAGE = "/assets/img/img_profile.svg";
 
-export default function Avatar({ src, width, height, className }: AvatarProps) {
-	const imageSrc = src?.trim() ? src : DEFAULT_AVATAR_IMAGE;
+export default function Avatar({
+	src,
+	width,
+	height,
+	className,
+	alt = "프로필 이미지",
+}: AvatarProps) {
+	const imageSrc = src?.trim() || DEFAULT_AVATAR_IMAGE;
 
 	return (
 		<Image
-			src={imageSrc ?? DEFAULT_AVATAR_IMAGE}
-			alt="프로필 이미지"
+			src={imageSrc}
+			alt={alt}
 			className={cn("rounded-full border border-gray-200 object-cover", className)}
 			width={width}
 			height={height}
