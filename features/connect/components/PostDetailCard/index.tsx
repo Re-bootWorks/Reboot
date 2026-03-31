@@ -8,7 +8,7 @@ import RelativeTime from "@/features/connect/ui/RelativeTime";
 import dayjs from "@/libs/dayjs";
 import { useRouter } from "next/navigation";
 import { useDeletePost, useToggleConnectLike } from "@/features/connect/mutations";
-import Alert from "@/components/ui/Modals/Alert";
+import Alert from "@/components/ui/Modals/AlertModal";
 import { useState } from "react";
 
 interface Props {
