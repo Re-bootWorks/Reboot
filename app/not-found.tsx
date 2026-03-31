@@ -12,8 +12,8 @@ export default function NotFound() {
 					<div className="pointer-events-none absolute top-[30%] right-[18%] h-2 w-2 rounded-full bg-green-400 md:h-2.5 md:w-2.5" />
 					<div className="pointer-events-none absolute bottom-[22%] left-[20%] h-2 w-2 rounded-full bg-purple-200 md:h-2.5 md:w-2.5" />
 
-					<div className="bg-gradient-purple-100-lr relative mx-auto flex h-34 w-34 flex-col items-center justify-center rounded-full md:h-40 md:w-40">
-						<span className="text-[10px] font-semibold tracking-[0.24em] text-purple-500 uppercase md:text-xs">
+					<div className="bg-gradient-purple-100-lr relative mx-auto flex h-34 w-34 shrink-0 flex-col items-center justify-center rounded-full md:h-40 md:w-40">
+						<span className="text-[10px] font-semibold tracking-[0.24em] whitespace-nowrap text-purple-500 uppercase md:text-xs">
 							not found
 						</span>
 						<span className="mt-1 text-5xl leading-none font-bold text-purple-600 md:text-7xl">
