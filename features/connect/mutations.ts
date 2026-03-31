@@ -21,7 +21,7 @@ export function useToggleConnectLike(postId: number) {
 			}
 		},
 
-		onMutate: async (isLiked: boolean) => {
+		onMutate: async (_isLiked: boolean) => {
 			await queryClient.cancelQueries({ queryKey: ["postDetail", postId] });
 			const previous = queryClient.getQueryData<ConnectPost>(["postDetail", postId]);
 
