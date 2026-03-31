@@ -5,7 +5,13 @@ import type {
 	ReviewsListRequest,
 	ReviewsListResponse,
 } from "../types";
-import { buildQuery, getErrorMessage } from "../utils";
+import {
+	buildQuery,
+	getErrorMessage,
+	toDateTimeRangeEnd,
+	toDateTimeRangeStart,
+	toOptionalNumber,
+} from "../utils";
 import {
 	ROUTE_REVIEWS,
 	ROUTE_REVIEWS_CATEGORIES_STATISTICS,
@@ -13,15 +19,23 @@ import {
 } from "../constants/routes";
 
 /** 리뷰 목록 조회 */
-export async function getReviews(params: ReviewsListRequest): Promise<ReviewsListResponse> {
+export async function getReviews(
+	params?: ReviewsListRequest | URLSearchParams,
+): Promise<ReviewsListResponse> {
+	const normalizedParams =
+		params instanceof URLSearchParams ? fromSearchParams(params) : (params ?? {});
+
 	const query = buildQuery({
-		type: params.type,
-		region: params.region,
-		date: params.date,
-		sort: params.sortBy,
-		order: params.sortOrder,
-		cursor: params.cursor,
-		size: params.size,
+		type: normalizedParams.type,
+		region: normalizedParams.region,
+		dateStart: toDateTimeRangeStart(normalizedParams.dateStart),
+		dateEnd: toDateTimeRangeEnd(normalizedParams.dateEnd),
+		registrationEndStart: toDateTimeRangeStart(normalizedParams.registrationEndStart),
+		registrationEndEnd: toDateTimeRangeEnd(normalizedParams.registrationEndEnd),
+		sortBy: normalizedParams.sortBy,
+		sortOrder: normalizedParams.sortOrder,
+		cursor: normalizedParams.cursor,
+		size: normalizedParams.size,
 	});
 
 	const response = await serverFetch(query ? `${ROUTE_REVIEWS}?${query}` : ROUTE_REVIEWS);
@@ -31,6 +45,21 @@ export async function getReviews(params: ReviewsListRequest): Promise<ReviewsLis
 	}
 
 	return response.json();
+}
+
+function fromSearchParams(searchParams: URLSearchParams): ReviewsListRequest {
+	return {
+		type: searchParams.get("type") ?? undefined,
+		region: searchParams.get("region") ?? undefined,
+		dateStart: searchParams.get("dateStart") ?? undefined,
+		dateEnd: searchParams.get("dateEnd") ?? undefined,
+		registrationEndStart: searchParams.get("registrationEndStart") ?? undefined,
+		registrationEndEnd: searchParams.get("registrationEndEnd") ?? undefined,
+		sortBy: (searchParams.get("sortBy") as ReviewsListRequest["sortBy"]) ?? undefined,
+		sortOrder: (searchParams.get("sortOrder") as ReviewsListRequest["sortOrder"]) ?? undefined,
+		cursor: searchParams.get("cursor") ?? undefined,
+		size: toOptionalNumber(searchParams.get("size")),
+	};
 }
 
 /** 리뷰 전체 통계 조회 */

@@ -4,39 +4,66 @@ import DateFilter from "@/components/ui/Filter/DateFilter";
 import RegionFilter from "@/components/ui/Filter/RegionFilter";
 import { FilterDropdown } from "@/components/ui/Filter/FilterDropdown";
 import { useQueryParams } from "@/hooks/useQueryParams";
-import { QUERY_KEYS, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "@/features/meetup/list/constants";
-import { getSortByItem, getSortOrderItem } from "@/features/meetup/list/utils";
-import { buildRegionParam, getRegionItem, RegionFilterValue } from "@/features/reviews/utils";
+import {
+	buildRegionParam,
+	getRegionItem,
+	getSortByItem,
+	getSortOrderItem,
+	RegionFilterValue,
+} from "@/features/reviews/utils";
+import {
+	QUERY_PARAM_KEYS,
+	REVIEWS_SORT_BY_OPTIONS,
+	REVIEWS_SORT_ORDER_OPTIONS,
+} from "../../constants/filers";
 
 export default function ListFilters() {
 	const { get, set } = useQueryParams();
-	const date = get(QUERY_KEYS.DATE);
-	const region = getRegionItem(get(QUERY_KEYS.REGION));
-	const sortBy = getSortByItem(get(QUERY_KEYS.SORT_BY)) ?? SORT_BY_OPTIONS[0].value;
-	const sortOrder = getSortOrderItem(get(QUERY_KEYS.SORT_ORDER)) ?? SORT_ORDER_OPTIONS[0].value;
+	const dateStart = get(QUERY_PARAM_KEYS.DATE_START);
+	const region = getRegionItem(get(QUERY_PARAM_KEYS.REGION));
+	const sortBy = getSortByItem(get(QUERY_PARAM_KEYS.SORT_BY)) ?? REVIEWS_SORT_BY_OPTIONS[0].value;
+	const sortOrder =
+		getSortOrderItem(get(QUERY_PARAM_KEYS.SORT_ORDER)) ?? REVIEWS_SORT_ORDER_OPTIONS[0].value;
 
-	function handleChangeDate(v: string) {
-		set({ [QUERY_KEYS.DATE]: v });
+	const dateValue = dateStart ? dateStart.split("T")[0] : "";
+
+	function handleChangeDate(v: string | null) {
+		if (!v) {
+			set({
+				[QUERY_PARAM_KEYS.DATE_START]: null,
+				[QUERY_PARAM_KEYS.DATE_END]: null,
+			});
+			return;
+		}
+
+		set({
+			[QUERY_PARAM_KEYS.DATE_START]: v,
+			[QUERY_PARAM_KEYS.DATE_END]: v,
+		});
 	}
 	function handleChangeLocation(data: RegionFilterValue) {
 		const param = buildRegionParam(data.region, data.district);
-		set({ [QUERY_KEYS.REGION]: param });
+		set({ [QUERY_PARAM_KEYS.REGION]: param });
 	}
 	function handleChangeSortOrder(v: string) {
-		set({ [QUERY_KEYS.SORT_ORDER]: v });
+		set({ [QUERY_PARAM_KEYS.SORT_ORDER]: v });
 	}
 	function handleChangeSortBy(v: string) {
-		set({ [QUERY_KEYS.SORT_BY]: v });
+		set({ [QUERY_PARAM_KEYS.SORT_BY]: v });
 	}
 
 	return (
 		<div role="group" aria-label="모임 필터 그룹" className="flex items-center justify-center">
-			<DateFilter value={date ?? ""} onChange={handleChangeDate} />
+			<DateFilter value={dateValue} onChange={handleChangeDate} />
 			<RegionFilter value={region} onChange={handleChangeLocation} />
-			<FilterDropdown value={sortBy.label} items={SORT_BY_OPTIONS} onChange={handleChangeSortBy} />
+			<FilterDropdown
+				value={sortBy.label}
+				items={REVIEWS_SORT_BY_OPTIONS}
+				onChange={handleChangeSortBy}
+			/>
 			<FilterDropdown
 				value={sortOrder.label}
-				items={SORT_ORDER_OPTIONS}
+				items={REVIEWS_SORT_ORDER_OPTIONS}
 				onChange={handleChangeSortOrder}
 			/>
 		</div>

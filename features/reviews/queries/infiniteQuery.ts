@@ -8,9 +8,8 @@ import { getReviews } from "../apis/client";
 export function useReviewsInfiniteQuery(params: ReviewsListRequest) {
 	const response = useSuspenseInfiniteQuery(reviewsInfiniteOptions(params, getReviews));
 
-	return {
-		...response,
-		data: response.data.pages.flatMap((page): ReviewCardProps[] =>
+	const flatData =
+		response.data?.pages.flatMap((page): ReviewCardProps[] =>
 			(page.data ?? []).map((review) => ({
 				id: review.id,
 				meetingId: review.meetingId,
@@ -24,6 +23,23 @@ export function useReviewsInfiniteQuery(params: ReviewsListRequest) {
 				meetingType: review.meeting.type,
 				userId: review.userId,
 			})),
-		),
+		) ?? [];
+
+	const dedupedData = (() => {
+		const seen = new Set<number>();
+		const result: ReviewCardProps[] = [];
+
+		for (const item of flatData) {
+			if (seen.has(item.id)) continue;
+			seen.add(item.id);
+			result.push(item);
+		}
+
+		return result;
+	})();
+
+	return {
+		...response,
+		data: dedupedData,
 	};
 }

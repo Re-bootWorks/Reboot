@@ -5,7 +5,7 @@ import {
 	ReviewsListRequest,
 	ReviewsListResponse,
 } from "../types";
-import { buildQuery, getErrorMessage } from "../utils";
+import { buildQuery, getErrorMessage, toDateTimeRangeEnd, toDateTimeRangeStart } from "../utils";
 import {
 	ROUTE_REVIEWS,
 	ROUTE_REVIEWS_CATEGORIES_STATISTICS,
@@ -17,9 +17,12 @@ export async function getReviews(params: ReviewsListRequest): Promise<ReviewsLis
 	const query = buildQuery({
 		type: params.type,
 		region: params.region,
-		date: params.date,
-		sort: params.sortBy,
-		order: params.sortOrder,
+		dateStart: toDateTimeRangeStart(params.dateStart),
+		dateEnd: toDateTimeRangeEnd(params.dateEnd),
+		registrationEndStart: toDateTimeRangeStart(params.registrationEndStart),
+		registrationEndEnd: toDateTimeRangeEnd(params.registrationEndEnd),
+		sortBy: params.sortBy,
+		sortOrder: params.sortOrder,
 		cursor: params.cursor,
 		size: params.size,
 	});

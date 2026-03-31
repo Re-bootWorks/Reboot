@@ -2,14 +2,17 @@ import { Suspense } from "react";
 import PageIntro from "@/components/ui/PageIntro";
 import ListControls from "@/features/reviews/components/ListControls";
 import RatingSummary from "@/features/reviews/components/RatingSummary";
-import ReviewsSection from "@/features/reviews/components/ReviewsSection";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { ReviewsListRequest } from "@/features/reviews/types";
 import {
 	prefetchReviewsStatistics,
 	prefetchReviews,
+	prefetchReviewsCategoriesStatistics,
 } from "@/features/reviews/queries/prefetchQueries";
-import SectionErrorBoundary from "@/features/reviews/components/ErrorBoundary";
+import { ErrorBoundary } from "react-error-boundary";
+import RatingSummarySkeleton from "@/features/reviews/components/RatingSummary/RatingSummarySkeleton";
+import ReviewsSection from "@/features/reviews/components/ReviewsCard/ReviewsSectionWrapper/ReviewsSection";
+import ErrorFallback from "@/features/reviews/components/ErrorBoundary";
 
 type Props = {
 	searchParams: Promise<ReviewsListRequest>;
@@ -17,18 +20,23 @@ type Props = {
 
 export default async function ReviewsPage({ searchParams }: Props) {
 	const params = await searchParams;
+
 	const queryClient = new QueryClient();
 
 	const normalizedParams: ReviewsListRequest = {
 		type: params.type,
 		region: params.region,
-		date: params.date,
+		dateStart: params.dateStart,
+		dateEnd: params.dateEnd,
+		registrationEndStart: params.registrationEndStart,
+		registrationEndEnd: params.registrationEndEnd,
 		sortBy: params.sortBy,
 		sortOrder: params.sortOrder,
 		size: params.size,
 	};
 
 	await prefetchReviewsStatistics(queryClient);
+	await prefetchReviewsCategoriesStatistics(queryClient);
 	await prefetchReviews(queryClient, normalizedParams);
 
 	return (
@@ -37,26 +45,21 @@ export default async function ReviewsPage({ searchParams }: Props) {
 				<PageIntro />
 			</header>
 
-			{/* ListFilters 수정중 */}
-			<Suspense fallback={<></>}>
-				<ListControls />
-			</Suspense>
+			<ListControls />
 
-			<SectionErrorBoundary fallback={<div>에러 바운더리 css 추후 작업</div>}>
+			<ErrorBoundary FallbackComponent={ErrorFallback}>
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<Suspense fallback={<div>스켈레톤 작업 예정</div>}>
-						<RatingSummary type={params.type} />
+					<Suspense fallback={<RatingSummarySkeleton />}>
+						<RatingSummary />
 					</Suspense>
 				</HydrationBoundary>
-			</SectionErrorBoundary>
+			</ErrorBoundary>
 
-			<SectionErrorBoundary fallback={<div>에러 바운더리 css 추후 작업</div>}>
+			<ErrorBoundary FallbackComponent={ErrorFallback}>
 				<HydrationBoundary state={dehydrate(queryClient)}>
-					<Suspense fallback={<div>스켈레톤 작업 예정</div>}>
-						<ReviewsSection {...normalizedParams} />
-					</Suspense>
+					<ReviewsSection />
 				</HydrationBoundary>
-			</SectionErrorBoundary>
+			</ErrorBoundary>
 		</>
 	);
 }

@@ -1,45 +1,27 @@
 "use client";
 
-import { cn } from "@/utils/cn";
-import { type ReactNode, Component } from "react";
+import type { FallbackProps } from "react-error-boundary";
 
-interface Props {
-	children: ReactNode;
-	fallback: ReactNode;
-	className?: string;
-}
+export default function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+	const errorMessage = error instanceof Error ? error.message : "알 수 없는 오류가 발생했어요.";
 
-export default class SectionErrorBoundary extends Component<Props, { hasError: boolean }> {
-	constructor(props: Props) {
-		super(props);
-		this.state = { hasError: false };
-	}
+	return (
+		<div className="flex min-h-40 w-full flex-col items-center justify-center rounded-3xl bg-white px-6 py-8 text-center md:rounded-4xl">
+			<p className="text-base font-semibold">문제가 발생했어요.</p>
+			<p className="mt-2 text-sm text-gray-600">잠시 후 다시 시도해주세요.</p>
 
-	static getDerivedStateFromError() {
-		return { hasError: true };
-	}
+			{process.env.NODE_ENV === "development" && (
+				<pre className="mt-4 w-full overflow-x-auto rounded-xl bg-gray-100 p-3 text-left text-xs text-red-500">
+					{errorMessage}
+				</pre>
+			)}
 
-	componentDidCatch(error: Error) {
-		console.error("Section Error:", error);
-	}
-
-	resetError = () => {
-		this.setState({ hasError: false });
-	};
-
-	render() {
-		if (this.state.hasError) {
-			return (
-				<div className={cn("rounded-lg border bg-red-50 p-4 text-red-700", this.props.className)}>
-					{this.props.fallback}
-					<button
-						onClick={this.resetError}
-						className="mt-2 rounded bg-red-100 px-3 py-1 text-sm text-red-700 hover:bg-red-200">
-						다시 시도
-					</button>
-				</div>
-			);
-		}
-		return this.props.children;
-	}
+			<button
+				type="button"
+				onClick={resetErrorBoundary}
+				className="mt-4 cursor-pointer rounded-xl bg-black px-4 py-2 text-sm text-white">
+				다시 시도
+			</button>
+		</div>
+	);
 }

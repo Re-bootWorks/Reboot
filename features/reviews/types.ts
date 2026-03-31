@@ -8,34 +8,43 @@ export interface RatingSummaryResponse {
 	fiveStars: number;
 }
 
-export interface ReviewCategoryStatisticsItem extends Pick<
-	RatingSummaryResponse,
-	"averageScore" | "totalReviews"
-> {
+export interface ReviewCategoryStatisticsItem extends RatingSummaryResponse {
 	type: string;
 }
 
 export type ReviewCategoryStatistics = ReviewCategoryStatisticsItem[];
 
-export type ReviewsSortBy = "dateTime" | "registrationEnd" | "participantCount";
-export type ReviewsSortOrder = "asc" | "desc";
+export type SortBy = "dateTime" | "registrationEnd" | "participantCount";
+export type SortOrder = "asc" | "desc";
 
-export interface ReviewsListRequest {
+export interface ReviewsFilterQueryParams {
 	/** 모임 종류 */
 	type?: string;
 	/** 모임 지역 */
 	region?: string;
-	/** 모임 날짜 */
-	date?: string;
+	/** 모임 시작 범위 (이상, ISO 8601) */
+	dateStart?: string;
+	/** 모임 끝 범위 (이하, ISO 8601) */
+	dateEnd?: string;
+	/** 모집 마감 시작 범위 (이상, ISO 8601) */
+	registrationEndStart?: string;
+	/** 모집 마감 끝 범위 (이하, ISO 8601) */
+	registrationEndEnd?: string;
+
 	/** 정렬 기준 */
-	sortBy?: ReviewsSortBy;
+	sortBy?: SortBy;
 	/** 정렬 순서 */
-	sortOrder?: ReviewsSortOrder;
+	sortOrder?: SortOrder;
+}
+
+export interface ReviewsListRequest extends ReviewsFilterQueryParams {
 	/** 다음 페이지를 위한 커서 */
 	cursor?: string;
 	/** 페이지 크기 */
 	size?: number;
 }
+
+export type ReviewsListKeyParams = Omit<ReviewsListRequest, "cursor">;
 
 export interface ReviewCardProps {
 	id: ReviewsListItem["id"];

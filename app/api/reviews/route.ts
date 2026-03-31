@@ -1,23 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getReviews } from "@/features/reviews/apis/server";
-import { isReviewsSortBy, isReviewsSortOrder, toOptionalNumber } from "@/features/reviews/utils";
 
 export async function GET(request: NextRequest) {
 	const searchParams = request.nextUrl.searchParams;
 
-	const sort = searchParams.get("sort");
-	const order = searchParams.get("order");
-
 	try {
-		const result = await getReviews({
-			type: searchParams.get("type") ?? undefined,
-			region: searchParams.get("region") ?? undefined,
-			date: searchParams.get("date") ?? undefined,
-			sortBy: isReviewsSortBy(sort) ? sort : undefined,
-			sortOrder: isReviewsSortOrder(order) ? order : undefined,
-			cursor: searchParams.get("cursor") ?? undefined,
-			size: toOptionalNumber(searchParams.get("size")),
-		});
+		const result = await getReviews(searchParams);
 
 		return NextResponse.json(result, { status: 200 });
 	} catch (error) {
