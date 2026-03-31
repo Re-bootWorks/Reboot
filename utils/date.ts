@@ -88,10 +88,12 @@ export const uiFormatTime = (date: string | Date) => {
 export const uiFormatDeadline = (date: string | Date) => {
 	const deadline = dayjs(date).tz(KOREAN_TIMEZONE);
 	const now = dayjs().tz(KOREAN_TIMEZONE);
-	const diffHours = deadline.diff(now, "hour");
 
-	if (diffHours >= 24) {
-		const diffDays = deadline.diff(now, "day");
+	const todayStart = now.startOf("day");
+	const deadlineStart = deadline.startOf("day");
+	const diffDays = deadlineStart.diff(todayStart, "day");
+
+	if (diffDays >= 1) {
 		return `${diffDays}일 후 마감`;
 	}
 

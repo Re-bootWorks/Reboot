@@ -26,3 +26,31 @@ export async function GET(request: NextRequest) {
 	return NextResponse.json(data, { status: res.status });
 	// 백엔드 응답 그대로 클라이언트에 전달
 }
+
+// 게시물 등록
+export async function POST(request: NextRequest) {
+	try {
+		const body = await request.json();
+
+		const res = await serverFetch("/posts", {
+			method: "POST",
+			body: JSON.stringify(body),
+		});
+
+		if (!res.ok) {
+			const errorText = await res.text();
+			return new NextResponse(errorText, {
+				status: res.status,
+				statusText: res.statusText,
+			});
+		}
+
+		const data = await res.json();
+
+		return NextResponse.json(data, { status: res.status });
+	} catch (error) {
+		console.error("POST /api/posts error:", error);
+
+		return new NextResponse("Internal Server Error", { status: 500 });
+	}
+}

@@ -1,11 +1,10 @@
 import Button from "@/components/ui/Buttons/Button";
 import { useFormStep } from "../providers/FormStepProvider";
 import { useFormData } from "../providers/FormDataProvider";
-import { postMeetup } from "../../apis";
-import { useState } from "react";
 import { useToast } from "@/providers/toast-provider";
 import type { OnSuccess } from "./CreateModal";
 import { extractMeetupData } from "../utils";
+import { usePostMeetup } from "../../queries";
 
 interface FormFooterProps {
 	/** 닫기 버튼 클릭 시 호출 */
@@ -18,7 +17,7 @@ export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
 	const { handleShowToast } = useToast();
 	const { currentStep, totalSteps, prev, next } = useFormStep();
 	const { checkAllStepValid, getStepValid, data } = useFormData();
-	const [isPending, setIsPending] = useState(false);
+	const postMeetupMutation = usePostMeetup();
 
 	const isFirstStep = currentStep === 1;
 	const isLastStep = currentStep === totalSteps;
@@ -36,20 +35,17 @@ export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
 	async function handleClickNext() {
 		if (isLastStep) {
 			try {
-				setIsPending(true);
 				const meetupData = extractMeetupData(data);
-				const res = await postMeetup(meetupData);
+				const res = await postMeetupMutation.mutateAsync(meetupData);
 				if ("id" in res) {
 					onSuccess(res.id);
 				} else {
 					handleShowToast({ message: res.message, status: "error" });
 				}
-				setIsPending(false);
 			} catch (error) {
 				if (error instanceof Error) {
 					handleShowToast({ message: error.message, status: "error" });
 				}
-				setIsPending(false);
 			}
 		} else {
 			next();
@@ -64,7 +60,7 @@ export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
 			<Button
 				disabled={isLastStep ? !checkAllStepValid() : !getStepValid(currentStep)}
 				className="min-w-0"
-				isPending={isPending}
+				isPending={postMeetupMutation.isPending}
 				onClick={handleClickNext}>
 				{nextLabel}
 			</Button>

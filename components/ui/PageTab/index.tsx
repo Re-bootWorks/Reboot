@@ -27,8 +27,9 @@ export default function PageTab({
 				isActive ? "border-purple-600 text-purple-600" : "border-gray-200 text-gray-600",
 				hasBorder && "border-b-2",
 			)}
-			type="button"
+			role="tab"
 			aria-selected={isActive}
+			type="button"
 			{...props}>
 			{icon}
 			<div className="whitespace-nowrap">{children}</div>

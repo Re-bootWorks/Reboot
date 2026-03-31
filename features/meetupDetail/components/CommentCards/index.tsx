@@ -6,6 +6,7 @@ import { Rating, Heart } from "@smastrom/react-rating";
 import { formatIsoDateWithDots } from "@/utils/date";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { User } from "@/features/meetupDetail/types";
+import { useGetMe } from "@/features/auth/queries";
 
 export interface CommentProps {
 	id: number;
@@ -17,16 +18,15 @@ export interface CommentProps {
 
 const EMPTY_IMAGE = "/assets/img/img_empty_purple.svg";
 const DEFAULT_PROFILE = "/assets/img/img_profile.svg";
-const MOCK_ID = 1;
 
 function CommentItem({ score, comment, createdAt, user }: Omit<CommentProps, "id">) {
+	const { data: me } = useGetMe();
+	const myReview = me?.id === user.id;
 	const heartStyles = {
 		itemShapes: Heart,
 		activeFillColor: "#7566E5",
 		inactiveFillColor: "#DDD",
 	};
-
-	const myReview = user.id === MOCK_ID;
 
 	return (
 		<div className="h-fit w-full border-b border-gray-200 pt-2 pb-6 last:border-none md:pt-4">
@@ -52,6 +52,7 @@ function CommentItem({ score, comment, createdAt, user }: Omit<CommentProps, "id
 								<time dateTime={createdAt}>{formatIsoDateWithDots(createdAt)}</time>
 							</div>
 						</div>
+						{/* TODO: 해당 부분은 리뷰 관련 API 구현 완료 후 진행 */}
 						{myReview && (
 							<ActionDropdown
 								items={[
@@ -72,9 +73,17 @@ function CommentItem({ score, comment, createdAt, user }: Omit<CommentProps, "id
 
 interface CommentCardsProps {
 	comments: CommentProps[];
+	currentPage: number;
+	hasMore: boolean;
+	onPageChange: (page: number) => void;
 }
 
-export default function CommentCards({ comments }: CommentCardsProps) {
+export default function CommentCards({
+	comments,
+	currentPage,
+	hasMore,
+	onPageChange,
+}: CommentCardsProps) {
 	const hasComments = comments.length > 0;
 
 	return (
@@ -106,8 +115,13 @@ export default function CommentCards({ comments }: CommentCardsProps) {
 						</div>
 					)}
 				</div>
-
-				{hasComments && <Pagination currentPage={1} totalPages={9} handlePageChange={() => {}} />}
+				{(hasMore || currentPage > 1) && (
+					<Pagination
+						currentPage={currentPage}
+						totalPages={hasMore ? currentPage + 1 : currentPage}
+						handlePageChange={onPageChange}
+					/>
+				)}
 			</div>
 		</div>
 	);

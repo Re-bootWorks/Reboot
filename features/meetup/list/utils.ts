@@ -1,6 +1,7 @@
+import dayjs from "@/libs/dayjs";
 import { isDeadlinePassed } from "@/utils/date";
 import { SortBy, SortOrder } from "../types";
-import { SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "./constants";
+import { CATEGORY_TYPE_ALL, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "./constants";
 import { RegionFilterValue } from "../list/components/ListFilters";
 
 /** 정렬 기준 항목 조회 */
@@ -30,15 +31,10 @@ export function checkIsRegClosed(
 
 /** 모임 종류 쿼리 값 -> 요청 파라미터 변환 */
 export function transformTypeValue(data: string | null | undefined): string | undefined {
-	return !!data && data !== "all" ? data : undefined;
+	return !!data && data !== CATEGORY_TYPE_ALL.name ? data : undefined;
 }
 
-/** 기타 쿼리 값 -> 요청 파라미터 변환 */
-export function transformQueryValue<T extends string>(data: T | null | undefined): T | undefined {
-	return !!data ? data : undefined;
-}
-
-/** 정렬 기준 쿼리 → API 파라미터 */
+/** 정렬 기준 쿼리 값 → 요청 파라미터 변환 */
 const SORT_BY_VALUES = ["dateTime", "registrationEnd", "participantCount"];
 export function transformSortByQuery(value: string | null | undefined): SortBy | undefined {
 	if (value && SORT_BY_VALUES.includes(value)) {
@@ -46,12 +42,47 @@ export function transformSortByQuery(value: string | null | undefined): SortBy |
 	} else return undefined;
 }
 
-/** 정렬 순서 쿼리 → API 파라미터 */
+/** 정렬 순서 쿼리 값 → 요청 파라미터 변환 */
 const SORT_ORDER_VALUES = ["asc", "desc"];
 export function transformSortOrderQuery(value: string | null | undefined): SortOrder | undefined {
 	if (value && SORT_ORDER_VALUES.includes(value)) {
 		return value as SortOrder;
-	} else return undefined;
+	} else {
+		// 서버 기본값: asc, 클라이언트 기본값: desc
+		return SORT_ORDER_OPTIONS[0].value as SortOrder;
+	}
+}
+
+/** 모임 날짜 시작 YYYY-MM-DD -> ISO 형식(KST 시간대) 요청 파라미터 변환 */
+export function transformDateStartQuery(value: string | null | undefined): string | undefined {
+	const isoValue = parseDateStringToISO(value);
+	return isoValue ?? undefined;
+}
+
+/** 모임 날짜 종료 YYYY-MM-DD -> ISO 형식(KST 시간대) 요청 파라미터 변환 */
+export function transformDateEndQuery(value: string | null | undefined): string | undefined {
+	const isoValue = parseDateStringToISO(value, true);
+	return isoValue ?? undefined;
+}
+
+/** 기타 쿼리 값 -> 요청 파라미터 변환 */
+export function transformQueryValue<T extends string>(data: T | null | undefined): T | undefined {
+	return !!data ? data : undefined;
+}
+
+/** YYYY-MM-DD 형식 문자열을 ISO 형식(KST 시간대)으로 변환 */
+const KOREAN_TIMEZONE = "Asia/Seoul";
+export function parseDateStringToISO(
+	value: string | null | undefined,
+	endOfDay = false,
+): string | undefined {
+	if (!value) return undefined;
+
+	let parsed = dayjs.tz(value, "YYYY-MM-DD", KOREAN_TIMEZONE);
+	if (!parsed.isValid()) return undefined;
+
+	if (endOfDay) parsed = parsed.endOf("day");
+	return parsed.format("YYYY-MM-DDTHH:mm:ss.SSSZ");
 }
 
 /** 지역 (region) 쿼리 값 -> dropdown 데이터로 변환 */
