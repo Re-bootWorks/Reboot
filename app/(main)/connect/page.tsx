@@ -19,7 +19,7 @@ export default async function ConnectPage({
 
 	const queryClient = new QueryClient();
 
-	const sortBy = "likeCount";
+	const sortBy = "createdAt";
 	const LIMIT = 5;
 
 	await Promise.all([
