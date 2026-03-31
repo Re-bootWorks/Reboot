@@ -24,7 +24,7 @@ export default async function ConnectPage({
 
 	await Promise.all([
 		queryClient.prefetchQuery({
-			queryKey: ["posts", page, sortBy, LIMIT],
+			queryKey: ["posts", page, sortBy, LIMIT, ""],
 			queryFn: async () => {
 				const queryParams = new URLSearchParams({
 					type: "all",

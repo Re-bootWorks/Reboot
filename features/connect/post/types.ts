@@ -64,4 +64,15 @@ export type GetPostsParams = {
 	sortBy?: "createdAt" | "viewCount" | "likeCount" | "commentCount"; // 정렬 기준
 	offset?: number; // 시작 위치
 	limit?: number; // 가져올 개수
+	keyword?: string;
+};
+
+// 게시글 목록 응답 타입
+export type GetPostsResponse = {
+	data: Post[];
+	nextCursor?: string;
+	hasMore?: boolean;
+	totalCount?: number;
+	currentOffset?: number;
+	limit?: number;
 };

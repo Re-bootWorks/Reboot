@@ -6,9 +6,9 @@ import Container from "@/components/layout/Container";
 import PostEditor from "../../components/PostEditor";
 import { useCreatePost } from "@/features/connect/mutations";
 import { useRouter } from "next/navigation";
-import { Modal } from "@/components/ui/Modals";
 import { useLeaveConfirm } from "@/hooks/useLeaveConfirm";
 import { useToast } from "@/providers/toast-provider";
+import Alert from "@/components/ui/Modals/AlertModal";
 
 export default function PostCreateContainer() {
 	const router = useRouter();
@@ -100,29 +100,14 @@ export default function PostCreateContainer() {
 			</div>
 
 			{/* 나가기 확인 모달 */}
-			<Modal
+			<Alert
 				isOpen={showModal}
 				onClose={handleCancelLeave}
-				hideCloseButton
-				isCenterTitle
-				title="등록하지 않고 나가시겠어요?"
-				className="] w-[343px] rounded-3xl p-6 md:w-[560px] md:rounded-[40px] md:pt-12 md:pr-10 md:pb-10 md:pl-10"
-				footer={
-					<div className="flex gap-3">
-						<Button
-							onClick={handleCancelLeave}
-							className="flex-1 rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
-							취소
-						</Button>
-						<Button
-							onClick={handleConfirmLeave}
-							className="flex-1 rounded-xl bg-purple-600 py-2.5 text-sm font-medium text-white hover:bg-purple-700">
-							나가기
-						</Button>
-					</div>
-				}>
-				<p className="text-center text-sm text-gray-500">작성하신 모든 내용이 사라집니다.</p>
-			</Modal>
+				confirmLabel="나가기"
+				handleConfirmButton={handleConfirmLeave}>
+				등록하지 않고 나가시겠어요?
+				<p className="mt-2 text-sm font-normal text-gray-500">작성하신 모든 내용이 사라집니다.</p>
+			</Alert>
 		</Container>
 	);
 }

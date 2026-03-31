@@ -1,17 +1,5 @@
 import { clientFetch } from "@/libs/clientFetch";
-import type { Post } from "@/features/connect/post/types";
-
-type GetPostsParams = {
-	type?: "all" | "best";
-	sortBy?: "createdAt" | "viewCount" | "likeCount" | "commentCount";
-	offset?: number;
-	limit?: number;
-};
-
-type GetPostsResponse = {
-	data: Post[];
-	total: number;
-};
+import type { GetPostsParams, GetPostsResponse } from "@/features/connect/post/types";
 
 // 클라이언트용 fetch
 export const fetchPostsClient = async (params: GetPostsParams): Promise<GetPostsResponse> => {
@@ -20,6 +8,7 @@ export const fetchPostsClient = async (params: GetPostsParams): Promise<GetPosts
 		sortBy: params.sortBy ?? "createdAt",
 		offset: String(params.offset ?? 0),
 		limit: String(params.limit ?? 5),
+		...(params.keyword ? { keyword: params.keyword } : {}),
 	});
 
 	const res = await clientFetch(`/posts?${query}`);

@@ -7,7 +7,7 @@ import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 import RelativeTime from "@/features/connect/ui/RelativeTime";
 import dayjs from "@/libs/dayjs";
 import { useRouter } from "next/navigation";
-import { useDeletePost } from "@/features/connect/mutations";
+import { useDeletePost, useToggleConnectLike } from "@/features/connect/mutations";
 
 interface Props {
 	id: number;
@@ -20,6 +20,7 @@ interface Props {
 	commentCount: number;
 	date: number;
 	isAuthor: boolean;
+	isLiked: boolean;
 }
 
 export default function PostDetailCard({
@@ -33,9 +34,11 @@ export default function PostDetailCard({
 	commentCount,
 	date,
 	isAuthor,
+	isLiked,
 }: Props) {
 	const router = useRouter();
 	const { mutate: deletePost } = useDeletePost(id);
+	const { mutate: toggleLike } = useToggleConnectLike(id);
 
 	return (
 		<div className="w-full rounded-[48px] bg-white px-6 pt-6 pb-5 md:px-10 md:pt-10 md:pb-9 lg:px-16 lg:pt-16 lg:pb-14">
@@ -88,14 +91,18 @@ export default function PostDetailCard({
 			<div className="mt-10 flex items-center gap-2 text-sm tracking-[-0.28px] text-gray-500 md:mt-12">
 				<RelativeTime date={date} />
 
-				<div className="flex items-center gap-1">
-					<IcThumbOutline color="gray-400" />
-					<span>{likeCount}</span>
-				</div>
+				<div className="flex items-center gap-3">
+					{/* 좋아요 */}
+					<button onClick={() => toggleLike()} className="flex items-center gap-1 text-gray-500">
+						<IcThumbOutline color={isLiked ? "purple-500" : "gray-400"} />
+						<span className={isLiked ? "text-purple-500" : ""}>{likeCount}</span>
+					</button>
 
-				<div className="flex items-center gap-1">
-					<IcMessageOutline color="gray-400" />
-					<span>{commentCount}</span>
+					{/* 댓글 */}
+					<div className="flex items-center gap-1 text-gray-500">
+						<IcMessageOutline color="gray-400" />
+						<span>{commentCount}</span>
+					</div>
 				</div>
 			</div>
 		</div>
