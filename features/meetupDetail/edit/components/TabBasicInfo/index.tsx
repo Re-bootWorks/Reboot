@@ -30,6 +30,8 @@ export default function TabBasicInfo() {
 				setIsComboOpened={setIsComboOpened}
 				value={addressValue}
 				setValue={setAddressValue}
+				firstName="_addressName"
+				secondName="_addressDetail"
 				getKakaoPlaceFn={getKakaoPlace}
 			/>
 			<FileField
