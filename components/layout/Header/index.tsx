@@ -5,13 +5,7 @@ import Container from "../Container";
 import { ACCOUNT_MENU_ITEM, GNB_MENU_ITEMS } from "@/constants/navigation";
 import { ReactNode } from "react";
 import { cn } from "@/utils/cn";
-import {
-	IcBellOutline,
-	IcBellUnreadOutline,
-	IcChevronRight,
-	IcDelete,
-	IcMenu,
-} from "@/components/ui/icons";
+import { IcChevronRight, IcDelete, IcMenu } from "@/components/ui/icons";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import useToggle from "@/hooks/useToggle";
 import { useUserStore } from "@/store/user.store";
@@ -20,20 +14,23 @@ import { useLogout } from "@/features/auth/mutations";
 import { LoginModal } from "@/features/auth/components/LoginModal";
 import { SignUpModal } from "@/features/auth/components/SignUpModal";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useGetFavoritesCount } from "@/features/header/queries";
+import Notification from "@/features/header/components/Notification";
 
 interface GNBProps {
-	favoritesCount?: number;
 	showChevron?: boolean;
 	handleItemClick?: () => void;
 	className?: string;
+	favoritesCount?: number;
+	pathname: string;
 }
 interface SidebarProps {
 	isOpen: boolean;
 	isLogin: boolean;
 	handleSidebarClose: () => void;
 	favoritesCount?: number;
+	pathname: string;
 }
 
 const STYLE = {
@@ -46,7 +43,14 @@ const STYLE = {
 	link: "flex items-center gap-1 p-4 text-base text-gray-600 cursor-pointer",
 	etc: "flex items-center gap-4 md:gap-6",
 };
+// 활성화 메뉴
+function isActiveMenu(pathname: string, href: string) {
+	if (href === "/") return pathname === "/";
 
+	const basePath = href.split("/").filter(Boolean)[0];
+	return pathname === href || pathname.startsWith(`/${basePath}`);
+}
+// 찜한 모임 뱃지
 function GNBBadge({ children }: { children: ReactNode }) {
 	return (
 		<span className="rounded-full bg-purple-500 px-2 text-xs font-semibold text-white">
@@ -54,15 +58,22 @@ function GNBBadge({ children }: { children: ReactNode }) {
 		</span>
 	);
 }
-
-function GNB({ favoritesCount, handleItemClick, showChevron = false, className }: GNBProps) {
+// 기본 GNB
+function GNB({
+	favoritesCount,
+	pathname,
+	handleItemClick,
+	showChevron = false,
+	className,
+}: GNBProps) {
 	return (
 		<>
 			{GNB_MENU_ITEMS.map((item) => {
 				const { href, label, key } = item;
+				const isActive = isActiveMenu(pathname, href);
 				return (
 					<Link key={key} href={href} className={className} onClick={handleItemClick}>
-						<span className={STYLE.link}>
+						<span className={cn(STYLE.link, isActive && "font-semibold text-purple-500")}>
 							{label}
 							{key === "favorites" && favoritesCount !== undefined && favoritesCount > 0 && (
 								<GNBBadge>{favoritesCount}</GNBBadge>
@@ -75,8 +86,8 @@ function GNB({ favoritesCount, handleItemClick, showChevron = false, className }
 		</>
 	);
 }
-
-function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: SidebarProps) {
+// 모바일용 메뉴
+function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount, pathname }: SidebarProps) {
 	return (
 		<Dialog open={isOpen} onClose={handleSidebarClose} className={"relative z-30 md:hidden"}>
 			<DialogBackdrop className="bg-black-50 fixed inset-0" />
@@ -93,6 +104,7 @@ function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: Sideba
 						<GNB
 							showChevron
 							favoritesCount={favoritesCount}
+							pathname={pathname}
 							handleItemClick={handleSidebarClose}
 							className={STYLE.sidebarItem}
 						/>
@@ -101,7 +113,14 @@ function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: Sideba
 								href={ACCOUNT_MENU_ITEM.href}
 								className={STYLE.sidebarItem}
 								onClick={handleSidebarClose}>
-								<span className={STYLE.link}>{ACCOUNT_MENU_ITEM.label}</span>
+								<span
+									className={cn(
+										STYLE.link,
+										isActiveMenu(pathname, ACCOUNT_MENU_ITEM.href) &&
+											"font-semibold text-purple-500",
+									)}>
+									{ACCOUNT_MENU_ITEM.label}
+								</span>
 								<IcChevronRight />
 							</Link>
 						)}
@@ -116,7 +135,7 @@ function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: Sideba
 		</Dialog>
 	);
 }
-
+// 로그인 버튼
 function LoginButton({
 	showSidebar,
 	handleSidebarClose,
@@ -141,7 +160,7 @@ function LoginButton({
 		</button>
 	);
 }
-
+// 로그아웃 버튼
 function LogoutButton({
 	showSidebar,
 	handleSidebarClose,
@@ -175,14 +194,16 @@ function LogoutButton({
 	);
 }
 
+// 헤더 컴포넌트
 export default function Header() {
 	const { mutate: logout, isPending } = useLogout();
-	const { isOpen, open, close } = useToggle();
-	const user = useUserStore((state) => state.user);
-	const router = useRouter();
+	const { isOpen: isSidebarOpen, open: openSidebar, close: closeSidebar } = useToggle();
 
+	const user = useUserStore((state) => state.user);
+	const pathname = usePathname();
+	const router = useRouter();
 	const isLoggedIn = !!user;
-	const isAlarm = false;
+
 	const { data: favoritesCount } = useGetFavoritesCount();
 	return (
 		<>
@@ -192,34 +213,27 @@ export default function Header() {
 						<div className={STYLE.logo}>Re:boot</div>
 					</Link>
 					<nav className="hidden md:flex" aria-label="상단 내비게이션">
-						<GNB favoritesCount={favoritesCount?.count} />
+						<GNB favoritesCount={favoritesCount?.count} pathname={pathname} />
 					</nav>
 					<Sidebar
-						isOpen={isOpen}
+						isOpen={isSidebarOpen}
 						isLogin={isLoggedIn}
-						handleSidebarClose={close}
+						handleSidebarClose={closeSidebar}
 						favoritesCount={favoritesCount?.count}
+						pathname={pathname}
 					/>
 				</div>
 				<div className={STYLE.etc}>
 					{isLoggedIn ? (
 						<>
-							<button
-								type="button"
-								disabled={!isAlarm}
-								className={cn(isAlarm ? "cursor-pointer" : "cursor-default")}>
-								{isAlarm ? <IcBellUnreadOutline /> : <IcBellOutline />}
-							</button>
+							<Notification />
 							<div className="hidden md:block">
 								<ActionDropdown
 									triggerType="profile"
 									menuClassName="z-10"
 									profileImage={user.image}
 									items={[
-										{
-											label: "마이페이지",
-											onClick: () => router.push("/mypage"),
-										},
+										{ label: "마이페이지", onClick: () => router.push("/mypage") },
 										{
 											label: "로그아웃",
 											onClick: () => logout(),
@@ -233,7 +247,7 @@ export default function Header() {
 					) : (
 						<LoginButton />
 					)}
-					<button type="button" className="cursor-pointer md:hidden" onClick={open}>
+					<button type="button" className="cursor-pointer md:hidden" onClick={openSidebar}>
 						<IcMenu />
 					</button>
 				</div>
