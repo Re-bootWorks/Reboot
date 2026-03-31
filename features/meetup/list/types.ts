@@ -60,3 +60,10 @@ export interface MeetupListResponse {
 	nextCursor: string;
 	hasMore: boolean;
 }
+
+export type MeetupItemSelected =
+	| (MeetupItem & {
+			date: string;
+			time: string;
+	  })
+	| null;

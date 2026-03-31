@@ -15,10 +15,11 @@ type MutationCallbacks<TData> = Omit<
 	"mutationKey" | "mutationFn"
 >;
 
+export const GET_MEETUPS_QUERY_KEY = ["meetup", "list"];
 export const meetupQueryKeys = {
+	getMeetups: (params: MeetupListRequest) => [...GET_MEETUPS_QUERY_KEY, params] as const,
 	postMeetup: ["meetup", "post"] as const,
 	uploadMeetupImage: ["meetup", "image", "upload"] as const,
-	getMeetups: (params: MeetupListRequest) => ["meetup", params] as const,
 	postMeetingsFavorite: ["meetings", "favorite", "post"] as const,
 	deleteMeetingsFavorite: ["meetings", "favorite", "delete"] as const,
 	postMeetingsJoin: ["meetings", "join", "post"] as const,
@@ -33,6 +34,8 @@ export function useGetMeetups(params: MeetupListRequest) {
 		getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
 		initialPageParam: undefined as string | undefined,
 		refetchOnWindowFocus: false,
+		staleTime: 0,
+		gcTime: 5 * 60 * 1000, // 5분
 	});
 }
 

@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { useGetMeetups } from "@/features/meetup/queries";
+import { ErrorBoundary } from "react-error-boundary";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import useToggle from "@/hooks/useToggle";
 import { QUERY_KEYS } from "../constants";
-import { MeetupItem } from "../types";
+import { MeetupItem, MeetupItemSelected } from "../types";
 import {
 	transformQueryValue,
 	transformTypeValue,
@@ -15,12 +16,16 @@ import {
 	transformDateStartQuery,
 	transformDateEndQuery,
 } from "../utils";
+import { useGetMeetups } from "@/features/meetup/queries";
 import MeetupCard from "@/features/meetup/list/components/MeetupCard";
 import GroupCard from "@/components/ui/GroupCard";
 import LoaderDots from "@/components/ui/LoaderDots";
 import Empty from "./Emtpy";
+import JoinModal from "./JoinModal";
 
 export default function MeetupCardItems({ size }: { size: number }) {
+	const [selectedData, setSelectedData] = useState<MeetupItemSelected>(null);
+	const { isOpen, open, close } = useToggle();
 	const { get } = useQueryParams();
 	const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = useGetMeetups({
 		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
@@ -39,8 +44,12 @@ export default function MeetupCardItems({ size }: { size: number }) {
 	});
 
 	return (
-		<>
-			<MeetupCardLoadedItems data={data?.pages?.flatMap((page) => page?.data) ?? []} />
+		<ErrorBoundary fallbackRender={() => <LastItem>에러가 발생했습니다.</LastItem>}>
+			<MeetupCardLoadedItems
+				data={data?.pages?.flatMap((page) => page?.data) ?? []}
+				setSelectedData={setSelectedData}
+				openModalFn={open}
+			/>
 			{hasNextPage &&
 				(isFetchingNextPage ? (
 					<LastItem>
@@ -49,12 +58,24 @@ export default function MeetupCardItems({ size }: { size: number }) {
 				) : (
 					<LastItem ref={loadMoreRef} />
 				))}
-			{/* {error && <LastItem>에러가 발생했습니다.</LastItem>} */}
-		</>
+			<JoinModal
+				isOpen={isOpen}
+				selectedData={selectedData}
+				onClose={() => {
+					setSelectedData(null);
+					close();
+				}}
+			/>
+		</ErrorBoundary>
 	);
 }
 
-function MeetupCardLoadedItems({ data }: { data: MeetupItem[] | undefined }) {
+interface MeetupCardLoadedItemsProps {
+	data: MeetupItem[] | undefined;
+	setSelectedData: (data: MeetupItemSelected) => void;
+	openModalFn: () => void;
+}
+function MeetupCardLoadedItems({ data, setSelectedData, openModalFn }: MeetupCardLoadedItemsProps) {
 	if (data?.length === 0) {
 		return <Empty />;
 	}
@@ -69,7 +90,7 @@ function MeetupCardLoadedItems({ data }: { data: MeetupItem[] | undefined }) {
 					animate="visible"
 					exit="exit"
 					custom={i % 10}>
-					<MeetupCard data={item} />
+					<MeetupCard data={item} setSelectedData={setSelectedData} openModalFn={openModalFn} />
 				</motion.li>
 			))}
 		</AnimatePresence>
