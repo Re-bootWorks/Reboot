@@ -3,6 +3,8 @@ export interface MeetupEditData {
 	type: string;
 	region: string;
 	address: string;
+	_addressName: string;
+	_addressDetail: string;
 	latitude: number;
 	longitude: number;
 	dateTime: string;

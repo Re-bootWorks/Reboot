@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Participants } from "./index";
-import { mockParticipants } from "@/features/meetupDetail/components/Containers/PersonnelContainer/mocks";
+import { mockParticipants } from "@/features/meetupDetail/components/PersonnelContainer/mocks";
 
 const meta: Meta<typeof Participants> = {
 	title: "UI/Participants",

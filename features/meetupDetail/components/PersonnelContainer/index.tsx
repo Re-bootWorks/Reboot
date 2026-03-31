@@ -4,19 +4,22 @@ import ProgressBar from "@/components/ui/ProgressBar";
 import { Participants } from "@/components/ui/Participants";
 import { Participant } from "@/features/meetupDetail/types";
 
-// TODO: 추후, API 응답 타입에 따라 변경 가능
+const MIN_CONFIRMED_COUNT = 5;
+
 interface PersonnelProps {
 	capacity: number;
 	participantCount: number;
-	// TODO: GET /{teamId}/meetings/{meetingId}/participants API로 별도 호출 예정
 	participants: Participant[];
+	confirmedAt: string | null;
 }
 
 export default function PersonnelContainer({
 	capacity,
 	participantCount,
 	participants,
+	confirmedAt,
 }: PersonnelProps) {
+	const isConfirmed = !!confirmedAt || participantCount >= MIN_CONFIRMED_COUNT;
 	return (
 		<div className="flex h-fit w-full flex-col gap-2 rounded-[20px] bg-linear-to-r from-purple-100 to-purple-200 px-6 py-6 pt-5 pb-5.5 lg:rounded-[28px] lg:px-10 lg:py-10 lg:pt-7 lg:pb-8.5">
 			<div className="flex flex-col gap-3 lg:gap-4">
@@ -26,12 +29,13 @@ export default function PersonnelContainer({
 							{participantCount}
 							<span className="text-gray-700">명 참여</span>
 						</p>
-						{/* TODO: 추후, API 응답으로 이미지 리스트 구현 예정 */}
 						<Participants participants={participants} />
 					</div>
-					<StatusLabel size="sm" className="h-6 lg:text-sm">
-						개설확정
-					</StatusLabel>
+					{isConfirmed && (
+						<StatusLabel size="sm" className="h-6 lg:text-sm">
+							개설확정
+						</StatusLabel>
+					)}
 				</div>
 
 				<div className="flex flex-col gap-2">

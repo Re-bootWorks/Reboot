@@ -1,5 +1,9 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { getMeetingDetail, getParticipants, getReviews } from "@/features/meetupDetail/apis";
+import {
+	getMeetingDetailServer,
+	getParticipantsServer,
+	getReviewsServer,
+} from "@/features/meetupDetail/apis/apis.server";
 import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 import MeetupDetailClient from "@/features/meetupDetail/containers/meetupContainer";
 import { Metadata } from "next";
@@ -12,8 +16,8 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
 	const { meetupId } = await params;
 	try {
-		const meeting = await getMeetingDetail(Number(meetupId));
-		if (!meeting) return { title: "모임을 찾을 수 없습니다." };
+		const meeting = await getMeetingDetailServer(Number(meetupId));
+		if (!meeting) return notFound();
 		return {
 			title: meeting.name,
 			description: meeting.description,
@@ -34,17 +38,17 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 	await Promise.all([
 		queryClient.prefetchQuery({
 			queryKey: meetupDetailQueryKeys.meeting(meetingId),
-			queryFn: () => getMeetingDetail(meetingId),
+			queryFn: () => getMeetingDetailServer(meetingId),
 			staleTime: 1000 * 60 * 5,
 		}),
 		queryClient.prefetchQuery({
 			queryKey: meetupDetailQueryKeys.participants(meetingId),
-			queryFn: () => getParticipants(meetingId),
+			queryFn: () => getParticipantsServer(meetingId),
 			staleTime: 1000 * 60 * 3,
 		}),
 		queryClient.prefetchQuery({
-			queryKey: meetupDetailQueryKeys.reviews(meetingId),
-			queryFn: () => getReviews(meetingId),
+			queryKey: meetupDetailQueryKeys.reviews(meetingId, undefined),
+			queryFn: () => getReviewsServer(meetingId),
 			staleTime: 1000 * 60 * 10,
 		}),
 	]);
