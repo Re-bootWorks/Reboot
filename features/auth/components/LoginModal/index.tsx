@@ -19,7 +19,7 @@ export function LoginModal({ hideCloseButton }: LoginModalProps) {
 			hideCloseButton={hideCloseButton}
 			footer={
 				<div className="flex justify-center gap-1">
-					<span>같이달램이 처음이신가요?</span>
+					<span>리부트가 처음이신가요?</span>
 					<button
 						onClick={() => {
 							closeLogin();

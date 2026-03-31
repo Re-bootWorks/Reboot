@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useMutation, UseMutationOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getMeetups, postMeetup } from "./apis";
 import { MeetupCreateRequest, MeetupItemResponse, MeetupListRequest } from "./types";
 import {
@@ -8,15 +8,17 @@ import {
 	postMeetingsJoin,
 	SuccessResponse,
 } from "@/apis/meetings";
+import { uploadImage } from "@/apis/images";
 
 type MutationCallbacks<TData> = Omit<
-	UseMutationOptions<TData, Error, number>,
+	UseMutationOptions<TData, Error, void>,
 	"mutationKey" | "mutationFn"
 >;
 
 export const meetupQueryKeys = {
-	getMeetups: (params: MeetupListRequest) => ["meetup", params] as const,
 	postMeetup: ["meetup", "post"] as const,
+	uploadMeetupImage: ["meetup", "image", "upload"] as const,
+	getMeetups: (params: MeetupListRequest) => ["meetup", params] as const,
 	postMeetingsFavorite: ["meetings", "favorite", "post"] as const,
 	deleteMeetingsFavorite: ["meetings", "favorite", "delete"] as const,
 	postMeetingsJoin: ["meetings", "join", "post"] as const,
@@ -25,54 +27,63 @@ export const meetupQueryKeys = {
 
 /** 모임 목록 조회 */
 export function useGetMeetups(params: MeetupListRequest) {
-	return useInfiniteQuery({
+	return useSuspenseInfiniteQuery({
 		queryKey: meetupQueryKeys.getMeetups(params),
 		queryFn: ({ pageParam }) => getMeetups({ ...params, cursor: pageParam }),
 		getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
 		initialPageParam: undefined as string | undefined,
+		refetchOnWindowFocus: false,
 	});
 }
 
 /** 모임 생성 */
-export function usePostMeetup(data: MeetupCreateRequest) {
+export function usePostMeetup() {
 	return useMutation({
 		mutationKey: meetupQueryKeys.postMeetup,
-		mutationFn: () => postMeetup(data),
+		mutationFn: (data: MeetupCreateRequest) => postMeetup(data),
+	});
+}
+
+/** 모임 이미지 업로드 */
+export function useUploadMeetupImage() {
+	return useMutation({
+		mutationKey: meetupQueryKeys.uploadMeetupImage,
+		mutationFn: (file: File) => uploadImage(file),
 	});
 }
 
 /** 모임 찜 추가 */
-export function usePostMeetingsFavorite(options?: MutationCallbacks<MeetupItemResponse>) {
+export function usePostMeetupFavorite(id: number, options?: MutationCallbacks<MeetupItemResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.postMeetingsFavorite,
-		mutationFn: (meetingId: number) => postMeetingsFavorite({ meetingId }),
+		mutationFn: () => postMeetingsFavorite({ meetingId: id }),
 		...options,
 	});
 }
 
 /** 모임 찜 해제 */
-export function useDeleteMeetingsFavorite(options?: MutationCallbacks<SuccessResponse>) {
+export function useDeleteMeetupFavorite(id: number, options?: MutationCallbacks<SuccessResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.deleteMeetingsFavorite,
-		mutationFn: (meetingId: number) => deleteMeetingsFavorite({ meetingId }),
+		mutationFn: () => deleteMeetingsFavorite({ meetingId: id }),
 		...options,
 	});
 }
 
 /** 모임 참여 */
-export function usePostMeetingsJoin(options?: MutationCallbacks<SuccessResponse>) {
+export function usePostMeetupJoin(id: number, options?: MutationCallbacks<SuccessResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.postMeetingsJoin,
-		mutationFn: (meetingId: number) => postMeetingsJoin({ meetingId }),
+		mutationFn: () => postMeetingsJoin({ meetingId: id }),
 		...options,
 	});
 }
 
 /** 모임 참여 취소 */
-export function useDeleteMeetingsJoin(options?: MutationCallbacks<SuccessResponse>) {
+export function useDeleteMeetupJoin(id: number, options?: MutationCallbacks<SuccessResponse>) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.deleteMeetingsJoin,
-		mutationFn: (meetingId: number) => deleteMeetingsJoin({ meetingId }),
+		mutationFn: () => deleteMeetingsJoin({ meetingId: id }),
 		...options,
 	});
 }

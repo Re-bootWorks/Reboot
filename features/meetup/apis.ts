@@ -13,6 +13,9 @@ if (!BASE_URL) {
 	throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
 }
 
+// 카카오 장소 검색: 키워드로 장소 검색
+export type getKakaoPlaceFn = typeof getKakaoPlace;
+
 /** 카카오 장소 검색 API(목록 표시) */
 const ROUTE_KAKAO_PLACE = "/kakao/place";
 export async function getKakaoPlace(query: string) {
@@ -29,6 +32,7 @@ export async function getKakaoPlace(query: string) {
 const ROUTE_MEETINGS = "/meetings";
 /** 모임 찾기 */
 export async function getMeetups(params: MeetupListRequest): Promise<MeetupListResponse> {
+	// encodeURIComponent 자동 적용
 	const queryParams = new URLSearchParams();
 	for (const [key, value] of Object.entries(params)) {
 		if (value != null) {
