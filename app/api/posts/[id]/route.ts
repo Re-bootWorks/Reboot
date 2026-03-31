@@ -34,6 +34,7 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
 	try {
+		const { id } = await params;
 		const body = await req.json();
 
 		const res = await serverFetch(`/posts/${params.id}`, {
@@ -48,7 +49,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 		const data = await res.json();
 
 		return NextResponse.json(data);
-	} catch (error) {
+	} catch {
 		return NextResponse.json({ message: "수정 실패" }, { status: 500 });
 	}
 }
