@@ -1,8 +1,14 @@
 import LoaderDots, { SIZE_MAP } from "@/components/ui/LoaderDots";
+import { cn } from "@/utils/cn";
 
-export default function Loading({ size = "lg" }: { size?: keyof typeof SIZE_MAP }) {
+interface LoadingProps {
+	size?: keyof typeof SIZE_MAP;
+	className?: string;
+}
+
+export default function Loading({ size = "lg", className }: LoadingProps) {
 	return (
-		<div className="flex justify-center py-4">
+		<div className={cn("flex justify-center py-4", className)}>
 			<LoaderDots size={size} />
 		</div>
 	);
