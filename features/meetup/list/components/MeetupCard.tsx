@@ -2,7 +2,7 @@
 
 import GroupCard from "@/components/ui/GroupCard";
 import { formatDateTime, isDeadlinePassed, uiFormatDeadline } from "@/utils/date";
-import type { MeetupItem, MeetupItemSelected } from "../types";
+import type { MeetupItem, MeetupItemSelected } from "../../types";
 import { checkIsConfirmed, checkIsRegClosed } from "../utils";
 import { useDeleteMeetupFavorite, usePostMeetupFavorite } from "../../queries";
 import { useUserStore } from "@/store/user.store";

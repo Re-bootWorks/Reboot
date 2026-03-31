@@ -7,7 +7,7 @@ import { useQueryParams } from "@/hooks/useQueryParams";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import useToggle from "@/hooks/useToggle";
 import { QUERY_KEYS } from "../constants";
-import { MeetupItem, MeetupItemSelected } from "../types";
+import { MeetupItem, MeetupItemSelected } from "../../types";
 import {
 	transformQueryValue,
 	transformTypeValue,
@@ -22,8 +22,16 @@ import GroupCard from "@/components/ui/GroupCard";
 import LoaderDots from "@/components/ui/LoaderDots";
 import Empty from "./Emtpy";
 import JoinModal from "./JoinModal";
+import { useUserStore } from "@/store/user.store";
 
 export default function MeetupCardItems({ size }: { size: number }) {
+	const { isPending } = useUserStore();
+	// 인증 여부가 결정되지 않은 경우 스켈레톤 표시(데이터 중복 호출 방지)
+	if (isPending) return <MeetupCardSkeletonItems size={size} />;
+	return <MeetupCardListContent size={size} />;
+}
+
+function MeetupCardListContent({ size }: { size: number }) {
 	const [selectedData, setSelectedData] = useState<MeetupItemSelected>(null);
 	const { isOpen, open, close } = useToggle();
 	const { get } = useQueryParams();

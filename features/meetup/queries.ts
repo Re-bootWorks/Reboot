@@ -9,6 +9,7 @@ import {
 	SuccessResponse,
 } from "@/apis/meetings";
 import { uploadImage } from "@/apis/images";
+import { useUserStore } from "@/store/user.store";
 
 type MutationCallbacks<TData> = Omit<
 	UseMutationOptions<TData, Error, void>,
@@ -17,7 +18,8 @@ type MutationCallbacks<TData> = Omit<
 
 export const GET_MEETUPS_QUERY_KEY = ["meetup", "list"];
 export const meetupQueryKeys = {
-	getMeetups: (params: MeetupListRequest) => [...GET_MEETUPS_QUERY_KEY, params] as const,
+	getMeetups: (params: MeetupListRequest, userId: number | null) =>
+		[...GET_MEETUPS_QUERY_KEY, params, userId] as const,
 	postMeetup: ["meetup", "post"] as const,
 	uploadMeetupImage: ["meetup", "image", "upload"] as const,
 	postMeetingsFavorite: ["meetings", "favorite", "post"] as const,
@@ -28,8 +30,10 @@ export const meetupQueryKeys = {
 
 /** 모임 목록 조회 */
 export function useGetMeetups(params: MeetupListRequest) {
+	const userId = useUserStore((state) => state.user?.id ?? null);
+	// 유저(미인증 포함)가 변경되면 refetch
 	return useSuspenseInfiniteQuery({
-		queryKey: meetupQueryKeys.getMeetups(params),
+		queryKey: meetupQueryKeys.getMeetups(params, userId),
 		queryFn: ({ pageParam }) => getMeetups({ ...params, cursor: pageParam }),
 		getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
 		initialPageParam: undefined as string | undefined,
