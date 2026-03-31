@@ -8,6 +8,50 @@ import {
 import { useToast } from "@/providers/toast-provider";
 import { headerQueryKeys } from "./queries";
 
+export function usePutNotificationsReadAll() {
+	const queryClient = useQueryClient();
+	const { handleShowToast } = useToast();
+
+	return useMutation({
+		mutationFn: putNotificationsReadAll,
+
+		onSuccess: () => {
+			handleShowToast({
+				message: "모든 알림을 읽었습니다.",
+				status: "success",
+			});
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
+		},
+
+		onError: () => {
+			handleShowToast({
+				message: "모든 알림 읽기에 실패했습니다.\n잠시 후 다시 시도해주세요.",
+				status: "error",
+			});
+		},
+	});
+}
+
+export function usePutNotificationsRead() {
+	const queryClient = useQueryClient();
+	const { handleShowToast } = useToast();
+
+	return useMutation({
+		mutationFn: putNotificationsRead,
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
+		},
+
+		onError: () => {
+			handleShowToast({
+				message: "알림 읽기에 실패했습니다.\n잠시 후 다시 시도해주세요.",
+				status: "error",
+			});
+		},
+	});
+}
+
 export function useDeleteNotificationsAll() {
 	const queryClient = useQueryClient();
 	const { handleShowToast } = useToast();
@@ -26,54 +70,6 @@ export function useDeleteNotificationsAll() {
 		onError: () => {
 			handleShowToast({
 				message: "전체 알림 삭제에 실패했습니다.\n잠시 후 다시 시도해주세요.",
-				status: "error",
-			});
-		},
-	});
-}
-
-export function usePutNotificationsReadAll() {
-	const queryClient = useQueryClient();
-	const { handleShowToast } = useToast();
-
-	return useMutation({
-		mutationFn: putNotificationsReadAll,
-
-		onSuccess: () => {
-			handleShowToast({
-				message: "모든 알림을 읽음 처리했습니다.",
-				status: "success",
-			});
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
-		},
-
-		onError: () => {
-			handleShowToast({
-				message: "전체 알림 읽음 처리에 실패했습니다.\n잠시 후 다시 시도해주세요.",
-				status: "error",
-			});
-		},
-	});
-}
-
-export function usePutNotificationsRead() {
-	const queryClient = useQueryClient();
-	const { handleShowToast } = useToast();
-
-	return useMutation({
-		mutationFn: putNotificationsRead,
-
-		onSuccess: () => {
-			handleShowToast({
-				message: "알림을 읽음 처리했습니다.",
-				status: "success",
-			});
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
-		},
-
-		onError: () => {
-			handleShowToast({
-				message: "알림 읽음 처리에 실패했습니다.\n잠시 후 다시 시도해주세요.",
 				status: "error",
 			});
 		},
