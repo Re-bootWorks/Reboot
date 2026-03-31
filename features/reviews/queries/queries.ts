@@ -1,17 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import { reviewsStatisticsOptions } from "./queryOptions";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { reviewsCategoriesStatisticsOptions, reviewsStatisticsOptions } from "./queryOptions";
 import { getReviewsCategoriesStatistics, getReviewsStatistics } from "../apis/client";
-import { ReviewCategoryStatistics } from "../types";
-import { queryKeys } from "./queryKeys";
 
 export function useReviewsStatistics() {
-	return useQuery(reviewsStatisticsOptions(getReviewsStatistics));
+	return useSuspenseQuery(reviewsStatisticsOptions(getReviewsStatistics));
 }
 
 export function useReviewsCategoriesStatistics() {
-	return useQuery<ReviewCategoryStatistics>({
-		queryKey: queryKeys.reviews.categories.statistics,
-		queryFn: getReviewsCategoriesStatistics,
-		staleTime: 60 * 1000,
-	});
+	return useSuspenseQuery(reviewsCategoriesStatisticsOptions(getReviewsCategoriesStatistics));
 }
