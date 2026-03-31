@@ -34,31 +34,31 @@ export default function MeetupDetailClient({ meetupId }: MeetupDetailClientProps
 	return (
 		<>
 			{/* 섹션 1 - 모임 소개 */}
-			<ErrorBoundary fallback={<SectionErrorFallback />}>
+			<ErrorBoundary FallbackComponent={SectionErrorFallback}>
 				<Suspense fallback={<MeetupIntroSkeleton />}>
 					<MeetupIntroSection meetupId={meetupId} />
 				</Suspense>
 			</ErrorBoundary>
 			{/* 섹션 2 - 모임 설명 */}
-			<ErrorBoundary fallback={<SectionErrorFallback />}>
+			<ErrorBoundary FallbackComponent={SectionErrorFallback}>
 				<Suspense fallback={<MeetupDescSkeleton />}>
 					<MeetupDescSection meetupId={meetupId} />
 				</Suspense>
 			</ErrorBoundary>
 			{/* 섹션 3 - 지도 */}
-			<ErrorBoundary fallback={<SectionErrorFallback />}>
+			<ErrorBoundary FallbackComponent={SectionErrorFallback}>
 				<Suspense fallback={<MeetupMapSkeleton />}>
 					<MeetupMapSection meetupId={meetupId} />
 				</Suspense>
 			</ErrorBoundary>
 			{/* 섹션 4 - 리뷰 목록 */}
-			<ErrorBoundary fallback={<SectionErrorFallback />}>
+			<ErrorBoundary FallbackComponent={SectionErrorFallback}>
 				<Suspense fallback={<MeetupReviewSkeleton />}>
 					<MeetupReviewSection meetupId={meetupId} />
 				</Suspense>
 			</ErrorBoundary>
 			{/* 섹션 5 - 관련 모임 */}
-			<ErrorBoundary fallback={<SectionErrorFallback />}>
+			<ErrorBoundary FallbackComponent={SectionErrorFallback}>
 				<Suspense fallback={<MeetupRelatedSkeleton />}>
 					<MeetupRelatedSection meetupId={meetupId} />
 				</Suspense>
