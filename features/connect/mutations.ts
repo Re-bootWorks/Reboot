@@ -70,7 +70,7 @@ export function useDeletePost(postId: number) {
 
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["posts"] });
-			router.replace("/connect");
+			router.replace("/connect?deleted=true");
 		},
 	});
 }

@@ -26,8 +26,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 	const { handleShowToast } = useToast();
 
 	const { data } = useQuery<{ comments: Comment[] }>({
-		queryKey: ["postDetail", postId],
-		queryFn: () => getPostDetailClient(String(postId)),
+		queryKey: ["postComments", postId],
+		queryFn: () => getPostDetailClient(postId),
 	});
 
 	const mutation = useMutation({

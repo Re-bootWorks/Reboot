@@ -5,12 +5,16 @@ import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient
 import CommentSection from "@/features/connect/components/CommentSection";
 import PostDetailCard from "@/features/connect/components/PostDetailCard";
 import Container from "@/components/layout/Container";
+import { useUserStore } from "@/store/user.store";
 
 export default function PostDetailContainer({ id }: { id: number }) {
 	const { data } = useQuery({
 		queryKey: ["postDetail", id],
 		queryFn: () => getPostDetailClient(id),
 	});
+
+	const { user } = useUserStore();
+	const isAuthor = !!user && user.id === data?.authorId;
 
 	if (!data) return null;
 
@@ -27,6 +31,7 @@ export default function PostDetailContainer({ id }: { id: number }) {
 					likeCount={data.likeCount}
 					commentCount={data._count?.comments ?? 0}
 					date={new Date(data.createdAt).getTime()}
+					isAuthor={isAuthor}
 				/>
 
 				<CommentSection postId={data.id} />

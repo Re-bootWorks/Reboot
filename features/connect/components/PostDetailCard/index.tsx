@@ -19,9 +19,10 @@ interface Props {
 	likeCount: number;
 	commentCount: number;
 	date: number;
+	isAuthor: boolean;
 }
 
-export default function PostDeatilCard({
+export default function PostDetailCard({
 	id,
 	title,
 	content,
@@ -31,9 +32,11 @@ export default function PostDeatilCard({
 	likeCount,
 	commentCount,
 	date,
+	isAuthor,
 }: Props) {
 	const router = useRouter();
 	const { mutate: deletePost } = useDeletePost(id);
+
 	return (
 		<div className="w-full rounded-[48px] bg-white px-6 pt-6 pb-5 md:px-10 md:pt-10 md:pb-9 lg:px-16 lg:pt-16 lg:pb-14">
 			{/* 제목 */}
@@ -41,23 +44,25 @@ export default function PostDeatilCard({
 				<h1 className="text-[20px] leading-[30px] font-bold tracking-[-0.4px] md:text-3xl md:leading-[2.25rem]">
 					{title}
 				</h1>
-				<ActionDropdown
-					items={[
-						{
-							label: "수정하기",
-							onClick: () => router.push(`/connect/edit/${id}`),
-						},
-						{
-							label: "삭제하기",
-							onClick: () => {
-								if (confirm("정말 삭제하시겠습니까?")) {
-									deletePost();
-								}
+				{isAuthor && (
+					<ActionDropdown
+						items={[
+							{
+								label: "수정하기",
+								onClick: () => router.push(`/connect/edit/${id}`),
 							},
-							danger: true,
-						},
-					]}
-				/>
+							{
+								label: "삭제하기",
+								onClick: () => {
+									if (confirm("정말 삭제하시겠습니까?")) {
+										deletePost();
+									}
+								},
+								danger: true,
+							},
+						]}
+					/>
+				)}
 			</div>
 			{/* 작성자 */}
 			<div className="mt-3 flex items-center gap-2 text-sm text-gray-500 md:mt-5">

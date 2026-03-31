@@ -55,6 +55,7 @@ export type PostCardItem = {
 export type PostCardProps = PostCardItem & {
 	onClick?: () => void;
 	onLikeClick?: (e: React.MouseEvent) => void;
+	isLoading?: boolean;
 };
 
 // HOT 게시판용

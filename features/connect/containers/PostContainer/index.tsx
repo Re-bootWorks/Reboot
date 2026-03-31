@@ -10,9 +10,23 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { mapPostToCard } from "@/features/connect/post/mappers";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useToast } from "@/providers/toast-provider";
 
 export default function PostContainer({ page }: { page: number }) {
 	const [sortBy, setSortBy] = useState<"createdAt" | "likeCount">("likeCount");
+	const searchParams = useSearchParams();
+	const { handleShowToast } = useToast();
+	const deletedHandled = useRef(false);
+
+	useEffect(() => {
+		if (searchParams.get("deleted") === "true" && !deletedHandled.current) {
+			deletedHandled.current = true;
+			handleShowToast({ message: "게시글이 삭제됐습니다.", status: "success" });
+			router.replace("/connect", { scroll: false });
+		}
+	}, [searchParams]);
 
 	const { data } = useSuspenseQuery({
 		queryKey: ["posts", page, sortBy, 5],

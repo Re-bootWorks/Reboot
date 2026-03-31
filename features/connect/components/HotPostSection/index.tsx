@@ -3,26 +3,18 @@
 import CompactCard from "@/features/connect/components/CompactCard";
 import type { Post } from "@/features/connect/post/types";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 import { fetchPostsClient } from "@/features/connect/apis/fetchPostsClient";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export default function HotPostSection() {
-	const { data, isLoading } = useQuery({
+	const { data } = useSuspenseQuery({
 		queryKey: ["hotPosts"],
-		queryFn: () =>
-			fetchPostsClient({
-				type: "best",
-				limit: 4,
-			}),
-		staleTime: 1000 * 60 * 5, // 5분 캐싱
-		retry: 1, // 과한 재요청 방지
+		queryFn: () => fetchPostsClient({ type: "best", limit: 4 }),
+		staleTime: 1000 * 60 * 5,
+		retry: 1,
 	});
 	const posts: Post[] = data?.data ?? [];
 	const router = useRouter();
-
-	if (isLoading) {
-		return <section>로딩중...</section>; //나중에 스켈레톤 ui 추가
-	}
 
 	if (!posts.length) {
 		return null;

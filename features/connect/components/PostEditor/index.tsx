@@ -28,7 +28,7 @@ export default function PostEditor({ content, onChange }: Props) {
 		editorProps: {
 			attributes: {
 				class:
-					"max-w-none min-h-[200px] outline-none p-4 [&_img]:max-w-[200px] [&_img]:w-full [&_img]:rounded-[24px]",
+					"max-w-none min-h-[200px] outline-none p-4 [&_img]:max-w-[200px] [&_img]:w-full [&_img]:rounded-[40px]",
 			},
 		},
 		onUpdate: ({ editor }) => {
@@ -44,7 +44,7 @@ export default function PostEditor({ content, onChange }: Props) {
 	if (!editor) return null;
 
 	return (
-		<div className="overflow-hidden rounded-[24px] bg-white px-2">
+		<div className="overflow-hidden bg-white px-2">
 			<Toolbar editor={editor} />
 
 			<div className="mt-6">
