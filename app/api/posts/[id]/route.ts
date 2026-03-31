@@ -32,12 +32,12 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
 	}
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 	try {
 		const { id } = await params;
 		const body = await req.json();
 
-		const res = await serverFetch(`/posts/${params.id}`, {
+		const res = await serverFetch(`/posts/${id}`, {
 			method: "PATCH",
 			body: JSON.stringify(body),
 		});
