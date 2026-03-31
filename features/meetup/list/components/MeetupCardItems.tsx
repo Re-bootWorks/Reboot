@@ -1,7 +1,10 @@
 "use client";
 
+import { useRef } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { useGetMeetups } from "@/features/meetup/queries";
 import { useQueryParams } from "@/hooks/useQueryParams";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { QUERY_KEYS } from "../constants";
 import { MeetupItem } from "../types";
 import {
@@ -14,10 +17,8 @@ import {
 } from "../utils";
 import MeetupCard from "@/features/meetup/list/components/MeetupCard";
 import GroupCard from "@/components/ui/GroupCard";
-import Empty from "./Emtpy";
-import { useRef } from "react";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import LoaderDots from "@/components/ui/LoaderDots";
+import Empty from "./Emtpy";
 
 export default function MeetupCardItems({ size }: { size: number }) {
 	const { get } = useQueryParams();
@@ -53,6 +54,47 @@ export default function MeetupCardItems({ size }: { size: number }) {
 	);
 }
 
+function MeetupCardLoadedItems({ data }: { data: MeetupItem[] | undefined }) {
+	if (data?.length === 0) {
+		return <Empty />;
+	}
+	return (
+		<AnimatePresence mode="popLayout">
+			{data?.map((item, i) => (
+				<motion.li
+					key={item.id}
+					className="w-full"
+					variants={cardVariants}
+					initial="hidden"
+					animate="visible"
+					exit="exit"
+					custom={i % 10}>
+					<MeetupCard data={item} />
+				</motion.li>
+			))}
+		</AnimatePresence>
+	);
+}
+const cardVariants = {
+	hidden: { opacity: 0, y: 8 },
+	visible: (i: number) => ({
+		opacity: 1,
+		y: 0,
+		transition: {
+			delay: i * 0.05,
+			duration: 0.3,
+			ease: "easeOut" as const,
+		},
+	}),
+	exit: {
+		opacity: 0,
+		transition: {
+			duration: 0.3,
+			ease: "easeOut" as const,
+		},
+	},
+};
+
 export function MeetupCardSkeletonItems({ size }: { size: number }) {
 	return Array.from({ length: size }).map((_, i) => (
 		<li key={i} className="w-full">
@@ -73,15 +115,4 @@ function LastItem({ ref, children }: LastItemProps) {
 			</div>
 		</li>
 	);
-}
-
-function MeetupCardLoadedItems({ data }: { data: MeetupItem[] | undefined }) {
-	if (data?.length === 0) {
-		return <Empty />;
-	}
-	return data?.map((item) => (
-		<li key={item.id} className="w-full">
-			<MeetupCard data={item} />
-		</li>
-	));
 }
