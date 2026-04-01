@@ -63,12 +63,18 @@ export default function NotificationPanel({ close, unreadCount }: NotificationPa
 
 		popoverClose();
 
-		if (item.type === "COMMENT") {
+		if (item.type === "COMMENT" && "postId" in item) {
 			router.push(`/connect/${item.postId}`);
 			return;
 		}
 
-		router.push(`/meetup/${item.meetingId}`);
+		if (
+			(item.type === "MEETING_CONFIRMED" || item.type === "MEETING_CANCELED") &&
+			"meetingId" in item
+		) {
+			router.push(`/meetup/${item.meetingId}`);
+			return;
+		}
 	}
 
 	// 알람 전체 읽음
@@ -111,7 +117,6 @@ export default function NotificationPanel({ close, unreadCount }: NotificationPa
 							<NotificationCard
 								key={item.id}
 								item={item}
-								type={item.type}
 								handleReadAction={() => {
 									handleNotificationClick(item, close);
 								}}

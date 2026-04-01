@@ -10,35 +10,34 @@ import { throwApiError } from "@/utils/api";
 
 // 알림 목록 mapper
 function mapNotifications(item: NotificationRes): NotificationCardItem {
+	const base = {
+		id: item.id,
+		type: item.type,
+		message: item.message,
+		image: item.data.image,
+		isRead: item.isRead,
+		createdAt: item.createdAt,
+	};
+
 	switch (item.type) {
 		case "MEETING_CONFIRMED":
 		case "MEETING_CANCELED":
 			return {
-				id: item.id,
-				type: item.type,
-				message: item.message,
-				image: item.data.image,
+				...base,
 				meetingId: item.data.meetingId,
 				meetingName: item.data.meetingName,
-				isRead: item.isRead,
-				createdAt: item.createdAt,
 			};
 
 		case "COMMENT":
 			return {
-				id: item.id,
-				type: item.type,
-				message: item.message,
-				image: item.data.image,
+				...base,
 				postId: item.data.postId,
 				postTitle: item.data.postTitle,
 				commentId: item.data.commentId,
-				isRead: item.isRead,
-				createdAt: item.createdAt,
 			};
 
 		default:
-			throw new Error(`지원하지 않는 알림 타입입니다: ${String(item)}`);
+			return base;
 	}
 }
 

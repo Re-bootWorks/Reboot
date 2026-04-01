@@ -15,10 +15,14 @@ const NOTIFICATION_STYLE = {
 };
 interface NotificationCardProps {
 	item: NotificationCardItem;
-	type: NotificationType;
 	handleReadAction: () => void;
 	handleDeleteAction: () => void;
 }
+const DEFAULT_NOTIFICATION_TYPE_UI = {
+	label: "알림",
+	icon: null,
+} as const;
+
 const NOTIFICATION_TYPE_UI = {
 	COMMENT: {
 		label: "새로운 댓글",
@@ -36,11 +40,12 @@ const NOTIFICATION_TYPE_UI = {
 
 export default function NotificationCard({
 	item,
-	type,
 	handleReadAction,
 	handleDeleteAction,
 }: NotificationCardProps) {
-	const typeUi = NOTIFICATION_TYPE_UI[type];
+	const typeUi =
+		NOTIFICATION_TYPE_UI[item.type as keyof typeof NOTIFICATION_TYPE_UI] ??
+		DEFAULT_NOTIFICATION_TYPE_UI;
 	// 알림 클릭 시
 	function handleCardClick() {
 		handleReadAction();
