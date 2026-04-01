@@ -12,7 +12,7 @@ const MeetupCardItems = dynamic(() => import("@/features/meetup/list/components/
 
 export default function MeetupCardListWrapper() {
 	return (
-		<ul className="grid h-full w-full justify-items-stretch gap-4 md:gap-6 lg:grid-cols-2">
+		<ul className="grid w-full content-start justify-items-stretch gap-4 md:gap-6 lg:grid-cols-2">
 			<Suspense fallback={<MeetupCardSkeletonItems size={size} />}>
 				<MeetupCardItems size={size} />
 			</Suspense>
