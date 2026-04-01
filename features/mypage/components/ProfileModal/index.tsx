@@ -99,6 +99,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 
 	// 모달 닫기
 	function handleModalClose() {
+		close();
 		onClose();
 	}
 
