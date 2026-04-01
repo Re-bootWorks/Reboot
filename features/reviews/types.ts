@@ -90,11 +90,11 @@ export interface ReviewsListResponse {
 }
 
 export interface ReviewPayload {
-	score: number;
-	comment: string;
+	score: ReviewsListItem["score"];
+	comment: ReviewsListItem["comment"];
 }
 
 export interface PatchReviewPayload {
-	reviewId: number;
+	reviewId: ReviewsListItem["id"];
 	reviewFormValues: ReviewPayload;
 }
