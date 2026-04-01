@@ -18,8 +18,6 @@ import {
 } from "../mutations";
 import { useUserStore } from "@/store/user.store";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
-import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "../components/ErrorFallback";
 import QueryErrorBoundary from "../components/QueryErrorBoundary";
 interface MeetupActionHandlers {
 	/** 모임 확정 */

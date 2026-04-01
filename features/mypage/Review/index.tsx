@@ -16,8 +16,6 @@ import Loading from "@/components/ui/Loading";
 import Empty from "@/components/layout/Empty";
 import { useUserStore } from "@/store/user.store";
 import { useDeleteReviews, usePatchReviews, usePostMeetingsReviews } from "../mutations";
-import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "../components/ErrorFallback";
 import QueryErrorBoundary from "../components/QueryErrorBoundary";
 
 type ReviewTabId = "writable" | "written";
