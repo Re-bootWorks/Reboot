@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { IcDelete } from "@/components/ui/icons";
 import { cn } from "@/utils/cn";
 import { CloseButton } from "@headlessui/react";
@@ -31,8 +31,6 @@ interface NotificationPanelProps {
 
 export default function NotificationPanel({ close, unreadCount }: NotificationPanelProps) {
 	const router = useRouter();
-	// 삭제될 항목의 타겟
-	const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 	// 알람 목록
 	const {
 		data: notificationsData,
@@ -81,14 +79,9 @@ export default function NotificationPanel({ close, unreadCount }: NotificationPa
 	}
 
 	// 알람 개별 삭제
-	const { mutateAsync: deleteNotifications } = useDeleteNotifications();
-	async function handleDeleteClick(notificationId: number) {
-		try {
-			setDeleteTarget(notificationId);
-			await deleteNotifications({ notificationId });
-		} finally {
-			setDeleteTarget(null);
-		}
+	const { mutate: deleteNotifications } = useDeleteNotifications();
+	function handleDeleteClick(notificationId: number) {
+		deleteNotifications({ notificationId });
 	}
 
 	// 알람 전체 삭제
@@ -119,7 +112,6 @@ export default function NotificationPanel({ close, unreadCount }: NotificationPa
 								key={item.id}
 								item={item}
 								type={item.type}
-								isPending={deleteTarget === item.id}
 								handleReadAction={() => {
 									handleNotificationClick(item, close);
 								}}

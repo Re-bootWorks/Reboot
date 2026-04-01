@@ -1,7 +1,6 @@
 import { IcCheckCircle, IcDelete } from "@/components/ui/icons";
 import { NotificationCardItem, NotificationType } from "../../types";
 import { cn } from "@/utils/cn";
-import Loading from "@/components/ui/Loading";
 import Thumbnail from "@/components/ui/Thumbnail";
 import RelativeTime from "@/features/connect/ui/RelativeTime";
 
@@ -19,7 +18,6 @@ interface NotificationCardProps {
 	type: NotificationType;
 	handleReadAction: () => void;
 	handleDeleteAction: () => void;
-	isPending?: boolean;
 }
 const NOTIFICATION_TYPE_UI = {
 	COMMENT: {
@@ -41,18 +39,14 @@ export default function NotificationCard({
 	type,
 	handleReadAction,
 	handleDeleteAction,
-	isPending,
 }: NotificationCardProps) {
 	const typeUi = NOTIFICATION_TYPE_UI[type];
 	// 알림 클릭 시
 	function handleCardClick() {
-		if (isPending) return;
 		handleReadAction();
 	}
 	// 알림 키보드 활성화
 	function handleKeyDown(event: React.KeyboardEvent<HTMLElement>) {
-		if (isPending) return;
-
 		if (event.key === "Enter" || event.key === " ") {
 			event.preventDefault();
 			handleReadAction();
@@ -69,40 +63,36 @@ export default function NotificationCard({
 			className={cn(NOTIFICATION_STYLE.card, !item.isRead && "bg-purple-50/30")}
 			onClick={handleCardClick}
 			onKeyDown={handleKeyDown}>
-			{isPending ? (
-				<Loading size="sm" />
-			) : (
-				<div className={NOTIFICATION_STYLE.cardContent}>
-					<Thumbnail
-						src={item.image}
-						width={40}
-						height={40}
-						className={cn(
-							!!item.image ? "border border-gray-200" : "",
-							"size-10 shrink-0 rounded-lg",
-						)}
-					/>
-					<div className="grow">
-						<div className="flex items-center justify-between">
-							<span className={cn(NOTIFICATION_STYLE.cardType)}>
-								{typeUi.label}
-								{typeUi.icon}
-							</span>
-							<button
-								type="button"
-								className={NOTIFICATION_STYLE.cardDeleteBtn}
-								onClick={handleDeleteClick}>
-								<IcDelete color="white" size="10px" />
-							</button>
-						</div>
-						<p className={NOTIFICATION_STYLE.cardMessage}>{item.message}</p>
-						<div className={NOTIFICATION_STYLE.cardDate}>
-							{!item.isRead && <span className={NOTIFICATION_STYLE.cardDot} aria-hidden="true" />}
-							<RelativeTime date={item.createdAt} />
-						</div>
+			<div className={NOTIFICATION_STYLE.cardContent}>
+				<Thumbnail
+					src={item.image}
+					width={40}
+					height={40}
+					className={cn(
+						!!item.image ? "border border-gray-200" : "",
+						"size-10 shrink-0 rounded-lg",
+					)}
+				/>
+				<div className="grow">
+					<div className="flex items-center justify-between">
+						<span className={cn(NOTIFICATION_STYLE.cardType)}>
+							{typeUi.label}
+							{typeUi.icon}
+						</span>
+						<button
+							type="button"
+							className={NOTIFICATION_STYLE.cardDeleteBtn}
+							onClick={handleDeleteClick}>
+							<IcDelete color="white" size="10px" />
+						</button>
+					</div>
+					<p className={NOTIFICATION_STYLE.cardMessage}>{item.message}</p>
+					<div className={NOTIFICATION_STYLE.cardDate}>
+						{!item.isRead && <span className={NOTIFICATION_STYLE.cardDot} aria-hidden="true" />}
+						<RelativeTime date={item.createdAt} />
 					</div>
 				</div>
-			)}
+			</div>
 		</article>
 	);
 }
