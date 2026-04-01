@@ -2,6 +2,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query
 import {
 	getMeetingDetailServer,
 	getParticipantsServer,
+	getRelatedMeetingsServer,
 	getReviewsServer,
 } from "@/features/meetupDetail/apis/apis.server";
 import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
@@ -32,13 +33,14 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 	const meetingId = Number(meetupId);
 
 	if (isNaN(meetingId)) notFound();
+	const meeting = await getMeetingDetailServer(meetingId);
 
 	const queryClient = new QueryClient();
 
 	await Promise.all([
 		queryClient.prefetchQuery({
 			queryKey: meetupDetailQueryKeys.meeting(meetingId),
-			queryFn: () => getMeetingDetailServer(meetingId),
+			queryFn: () => meeting,
 			staleTime: 1000 * 60 * 5,
 		}),
 		queryClient.prefetchQuery({
@@ -49,6 +51,11 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 		queryClient.prefetchQuery({
 			queryKey: meetupDetailQueryKeys.reviews(meetingId, undefined),
 			queryFn: () => getReviewsServer(meetingId),
+			staleTime: 1000 * 60 * 10,
+		}),
+		queryClient.prefetchQuery({
+			queryKey: meetupDetailQueryKeys.related(meetingId, meeting.region, meeting.type),
+			queryFn: () => getRelatedMeetingsServer(meetingId, meeting.region, meeting.type),
 			staleTime: 1000 * 60 * 10,
 		}),
 	]);
