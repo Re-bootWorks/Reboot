@@ -1,6 +1,7 @@
-import type { Comment, CommentCardItem } from "./types";
+import type { CommentCardItem } from "./types";
+import type { PostComment } from "@/features/connect/post/types";
 
-export function mapCommentToCard(comment: Comment): CommentCardItem {
+export function mapCommentToCard(comment: PostComment): CommentCardItem {
 	return {
 		id: comment.id,
 		content: comment.content,
