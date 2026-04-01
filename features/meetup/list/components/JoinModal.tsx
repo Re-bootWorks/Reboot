@@ -11,12 +11,22 @@ import { Modal } from "@/components/ui/Modals";
 import { IcCalendarOutline, IcChevronRight, IcDotPoints, IcLocation } from "@/components/ui/icons";
 
 interface JoinModalProps {
-	isOpen: boolean;
 	selectedData: MeetupItemSelected | null;
+	isOpen: boolean;
 	onClose: () => void;
 }
-export default function JoinModal({ isOpen, selectedData, onClose }: JoinModalProps) {
-	const id = selectedData?.id as number;
+export default function JoinModal({ selectedData, isOpen, onClose }: JoinModalProps) {
+	if (!selectedData) return null;
+	return <JoinModalContent selectedData={selectedData} isOpen={isOpen} onClose={onClose} />;
+}
+
+interface JoinModalContentProps {
+	selectedData: NonNullable<MeetupItemSelected>;
+	isOpen: boolean;
+	onClose: () => void;
+}
+function JoinModalContent({ selectedData, isOpen, onClose }: JoinModalContentProps) {
+	const id = selectedData.id;
 	const { onMutate, onSuccess, onError } = useMeetupToggle(id, "isJoined");
 	const postJoinMutation = usePostMeetupJoin(id, {
 		onMutate,
@@ -43,31 +53,29 @@ export default function JoinModal({ isOpen, selectedData, onClose }: JoinModalPr
 		}
 	}
 
-	if (!selectedData) return null;
 	return (
 		<Modal
-			title={selectedData?.name}
+			title={selectedData.name}
 			isOpen={isOpen && !!selectedData}
 			onClose={onClose}
 			className={modalSizeStyle}>
-			{/* 이미지 + 정보 통합 카드 */}
 			<div className="overflow-hidden rounded-xl bg-gray-50">
 				<div className="relative aspect-video w-full">
-					<Image src={selectedData?.image} alt={selectedData?.name} fill className="object-cover" />
+					<Image src={selectedData.image} alt={selectedData.name} fill className="object-cover" />
 				</div>
 				<div className="flex flex-col gap-1 px-4 py-3.5 text-sm text-gray-700 md:text-base">
 					<div className={detailStyles}>
 						<IcDotPoints {...iconProps} />
-						<span>{selectedData?.type}</span>
+						<span>{selectedData.type}</span>
 					</div>
 					<div className={detailStyles}>
 						<IcLocation {...iconProps} />
-						<span>{selectedData?.address}</span>
+						<span>{selectedData.address}</span>
 					</div>
 					<div className={detailStyles}>
 						<IcCalendarOutline {...iconProps} />
 						<span>
-							{selectedData?.date} · {selectedData?.time}
+							{selectedData.date} · {selectedData.time}
 						</span>
 					</div>
 				</div>
@@ -76,20 +84,20 @@ export default function JoinModal({ isOpen, selectedData, onClose }: JoinModalPr
 			<div className="mt-2 text-right">
 				<Link
 					className="inline-flex items-center text-sm text-purple-500 md:text-base"
-					href={`/meetup/${selectedData?.id}`}>
+					href={`/meetup/${selectedData.id}`}>
 					상세 보기
 					<IcChevronRight {...iconProps} />
 				</Link>
 			</div>
 
 			<p className="my-2 text-center text-sm text-gray-600">
-				{!selectedData?.isJoined ? "이 모임에 참여하시겠어요?" : "이 모임 참여를 취소하시겠어요?"}
+				{!selectedData.isJoined ? "이 모임에 참여하시겠어요?" : "이 모임 참여를 취소하시겠어요?"}
 			</p>
 
 			<Button
 				onClick={handleClickJoinButton}
 				isPending={postJoinMutation.isPending || deleteJoinMutation.isPending}>
-				{selectedData?.isJoined ? "참여 취소" : "참여하기"}
+				{!selectedData.isJoined ? "참여하기" : "참여 취소"}
 			</Button>
 		</Modal>
 	);
