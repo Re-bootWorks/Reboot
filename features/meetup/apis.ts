@@ -20,7 +20,7 @@ const ROUTE_KAKAO_PLACE = "/kakao/place";
 export async function getKakaoPlace(query: string) {
 	const res = await clientFetch(`${ROUTE_KAKAO_PLACE}?query=${query}`);
 	if (!res.ok) {
-		throw new Error(`카카오 장소 검색 API 호출에 실패했습니다. (${res.status})`);
+		throw new Error(`카카오 장소 검색 API 호출에 실패했습니다.`);
 	}
 
 	const data = await res.json();
@@ -29,6 +29,7 @@ export async function getKakaoPlace(query: string) {
 }
 
 const ROUTE_MEETINGS = "/meetings";
+
 /** 모임 찾기 */
 export async function getMeetups(params: MeetupListRequest): Promise<MeetupListResponse> {
 	// encodeURIComponent 자동 적용
@@ -44,6 +45,10 @@ export async function getMeetups(params: MeetupListRequest): Promise<MeetupListR
 		headers: { "Content-Type": "application/json" },
 	});
 
+	if (!res.ok) {
+		const error = await res.json().catch(() => null);
+		throw new Error(error?.message ?? "모임 목록을 불러오는데 실패했습니다.");
+	}
 	return res.json();
 }
 
@@ -56,7 +61,8 @@ export async function postMeetup(data: MeetupCreateRequest): Promise<MeetupItemR
 	});
 
 	if (!res.ok) {
-		throw new Error(`모임 생성 API 호출에 실패했습니다.`);
+		const error = await res.json().catch(() => null);
+		throw new Error(error?.message ?? "모임 생성에 실패했습니다.");
 	}
 	return res.json();
 }
