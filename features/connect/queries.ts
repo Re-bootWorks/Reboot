@@ -1,6 +1,6 @@
 import { fetchPostsClient } from "@/features/connect/apis/fetchPostsClient";
 import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
-import { useSuspenseQuery, useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery, useQuery, keepPreviousData } from "@tanstack/react-query";
 
 export const connectQueryKeys = {
 	posts: (page: number, sortBy: string, limit: number, keyword: string) =>
@@ -20,7 +20,7 @@ export function useGetPosts({
 	keyword: string;
 	limit?: number;
 }) {
-	return useSuspenseQuery({
+	return useQuery({
 		queryKey: connectQueryKeys.posts(page, sortBy, limit, keyword),
 		queryFn: () =>
 			fetchPostsClient({
@@ -31,6 +31,7 @@ export function useGetPosts({
 				limit,
 			}),
 		staleTime: 1000 * 60,
+		placeholderData: keepPreviousData,
 	});
 }
 

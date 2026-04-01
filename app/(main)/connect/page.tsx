@@ -65,7 +65,7 @@ export default async function ConnectPage({
 				</Suspense>
 				<div className="mt-[6.125rem] pb-[8.75rem]">
 					<Suspense fallback={null}>
-						<PostContainer page={page} />
+						<PostContainer />
 					</Suspense>
 				</div>
 			</Container>

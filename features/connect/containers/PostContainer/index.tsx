@@ -10,6 +10,9 @@ import { mapPostToCard } from "@/features/connect/post/mappers";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/providers/toast-provider";
 import { useGetPosts } from "@/features/connect/queries";
+import { AnimatePresence, motion } from "motion/react";
+import { cardVariants } from "@/features/connect/animations";
+import LoaderDots from "@/components/ui/LoaderDots";
 
 const SORT_OPTIONS = [
 	{ label: "최신순", value: "createdAt" },
@@ -20,7 +23,8 @@ const SORT_OPTIONS = [
 
 const LIMIT = 5;
 
-export default function PostContainer({ page }: { page: number }) {
+export default function PostContainer() {
+	const [page, setPage] = useState(1);
 	const [sortBy, setSortBy] = useState<"createdAt" | "likeCount" | "viewCount" | "commentCount">(
 		"createdAt",
 	);
@@ -40,7 +44,7 @@ export default function PostContainer({ page }: { page: number }) {
 		}
 	}, [searchParams]);
 
-	const { data } = useGetPosts({ page, sortBy, keyword: searchKeyword, limit: LIMIT });
+	const { data, isFetching } = useGetPosts({ page, sortBy, keyword: searchKeyword, limit: LIMIT });
 
 	const handleSearch = () => {
 		setSearchKeyword(keyword);
@@ -55,7 +59,7 @@ export default function PostContainer({ page }: { page: number }) {
 	return (
 		<div>
 			{/* 검색 + 정렬 */}
-			<div className="flex items-center justify-between pb-4">
+			<div className="-mx-4 flex items-center justify-between pb-4">
 				<SearchInput
 					value={keyword}
 					onChange={(e) => setKeyword(e.target.value)}
@@ -75,7 +79,12 @@ export default function PostContainer({ page }: { page: number }) {
 			{/* 게시글 목록 */}
 			<div
 				ref={containerRef}
-				className="flex flex-col gap-2 rounded-3xl bg-white px-8 py-8 md:gap-12">
+				className="relative -mx-4 flex flex-col gap-12 rounded-3xl bg-white px-8 py-8">
+				{isFetching && (
+					<div className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-white/60">
+						<LoaderDots size="lg" />
+					</div>
+				)}
 				{mappedPosts.length === 0 ? (
 					<div className="flex flex-col items-center justify-center gap-4 py-20">
 						<img
@@ -86,9 +95,19 @@ export default function PostContainer({ page }: { page: number }) {
 						<p className="text-sm text-gray-400">아직 게시물이 없어요</p>
 					</div>
 				) : (
-					mappedPosts.map((post) => (
-						<PostCard key={post.id} {...post} onClick={() => router.push(`/connect/${post.id}`)} />
-					))
+					<AnimatePresence mode="popLayout">
+						{mappedPosts.map((post, i) => (
+							<motion.div
+								key={post.id}
+								variants={cardVariants}
+								initial="hidden"
+								animate="visible"
+								exit="exit"
+								custom={i}>
+								<PostCard {...post} onClick={() => router.push(`/connect/${post.id}`)} />
+							</motion.div>
+						))}
+					</AnimatePresence>
 				)}
 			</div>
 
@@ -98,10 +117,8 @@ export default function PostContainer({ page }: { page: number }) {
 					currentPage={page}
 					totalPages={totalPages}
 					handlePageChange={(newPage) => {
-						router.push(`?page=${newPage}`);
-						setTimeout(() => {
-							containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-						}, 0);
+						setPage(newPage); // router.push 제거
+						containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 					}}
 				/>
 			</div>
