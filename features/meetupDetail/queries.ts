@@ -1,12 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMeetingDetail, getParticipants, getReviews } from "@/features/meetupDetail/apis";
+import {
+	getMeetingDetail,
+	getParticipants,
+	getRelatedMeetings,
+	getReviews,
+} from "@/features/meetupDetail/apis/apis";
 
 export const meetupDetailQueryKeys = {
 	meeting: (meetingId: number) => ["meetupDetail", "meeting", meetingId] as const,
 	participants: (meetingId: number) => ["meetupDetail", "participants", meetingId] as const,
-	reviews: (meetingId: number) => ["meetupDetail", "reviews", meetingId] as const,
+	reviews: (meetingId: number, cursor?: string) =>
+		["meetupDetail", "reviews", meetingId, cursor] as const,
 };
 
+{
+	/* TODO: Suspense 도입으로, useQuery -> useSuspenseQuery 변경 가능성 o */
+}
 export function useMeetingDetail(meetingId: number) {
 	return useQuery({
 		queryKey: meetupDetailQueryKeys.meeting(meetingId),
@@ -23,10 +32,18 @@ export function useParticipants(meetingId: number) {
 	});
 }
 
-export function useReviews(meetingId: number) {
+export function useReviews(meetingId: number, cursor?: string) {
 	return useQuery({
-		queryKey: meetupDetailQueryKeys.reviews(meetingId),
-		queryFn: () => getReviews(meetingId),
+		queryKey: meetupDetailQueryKeys.reviews(meetingId, cursor),
+		queryFn: () => getReviews(meetingId, cursor),
 		staleTime: 1000 * 60 * 10, // 리뷰: 10분 (가장 안바뀌므로)
+	});
+}
+
+export function useRelatedMeetings(meetingId: number, region: string, type: string) {
+	return useQuery({
+		queryKey: ["meetupDetail", "related", meetingId, region, type] as const,
+		queryFn: () => getRelatedMeetings(meetingId, region, type),
+		staleTime: 1000 * 60 * 5,
 	});
 }

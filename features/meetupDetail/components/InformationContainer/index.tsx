@@ -12,33 +12,57 @@ import useToggle from "@/hooks/useToggle";
 import EditMeetup from "@/features/meetupDetail/edit";
 import { MeetupEditData } from "@/features/meetupDetail/edit/types";
 import Alert from "@/components/ui/Modals/AlertModal";
+import {
+	useCancelJoinMutation,
+	useDeleteMeetingMutation,
+	useJoinMutation,
+} from "@/features/meetupDetail/mutations";
+import useMeetingFavorite from "@/hooks/useMeetingFavorite";
+import { useToast } from "@/providers/toast-provider";
 
 interface InformationContainerProps {
+	id: number;
 	name: string;
 	type: string;
 	region: string;
 	dateTime: string;
 	registrationEnd: string;
+	canceledAt: string | null;
 	isHost: boolean;
+	isJoined: boolean;
+	isFavorited: boolean;
 	editInitialData: MeetupEditData;
+	participantCount: number;
 }
 
 export default function InformationContainer({
+	id,
 	name,
 	type,
 	region,
 	dateTime,
 	registrationEnd,
+	canceledAt,
+	participantCount,
 	isHost,
+	isJoined,
+	isFavorited,
 	editInitialData,
 }: InformationContainerProps) {
 	const { data: me } = useGetMe();
 	const isLoggedIn = !!me;
 
-	const { isOpen: isJoined, toggle: toggleJoin } = useToggle();
 	const { isOpen: isLoginModalOpen, open: openLoginModal, close: closeLoginModal } = useToggle();
 	const { isOpen: isEditModalOpen, open: openEditModal, close: closeEditModal } = useToggle();
 	const { isOpen: isDeleteModalOpen, open: openDeleteModal, close: closeDeleteModal } = useToggle();
+
+	const { mutate: join, isPending: isJoinPending } = useJoinMutation(id);
+	const { mutate: cancelJoin, isPending: isCancelPending } = useCancelJoinMutation(id);
+	const { mutate: deleteMeeting, isPending: isDeletePending } = useDeleteMeetingMutation(id);
+	const { handleWishToggle } = useMeetingFavorite();
+	const { handleShowToast } = useToast();
+
+	const isJoinPendingAny = isJoinPending || isCancelPending;
 
 	const isClosed = isDeadlinePassed(registrationEnd);
 
@@ -47,7 +71,11 @@ export default function InformationContainer({
 			openLoginModal();
 			return;
 		}
-		toggleJoin();
+		if (isJoined) {
+			cancelJoin();
+		} else {
+			join();
+		}
 	};
 
 	const handleShareClick = () => {
@@ -59,14 +87,14 @@ export default function InformationContainer({
 	};
 
 	const handleDeleteConfirm = () => {
-		// TODO: 추후 실제 삭제 API 연동 예정
-		closeDeleteModal();
+		deleteMeeting();
 	};
 
 	const actionItems = [
 		{
 			label: "수정하기",
 			onClick: openEditModal,
+			disabled: !!canceledAt,
 		},
 		{
 			label: "삭제하기",
@@ -111,11 +139,23 @@ export default function InformationContainer({
 				</div>
 
 				<div className="flex w-full items-center gap-4">
-					<UtilityButton sizes="small" className="lg:size-15" />
+					<UtilityButton
+						sizes="small"
+						className="lg:size-15"
+						pressed={isFavorited}
+						onClick={() => {
+							handleWishToggle(id, isFavorited);
+							handleShowToast({
+								message: isFavorited ? "모임이 찜 해제되었습니다." : "모임이 찜 추가되었습니다.",
+								status: "success",
+							});
+						}}
+					/>
 					<Button
 						sizes="small"
 						colors={isJoined ? "purpleBorder" : "purple"}
 						disabled={!isHost && isClosed}
+						isPending={!isHost && isJoinPendingAny}
 						onClick={isHost ? handleShareClick : handleJoinClick}
 						className="flex-1 lg:h-15 lg:rounded-2xl lg:px-7.5 lg:text-xl">
 						{isHost ? "공유하기" : isJoined ? "참여 취소하기" : "참여하기"}
@@ -133,13 +173,20 @@ export default function InformationContainer({
 			</Alert>
 
 			{/* 모임 수정 모달 */}
-			<EditMeetup isOpen={isEditModalOpen} onClose={closeEditModal} initialData={editInitialData} />
+			<EditMeetup
+				meetingId={id}
+				isOpen={isEditModalOpen}
+				onClose={closeEditModal}
+				initialData={editInitialData}
+				participantCount={participantCount}
+			/>
 
 			{/* 모임 삭제 모달 */}
 			<Alert
 				isOpen={isDeleteModalOpen}
 				onClose={closeDeleteModal}
 				confirmLabel="삭제하기"
+				isPending={isDeletePending}
 				handleConfirmButton={handleDeleteConfirm}>
 				<p>모임을 정말 삭제하시겠어요?</p>
 				<p className="mt-1 text-sm font-normal text-gray-500 md:text-base">

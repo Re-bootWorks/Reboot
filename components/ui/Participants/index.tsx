@@ -1,8 +1,6 @@
 import { Participant } from "@/features/meetupDetail/types";
 import Image from "next/image";
 
-// TODO: 추후 API 응답 타입으로 대체 예정
-
 interface ParticipantsImageProps {
 	participants: Participant[];
 }
