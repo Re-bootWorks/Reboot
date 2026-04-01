@@ -18,7 +18,9 @@ export default function CreateOpenButton({ className }: { className?: string }) 
 			className={cn("shadow-lg transition-transform duration-300 hover:-translate-y-1", className)}
 			onClick={() => {
 				if (user) {
-					router.push(`/meetup/create${queries ? `?${queries}` : ""}`);
+					// 모임 목록 페이지 데이터 변경 이슈 해결을 위한 querystring 추가
+					const url = `/meetup/create${queries ? `?${queries}` : ""}`;
+					router.push(url, { scroll: false });
 				} else {
 					handleShowToast({ message: "로그인 후 이용해주세요.", status: "error" });
 				}

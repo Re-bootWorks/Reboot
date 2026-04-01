@@ -16,10 +16,10 @@ type MutationCallbacks<TData, TVariables = void> = Omit<
 	"mutationKey" | "mutationFn"
 >;
 
-export const GET_MEETUPS_QUERY_KEY = ["meetup", "list"];
 export const meetupQueryKeys = {
+	list: ["meetup", "list"] as const,
 	getMeetups: (params: MeetupListRequest, userId: number | null) =>
-		[...GET_MEETUPS_QUERY_KEY, params, userId] as const,
+		[...meetupQueryKeys.list, params, userId] as const,
 	postMeetup: ["meetup", "post"] as const,
 	uploadMeetupImage: ["meetup", "image", "upload"] as const,
 	postMeetingsFavorite: ["meetings", "favorite", "post"] as const,
