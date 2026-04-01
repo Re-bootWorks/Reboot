@@ -33,13 +33,19 @@ export function middleware(request: NextRequest) {
 	) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
-	if (pathname === "/meetup/create") {
+	if (pathname.startsWith("/meetup/create")) {
 		const step = request.nextUrl.searchParams.get("step");
-		const validStep = Number(step);
 
-		// step 외 다른 쿼리 있거나, step이 숫자가 아니거나 범위 밖이면 리다이렉트
-		if (!step || isNaN(validStep) || validStep < 1 || validStep > 4) {
-			return NextResponse.redirect(new URL("/meetup/create?step=1", request.url));
+		if (step !== null) {
+			const validStep = Number(step);
+			if (!Number.isInteger(validStep) || validStep < 1 || validStep > 4) {
+				const url = new URL("/meetup/create", request.url);
+				request.nextUrl.searchParams.forEach((value, key) => {
+					if (key !== "step") url.searchParams.set(key, value);
+				});
+				url.searchParams.set("step", "1");
+				return NextResponse.redirect(url);
+			}
 		}
 	}
 
