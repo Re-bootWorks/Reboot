@@ -1,17 +1,24 @@
 "use client";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import DetailCard from "../components/DetailCard";
 import { DetailCardAction, DetailCardBadge } from "@/features/mypage/types";
-import ReviewFormModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
+import ReviewModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
 import { MeetupItem } from "@/features/mypage/types";
-import AlertModal from "@/components/ui/Modals/AlertModal";
+import Alert from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/hooks/useMeetingFavorite";
-import { useUserStore } from "@/store/user.store";
 import { useMyMeetupInfinite } from "@/features/mypage/queries";
 import Empty from "@/components/layout/Empty";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
-
+import {
+	useDeleteMeetings,
+	useDeleteMeetingsJoin,
+	usePatchMeetingsStatus,
+	usePostMeetingsReviews,
+} from "../mutations";
+import { useUserStore } from "@/store/user.store";
+import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
+import QueryErrorBoundary from "../components/QueryErrorBoundary";
 interface MeetupActionHandlers {
 	/** 모임 확정 */
 	onConfirmMeetup: () => void;
@@ -31,7 +38,7 @@ type AlertAction = "confirm" | "delete" | "cancelMeetup" | "cancelReservation";
 const ALERT_MESSAGE = {
 	confirm: "모임을 확정하시겠습니까?",
 	delete: "모임을 삭제하시겠습니까?",
-	cancelMeetup: "모임 취소하시겠습니까?",
+	cancelMeetup: "모임 취소하시겠습니까? \n 	취소한 모임은 모임 이용이 불가능 합니다.",
 	cancelReservation: "모임 예약을 취소하시겠습니까?",
 } satisfies Record<AlertAction, string>;
 
@@ -89,17 +96,16 @@ function meetupActions(
 				},
 				{
 					label: "모임 취소하기",
-					variant: "purpleBorder",
+					variant: "grayBorder",
 					handleCardButtonClick: handlers.onCancelMeetup,
 				},
 			];
 		}
 		return [
 			{
-				label: "모임 삭제하기",
+				label: "모임 취소하기",
 				variant: "grayBorder",
-				handleCardButtonClick: handlers.onDeleteMeetup,
-				isDestructive: true,
+				handleCardButtonClick: handlers.onCancelMeetup,
 			},
 			{
 				label: "모임 확정하기",
@@ -118,7 +124,7 @@ function meetupActions(
 	];
 }
 
-export default function Meetup() {
+function Meetup() {
 	const userId = useUserStore((state) => state.user?.id);
 
 	const { handleWishToggle } = useMeetingFavorite();
@@ -129,6 +135,7 @@ export default function Meetup() {
 	// alert이 어떤 행동을 할것인지
 	const [alertAction, setAlertAction] = useState<AlertAction | null>(null);
 
+	// 모임 목록 불러오기
 	const {
 		data: meetupData,
 		fetchNextPage,
@@ -136,12 +143,29 @@ export default function Meetup() {
 		isFetchingNextPage,
 	} = useMyMeetupInfinite();
 	const items = meetupData.pages.flatMap((page) => page.data) ?? [];
+
+	// 모임 목록 무한스크롤
 	const observerRef = useRef<HTMLDivElement>(null);
 	useIntersectionObserver({
 		targetRef: observerRef,
 		onIntersect: fetchNextPage,
 		isEnabled: !!hasNextPage && !isFetchingNextPage,
 	});
+
+	// 모임 상태 변경하기
+	const { mutate: patchMeetingsStatus, isPending: isStatusPending } = usePatchMeetingsStatus();
+
+	// 모임 삭제하기
+	const { mutate: deleteMeetings, isPending: isDeletePending } = useDeleteMeetings();
+
+	// 모임 예약 취소하기
+	const { mutate: deleteMeetingsJoin, isPending: isJoinCancelPending } = useDeleteMeetingsJoin();
+
+	// 어떤 액션이든 하나라도 pending이면 true
+	const isAlertPending = isStatusPending || isDeletePending || isJoinCancelPending;
+
+	// 모임 리뷰 작성하기
+	const { mutate: postMeetingReview, isPending: isMeetingReviewPending } = usePostMeetingsReviews();
 
 	// alert modal 닫기
 	function closeAlert() {
@@ -185,26 +209,47 @@ export default function Meetup() {
 	}
 
 	// Alert 확인 시 api 연결
-	async function handleAlertConfirm() {
+	function handleAlertConfirm() {
 		if (!alertTarget || !alertAction) return;
 
 		const actionHandlers: Record<AlertAction, () => void> = {
-			confirm: () => console.log("모임 확정 API", alertTarget.id),
-			delete: () => console.log("모임 삭제 API", alertTarget.id),
-			cancelMeetup: () => console.log("모임 취소 API", alertTarget.id),
-			cancelReservation: () => console.log("모임 예약 취소 API", alertTarget.id),
+			// 모임 확정
+			confirm: () =>
+				patchMeetingsStatus(
+					{ meetingId: alertTarget.id, status: "CONFIRMED" },
+					{ onSuccess: closeAlert, onError: closeAlert },
+				),
+			// 모임 취소
+			cancelMeetup: () =>
+				patchMeetingsStatus(
+					{ meetingId: alertTarget.id, status: "CANCELED" },
+					{ onSuccess: closeAlert, onError: closeAlert },
+				),
+			// 모임 삭제
+			delete: () =>
+				deleteMeetings(
+					{ meetingId: alertTarget.id },
+					{ onSuccess: closeAlert, onError: closeAlert },
+				),
+			// 모임 예약 취소
+			cancelReservation: () =>
+				deleteMeetingsJoin(
+					{ meetingId: alertTarget.id },
+					{ onSuccess: closeAlert, onError: closeAlert },
+				),
 		};
 
 		actionHandlers[alertAction]();
 	}
+
 	// 리뷰 제출 시
-	async function handleReviewSubmit(reviewFormValues: ReviewFormValues) {
+	function handleReviewSubmit(reviewFormValues: ReviewFormValues) {
 		if (!reviewTarget) return;
-		console.log("리뷰 작성 API", reviewTarget.id, reviewFormValues);
-
-		closeReviewModal();
+		postMeetingReview(
+			{ meetingId: reviewTarget.id, reviewFormValues },
+			{ onSuccess: closeReviewModal, onError: closeReviewModal },
+		);
 	}
-
 	if (!userId) return null;
 
 	if (items.length === 0) return <Empty>아직 참여한 모임이 없어요</Empty>;
@@ -232,25 +277,30 @@ export default function Meetup() {
 			<div ref={observerRef} className="h-4" />
 			{isFetchingNextPage && <Loading />}
 
-			<AlertModal
+			<Alert
 				isOpen={!!alertTarget}
+				isPending={isAlertPending}
 				onClose={closeAlert}
 				handleConfirmButton={handleAlertConfirm}>
 				{alertAction ? ALERT_MESSAGE[alertAction] : ""}
-				{alertAction === "cancelMeetup" && (
-					<>
-						<br />
-						재확정이 불가능 합니다.
-					</>
-				)}
-			</AlertModal>
+			</Alert>
 
-			<ReviewFormModal
+			<ReviewModal
 				mode="create"
 				isOpen={!!reviewTarget}
 				onClose={closeReviewModal}
 				handleFormSubmit={handleReviewSubmit}
+				isPending={isMeetingReviewPending}
 			/>
 		</>
+	);
+}
+export default function MeetupWrapper() {
+	return (
+		<QueryErrorBoundary prefix="나의 모임을 ">
+			<Suspense fallback={<DetailCardSkeleton />}>
+				<Meetup />
+			</Suspense>
+		</QueryErrorBoundary>
 	);
 }
