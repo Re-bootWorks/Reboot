@@ -4,7 +4,8 @@ import { useFormData } from "../providers/FormDataProvider";
 import { useToast } from "@/providers/toast-provider";
 import type { OnSuccess } from "./CreateModal";
 import { extractMeetupData } from "../utils";
-import { usePostMeetup } from "../../queries";
+import { GET_MEETUPS_QUERY_KEY, usePostMeetup } from "../../queries";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface FormFooterProps {
 	/** 닫기 버튼 클릭 시 호출 */
@@ -17,7 +18,16 @@ export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
 	const { handleShowToast } = useToast();
 	const { currentStep, totalSteps, prev, next } = useFormStep();
 	const { checkAllStepValid, getStepValid, data } = useFormData();
-	const postMeetupMutation = usePostMeetup();
+	const queryClient = useQueryClient();
+	const postMeetupMutation = usePostMeetup({
+		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: GET_MEETUPS_QUERY_KEY });
+			onSuccess(data.id);
+		},
+		onError: (error) => {
+			handleShowToast({ message: error.message, status: "error" });
+		},
+	});
 
 	const isFirstStep = currentStep === 1;
 	const isLastStep = currentStep === totalSteps;
@@ -34,19 +44,8 @@ export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
 
 	async function handleClickNext() {
 		if (isLastStep) {
-			try {
-				const meetupData = extractMeetupData(data);
-				const res = await postMeetupMutation.mutateAsync(meetupData);
-				if ("id" in res) {
-					onSuccess(res.id);
-				} else {
-					handleShowToast({ message: res.message, status: "error" });
-				}
-			} catch (error) {
-				if (error instanceof Error) {
-					handleShowToast({ message: error.message, status: "error" });
-				}
-			}
+			const meetupData = extractMeetupData(data);
+			postMeetupMutation.mutate(meetupData);
 		} else {
 			next();
 		}

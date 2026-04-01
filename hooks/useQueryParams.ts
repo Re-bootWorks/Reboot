@@ -26,8 +26,13 @@ export function useQueryParams() {
 					newParams.set(key, value);
 				}
 			});
-
-			router.replace(`?${newParams.toString()}`);
+			/**
+			 * @description
+			 * router.replace 사용 시 서버 컴포넌트 리렌더링으로 인해 속도 저하 발생
+			 * 따라서 windows.history.replaceState 로 교체
+			 * 하단 방식은 서버 컴포넌트 searchParams prop 사용 시 문제 발생 가능성 있음
+			 */
+			window.history.replaceState(null, "", `?${newParams.toString()}`);
 		},
 		[searchParams, router],
 	);

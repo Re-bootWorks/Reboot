@@ -13,6 +13,7 @@ import StepTypeSelect from "./StepTypeSelect";
 import StepInfo from "./StepInfo";
 import StepSchedule from "./StepSchedule";
 import StepDesc from "./StepDesc";
+import { modalSizeStyle } from "../../styles";
 
 export default function CreateModal({ isOpen, onClose, onSuccess }: CreateModalProps) {
 	return (
@@ -52,7 +53,7 @@ function CreateForm({ isOpen, onClose, onSuccess }: CreateModalProps) {
 
 	return (
 		<Modal
-			className="max-h-fit w-[342px] md:w-[544px]"
+			className={modalSizeStyle}
 			isOpen={isOpen}
 			onClose={onClose}
 			title={<FormHeader>{TITLE}</FormHeader>}

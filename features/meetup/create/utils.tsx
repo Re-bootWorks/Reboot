@@ -21,7 +21,7 @@ export const createSessionStore = {
 };
 
 /** 모임 만들기 폼 데이터에서 실제 데이터 추출 */
-export function extractMeetupData(data: MeetupCreateFormData) {
+export function extractMeetupData(data: MeetupCreateFormData): MeetupCreateRequest {
 	return {
 		name: data.name,
 		type: data.type,

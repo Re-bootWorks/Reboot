@@ -1,6 +1,5 @@
 import { clientFetch } from "@/libs/clientFetch";
 import {
-	ErrorResponse,
 	MeetupCreateRequest,
 	MeetupItemResponse,
 	MeetupListRequest,
@@ -49,14 +48,15 @@ export async function getMeetups(params: MeetupListRequest): Promise<MeetupListR
 }
 
 /** 모임 생성 */
-export async function postMeetup(
-	data: MeetupCreateRequest,
-): Promise<MeetupItemResponse | ErrorResponse> {
+export async function postMeetup(data: MeetupCreateRequest): Promise<MeetupItemResponse> {
 	const res = await clientFetch(ROUTE_MEETINGS, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify(data),
 	});
 
+	if (!res.ok) {
+		throw new Error(`모임 생성 API 호출에 실패했습니다.`);
+	}
 	return res.json();
 }
