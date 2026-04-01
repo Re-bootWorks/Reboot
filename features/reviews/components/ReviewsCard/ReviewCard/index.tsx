@@ -9,9 +9,9 @@ import { RATING_STYLE } from "@/constants/ratingStyle";
 import { ReviewCardProps } from "@/features/reviews/types";
 import Link from "next/link";
 import { useUserStore } from "@/store/user.store";
+import Avatar from "@/components/ui/Avatar";
 
 const EMPTY_THUMBNAIL_SRC = "/assets/img/img_empty_purple.svg";
-const EMPTY_PROFILE_SRC = "/assets/img/img_profile.svg";
 
 export default function ReviewCard({
 	meetingId,
@@ -104,25 +104,17 @@ export default function ReviewCard({
 								type="button"
 								onClick={handleProfileClick}
 								className="flex cursor-pointer items-center gap-1.5 select-none">
-								<div className="relative size-6">
-									{userImage ? (
-										<Image
-											src={userImage}
-											alt={`${userName} 프로필 이미지`}
-											fill
-											className="rounded-full object-cover"
-										/>
-									) : (
-										<Image
-											src={EMPTY_PROFILE_SRC}
-											alt="빈 프로필 이미지"
-											width={24}
-											height={24}
-											className="rounded-full border border-gray-200 object-contain"
-										/>
-									)}
-								</div>
-
+								<Avatar
+									src={userImage}
+									alt={userImage ? `${userName} 프로필 이미지` : "빈 프로필 이미지"}
+									width={24}
+									height={24}
+									className={
+										userImage?.trim()
+											? "size-6 border-0 object-cover"
+											: "size-6 border object-contain"
+									}
+								/>
 								<span className="text-xs text-gray-500 md:text-sm">{userName}</span>
 							</button>
 
