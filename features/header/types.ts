@@ -6,7 +6,7 @@ export interface CursorPageResponse<T> {
 	hasMore: boolean;
 }
 
-export interface FavoritesCount {
+export interface GNBCount {
 	count: number;
 }
 

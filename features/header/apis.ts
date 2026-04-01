@@ -1,6 +1,6 @@
 import { clientFetch } from "@/libs/clientFetch";
 import {
-	FavoritesCount,
+	GNBCount,
 	NotificationCardItem,
 	NotificationCardList,
 	NotificationRes,
@@ -36,11 +36,14 @@ function mapNotifications(item: NotificationRes): NotificationCardItem {
 				isRead: item.isRead,
 				createdAt: item.createdAt,
 			};
+
+		default:
+			throw new Error(`지원하지 않는 알림 타입입니다: ${String(item)}`);
 	}
 }
 
 // GNB 찜한 모임 개수
-export async function getFavoritesCount(): Promise<FavoritesCount> {
+export async function getFavoritesCount(): Promise<GNBCount> {
 	const res = await clientFetch("/favorites/count");
 
 	await throwApiError(res, "찜 개수 조회에 실패했습니다.");
@@ -62,6 +65,14 @@ export async function getNotifications(
 		...json,
 		data: json.data.map(mapNotifications),
 	};
+}
+
+// 읽지 않은 알림 수 조회
+export async function getNotificationUnreadCount(): Promise<GNBCount> {
+	const res = await clientFetch("/notifications/unread-count");
+
+	await throwApiError(res, "읽지 않은 알림 개수 조회에 실패했습니다.");
+	return res.json();
 }
 
 // 전체 알림 삭제
