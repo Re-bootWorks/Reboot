@@ -20,7 +20,8 @@ const ROUTE_KAKAO_PLACE = "/kakao/place";
 export async function getKakaoPlace(query: string) {
 	const res = await clientFetch(`${ROUTE_KAKAO_PLACE}?query=${query}`);
 	if (!res.ok) {
-		throw new Error(`카카오 장소 검색 API 호출에 실패했습니다.`);
+		const error = await res.json().catch(() => null);
+		throw new Error(error?.message ?? "카카오 장소 검색 API 호출에 실패했습니다.");
 	}
 
 	const data = await res.json();

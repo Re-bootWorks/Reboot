@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import { InfiniteData, QueryKey, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/providers/toast-provider";
-import { meetupListQueryKey } from "../queries";
 import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 import { mypageQueryKeys } from "@/features/mypage/queries";
+import { meetupQueryKeys } from "../queries";
 
 interface ToggleItem {
 	id: number;
@@ -22,14 +22,14 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 
 	async function onMutate() {
 		// 목록 쿼리 refetch 취소
-		await queryClient.cancelQueries({ queryKey: meetupListQueryKey });
+		await queryClient.cancelQueries({ queryKey: meetupQueryKeys.list });
 
 		// 목록 쿼리 데이터를 캐시에 백업
-		snapshotRef.current = queryClient.getQueriesData({ queryKey: meetupListQueryKey });
+		snapshotRef.current = queryClient.getQueriesData({ queryKey: meetupQueryKeys.list });
 
 		// 목록 쿼리 Optimistic Update
 		queryClient.setQueriesData<InfiniteData<TogglePage>>(
-			{ queryKey: meetupListQueryKey },
+			{ queryKey: meetupQueryKeys.list },
 			(oldData) => {
 				if (!oldData?.pages) return oldData;
 				return {
@@ -48,13 +48,16 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 	function onSuccess(message: string) {
 		handleShowToast({ message, status: "success" });
 		// 목록 쿼리를 포함한 연관 쿼리 무효화
-		queryClient.invalidateQueries({ queryKey: meetupListQueryKey });
+		queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 		queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
-		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups() });
-		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created() });
+		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
+		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
 
 		if (field === "isFavorited") {
 			queryClient.invalidateQueries({ queryKey: ["header", "favorites"] });
+		}
+		if (field === "isJoined") {
+			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) });
 		}
 	}
 

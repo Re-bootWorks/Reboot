@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { meetupListQueryKey, usePostMeetup } from "../../queries";
+import { meetupQueryKeys, usePostMeetup } from "../../queries";
 import { mypageQueryKeys } from "@/features/mypage/queries";
 import { useFormStep } from "../providers/FormStepProvider";
 import { useFormData } from "../providers/FormDataProvider";
@@ -22,9 +22,9 @@ export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
 	const queryClient = useQueryClient();
 	const postMeetupMutation = usePostMeetup({
 		onSuccess: (data) => {
-			queryClient.invalidateQueries({ queryKey: meetupListQueryKey });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups() });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created() });
+			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
 			onSuccess(data.id);
 		},
 		onError: (error) => {
