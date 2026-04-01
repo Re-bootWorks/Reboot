@@ -8,6 +8,7 @@ import { cn } from "@/utils/cn";
 import SendButton from "@/components/ui/Buttons/SendButton";
 import { uiFormatDate, uiFormatTime } from "@/utils/date";
 import { DetailCardProps } from "@/features/mypage/types";
+import Link from "next/link";
 
 const STYLE = {
 	itemBgBox: "relative overflow-hidden rounded-3xl bg-white md:flex md:gap-6 md:rounded-4xl md:p-6",
@@ -32,13 +33,15 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 
 	return (
 		<li className={STYLE.itemBgBox}>
-			<Image
-				src={item.image ?? EMPTY_THUMBNAIL_IMAGE}
-				alt="모임 대표 이미지"
-				width={343}
-				height={343}
-				className={cn(STYLE.itemImage, !!item.image ? "" : "bg-purple-50 object-scale-down")}
-			/>
+			<Link href={`/meetup/${item.id}`}>
+				<Image
+					src={item.image ?? EMPTY_THUMBNAIL_IMAGE}
+					alt="모임 대표 이미지"
+					width={343}
+					height={343}
+					className={cn(STYLE.itemImage, !!item.image ? "" : "bg-purple-50 object-scale-down")}
+				/>
+			</Link>
 			<div className={STYLE.wishBtn}>
 				{isWishable ? (
 					<UtilityButton
@@ -69,7 +72,9 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 							))}
 						</div>
 					)}
-					<h2 className="w-[90%] truncate text-xl font-semibold">{item.name}</h2>
+					<h2 className="w-[90%] truncate text-xl font-semibold">
+						<Link href={`/meetup/${item.id}`}>{item.name}</Link>
+					</h2>
 				</div>
 				<div className={STYLE.itemContent}>
 					<div>
