@@ -6,7 +6,7 @@ export interface CursorPageResponse<T> {
 	hasMore: boolean;
 }
 
-export interface FavoritesCount {
+export interface GNBCount {
 	count: number;
 }
 
@@ -49,7 +49,6 @@ export type NotificationType = "MEETING_CONFIRMED" | "MEETING_CANCELED" | "COMME
 
 interface NotificationCardBase {
 	id: number;
-	type: NotificationType;
 	message: string;
 	image: string | null;
 	isRead: boolean;
@@ -67,7 +66,13 @@ export interface CommentNotificationCardItem extends NotificationCardBase {
 	postTitle: string;
 	commentId: number;
 }
+export interface UnknownNotificationCardItem extends NotificationCardBase {
+	type: string;
+}
 
-export type NotificationCardItem = MeetingNotificationCardItem | CommentNotificationCardItem;
+export type NotificationCardItem =
+	| MeetingNotificationCardItem
+	| CommentNotificationCardItem
+	| UnknownNotificationCardItem;
 
 export type NotificationCardList = NotificationCardItem[];

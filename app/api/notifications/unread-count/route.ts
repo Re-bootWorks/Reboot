@@ -2,10 +2,10 @@ import { serverFetch } from "@/libs/serverFetch";
 import { parseJsonSafely } from "@/utils/api";
 import { NextResponse } from "next/server";
 
-// GNB 찜한 모임 개수
+// GNB 읽지 않은 알림 개수
 export async function GET() {
 	try {
-		const res = await serverFetch("/favorites/count");
+		const res = await serverFetch("/notifications/unread-count");
 		const data = await parseJsonSafely(res);
 
 		return NextResponse.json(data, { status: res.status });
