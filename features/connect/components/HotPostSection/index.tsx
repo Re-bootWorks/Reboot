@@ -14,7 +14,7 @@ export default function HotPostSection() {
 	});
 	const { data } = useSuspenseQuery({
 		queryKey: ["hotPosts"],
-		queryFn: () => fetchPostsClient({ type: "best", limit: 4 }),
+		queryFn: () => fetchPostsClient({ type: "best", limit: 20 }),
 		staleTime: 1000 * 60 * 5,
 		retry: 1,
 	});
@@ -34,7 +34,7 @@ export default function HotPostSection() {
 			{/* 카드 영역 */}
 			<div className="relative mt-6">
 				<div ref={ref} style={style} className={`${containerStyle} flex gap-6`} {...events}>
-					{posts.slice(0, 4).map((post) => {
+					{posts.map((post) => {
 						const mapped = mapPostToCard(post);
 						return (
 							<CompactCard

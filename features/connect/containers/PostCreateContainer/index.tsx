@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { cn } from "@/utils/cn";
 import Button from "@/components/ui/Buttons/Button";
 import Container from "@/components/layout/Container";
 import PostEditor from "../../components/PostEditor";
@@ -18,6 +19,8 @@ export default function PostCreateContainer() {
 
 	const isDirty = title.trim().length > 0 || content.replace(/<[^>]*>/g, "").trim().length > 0;
 	const { showModal, handleConfirmLeave, handleCancelLeave } = useLeaveConfirm(isDirty);
+
+	const isFormFilled = title.trim().length > 0 && content.replace(/<[^>]*>/g, "").trim().length > 0;
 
 	const getTextLength = (html: string) => {
 		const plainText = html.replace(/<[^>]*>/g, "");
@@ -52,7 +55,12 @@ export default function PostCreateContainer() {
 					</div>
 
 					<Button
-						className="h-[40px] w-[80px] shrink-0 rounded-[10px] bg-gray-100 px-4 text-gray-600 hover:bg-gray-100 hover:text-gray-400"
+						className={cn(
+							"h-[40px] w-[80px] shrink-0 rounded-[10px] px-4 transition-colors",
+							isFormFilled
+								? "bg-purple-600 text-white hover:bg-purple-700"
+								: "bg-gray-100 text-gray-400 hover:bg-gray-100 hover:text-gray-400",
+						)}
 						disabled={isPending}
 						onClick={() => {
 							const isEmptyContent = content.replace(/<[^>]*>/g, "").trim().length === 0;

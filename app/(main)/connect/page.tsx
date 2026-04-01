@@ -3,10 +3,8 @@ import PostContainer from "@/features/connect/containers/PostContainer";
 import HotPostSection from "@/features/connect/components/HotPostSection";
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
-import Loading from "@/features/connect/ui/Loading";
 import { serverFetch } from "@/libs/serverFetch";
 import IntroSection from "@/features/connect/components/IntroSection";
-import { CompactCardSkeleton } from "@/features/connect/components/CompactCard/Skeleton";
 
 // 서버 컴포넌트
 export default async function ConnectPage({
@@ -46,7 +44,7 @@ export default async function ConnectPage({
 		queryClient.prefetchQuery({
 			queryKey: ["hotPosts"],
 			queryFn: async () => {
-				const res = await serverFetch(`/posts?type=best&limit=4`);
+				const res = await serverFetch(`/posts?type=best&limit=20`);
 
 				if (!res.ok) {
 					throw new Error("HOT 게시글 조회 실패");
@@ -62,23 +60,11 @@ export default async function ConnectPage({
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<Container>
 				<IntroSection />
-				<Suspense
-					fallback={
-						<section className="mt-[81px]">
-							<h2 className="text-2xl leading-8 font-semibold tracking-[-0.03rem] whitespace-nowrap">
-								이번주 HOT 게시물!
-							</h2>
-							<div className="mt-6 flex gap-6">
-								{Array.from({ length: 4 }).map((_, i) => (
-									<CompactCardSkeleton key={i} />
-								))}
-							</div>
-						</section>
-					}>
+				<Suspense fallback={null}>
 					<HotPostSection />
 				</Suspense>
-				<div className="mt-[98px] pb-[140px]">
-					<Suspense fallback={<Loading />}>
+				<div className="mt-[6.125rem] pb-[8.75rem]">
+					<Suspense fallback={null}>
 						<PostContainer page={page} />
 					</Suspense>
 				</div>

@@ -7,7 +7,7 @@ export const fetchPostsClient = async (params: GetPostsParams): Promise<GetPosts
 		type: params.type ?? "all",
 		sortBy: params.sortBy ?? "createdAt",
 		offset: String(params.offset ?? 0),
-		limit: String(params.limit ?? 5),
+		limit: String(params.limit ?? 20),
 		...(params.keyword ? { keyword: params.keyword } : {}),
 	});
 

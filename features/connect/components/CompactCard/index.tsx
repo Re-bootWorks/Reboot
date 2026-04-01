@@ -2,6 +2,8 @@ import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 import EmptyImage from "@/features/connect/ui/EmptyImage";
 import dayjs from "@/libs/dayjs";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 type CompactCardProps = {
 	id: number;
@@ -12,6 +14,21 @@ type CompactCardProps = {
 	commentCount: number;
 	onClick?: () => void;
 };
+
+const containerStyle =
+	"flex h-[13.875rem] w-[10.125rem] shrink-0 flex-col overflow-hidden md:h-[15.75rem] md:w-[19rem]";
+
+function CompactCardSkeleton() {
+	return (
+		<div className={containerStyle}>
+			<Skeleton
+				height="100%"
+				containerClassName="block h-full w-full leading-none"
+				borderRadius={24}
+			/>
+		</div>
+	);
+}
 
 export default function CompactCard({
 	title,
@@ -61,3 +78,5 @@ export default function CompactCard({
 		</div>
 	);
 }
+
+CompactCard.Skeleton = CompactCardSkeleton;
