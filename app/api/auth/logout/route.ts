@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { serverFetch } from "@/libs/serverFetch";
+import { COOKIE_OPTIONS } from "@/constants/auth";
+
 export async function POST() {
 	try {
 		const cookieStore = await cookies();
@@ -18,13 +20,16 @@ export async function POST() {
 			} catch {
 				data = null;
 			}
-			return NextResponse.json(data, { status: response.status });
+			const res = NextResponse.json(data, { status: response.status });
+			res.cookies.delete({ name: "accessToken", ...COOKIE_OPTIONS });
+			res.cookies.delete({ name: "refreshToken", ...COOKIE_OPTIONS });
+			return res;
 		}
 
 		const res = NextResponse.json({ message: "로그아웃 성공" }, { status: 200 });
 
-		res.cookies.delete({ name: "accessToken", path: "/" });
-		res.cookies.delete({ name: "refreshToken", path: "/" });
+		res.cookies.delete({ name: "accessToken", ...COOKIE_OPTIONS });
+		res.cookies.delete({ name: "refreshToken", ...COOKIE_OPTIONS });
 
 		return res;
 	} catch {
