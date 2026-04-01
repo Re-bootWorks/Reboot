@@ -102,7 +102,7 @@ export function useDeleteMeetings() {
 	return useMutation({
 		mutationFn: deleteMeetings,
 
-		onSuccess: (_error, variables) => {
+		onSuccess: (_data, variables) => {
 			handleShowToast({
 				message: "모임이 삭제 되었습니다.",
 				status: "success",
@@ -132,7 +132,7 @@ export function useDeleteMeetingsJoin() {
 	return useMutation({
 		mutationFn: deleteMeetingsJoin,
 
-		onSuccess: (_error, variables) => {
+		onSuccess: (_data, variables) => {
 			handleShowToast({
 				message: "모임 예약이 취소 되었습니다.",
 				status: "success",

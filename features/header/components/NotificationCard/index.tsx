@@ -1,5 +1,5 @@
 import { IcCheckCircle, IcDelete } from "@/components/ui/icons";
-import { NotificationCardItem, NotificationType } from "../../types";
+import { NotificationCardItem } from "../../types";
 import { cn } from "@/utils/cn";
 import Thumbnail from "@/components/ui/Thumbnail";
 import RelativeTime from "@/features/connect/ui/RelativeTime";
