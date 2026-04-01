@@ -38,7 +38,6 @@ interface GroupCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "id"
 }
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
-/** isCompleted 가 되지 않은 모든 모임 목록에서 표시되는 카드 */
 function GroupCard({ id, href, status, children, className, ...props }: GroupCardProps) {
 	return (
 		<GroupCardContext.Provider value={status}>
