@@ -11,8 +11,11 @@ export const meetupDetailQueryKeys = {
 	participants: (meetingId: number) => ["meetupDetail", "participants", meetingId] as const,
 	reviews: (meetingId: number, cursor?: string) =>
 		["meetupDetail", "reviews", meetingId, cursor] as const,
-	related: (meetingId: number, region: string, type: string) =>
-		["meetupDetail", "related", meetingId, region, type] as const,
+	related: {
+		all: () => ["meetupDetail", "related"] as const,
+		detail: (meetingId: number, region: string, type: string) =>
+			["meetupDetail", "related", meetingId, region, type] as const,
+	},
 };
 
 export function useMeetingDetail(meetingId: number) {
@@ -41,7 +44,7 @@ export function useReviews(meetingId: number, cursor?: string) {
 
 export function useRelatedMeetings(meetingId: number, region: string, type: string) {
 	return useSuspenseQuery({
-		queryKey: meetupDetailQueryKeys.related(meetingId, region, type),
+		queryKey: meetupDetailQueryKeys.related.detail(meetingId, region, type),
 		queryFn: () => getRelatedMeetings(meetingId, region, type),
 		staleTime: 1000 * 60 * 5,
 	});

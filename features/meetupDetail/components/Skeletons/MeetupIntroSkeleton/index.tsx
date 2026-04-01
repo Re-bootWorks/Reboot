@@ -21,7 +21,7 @@ export default function MeetupIntroSkeleton() {
 					</div>
 				</div>
 				{/* PersonnelContainer */}
-				<div className="rounded-[20px] bg-white px-6 py-6 lg:rounded-[28px]">
+				<div className="h-full items-center rounded-[20px] bg-white px-6 py-8 lg:rounded-[28px]">
 					<Skeleton width={80} height={20} className="mb-3" />
 					<Skeleton height={8} borderRadius={999} />
 				</div>

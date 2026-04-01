@@ -47,6 +47,24 @@ export async function deleteJoin(meetingId: number) {
 	}
 }
 
+/** 찜 추가 */
+export async function postFavorite(meetingId: number) {
+	const res = await clientFetch(`/meetings/${meetingId}/favorites`, { method: "POST" });
+	if (!res.ok) {
+		const error = await res.json().catch(() => null);
+		throw new Error(error?.message ?? "찜 추가에 실패했습니다.");
+	}
+}
+
+/** 찜 해제 */
+export async function deleteFavorite(meetingId: number) {
+	const res = await clientFetch(`/meetings/${meetingId}/favorites`, { method: "DELETE" });
+	if (!res.ok) {
+		const error = await res.json().catch(() => null);
+		throw new Error(error?.message ?? "찜 해제에 실패했습니다.");
+	}
+}
+
 /** 모임 수정 */
 export async function patchMeeting(meetingId: number, data: MeetupEditData) {
 	const { _addressName, _addressDetail, ...rest } = data;

@@ -37,7 +37,7 @@ export default function EditFormDataProvider({
 		if (!isOpen) {
 			setData(initialData);
 		}
-	}, [isOpen]);
+	}, [isOpen, initialData]);
 
 	return (
 		<EditFormDataContext.Provider value={{ data, setData }}>

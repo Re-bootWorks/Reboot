@@ -5,6 +5,8 @@ import { useFormData } from "../providers/FormDataProvider";
 import CapacityField from "../../components/CapacityField";
 import DateTimeField from "../../components/DateTimeField";
 import { validateCapacity, validateDateTime } from "../../utils";
+import { validateMaxCapacity } from "@/features/meetupDetail/edit/utils";
+import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/PersonnelContainer";
 
 interface StepScheduleProps {
 	/** 단계 숫자 */
@@ -38,7 +40,8 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 		const isDateTimeValid = validateDateTime(data._dateTime.date, data._dateTime.time);
 		const isRegEndValid = validateDateTime(data._registrationEnd.date, data._registrationEnd.time);
 		const isCapacityValid = validateCapacity(data.capacity);
-		const isValid = isDateTimeValid && isRegEndValid && isCapacityValid;
+		const isMaxCapacityValid = validateMaxCapacity(data.capacity, MIN_CONFIRMED_COUNT);
+		const isValid = isDateTimeValid && isRegEndValid && isCapacityValid && isMaxCapacityValid;
 		setStepValid(step, isValid);
 	}, [data, setStepValid, step]);
 

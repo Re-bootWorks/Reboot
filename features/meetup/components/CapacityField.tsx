@@ -1,6 +1,7 @@
 "use client";
 
 import InputField from "@/components/ui/Inputs/InputField";
+import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/PersonnelContainer";
 
 interface CapacityFieldProps {
 	/** 필드 이름 @default "capacity" */
@@ -35,6 +36,7 @@ export default function CapacityField({
 			isRequired={isRequired}
 			value={!value || value <= 0 ? "" : value}
 			onChange={handleChangeInput}
+			hintText={`최소 ${MIN_CONFIRMED_COUNT}명 이상 모집 시 모임이 만들어집니다.`}
 		/>
 	);
 }
