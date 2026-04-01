@@ -5,15 +5,15 @@ import Button from "@/components/ui/Buttons/Button";
 import InputTextarea from "@/components/ui/Inputs/InputTextarea";
 import CommentCard from "@/features/connect/components/CommentCard";
 import { mapCommentToCard } from "@/features/connect/comment/mappers";
-import type { ConnectPost } from "@/features/connect/post/types";
 import { useState, useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createComment } from "@/features/connect/apis/createComment";
-import { useQuery } from "@tanstack/react-query";
-import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
 import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/providers/toast-provider";
 import Loading from "@/components/ui/Loading";
+import { useGetPostDetail } from "@/features/connect/queries";
+import { connectQueryKeys } from "@/features/connect/queries";
+import type { ConnectPost } from "@/features/connect/post/types";
 
 interface CommentSectionProps {
 	postId: number;
@@ -31,10 +31,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 	const currentUserId = user?.id;
 	const { handleShowToast } = useToast();
 
-	const { data, isLoading } = useQuery<ConnectPost>({
-		queryKey: ["postDetail", postId],
-		queryFn: () => getPostDetailClient(postId),
-	});
+	const { data, isLoading } = useGetPostDetail(postId);
 
 	// 무한스크롤
 	useEffect(() => {
@@ -64,18 +61,16 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 		mutationFn: createComment,
 
 		onMutate: async (newComment: { postId: number; content: string }) => {
-			await queryClient.cancelQueries({ queryKey: ["postDetail", postId] });
+			await queryClient.cancelQueries({ queryKey: connectQueryKeys.postDetail(postId) });
 
-			const previousData = queryClient.getQueryData(["postDetail", postId]);
+			const previousData = queryClient.getQueryData(connectQueryKeys.postDetail(postId));
 
 			queryClient.setQueryData(
-				["postDetail", postId],
+				connectQueryKeys.postDetail(postId),
 				(old: { comments?: Comment[] } | undefined) => ({
-					//old:기존 캐시 데이터
-					...old, // 기존 데이터 유지 + comments만 덮어쓰기
+					...old,
 					comments: [
 						{
-							//임시 데이터 (fake 데이터)
 							id: Date.now(),
 							content: newComment.content,
 							isPending: true,
@@ -84,10 +79,6 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 								name: user?.name ?? "사용자",
 							},
 							createdAt: new Date().toISOString(),
-							// 1. Optimistic으로 유저이름 표시
-							// 2. 서버 응답 도착
-							// 3. invalidateQueries 실행
-							// 4. 진짜 데이터로 교체됨
 						},
 						...(old?.comments ?? []),
 					],
@@ -95,20 +86,19 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 			);
 			setComment("");
 
-			return { previousData }; //새로운 캐시 데이터
+			return { previousData };
 		},
 
 		onError: (_err, _newComment, context) => {
 			if (context?.previousData) {
-				queryClient.setQueryData(["postComments", postId], context.previousData);
+				queryClient.setQueryData(connectQueryKeys.postDetail(postId), context.previousData);
 			}
 			handleShowToast({ message: "댓글 등록에 실패했습니다.", status: "error" });
 		},
 
 		onSuccess: () => {
 			setComment("");
-			queryClient.invalidateQueries({ queryKey: ["postComments", postId] });
-			//캐시를 무효화해서 데이터를 다시 불러오게 만드는 함수
+			queryClient.invalidateQueries({ queryKey: connectQueryKeys.postDetail(postId) });
 		},
 	});
 
@@ -117,12 +107,10 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
 	const comments = data?.comments ?? [];
 
-	//  정렬
 	const sortedComments = [...comments].sort(
 		(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
 	);
 
-	//  보여줄 댓글
 	const visibleComments = sortedComments.slice(0, visibleCount);
 
 	const handleSubmit = () => {
@@ -176,7 +164,9 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 								postId={postId}
 								authorId={comment.author.id}
 								currentUserId={user?.id ?? null}
-								isPending={comment.isPending}
+								isPending={
+									(comment as ConnectPost["comments"][number] & { isPending?: boolean }).isPending
+								}
 							/>
 						</li>
 					);

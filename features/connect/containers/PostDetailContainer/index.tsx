@@ -1,17 +1,13 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
+import { useGetPostDetail } from "@/features/connect/queries";
 import CommentSection from "@/features/connect/components/CommentSection";
 import PostDetailCard from "@/features/connect/components/PostDetailCard";
 import Container from "@/components/layout/Container";
 import { useUserStore } from "@/store/user.store";
 
 export default function PostDetailContainer({ id }: { id: number }) {
-	const { data } = useQuery({
-		queryKey: ["postDetail", id],
-		queryFn: () => getPostDetailClient(id),
-	});
+	const { data } = useGetPostDetail(id);
 	const { user } = useUserStore();
 	const isAuthor = !!user && user.id === data?.authorId;
 
@@ -28,12 +24,11 @@ export default function PostDetailContainer({ id }: { id: number }) {
 					author={data.author.name}
 					createdAt={data.createdAt}
 					likeCount={data.likeCount}
-					commentCount={data._count?.comments ?? 0}
+					commentCount={data.comments?.length ?? 0}
 					date={new Date(data.createdAt).getTime()}
 					isAuthor={isAuthor}
 					isLiked={data.isLiked ?? false}
 				/>
-
 				<CommentSection postId={data.id} />
 			</div>
 		</Container>

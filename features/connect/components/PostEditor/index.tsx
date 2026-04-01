@@ -7,6 +7,8 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
 import { useEffect } from "react";
+import ListItem from "@tiptap/extension-list-item";
+import BulletList from "@tiptap/extension-bullet-list";
 
 interface Props {
 	content: string;
@@ -18,6 +20,12 @@ export default function PostEditor({ content, onChange }: Props) {
 		immediatelyRender: false,
 		extensions: [
 			StarterKit,
+			BulletList.configure({
+				HTMLAttributes: {
+					class: "list-disc pl-5",
+				},
+			}),
+			ListItem,
 			Underline,
 			Image,
 			TextAlign.configure({
@@ -28,7 +36,7 @@ export default function PostEditor({ content, onChange }: Props) {
 		editorProps: {
 			attributes: {
 				class:
-					"max-w-none min-h-[200px] outline-none p-4 [&_img]:max-w-[200px] [&_img]:w-full [&_img]:rounded-[40px]",
+					"max-w-none min-h-[200px] outline-none p-4 [&_img]:max-w-[200px] [&_img]:w-full [&_img]:rounded-[40px] [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5",
 			},
 		},
 		onUpdate: ({ editor }) => {
