@@ -138,14 +138,6 @@ function Written() {
 		setReviewTarget(null);
 	}
 
-	// // review 수정 시 기존 값 추출
-	// const reviewInitialValue = reviewTarget
-	// 	? {
-	// 			score: reviewTarget.score,
-	// 			comment: reviewTarget.comment,
-	// 		}
-	// 	: undefined;
-
 	// 수정 버튼 클릭 시 initialValue 따로 저장
 	function handleReviewEdit(reviewItem: ReviewCardItem) {
 		setReviewInitialValue({
