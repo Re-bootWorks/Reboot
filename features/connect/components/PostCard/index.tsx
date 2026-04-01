@@ -11,7 +11,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const containerStyle =
-	"relative flex h-[19.375rem] w-full max-w-[18.4375rem] flex-col rounded-xl overflow-hidden bg-white sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]";
+	"relative flex h-[19.375rem] w-full max-w-[18.5rem] flex-col rounded-xl overflow-hidden bg-white sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]";
 
 function ConnectCardSkeleton() {
 	return (

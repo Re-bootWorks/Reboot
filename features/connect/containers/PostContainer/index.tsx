@@ -59,7 +59,7 @@ export default function PostContainer() {
 	return (
 		<div>
 			{/* 검색 + 정렬 */}
-			<div className="-mx-4 flex items-center justify-between pb-4">
+			<div className="flex items-center justify-between pb-4">
 				<SearchInput
 					value={keyword}
 					onChange={(e) => setKeyword(e.target.value)}
@@ -79,7 +79,7 @@ export default function PostContainer() {
 			{/* 게시글 목록 */}
 			<div
 				ref={containerRef}
-				className="relative -mx-4 flex flex-col gap-12 rounded-3xl bg-white px-8 py-8">
+				className="relative flex flex-col gap-12 rounded-3xl bg-white px-8 py-8">
 				{isFetching && (
 					<div className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-white/60">
 						<LoaderDots size="lg" />

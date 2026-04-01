@@ -16,7 +16,7 @@ type CompactCardProps = {
 };
 
 const containerStyle =
-	"flex h-[13.875rem] w-[10.125rem] shrink-0 flex-col overflow-hidden md:h-[15.75rem] md:w-[19rem]";
+	"flex h-[13.875rem] w-[10.125rem] shrink-0 flex-col overflow-hidden md:h-[15.75rem] md:w-[18.725rem]";
 
 function CompactCardSkeleton() {
 	return (
