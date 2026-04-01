@@ -217,7 +217,7 @@ function JoinButton({ onClick, isPending, ...props }: ButtonProp) {
 
 	return (
 		<Button
-			disabled={isRegClosed}
+			disabled={!isJoined && isRegClosed}
 			colors="purpleBorder"
 			className="relative z-2 mt-auto h-10 w-20 text-sm font-semibold [grid-area:join-button] md:h-12 md:w-[103px] md:text-base"
 			onClick={handleClick}

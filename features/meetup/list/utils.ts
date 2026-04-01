@@ -19,7 +19,7 @@ export function checkIsConfirmed(confirmedAt: string | null) {
 	return confirmedAt !== null;
 }
 
-/** 모집 마감 여부 체크 */
+/** 모집 마감 여부 체크: registrationEnd 가 지났거나 정원이 가득 찼으면 true */
 export function checkIsRegClosed(
 	registrationEnd: string,
 	participantCount: number,
