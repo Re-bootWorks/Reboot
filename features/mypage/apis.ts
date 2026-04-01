@@ -194,7 +194,6 @@ export async function uploadProfileImage(file: File): Promise<string> {
 		body: JSON.stringify({
 			fileName: file.name,
 			contentType: file.type,
-			folder: "mypage",
 		}),
 	});
 
