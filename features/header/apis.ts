@@ -6,21 +6,7 @@ import {
 	NotificationRes,
 	CursorPageResponse,
 } from "./types";
-
-//@TODO 공통 기능 merge시 삭제
-interface ErrorResponse {
-	code?: string;
-	message?: string;
-}
-async function throwApiError(response: Response, fallbackMessage: string): Promise<void> {
-	if (response.ok) return;
-
-	const error: ErrorResponse = await response.json().catch(() => ({
-		message: fallbackMessage,
-	}));
-
-	throw new Error(error.message ?? fallbackMessage);
-}
+import { throwApiError } from "@/utils/api";
 
 // 알림 목록 mapper
 function mapNotifications(item: NotificationRes): NotificationCardItem {
