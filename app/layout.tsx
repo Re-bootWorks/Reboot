@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 		description: "오늘 당신의 배터리는 몇 %인가요?",
 		images: [
 			{
-				url: "/assets/img/og_image.svg",
+				url: "/assets/img/og_image.png",
 				width: 1200,
 				height: 630,
 				alt: "RE:BOOT - 오늘 당신의 배터리는 몇 %인가요?",
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "RE:BOOT",
 		description: "오늘 당신의 배터리는 몇 %인가요?",
-		images: ["/assets/img/og_image.svg"],
+		images: ["/assets/img/og_image.png"],
 	},
 
 	// 검색엔진 크롤링 허용
