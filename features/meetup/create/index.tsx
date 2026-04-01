@@ -21,10 +21,8 @@ export default function MeetUpCreate() {
 	function redirectToDetail(id: number) {
 		createSessionStore.remove();
 		handleShowToast({ message: "모임 생성이 완료되었습니다!", status: "success" });
-		setTimeout(() => {
-			close();
-			router.replace(`/meetup/${id}`);
-		}, 1000);
+		close();
+		setTimeout(() => router.replace(`/meetup/${id}`), 1000);
 	}
 
 	return <CreateModal isOpen={isOpen} onClose={handleClickClose} onSuccess={redirectToDetail} />;

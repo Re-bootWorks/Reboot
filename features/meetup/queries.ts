@@ -11,8 +11,8 @@ import {
 import { uploadImage } from "@/apis/images";
 import { useUserStore } from "@/store/user.store";
 
-type MutationCallbacks<TData> = Omit<
-	UseMutationOptions<TData, Error, void>,
+type MutationCallbacks<TData, TVariables = void> = Omit<
+	UseMutationOptions<TData, Error, TVariables>,
 	"mutationKey" | "mutationFn"
 >;
 
@@ -44,10 +44,13 @@ export function useGetMeetups(params: MeetupListRequest) {
 }
 
 /** 모임 생성 */
-export function usePostMeetup() {
+export function usePostMeetup(
+	options?: MutationCallbacks<MeetupItemResponse, MeetupCreateRequest>,
+) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.postMeetup,
 		mutationFn: (data: MeetupCreateRequest) => postMeetup(data),
+		...options,
 	});
 }
 
