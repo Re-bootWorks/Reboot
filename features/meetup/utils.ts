@@ -30,12 +30,16 @@ export function validatePlaceSearch(value: string) {
 const DONG_REGEX =
 	/(([가-힣]+(\d|\d[,\.]\d|)+(읍|면|동|가|리))(?=[\s\d]|$)([^구\s]|)((\d(~|-)\d|\d)(가|리)|))([ ](산[ ]?\d+([~-]\d+)?))?|(([가-힣]|(\d(~|-)\d)|\d)+(로|길))(?=[\s\d]|$)/;
 export function getRegion(text: string) {
+	text = text
+		.replace(/특별자치시|특별자치도/g, "")
+		.replace(/\s+/g, " ")
+		.trim();
 	const dong = text.match(DONG_REGEX);
 	if (!dong) return text.trim();
 	// 매칭되는 문자열 전까지 반환
 	const prefix = text.substring(0, dong.index).trim();
 	if (!prefix) return text.trim();
-	// 세종시 주소 예외 처리(필요할 경우 주석 해제)
+	// 예외: 세종시 주소는 동까지 처리(필요할 경우 주석 해제)
 	// if (/세종/.test(prefix)) {
 	// 	return (prefix + " " + dong[0]).trim();
 	// }

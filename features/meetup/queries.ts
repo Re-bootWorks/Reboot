@@ -9,16 +9,19 @@ import {
 	SuccessResponse,
 } from "@/apis/meetings";
 import { uploadImage } from "@/apis/images";
+import { useUserStore } from "@/store/user.store";
 
-type MutationCallbacks<TData> = Omit<
-	UseMutationOptions<TData, Error, void>,
+type MutationCallbacks<TData, TVariables = void> = Omit<
+	UseMutationOptions<TData, Error, TVariables>,
 	"mutationKey" | "mutationFn"
 >;
 
+export const GET_MEETUPS_QUERY_KEY = ["meetup", "list"];
 export const meetupQueryKeys = {
+	getMeetups: (params: MeetupListRequest, userId: number | null) =>
+		[...GET_MEETUPS_QUERY_KEY, params, userId] as const,
 	postMeetup: ["meetup", "post"] as const,
 	uploadMeetupImage: ["meetup", "image", "upload"] as const,
-	getMeetups: (params: MeetupListRequest) => ["meetup", params] as const,
 	postMeetingsFavorite: ["meetings", "favorite", "post"] as const,
 	deleteMeetingsFavorite: ["meetings", "favorite", "delete"] as const,
 	postMeetingsJoin: ["meetings", "join", "post"] as const,
@@ -27,20 +30,27 @@ export const meetupQueryKeys = {
 
 /** 모임 목록 조회 */
 export function useGetMeetups(params: MeetupListRequest) {
+	const userId = useUserStore((state) => state.user?.id ?? null);
+	// 유저(미인증 포함)가 변경되면 refetch
 	return useSuspenseInfiniteQuery({
-		queryKey: meetupQueryKeys.getMeetups(params),
+		queryKey: meetupQueryKeys.getMeetups(params, userId),
 		queryFn: ({ pageParam }) => getMeetups({ ...params, cursor: pageParam }),
 		getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
 		initialPageParam: undefined as string | undefined,
 		refetchOnWindowFocus: false,
+		staleTime: 0,
+		gcTime: 5 * 60 * 1000, // 5분
 	});
 }
 
 /** 모임 생성 */
-export function usePostMeetup() {
+export function usePostMeetup(
+	options?: MutationCallbacks<MeetupItemResponse, MeetupCreateRequest>,
+) {
 	return useMutation({
 		mutationKey: meetupQueryKeys.postMeetup,
 		mutationFn: (data: MeetupCreateRequest) => postMeetup(data),
+		...options,
 	});
 }
 

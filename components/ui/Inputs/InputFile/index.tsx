@@ -6,6 +6,7 @@ import { cn } from "@/utils/cn";
 import { InputFieldWrapper } from "../InputFieldWrapper";
 import { IcImagePlus } from "../../icons";
 import DeleteButton from "../../Buttons/DeleteButton";
+import LoaderDots from "../../LoaderDots";
 import useInputImage from "@/hooks/useInputImage";
 
 interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -29,11 +30,14 @@ interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	defaultUrl?: string | null;
 	/** 파일 변경 시 콜백 */
 	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	/** 업로드 진행 중 여부 */
+	isPending?: boolean;
 }
 
 /**
+ * @example
  * const ref = useRef<InputFileHandle>(null);
- * <InputFile ref={ref} id="image" name="image" />
+ * <InputFile ref={ref} id="image" name="image" isPending={true} />
  */
 export interface InputFileHandle {
 	reset: () => void;
@@ -49,6 +53,7 @@ export default function InputFile({
 	accept = "image/*",
 	hintText,
 	isDestructive = false,
+	isPending = false,
 	onChange,
 	...props
 }: InputFileProps) {
@@ -92,8 +97,13 @@ export default function InputFile({
 						htmlFor={id}
 						className={cn(
 							"relative block h-full w-full",
-							!previewUrl ? "cursor-pointer" : "cursor-initial",
+							isPending ? "pointer-events-none" : !previewUrl ? "cursor-pointer" : "cursor-initial",
 						)}>
+						{isPending && (
+							<div className="absolute inset-0 z-20 flex items-center justify-center rounded-xl bg-black/40">
+								<LoaderDots size="xs" className="fill-white" />
+							</div>
+						)}
 						{!previewUrl && <NoPreview thumbSize={thumbSize} />}
 						{previewUrl && (
 							<>
