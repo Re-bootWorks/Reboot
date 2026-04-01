@@ -61,7 +61,7 @@ function MeetupCardListContent({ size }: { size: number }) {
 			{hasNextPage &&
 				(isFetchingNextPage ? (
 					<LastItem>
-						<LoaderDots size="xl" className="fill-gray-600" />
+						<LoaderDots size="lg" />
 					</LastItem>
 				) : (
 					<LastItem ref={loadMoreRef} />
