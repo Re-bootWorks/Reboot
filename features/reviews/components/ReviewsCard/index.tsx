@@ -91,16 +91,13 @@ function ReviewsCardContent() {
 	// 리뷰 수정 시 제출
 	function handleReviewSubmit(reviewFormValues: ReviewFormValues) {
 		if (!reviewTarget) return;
-		patchReviews(
-			{ reviewId: reviewTarget.id, reviewFormValues },
-			{ onSuccess: closeReviewModal, onError: closeReviewModal },
-		);
+		patchReviews({ reviewId: reviewTarget.id, reviewFormValues }, { onSuccess: closeReviewModal });
 	}
 
 	// 리뷰 삭제
 	async function handleReviewDelete() {
 		if (!alertTarget) return;
-		deleteReviews({ reviewId: alertTarget.id }, { onSuccess: closeAlert, onError: closeAlert });
+		deleteReviews({ reviewId: alertTarget.id }, { onSuccess: closeAlert });
 	}
 
 	return (
@@ -122,23 +119,6 @@ function ReviewsCardContent() {
 			<div ref={bottomRef} />
 
 			{isFetchingNextPage && <Loading className="flex h-30 items-center justify-center" />}
-
-			<Alert
-				isOpen={!!alertTarget}
-				isPending={isDeleteReviewsPending}
-				onClose={closeAlert}
-				handleConfirmButton={handleReviewDelete}>
-				리뷰를 삭제하시겠습니까?
-			</Alert>
-
-			<ReviewModal
-				mode="edit"
-				initialValue={reviewInitialValue}
-				isOpen={!!reviewTarget}
-				isPending={isPatchReviewsPending}
-				onClose={closeReviewModal}
-				handleFormSubmit={handleReviewSubmit}
-			/>
 
 			<Alert
 				isOpen={!!alertTarget}
