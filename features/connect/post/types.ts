@@ -4,6 +4,7 @@ export type Post = {
 	title: string;
 	content: string;
 	image: string;
+	imageUrl?: string;
 	likeCount: number;
 	createdAt: string;
 	author: {
@@ -11,6 +12,18 @@ export type Post = {
 	};
 	_count: {
 		comments: number;
+	};
+};
+
+export type PostComment = {
+	id: number;
+	content: string;
+	createdAt: string;
+	isPending?: boolean;
+	author: {
+		id: number;
+		name: string;
+		image?: string;
 	};
 };
 
@@ -27,16 +40,7 @@ export type ConnectPost = Post & {
 		image?: string;
 		email?: string;
 	};
-	comments: {
-		id: number;
-		content: string;
-		createdAt: string;
-		author: {
-			id: number;
-			name: string;
-			image?: string;
-		};
-	}[];
+	comments: PostComment[];
 };
 // UI 타입 (PostCard용)
 export type PostCardItem = {
@@ -55,6 +59,7 @@ export type PostCardItem = {
 export type PostCardProps = PostCardItem & {
 	onClick?: () => void;
 	onLikeClick?: (e: React.MouseEvent) => void;
+	isLoading?: boolean;
 };
 
 // HOT 게시판용
@@ -63,4 +68,15 @@ export type GetPostsParams = {
 	sortBy?: "createdAt" | "viewCount" | "likeCount" | "commentCount"; // 정렬 기준
 	offset?: number; // 시작 위치
 	limit?: number; // 가져올 개수
+	keyword?: string;
+};
+
+// 게시글 목록 응답 타입
+export type GetPostsResponse = {
+	data: Post[];
+	nextCursor?: string;
+	hasMore?: boolean;
+	totalCount?: number;
+	currentOffset?: number;
+	limit?: number;
 };

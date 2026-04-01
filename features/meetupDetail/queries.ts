@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
 	getMeetingDetail,
 	getParticipants,
@@ -11,13 +11,12 @@ export const meetupDetailQueryKeys = {
 	participants: (meetingId: number) => ["meetupDetail", "participants", meetingId] as const,
 	reviews: (meetingId: number, cursor?: string) =>
 		["meetupDetail", "reviews", meetingId, cursor] as const,
+	related: (meetingId: number, region: string, type: string) =>
+		["meetupDetail", "related", meetingId, region, type] as const,
 };
 
-{
-	/* TODO: Suspense 도입으로, useQuery -> useSuspenseQuery 변경 가능성 o */
-}
 export function useMeetingDetail(meetingId: number) {
-	return useQuery({
+	return useSuspenseQuery({
 		queryKey: meetupDetailQueryKeys.meeting(meetingId),
 		queryFn: () => getMeetingDetail(meetingId),
 		staleTime: 1000 * 60 * 5, // 모임 정보: 5분 (자주 안바뀌므로)
@@ -25,7 +24,7 @@ export function useMeetingDetail(meetingId: number) {
 }
 
 export function useParticipants(meetingId: number) {
-	return useQuery({
+	return useSuspenseQuery({
 		queryKey: meetupDetailQueryKeys.participants(meetingId),
 		queryFn: () => getParticipants(meetingId),
 		staleTime: 1000 * 60 * 3, // 참여자: 3분 (실시간성 필요하므로)
@@ -33,7 +32,7 @@ export function useParticipants(meetingId: number) {
 }
 
 export function useReviews(meetingId: number, cursor?: string) {
-	return useQuery({
+	return useSuspenseQuery({
 		queryKey: meetupDetailQueryKeys.reviews(meetingId, cursor),
 		queryFn: () => getReviews(meetingId, cursor),
 		staleTime: 1000 * 60 * 10, // 리뷰: 10분 (가장 안바뀌므로)
@@ -41,8 +40,8 @@ export function useReviews(meetingId: number, cursor?: string) {
 }
 
 export function useRelatedMeetings(meetingId: number, region: string, type: string) {
-	return useQuery({
-		queryKey: ["meetupDetail", "related", meetingId, region, type] as const,
+	return useSuspenseQuery({
+		queryKey: meetupDetailQueryKeys.related(meetingId, region, type),
 		queryFn: () => getRelatedMeetings(meetingId, region, type),
 		staleTime: 1000 * 60 * 5,
 	});

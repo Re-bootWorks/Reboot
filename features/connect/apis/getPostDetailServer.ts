@@ -1,7 +1,7 @@
 import { serverFetch } from "@/libs/serverFetch";
 
 // 서버용
-export async function getPostDetailServer(id: string) {
+export async function getPostDetailServer(id: number) {
 	const res = await serverFetch(`/posts/${id}`);
 
 	if (!res.ok) {

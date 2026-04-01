@@ -20,7 +20,7 @@ export function useLogin(onSuccess: () => void) {
 	});
 }
 
-export function useSignUp(onSuccess: () => void) {
+export function useSignUp(onSuccess: () => void, onAutoLoginFail?: () => void) {
 	const { setUser } = useUserStore();
 	const { handleShowToast } = useToast();
 
@@ -33,9 +33,16 @@ export function useSignUp(onSuccess: () => void) {
 					password: variables.password,
 				});
 				setUser(loginResult.user);
-			} catch {}
-			handleShowToast({ message: "회원가입이 완료됐습니다.", status: "success" });
-			onSuccess();
+
+				handleShowToast({ message: "회원가입이 완료됐습니다.", status: "success" });
+				onSuccess();
+			} catch {
+				handleShowToast({
+					message: "회원가입이 완료됐습니다. 로그인 해주세요.",
+					status: "success",
+				});
+				onAutoLoginFail?.();
+			}
 		},
 		onError: (error: Error) => {
 			handleShowToast({ message: error.message, status: "error" });

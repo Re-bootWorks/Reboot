@@ -1,7 +1,17 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { serverFetch } from "@/libs/serverFetch";
+import { COOKIE_OPTIONS } from "@/constants/auth";
+
+function deleteAuthCookies(res: NextResponse) {
+	res.cookies.delete({ name: "accessToken", ...COOKIE_OPTIONS });
+	res.cookies.delete({ name: "refreshToken", ...COOKIE_OPTIONS });
+}
+
 export async function POST() {
+	let body: object = { message: "로그아웃 성공" };
+	let status = 200;
+
 	try {
 		const cookieStore = await cookies();
 		const refreshToken = cookieStore.get("refreshToken")?.value;
@@ -18,16 +28,15 @@ export async function POST() {
 			} catch {
 				data = null;
 			}
-			return NextResponse.json(data, { status: response.status });
+			body = data;
+			status = response.status;
 		}
-
-		const res = NextResponse.json({ message: "로그아웃 성공" }, { status: 200 });
-
-		res.cookies.delete({ name: "accessToken", path: "/" });
-		res.cookies.delete({ name: "refreshToken", path: "/" });
-
-		return res;
 	} catch {
-		return NextResponse.json({ message: "서버 오류가 발생했습니다." }, { status: 500 });
+		body = { message: "서버 오류가 발생했습니다." };
+		status = 500;
 	}
+
+	const res = NextResponse.json(body, { status });
+	deleteAuthCookies(res);
+	return res;
 }

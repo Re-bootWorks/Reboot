@@ -2,6 +2,8 @@ import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 import EmptyImage from "@/features/connect/ui/EmptyImage";
 import dayjs from "@/libs/dayjs";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 type CompactCardProps = {
 	id: number;
@@ -12,6 +14,21 @@ type CompactCardProps = {
 	commentCount: number;
 	onClick?: () => void;
 };
+
+const containerStyle =
+	"flex h-[13.875rem] w-[10.125rem] shrink-0 flex-col overflow-hidden md:h-[15.75rem] md:w-[19rem]";
+
+function CompactCardSkeleton() {
+	return (
+		<div className={containerStyle}>
+			<Skeleton
+				height="100%"
+				containerClassName="block h-full w-full leading-none"
+				borderRadius={24}
+			/>
+		</div>
+	);
+}
 
 export default function CompactCard({
 	title,
@@ -25,7 +42,7 @@ export default function CompactCard({
 		// 카드 컨테이너
 		<div
 			onClick={onClick}
-			className="flex h-[13.875rem] w-[10.125rem] shrink-0 cursor-pointer flex-col transition duration-300 ease-out hover:-translate-y-0.5 md:h-[15.75rem] md:w-[18.5rem]">
+			className="flex h-[13.875rem] w-[10.125rem] shrink-0 cursor-pointer flex-col transition duration-300 ease-out hover:-translate-y-0.5 md:h-[15.75rem] md:w-[19rem]">
 			{/* 이미지 영역 */}
 			<div className="h-[11.25rem] overflow-hidden rounded-[1.5rem]">
 				{image?.trim() ? (
@@ -61,3 +78,5 @@ export default function CompactCard({
 		</div>
 	);
 }
+
+CompactCard.Skeleton = CompactCardSkeleton;

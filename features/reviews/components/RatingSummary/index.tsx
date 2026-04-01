@@ -1,8 +1,12 @@
+"use client";
+
 import { Rating } from "@smastrom/react-rating";
-import { RatingSummaryProps } from "../../types";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { cn } from "@/utils/cn";
 import { RATING_STYLE } from "@/constants/ratingStyle";
+import { useReviewsCategoriesStatistics, useReviewsStatistics } from "../../queries/queries";
+import { ReviewCategoryStatistics, ReviewCategoryStatisticsItem } from "../../types";
+import { useSearchParams } from "next/navigation";
 
 const myStyles = {
 	itemShapes: RATING_STYLE.itemShapes,
@@ -10,25 +14,44 @@ const myStyles = {
 	inactiveFillColor: "#F6F7F9",
 };
 
-export default function RatingSummary({
-	averageScore,
-	totalReviews,
-	oneStar,
-	twoStars,
-	threeStars,
-	fourStars,
-	fiveStars,
-}: RatingSummaryProps) {
+function getSelectedCategoryStats(
+	statistics: ReviewCategoryStatistics | undefined,
+	selectedType?: string | null,
+): ReviewCategoryStatisticsItem | null {
+	if (!statistics) return null;
+	if (!selectedType) return null;
+
+	return statistics.find((item) => item.type === selectedType) ?? null;
+}
+
+export default function RatingSummary() {
+	const { data } = useReviewsStatistics();
+	const { data: categoriesStatistics } = useReviewsCategoriesStatistics();
+
+	const searchParams = useSearchParams();
+	const type = searchParams.get("type");
+
+	const selectedStats = getSelectedCategoryStats(categoriesStatistics, type);
+
+	const averageScore = selectedStats?.averageScore ?? data?.averageScore ?? 0;
+	const totalReviews = selectedStats?.totalReviews ?? data?.totalReviews ?? 0;
+
+	const oneStar = selectedStats?.oneStar ?? data?.oneStar ?? 0;
+	const twoStars = selectedStats?.twoStars ?? data?.twoStars ?? 0;
+	const threeStars = selectedStats?.threeStars ?? data?.threeStars ?? 0;
+	const fourStars = selectedStats?.fourStars ?? data?.fourStars ?? 0;
+	const fiveStars = selectedStats?.fiveStars ?? data?.fiveStars ?? 0;
+
 	const safeAverageScore = totalReviews > 0 ? averageScore : 0;
-	const displayAverageScore = Number(safeAverageScore ?? 0).toFixed(1);
+	const displayAverageScore = Number(safeAverageScore).toFixed(1);
 	const hasReviews = totalReviews > 0;
 
 	const starCounts: [number, number, number, number, number] = [
-		oneStar ?? 0,
-		twoStars ?? 0,
-		threeStars ?? 0,
-		fourStars ?? 0,
-		fiveStars ?? 0,
+		oneStar,
+		twoStars,
+		threeStars,
+		fourStars,
+		fiveStars,
 	];
 
 	const ratingItems = [5, 4, 3, 2, 1].map((score) => ({
@@ -57,7 +80,7 @@ export default function RatingSummary({
 						</p>
 
 						<Rating
-							value={safeAverageScore ?? 0}
+							value={safeAverageScore}
 							readOnly
 							itemStyles={myStyles}
 							className="max-w-25 md:max-w-47.5"
