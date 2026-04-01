@@ -1,0 +1,7 @@
+.review:global(.rr--group) {
+	gap: 0.5rem;
+}
+
+.review :global(.rr--svg) {
+	padding: 0;
+}

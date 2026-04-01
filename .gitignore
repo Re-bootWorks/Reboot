@@ -697,6 +697,7 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
@@ -704,3 +705,8 @@ FodyWeavers.xsd
 *storybook.log
 
 .idea
+
+# vscode setting
+.vscode
+
+.env

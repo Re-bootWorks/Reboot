@@ -1,0 +1,35 @@
+import resolveIconAttr, { IconProps } from "@/utils/resolveIconAttr";
+
+export default function IcAlarm({
+	color = "purple-500",
+	size = "md", // "md"
+	...props
+}: IconProps) {
+	const attrs = resolveIconAttr({ fill: color, size });
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width={attrs.size}
+			height={attrs.size}
+			viewBox="0 0 24 24"
+			{...props}
+			fill="none">
+			<path
+				d="M6.66667 6L5 7.66667"
+				stroke={attrs.fill}
+				strokeWidth="1.66667"
+				strokeLinecap="round"
+			/>
+			<path
+				d="M18.3333 6L20 7.66667"
+				stroke={attrs.fill}
+				strokeWidth="1.66667"
+				strokeLinecap="round"
+			/>
+			<path
+				d="M12.5 6C16.1817 6.00018 19.166 8.9852 19.166 12.667C19.1658 16.3486 16.1816 19.3328 12.5 19.333C8.81821 19.333 5.83318 16.3487 5.83301 12.667C5.83301 8.98509 8.8181 6 12.5 6ZM14.6875 9.93262C14.3281 9.64525 13.8031 9.70317 13.5156 10.0625L12.3262 11.5488L10.4619 10.3066C10.0791 10.0516 9.56193 10.1544 9.30664 10.5371C9.05142 10.92 9.15529 11.438 9.53809 11.6934L11.8789 13.2539C12.3284 13.5535 12.933 13.4599 13.2705 13.0381L14.8174 11.1035C15.1048 10.7442 15.0466 10.2202 14.6875 9.93262Z"
+				fill={attrs.fill}
+			/>
+		</svg>
+	);
+}
