@@ -5,18 +5,13 @@ import type {
 	ReviewsListRequest,
 	ReviewsListResponse,
 } from "../types";
-import {
-	buildQuery,
-	getErrorMessage,
-	toDateTimeRangeEnd,
-	toDateTimeRangeStart,
-	toOptionalNumber,
-} from "../utils";
+import { buildQuery, toDateTimeRangeEnd, toDateTimeRangeStart, toOptionalNumber } from "../utils";
 import {
 	ROUTE_REVIEWS,
 	ROUTE_REVIEWS_CATEGORIES_STATISTICS,
 	ROUTE_REVIEWS_STATISTICS,
 } from "../constants/routes";
+import { throwApiError } from "@/utils/api";
 
 /** 리뷰 목록 조회 */
 export async function getReviews(
@@ -40,10 +35,7 @@ export async function getReviews(
 
 	const response = await serverFetch(query ? `${ROUTE_REVIEWS}?${query}` : ROUTE_REVIEWS);
 
-	if (!response.ok) {
-		throw new Error(`${getErrorMessage(response.status)} ${response.status} 에러`);
-	}
-
+	await throwApiError(response, "리뷰 목록 조회에 실패했습니다.");
 	return response.json();
 }
 
@@ -66,10 +58,7 @@ function fromSearchParams(searchParams: URLSearchParams): ReviewsListRequest {
 export async function getReviewsStatistics(): Promise<RatingSummaryResponse> {
 	const response = await serverFetch(ROUTE_REVIEWS_STATISTICS);
 
-	if (!response.ok) {
-		throw new Error(`${getErrorMessage(response.status)} ${response.status} 에러`);
-	}
-
+	await throwApiError(response, "리뷰 전체 통계 조회에 실패했습니다.");
 	return response.json();
 }
 
@@ -77,9 +66,6 @@ export async function getReviewsStatistics(): Promise<RatingSummaryResponse> {
 export async function getReviewsCategoriesStatistics(): Promise<ReviewCategoryStatistics> {
 	const response = await serverFetch(ROUTE_REVIEWS_CATEGORIES_STATISTICS);
 
-	if (!response.ok) {
-		throw new Error(`${getErrorMessage(response.status)} ${response.status} 에러`);
-	}
-
+	await throwApiError(response, "카테고리 별 리뷰 통계 조회에 실패했습니다.");
 	return response.json();
 }

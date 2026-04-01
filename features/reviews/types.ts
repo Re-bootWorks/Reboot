@@ -88,3 +88,13 @@ export interface ReviewsListResponse {
 	nextCursor: string | null;
 	hasMore: boolean;
 }
+
+export interface ReviewPayload {
+	score: ReviewsListItem["score"];
+	comment: ReviewsListItem["comment"];
+}
+
+export interface PatchReviewPayload {
+	reviewId: ReviewsListItem["id"];
+	reviewFormValues: ReviewPayload;
+}
