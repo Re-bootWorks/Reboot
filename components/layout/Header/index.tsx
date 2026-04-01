@@ -17,6 +17,7 @@ import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { usePathname, useRouter } from "next/navigation";
 import { useGetFavoritesCount } from "@/features/header/queries";
 import Notification from "@/features/header/components/Notification";
+import Image from "next/image";
 
 interface GNBProps {
 	showChevron?: boolean;
@@ -35,7 +36,6 @@ interface SidebarProps {
 
 const STYLE = {
 	header: "sticky top-0 left-0 z-10 flex items-center justify-between bg-gray-50 py-2 md:py-4 ",
-	logo: "font-taenada w-fit p-2 text-base leading-none text-purple-500 md:text-2xl",
 	gnb: "flex items-center gap-4",
 	sidebar:
 		"fixed inset-0 flex h-full max-w-xl w-11/12 flex-col justify-between rounded-r-3xl bg-white py-6",
@@ -194,6 +194,7 @@ function LogoutButton({
 	);
 }
 
+const LOGO = "/assets/img/img_logo.svg";
 // 헤더 컴포넌트
 export default function Header() {
 	const { mutate: logout, isPending } = useLogout();
@@ -210,7 +211,13 @@ export default function Header() {
 			<Container as="header" className={STYLE.header}>
 				<div className={STYLE.gnb}>
 					<Link href="/">
-						<div className={STYLE.logo}>Re:boot</div>
+						<Image
+							src={LOGO}
+							height={42}
+							width={120}
+							alt="RE:BOOT"
+							className="h-8 w-fit md:h-10.5"
+						/>
 					</Link>
 					<nav className="hidden md:flex" aria-label="상단 내비게이션">
 						<GNB favoritesCount={favoritesCount?.count} pathname={pathname} />
