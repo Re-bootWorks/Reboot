@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const PROTECTED_ROUTES = [
 	"/mypage",
 	"/connect/write",
-	"/connect/edit/",
+	"/connect/edit",
 	"/meetup/create",
 	"/favorites",
 ];
@@ -14,18 +14,22 @@ const AUTH_ROUTES = ["/login", "/signup", "/oauth"];
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
-	const accessToken = request.cookies.get("accessToken")?.value;
+	const refreshToken = request.cookies.get("refreshToken")?.value;
 
 	// 로그인 한 유저가 진입시 -> 홈으로 리다이렉트
-	if (AUTH_ROUTES.some((route) => pathname.startsWith(route)) && accessToken) {
+	if (AUTH_ROUTES.some((route) => pathname.startsWith(route)) && refreshToken) {
 		return NextResponse.redirect(new URL("/", request.url));
 	}
 
 	// 인증되지 않은 유저가 인증이 필요한 URL로 진입시 -> 로그인페이지로이동
 	if (
 		(PROTECTED_ROUTES.some((route) => pathname.startsWith(route)) ||
-			(pathname.startsWith("/meetup/") && pathname.endsWith("/edit"))) &&
-		!accessToken
+			(pathname.startsWith("/meetup/") &&
+				pathname
+					.split("/")
+					.filter((p) => p)
+					.pop() === "edit")) &&
+		!refreshToken
 	) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
