@@ -14,7 +14,7 @@ export function useQueryParams() {
 	const get = (key: string) => searchParams.get(key);
 
 	const set = useCallback((params: Record<string, string | null | undefined>) => {
-		const newParams = new URLSearchParams(searchParams.toString());
+		const newParams = new URLSearchParams(window.location.search);
 
 		Object.entries(params).forEach(([key, value]) => {
 			if (value === null || value === undefined) {
