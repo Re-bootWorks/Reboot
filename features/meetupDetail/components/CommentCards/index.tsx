@@ -6,7 +6,8 @@ import { Rating, Heart } from "@smastrom/react-rating";
 import { formatIsoDateWithDots } from "@/utils/date";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { User } from "@/features/meetupDetail/types";
-import { useGetMe } from "@/features/auth/queries";
+import Empty from "@/components/layout/Empty";
+import { useUserStore } from "@/store/user.store";
 
 export interface CommentProps {
 	id: number;
@@ -16,12 +17,11 @@ export interface CommentProps {
 	user: User;
 }
 
-const EMPTY_IMAGE = "/assets/img/img_empty_purple.svg";
 const DEFAULT_PROFILE = "/assets/img/img_profile.svg";
 
 function CommentItem({ score, comment, createdAt, user }: Omit<CommentProps, "id">) {
-	const { data: me } = useGetMe();
-	const myReview = me?.id === user.id;
+	const { user: me, isPending } = useUserStore();
+	const myReview = !isPending && me?.id === user.id;
 	const heartStyles = {
 		itemShapes: Heart,
 		activeFillColor: "#7566E5",
@@ -101,18 +101,9 @@ export default function CommentCards({
 							))}
 						</div>
 					) : (
-						<div className="flex h-fit w-full flex-col items-center gap-5 md:gap-6">
-							<Image
-								src={EMPTY_IMAGE}
-								alt={"빈 이미지"}
-								width={200}
-								height={200}
-								className="flex h-fit w-fit flex-col gap-2.5 object-cover"
-							/>
-							<span className="h-fit w-full text-center text-sm font-medium text-gray-500 md:text-base">
-								아직 작성된 리뷰가 없어요.
-							</span>
-						</div>
+						<Empty section className="w-full">
+							아직 작성된 리뷰가 없어요.
+						</Empty>
 					)}
 				</div>
 				{(hasMore || currentPage > 1) && (

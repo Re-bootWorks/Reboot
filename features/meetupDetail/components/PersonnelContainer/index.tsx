@@ -4,7 +4,7 @@ import ProgressBar from "@/components/ui/ProgressBar";
 import { Participants } from "@/components/ui/Participants";
 import { Participant } from "@/features/meetupDetail/types";
 
-const MIN_CONFIRMED_COUNT = 5;
+export const MIN_CONFIRMED_COUNT = 3;
 
 interface PersonnelProps {
 	capacity: number;
@@ -40,7 +40,7 @@ export default function PersonnelContainer({
 
 				<div className="flex flex-col gap-2">
 					<div className="flex flex-row items-center justify-between text-xs text-gray-600 lg:text-sm">
-						<p>최소 5명</p>
+						<p>최소 {MIN_CONFIRMED_COUNT}명</p>
 						<p>최대 {capacity}명</p>
 					</div>
 					<ProgressBar max={capacity} current={participantCount} />

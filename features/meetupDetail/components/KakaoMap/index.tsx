@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Script from "next/script";
 import IcCopy from "@/components/ui/icons/IcCopy";
+import { useToast } from "@/providers/toast-provider";
 
 interface KakaoMapProps {
 	address: string;
@@ -14,8 +15,9 @@ const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
 
 export default function KakaoMap({ address, latitude, longitude }: KakaoMapProps) {
 	const mapRef = useRef<HTMLDivElement>(null);
-
 	const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+
+	const { handleShowToast } = useToast();
 
 	const initMap = useCallback(() => {
 		if (!mapRef.current || !window.kakao) return;
@@ -43,6 +45,7 @@ export default function KakaoMap({ address, latitude, longitude }: KakaoMapProps
 
 	const handleCopyAddress = async () => {
 		await navigator.clipboard.writeText(address);
+		handleShowToast({ message: "주소가 복사되었습니다!", status: "success" });
 	};
 
 	if (!KAKAO_JS_KEY) {
@@ -64,7 +67,7 @@ export default function KakaoMap({ address, latitude, longitude }: KakaoMapProps
 			/>
 
 			{/* 지도가 그려질 영역 */}
-			<div className="h-54 w-full rounded-t-lg border-t border-r border-l border-gray-200 md:h-70 md:rounded-t-4xl">
+			<div className="h-54 w-full overflow-hidden rounded-t-lg border-t border-r border-l border-gray-200 md:h-70 md:rounded-t-4xl">
 				<div ref={mapRef} className="h-full w-full" />
 			</div>
 
