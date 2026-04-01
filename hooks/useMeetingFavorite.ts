@@ -2,6 +2,7 @@
 
 import { CreatedList, CursorPageResponse, MeetupList } from "@/features/mypage/types";
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
+import { headerQueryKeys } from "@/features/header/queries";
 import { deleteMeetingsFavorites, postMeetingsFavorites } from "@/features/mypage/apis";
 
 /**
@@ -58,7 +59,10 @@ export default function useMeetingFavorite() {
 			// 백업데이터 전달
 			return { prevDataList };
 		},
-
+		// 성공시 header count
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites });
+		},
 		// 실패시 롤백
 		onError: (_error, _variables, context) => {
 			context?.prevDataList.forEach(({ data }) => {

@@ -17,4 +17,4 @@ export const GNB_MENU_ITEMS = [
 	},
 ];
 
-export const ACCOUNT_MENU_ITEM = { href: "#", label: "마이페이지", key: "mypage" };
+export const ACCOUNT_MENU_ITEM = { href: "/mypage", label: "마이페이지", key: "mypage" };
