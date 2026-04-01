@@ -1,11 +1,12 @@
-import Button from "@/components/ui/Buttons/Button";
+import { useQueryClient } from "@tanstack/react-query";
+import { meetupListQueryKey, usePostMeetup } from "../../queries";
+import { mypageQueryKeys } from "@/features/mypage/queries";
 import { useFormStep } from "../providers/FormStepProvider";
 import { useFormData } from "../providers/FormDataProvider";
 import { useToast } from "@/providers/toast-provider";
+import Button from "@/components/ui/Buttons/Button";
 import type { OnSuccess } from "./CreateModal";
 import { extractMeetupData } from "../utils";
-import { GET_MEETUPS_QUERY_KEY, usePostMeetup } from "../../queries";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface FormFooterProps {
 	/** 닫기 버튼 클릭 시 호출 */
@@ -21,7 +22,9 @@ export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
 	const queryClient = useQueryClient();
 	const postMeetupMutation = usePostMeetup({
 		onSuccess: (data) => {
-			queryClient.invalidateQueries({ queryKey: GET_MEETUPS_QUERY_KEY });
+			queryClient.invalidateQueries({ queryKey: meetupListQueryKey });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups() });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created() });
 			onSuccess(data.id);
 		},
 		onError: (error) => {
