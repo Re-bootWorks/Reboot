@@ -76,7 +76,7 @@ export default function PostDetailCard({
 				</div>
 				{/* 내용 */}
 				<div
-					className="mt-6 min-h-[140px] text-base leading-6 tracking-[-0.32px] text-gray-700 md:mt-10 [&_img]:my-4 [&_img]:rounded-[24px]"
+					className="mt-6 min-h-[140px] max-w-none overflow-hidden text-base leading-6 tracking-[-0.32px] text-gray-700 md:mt-10 [&_em]:italic [&_img]:my-4 [&_img]:rounded-[24px] [&_ol]:list-decimal [&_ol]:pl-5 [&_strong]:font-bold [&_u]:underline [&_ul]:list-disc [&_ul]:pl-5"
 					dangerouslySetInnerHTML={{ __html: content }}
 				/>
 				{/* 이미지 */}

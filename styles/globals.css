@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @import "./font.css";
 @import "react-loading-skeleton/dist/skeleton.css";
 @import "@smastrom/react-rating/style.css";

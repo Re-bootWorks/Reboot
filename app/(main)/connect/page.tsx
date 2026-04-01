@@ -58,7 +58,7 @@ export default async function ConnectPage({
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<Container>
+			<Container className="min-w-[380px]">
 				<IntroSection />
 				<Suspense fallback={null}>
 					<HotPostSection />
