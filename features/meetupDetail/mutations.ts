@@ -104,7 +104,7 @@ export function useFavoriteMutation(meetingId: number) {
 				status: "success",
 			});
 		},
-		onError: (_error, _variables, context) => {
+		onError: (error: Error, _variables, context) => {
 			if (context?.prevData) {
 				queryClient.setQueryData(meetupDetailQueryKeys.meeting(meetingId), context.prevData);
 			}
@@ -113,7 +113,7 @@ export function useFavoriteMutation(meetingId: number) {
 					queryClient.setQueryData(queryKey, oldData);
 				});
 			}
-			handleShowToast({ message: "찜 처리에 실패했습니다.", status: "error" });
+			handleShowToast({ message: error.message, status: "error" });
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
@@ -134,6 +134,7 @@ export function useCancelJoinMutation(meetingId: number) {
 		mutationFn: () => deleteJoin(meetingId),
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
+			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) });
 
 			const prevData = queryClient.getQueryData<Meeting>(meetupDetailQueryKeys.meeting(meetingId));
 
