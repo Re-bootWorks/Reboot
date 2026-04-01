@@ -64,7 +64,11 @@ export default function Alert({
 					</Button>
 				</div>
 			}>
-			<div className={cn("text-center text-lg font-semibold md:text-xl", className)}>
+			<div
+				className={cn(
+					"text-center text-lg font-semibold whitespace-pre-line md:text-xl",
+					className,
+				)}>
 				{children}
 			</div>
 		</Modal>

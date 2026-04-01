@@ -5,14 +5,7 @@ import Container from "../Container";
 import { ACCOUNT_MENU_ITEM, GNB_MENU_ITEMS } from "@/constants/navigation";
 import { ReactNode } from "react";
 import { cn } from "@/utils/cn";
-import {
-	IcBellOutline,
-	IcBellUnreadOutline,
-	IcChevronRight,
-	IcDelete,
-	IcMenu,
-} from "@/components/ui/icons";
-import Image from "next/image";
+import { IcChevronRight, IcDelete, IcMenu } from "@/components/ui/icons";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import useToggle from "@/hooks/useToggle";
 import { useUserStore } from "@/store/user.store";
@@ -20,18 +13,24 @@ import { useModalStore } from "@/store/modal.store";
 import { useLogout } from "@/features/auth/mutations";
 import { LoginModal } from "@/features/auth/components/LoginModal";
 import { SignUpModal } from "@/features/auth/components/SignUpModal";
+import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
+import { usePathname, useRouter } from "next/navigation";
+import { useGetFavoritesCount } from "@/features/header/queries";
+import Notification from "@/features/header/components/Notification";
 
 interface GNBProps {
-	favoritesCount: number;
 	showChevron?: boolean;
 	handleItemClick?: () => void;
 	className?: string;
+	favoritesCount?: number;
+	pathname: string;
 }
 interface SidebarProps {
 	isOpen: boolean;
 	isLogin: boolean;
 	handleSidebarClose: () => void;
-	favoritesCount: number;
+	favoritesCount?: number;
+	pathname: string;
 }
 
 const STYLE = {
@@ -41,11 +40,17 @@ const STYLE = {
 	sidebar:
 		"fixed inset-0 flex h-full max-w-xl w-11/12 flex-col justify-between rounded-r-3xl bg-white py-6",
 	sidebarItem: "px-4 py-2 flex items-center justify-between",
-	link: "flex items-center gap-1 p-4 text-base text-gray-600",
+	link: "flex items-center gap-1 p-4 text-base text-gray-600 cursor-pointer",
 	etc: "flex items-center gap-4 md:gap-6",
-	image: "rounded-full border border-gray-200",
 };
+// 활성화 메뉴
+function isActiveMenu(pathname: string, href: string) {
+	if (href === "/") return pathname === "/";
 
+	const basePath = href.split("/").filter(Boolean)[0];
+	return pathname === href || pathname.startsWith(`/${basePath}`);
+}
+// 찜한 모임 뱃지
 function GNBBadge({ children }: { children: ReactNode }) {
 	return (
 		<span className="rounded-full bg-purple-500 px-2 text-xs font-semibold text-white">
@@ -53,17 +58,26 @@ function GNBBadge({ children }: { children: ReactNode }) {
 		</span>
 	);
 }
-
-function GNB({ favoritesCount, handleItemClick, showChevron = false, className }: GNBProps) {
+// 기본 GNB
+function GNB({
+	favoritesCount,
+	pathname,
+	handleItemClick,
+	showChevron = false,
+	className,
+}: GNBProps) {
 	return (
 		<>
 			{GNB_MENU_ITEMS.map((item) => {
 				const { href, label, key } = item;
+				const isActive = isActiveMenu(pathname, href);
 				return (
 					<Link key={key} href={href} className={className} onClick={handleItemClick}>
-						<span className={STYLE.link}>
+						<span className={cn(STYLE.link, isActive && "font-semibold text-purple-500")}>
 							{label}
-							{key === "favorites" && <GNBBadge>{favoritesCount}</GNBBadge>}
+							{key === "favorites" && favoritesCount !== undefined && favoritesCount > 0 && (
+								<GNBBadge>{favoritesCount}</GNBBadge>
+							)}
 						</span>
 						{showChevron && <IcChevronRight />}
 					</Link>
@@ -72,10 +86,8 @@ function GNB({ favoritesCount, handleItemClick, showChevron = false, className }
 		</>
 	);
 }
-
-function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: SidebarProps) {
-	const { mutate: logout } = useLogout();
-	const { openLogin } = useModalStore();
+// 모바일용 메뉴
+function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount, pathname }: SidebarProps) {
 	return (
 		<Dialog open={isOpen} onClose={handleSidebarClose} className={"relative z-30 md:hidden"}>
 			<DialogBackdrop className="bg-black-50 fixed inset-0" />
@@ -92,6 +104,7 @@ function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: Sideba
 						<GNB
 							showChevron
 							favoritesCount={favoritesCount}
+							pathname={pathname}
 							handleItemClick={handleSidebarClose}
 							className={STYLE.sidebarItem}
 						/>
@@ -100,48 +113,98 @@ function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount }: Sideba
 								href={ACCOUNT_MENU_ITEM.href}
 								className={STYLE.sidebarItem}
 								onClick={handleSidebarClose}>
-								<span className={STYLE.link}>{ACCOUNT_MENU_ITEM.label}</span>
+								<span
+									className={cn(
+										STYLE.link,
+										isActiveMenu(pathname, ACCOUNT_MENU_ITEM.href) &&
+											"font-semibold text-purple-500",
+									)}>
+									{ACCOUNT_MENU_ITEM.label}
+								</span>
 								<IcChevronRight />
 							</Link>
 						)}
 					</nav>
 				</div>
 				{isLogin ? (
-					<button
-						type="button"
-						className={cn(STYLE.sidebarItem, "justify-end")}
-						onClick={() => {
-							logout();
-							handleSidebarClose();
-						}}>
-						<span className={STYLE.link}>로그아웃</span>
-					</button>
+					<LogoutButton showSidebar handleSidebarClose={handleSidebarClose} />
 				) : (
-					<button
-						type="button"
-						className={cn(STYLE.sidebarItem, "justify-end")}
-						onClick={() => {
-							openLogin();
-							handleSidebarClose();
-						}}>
-						<span className={STYLE.link}>로그인</span>
-					</button>
+					<LoginButton showSidebar handleSidebarClose={handleSidebarClose} />
 				)}
 			</DialogPanel>
 		</Dialog>
 	);
 }
-
-export default function Header() {
-	const { isOpen, open, close } = useToggle();
-	const { user } = useUserStore();
+// 로그인 버튼
+function LoginButton({
+	showSidebar,
+	handleSidebarClose,
+}: {
+	showSidebar?: boolean;
+	handleSidebarClose?: () => void;
+}) {
 	const { openLogin } = useModalStore();
-	const { mutate: logout } = useLogout();
-	const isLogin = !!user;
-	const isAlarm = false;
-	const favoritesCount = 1;
-	const profile = null;
+	return showSidebar ? (
+		<button
+			type="button"
+			className={cn(STYLE.sidebarItem, "justify-end")}
+			onClick={() => {
+				openLogin();
+				handleSidebarClose?.();
+			}}>
+			<span className={STYLE.link}>로그인</span>
+		</button>
+	) : (
+		<button type="button" className={cn(STYLE.link, "hidden md:block")} onClick={openLogin}>
+			로그인
+		</button>
+	);
+}
+// 로그아웃 버튼
+function LogoutButton({
+	showSidebar,
+	handleSidebarClose,
+}: {
+	showSidebar?: boolean;
+	handleSidebarClose?: () => void;
+}) {
+	const { mutate: logout, isPending } = useLogout();
 
+	return showSidebar ? (
+		<button
+			type="button"
+			className={cn(STYLE.sidebarItem, "justify-end")}
+			onClick={() => {
+				logout();
+				handleSidebarClose?.();
+			}}
+			disabled={isPending}
+			aria-busy={isPending}>
+			<span className={STYLE.link}>로그아웃</span>
+		</button>
+	) : (
+		<button
+			type="button"
+			onClick={() => logout()}
+			className={cn(STYLE.link, "hidden md:block")}
+			disabled={isPending}
+			aria-busy={isPending}>
+			로그아웃
+		</button>
+	);
+}
+
+// 헤더 컴포넌트
+export default function Header() {
+	const { mutate: logout, isPending } = useLogout();
+	const { isOpen: isSidebarOpen, open: openSidebar, close: closeSidebar } = useToggle();
+
+	const user = useUserStore((state) => state.user);
+	const pathname = usePathname();
+	const router = useRouter();
+	const isLoggedIn = !!user;
+
+	const { data: favoritesCount } = useGetFavoritesCount();
 	return (
 		<>
 			<Container as="header" className={STYLE.header}>
@@ -150,52 +213,41 @@ export default function Header() {
 						<div className={STYLE.logo}>Re:boot</div>
 					</Link>
 					<nav className="hidden md:flex" aria-label="상단 내비게이션">
-						<GNB favoritesCount={favoritesCount} />
+						<GNB favoritesCount={favoritesCount?.count} pathname={pathname} />
 					</nav>
 					<Sidebar
-						isOpen={isOpen}
-						isLogin={isLogin}
-						handleSidebarClose={close}
-						favoritesCount={favoritesCount}
+						isOpen={isSidebarOpen}
+						isLogin={isLoggedIn}
+						handleSidebarClose={closeSidebar}
+						favoritesCount={favoritesCount?.count}
+						pathname={pathname}
 					/>
 				</div>
 				<div className={STYLE.etc}>
-					{isLogin ? (
+					{isLoggedIn ? (
 						<>
-							<button
-								type="button"
-								disabled={!isAlarm}
-								className={cn(isAlarm ? "cursor-pointer" : "cursor-default")}>
-								{isAlarm ? <IcBellUnreadOutline /> : <IcBellOutline />}
-							</button>
-							<button
-								type="button"
-								onClick={() => logout()}
-								className={cn(STYLE.link, "hidden md:block")}>
-								로그아웃
-							</button>
+							<Notification />
 							<div className="hidden md:block">
-								<button type="button" className={STYLE.image}>
-									<Image
-										src={profile ? profile : "/assets/img/img_profile.svg"}
-										alt="프로필 이미지"
-										width={44}
-										height={44}
-									/>
-								</button>
+								<ActionDropdown
+									triggerType="profile"
+									menuClassName="z-10"
+									profileImage={user.image}
+									items={[
+										{ label: "마이페이지", onClick: () => router.push("/mypage") },
+										{
+											label: "로그아웃",
+											onClick: () => logout(),
+											disabled: isPending,
+											danger: true,
+										},
+									]}
+								/>
 							</div>
 						</>
 					) : (
-						<>
-							<button
-								type="button"
-								className={cn(STYLE.link, "hidden md:block")}
-								onClick={openLogin}>
-								로그인
-							</button>
-						</>
+						<LoginButton />
 					)}
-					<button type="button" className="cursor-pointer md:hidden" onClick={open}>
+					<button type="button" className="cursor-pointer md:hidden" onClick={openSidebar}>
 						<IcMenu />
 					</button>
 				</div>

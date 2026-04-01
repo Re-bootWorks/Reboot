@@ -2,6 +2,7 @@ import { Meeting } from "@/features/meetupDetail/types";
 import { MeetupEditData } from "./types";
 import dayjs from "@/libs/dayjs";
 import { splitAddress, validateCapacity, validateText } from "@/features/meetup/utils";
+import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/PersonnelContainer";
 
 export function toMeetupEditData(meeting: Meeting): MeetupEditData {
 	const {
@@ -50,6 +51,11 @@ export function validateCapacityOverParticipants(capacity: number, participantCo
 /** 모임 일시가 현재 시각 이후인지 검사 */
 export function validateDateTimeIsFuture(dateTime: string) {
 	return dayjs(dateTime).isAfter(dayjs());
+}
+
+/** 최대 정원이 최소 인원보다 크거나 같은지 검사 */
+export function validateMaxCapacity(capacity: number, MIN_CONFIRMED_COUNT: number) {
+	return capacity >= MIN_CONFIRMED_COUNT;
 }
 
 /** 모집 마감이 모임 일정보다 이전인지 검사 */
@@ -103,6 +109,11 @@ export const EDIT_VALIDATIONS: {
 	{
 		test: (d) => validateCapacity(d.capacity),
 		message: "모임 정원을 입력해 주세요.",
+		tab: TAB_IDS.SCHEDULE,
+	},
+	{
+		test: (d) => validateMaxCapacity(d.capacity, MIN_CONFIRMED_COUNT),
+		message: `최대 인원은 ${MIN_CONFIRMED_COUNT}이상이어야 합니다.`,
 		tab: TAB_IDS.SCHEDULE,
 	},
 ];

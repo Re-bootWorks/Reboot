@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 // 로그인 필요한 페이지
 const PROTECTED_ROUTES = [
 	"/mypage",
-	"/connect/write",
+	"/connect/create",
 	"/connect/edit",
 	"/meetup/create",
 	"/favorites",
@@ -32,6 +32,21 @@ export function middleware(request: NextRequest) {
 		!refreshToken
 	) {
 		return NextResponse.redirect(new URL("/login", request.url));
+	}
+	if (pathname.startsWith("/meetup/create")) {
+		const step = request.nextUrl.searchParams.get("step");
+
+		if (step !== null) {
+			const validStep = Number(step);
+			if (!Number.isInteger(validStep) || validStep < 1 || validStep > 4) {
+				const url = new URL("/meetup/create", request.url);
+				request.nextUrl.searchParams.forEach((value, key) => {
+					if (key !== "step") url.searchParams.set(key, value);
+				});
+				url.searchParams.set("step", "1");
+				return NextResponse.redirect(url);
+			}
+		}
 	}
 
 	return NextResponse.next();

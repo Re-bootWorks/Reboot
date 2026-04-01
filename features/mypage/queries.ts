@@ -1,10 +1,10 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import {
 	BaseListParams,
-	getMeetingJoined,
-	GetMeetingJoinedParams,
+	getMeetingsJoined,
+	GetMeetingsJoinedParams,
 	getMeetingsMy,
-	getMeReviews,
+	getUsersMeReviews,
 } from "./apis";
 
 const DEFAULT_PARAMS = {
@@ -20,23 +20,27 @@ const DEFAULT_REVIEW_PARAMS = {
 } as const;
 
 export const mypageQueryKeys = {
+	all: ["mypage"] as const,
 	// 참여한 모임 목록 (나의 모임, 작성 가능한 리뷰)
-	meetups: (params: GetMeetingJoinedParams = {}) => ["mypage", "meetups", params] as const,
+	meetups: ["mypage", "meetups"] as const,
+	meetupsList: (params: GetMeetingsJoinedParams = {}) => ["mypage", "meetups", params] as const,
 	// 작성한 리뷰 목록
-	reviews: (params: BaseListParams = {}) => ["mypage", "reviews", params] as const,
+	reviews: ["mypage", "reviews"] as const,
+	reviewsList: (params: BaseListParams = {}) => ["mypage", "reviews", params] as const,
 	// 만든 모임 목록
-	created: (params: BaseListParams = {}) => ["mypage", "created", params] as const,
+	created: ["mypage", "created"] as const,
+	createdList: (params: BaseListParams = {}) => ["mypage", "created", params] as const,
 } as const;
 
 // 참여한 모임 목록 (나의 모임, 작성 가능한 리뷰)
-export function useMyMeetupInfinite(params: Omit<GetMeetingJoinedParams, "cursor"> = {}) {
+export function useMyMeetupInfinite(params: Omit<GetMeetingsJoinedParams, "cursor"> = {}) {
 	// 초기값과 외부에서 받은 params를 합침
 	const mergedParams = { ...DEFAULT_PARAMS, ...params };
 
 	return useSuspenseInfiniteQuery({
-		queryKey: mypageQueryKeys.meetups(mergedParams),
+		queryKey: mypageQueryKeys.meetupsList(mergedParams),
 		queryFn: ({ pageParam }) =>
-			getMeetingJoined({
+			getMeetingsJoined({
 				...mergedParams,
 				cursor: pageParam,
 			}),
@@ -56,9 +60,9 @@ export function useMyReviewInfinite(params: Omit<BaseListParams, "cursor"> = {})
 	const mergedParams = { ...DEFAULT_REVIEW_PARAMS, ...params };
 
 	return useSuspenseInfiniteQuery({
-		queryKey: mypageQueryKeys.reviews(mergedParams),
+		queryKey: mypageQueryKeys.reviewsList(mergedParams),
 		queryFn: ({ pageParam }) =>
-			getMeReviews({
+			getUsersMeReviews({
 				...mergedParams,
 				cursor: pageParam,
 			}),
@@ -74,7 +78,7 @@ export function useMyCreatedInfinite(params: Omit<BaseListParams, "cursor"> = {}
 	const mergedParams = { ...DEFAULT_PARAMS, ...params };
 
 	return useSuspenseInfiniteQuery({
-		queryKey: mypageQueryKeys.created(mergedParams),
+		queryKey: mypageQueryKeys.createdList(mergedParams),
 		queryFn: ({ pageParam }) =>
 			getMeetingsMy({
 				...mergedParams,

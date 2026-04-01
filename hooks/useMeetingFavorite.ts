@@ -2,7 +2,9 @@
 
 import { CreatedList, CursorPageResponse, MeetupList } from "@/features/mypage/types";
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteMeetingFavorite, postMeetingFavorite } from "@/features/mypage/apis";
+import { headerQueryKeys } from "@/features/header/queries";
+import { deleteMeetingsFavorites, postMeetingsFavorites } from "@/features/mypage/apis";
+import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 
 /**
  * 찜 추가 시 낙관적 업데이트 및 롤백 하는 훅
@@ -22,7 +24,7 @@ export default function useMeetingFavorite() {
 
 	const { mutate } = useMutation({
 		mutationFn: ({ meetingId, currentState }: { meetingId: number; currentState: boolean }) =>
-			currentState ? deleteMeetingFavorite(meetingId) : postMeetingFavorite(meetingId),
+			currentState ? deleteMeetingsFavorites(meetingId) : postMeetingsFavorites(meetingId),
 
 		// API 호출 전에 실행
 		onMutate: async ({ meetingId }) => {
@@ -59,6 +61,13 @@ export default function useMeetingFavorite() {
 			return { prevDataList };
 		},
 
+		onSuccess: (_data, variables) => {
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites });
+			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
+			queryClient.invalidateQueries({
+				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
+			});
+		},
 		// 실패시 롤백
 		onError: (_error, _variables, context) => {
 			context?.prevDataList.forEach(({ data }) => {

@@ -54,7 +54,7 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 			staleTime: 1000 * 60 * 10,
 		}),
 		queryClient.prefetchQuery({
-			queryKey: meetupDetailQueryKeys.related(meetingId, meeting.region, meeting.type),
+			queryKey: meetupDetailQueryKeys.related.detail(meetingId, meeting.region, meeting.type),
 			queryFn: () => getRelatedMeetingsServer(meetingId, meeting.region, meeting.type),
 			staleTime: 1000 * 60 * 10,
 		}),

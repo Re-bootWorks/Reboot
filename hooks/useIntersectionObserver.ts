@@ -18,19 +18,26 @@ import { useEffect } from "react";
 interface UseIntersectionObserverProps {
 	/** 감시할 DOM 요소의 ref */
 	targetRef: React.RefObject<Element | null>;
+	/** 감시할 DOM 요소의 root ref */
+	rootRef?: React.RefObject<Element | null>;
 	/** 요소가 화면에 보였을 때 실행할 함수 */
 	onIntersect: () => void;
 	/** 옵저버 활성화 여부 */
 	isEnabled: boolean;
-	/** IntersectionObserver의 threshold 값 (기본값: 0.1) */
+	/** IntersectionObserver의 threshold 값 요소가 해당 비율만큼 보일 때 트리거 (기본값: 0.1) */
 	threshold?: number;
+	/** root 기준으로 감지 영역을 확장/축소하는 margin (기본값: "0px")
+	 *  양수면 감지 영역 확장(미리 트리거), 음수면 축소 */
+	rootMargin?: string;
 }
 
 export function useIntersectionObserver({
 	targetRef,
+	rootRef,
 	onIntersect,
 	isEnabled,
 	threshold = 0.1,
+	rootMargin,
 }: UseIntersectionObserverProps) {
 	useEffect(() => {
 		// 비활성화면 감시 자체를 안 하도록
@@ -44,7 +51,7 @@ export function useIntersectionObserver({
 					onIntersect(); // 요소가 화면에 보이고 있는지 확인
 				}
 			},
-			{ threshold }, // 요소가 해당 값 이상 화면에 보일 때 감지
+			{ threshold, root: rootRef?.current ?? null, rootMargin }, // 요소가 해당 값 이상 화면에 보일 때 감지
 		);
 
 		observer.observe(currentElement);
@@ -52,5 +59,5 @@ export function useIntersectionObserver({
 		return () => observer.disconnect();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [targetRef.current, onIntersect, isEnabled]);
+	}, [targetRef.current, onIntersect, isEnabled, rootRef, threshold, rootMargin]);
 }

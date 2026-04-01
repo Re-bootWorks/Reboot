@@ -1,8 +1,10 @@
 import { useRef } from "react";
-import { useToast } from "@/providers/toast-provider";
 import { InfiniteData, QueryKey, useQueryClient } from "@tanstack/react-query";
-import { GET_MEETUPS_QUERY_KEY } from "../queries";
+import { useToast } from "@/providers/toast-provider";
+import { meetupQueryKeys } from "../queries";
 import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
+import { mypageQueryKeys } from "@/features/mypage/queries";
+import { headerQueryKeys } from "@/features/header/queries";
 
 interface ToggleItem {
 	id: number;
@@ -14,8 +16,6 @@ interface TogglePage {
 	data: ToggleItem[];
 }
 
-const INVALIDATE_PREFIXES = [GET_MEETUPS_QUERY_KEY, ["mypage", "meetups"], ["mypage", "created"]];
-
 export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavorited") {
 	const queryClient = useQueryClient();
 	const { handleShowToast } = useToast();
@@ -23,14 +23,14 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 
 	async function onMutate() {
 		// 목록 쿼리 refetch 취소
-		await queryClient.cancelQueries({ queryKey: GET_MEETUPS_QUERY_KEY });
+		await queryClient.cancelQueries({ queryKey: meetupQueryKeys.list });
 
 		// 목록 쿼리 데이터를 캐시에 백업
-		snapshotRef.current = queryClient.getQueriesData({ queryKey: GET_MEETUPS_QUERY_KEY });
+		snapshotRef.current = queryClient.getQueriesData({ queryKey: meetupQueryKeys.list });
 
 		// 목록 쿼리 Optimistic Update
 		queryClient.setQueriesData<InfiniteData<TogglePage>>(
-			{ queryKey: GET_MEETUPS_QUERY_KEY },
+			{ queryKey: meetupQueryKeys.list },
 			(oldData) => {
 				if (!oldData?.pages) return oldData;
 				return {
@@ -49,11 +49,17 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 	function onSuccess(message: string) {
 		handleShowToast({ message, status: "success" });
 		// 목록 쿼리를 포함한 연관 쿼리 무효화
-		INVALIDATE_PREFIXES.forEach((queryKey) => {
-			queryClient.invalidateQueries({ queryKey });
-		});
-		// 모임 상세 페이지 쿼리 무효화
-		queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
+		queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list }); // 모임 목록
+		queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) }); // 해당 모임 상세
+		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups }); // 참여한 모임 목록
+		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created }); // 만든 모임 목록
+
+		if (field === "isFavorited") {
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites }); // 찜 개수
+		}
+		if (field === "isJoined") {
+			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) }); // 해당 모임 참여자
+		}
 	}
 
 	function onError(error: Error) {

@@ -11,7 +11,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/utils/cn";
 import rating from "./style.module.css";
-import AlertModal from "@/components/ui/Modals/AlertModal";
+import Alert from "@/components/ui/Modals/AlertModal";
 import useToggle from "@/hooks/useToggle";
 
 const STYLE = {
@@ -28,7 +28,7 @@ const reviewFormSchema = z.object({
 
 export type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 
-interface ReviewFormModalProps {
+interface ReviewModalProps {
 	/** 작성 모드인지 수정 모드인지 구분 */
 	mode: "create" | "edit";
 	/** 수정 모드를 위한 초기값 */
@@ -51,14 +51,14 @@ function getReviewDefaultValues(initialValue?: Partial<ReviewFormValues>): Revie
 	};
 }
 
-export default function ReviewFormModal({
+export default function ReviewModal({
 	mode,
 	initialValue,
 	isOpen,
 	isPending = false,
 	onClose,
 	handleFormSubmit,
-}: ReviewFormModalProps) {
+}: ReviewModalProps) {
 	const { isOpen: alertOpen, open, close } = useToggle();
 	const reviewFormId = useId();
 	const reviewScoreId = useId();
@@ -92,13 +92,13 @@ export default function ReviewFormModal({
 
 	// 리뷰 모달 닫기
 	function handleReviewClose() {
+		close();
 		onClose();
 	}
 
 	// 리뷰 제출
 	const handleReviewSubmit = handleSubmit(async (reviewFormValues) => {
 		await handleFormSubmit(reviewFormValues);
-		handleReviewClose();
 	});
 
 	const reviewFormTitle = mode === "create" ? "리뷰 작성" : "리뷰 수정";
@@ -183,9 +183,9 @@ export default function ReviewFormModal({
 			</Modal>
 
 			{/* dirty 상태에서 닫으려 할 때 취소 확인용 Alert 노출 */}
-			<AlertModal isOpen={alertOpen} onClose={close} handleConfirmButton={handleReviewClose}>
+			<Alert isOpen={alertOpen} onClose={close} handleConfirmButton={handleReviewClose}>
 				{reviewFormTitle}을 취소하시겠습니까?
-			</AlertModal>
+			</Alert>
 		</>
 	);
 }

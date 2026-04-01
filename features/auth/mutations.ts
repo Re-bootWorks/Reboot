@@ -2,10 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user.store";
 import { postLogin, postSignUp, postLogout } from "@/features/auth/apis";
 import { useToast } from "@/providers/toast-provider";
+import { useRouter } from "next/navigation";
 
 export function useLogin(onSuccess: () => void) {
 	const { setUser } = useUserStore();
 	const { handleShowToast } = useToast();
+	const router = useRouter();
 
 	return useMutation({
 		mutationFn: postLogin,
@@ -13,6 +15,7 @@ export function useLogin(onSuccess: () => void) {
 			setUser(data.user);
 			handleShowToast({ message: "로그인이 완료됐습니다.", status: "success" });
 			onSuccess();
+			router.refresh();
 		},
 		onError: (error: Error) => {
 			handleShowToast({ message: error.message, status: "error" });
@@ -54,6 +57,7 @@ export function useLogout() {
 	const { clearUser } = useUserStore();
 	const { handleShowToast } = useToast();
 	const queryClient = useQueryClient();
+	const router = useRouter();
 
 	return useMutation({
 		mutationFn: postLogout,
@@ -61,6 +65,7 @@ export function useLogout() {
 			clearUser();
 			queryClient.removeQueries({ queryKey: ["me"] });
 			handleShowToast({ message: "로그아웃 됐습니다.", status: "success" });
+			router.refresh();
 		},
 		onError: () => {
 			handleShowToast({ message: "로그아웃에 실패했습니다.", status: "error" });

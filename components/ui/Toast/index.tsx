@@ -23,7 +23,7 @@ export function ToastBox({ status, children }: ToastBoxDisplayProps) {
 			}}
 			className={cn(
 				!status ? "bg-black-70" : status === "success" ? "bg-green-500" : "bg-error",
-				"w-fit rounded-[0.625rem] px-6 py-3 text-center text-xs font-semibold break-keep text-white md:rounded-xl md:px-8 md:py-4 md:text-base",
+				"w-fit rounded-[0.625rem] px-6 py-3 text-center text-xs font-semibold break-keep whitespace-pre-line text-white md:rounded-xl md:px-8 md:py-4 md:text-base",
 			)}>
 			{children}
 		</motion.div>

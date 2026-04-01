@@ -8,7 +8,7 @@ interface EmptyProps {
 	children: ReactNode;
 }
 const pageStyle = "h-full justify-center";
-const sectionStyle = "rounded-4xl bg-white ";
+const sectionStyle = "rounded-4xl bg-white";
 export default function Empty({ section = false, className, children }: EmptyProps) {
 	return (
 		<section
@@ -19,7 +19,7 @@ export default function Empty({ section = false, className, children }: EmptyPro
 			)}>
 			<div>
 				<Image
-					src="/assets/img/img_empty.svg"
+					src="/assets/img/img_empty_purple.svg"
 					alt="컨텐츠가 없습니다."
 					width={120}
 					height={72}

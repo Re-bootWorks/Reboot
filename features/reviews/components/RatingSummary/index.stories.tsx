@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import RatingSummary from ".";
-import { queryKeys } from "../../queries/queryKeys";
+import { reviewsQueryKeys } from "../../queries/queryKeys";
 
 const DEFAULT_STATISTICS = {
 	averageScore: 4.5,
@@ -77,9 +77,9 @@ export const Default: Story = {
 		(Story) => {
 			const queryClient = createQueryClient();
 
-			queryClient.setQueryData(queryKeys.reviews.statistics, DEFAULT_STATISTICS);
+			queryClient.setQueryData(reviewsQueryKeys.reviews.statistics, DEFAULT_STATISTICS);
 			queryClient.setQueryData(
-				queryKeys.reviews.categories.statistics,
+				reviewsQueryKeys.reviews.categories.statistics,
 				DEFAULT_CATEGORIES_STATISTICS,
 			);
 
@@ -98,9 +98,9 @@ export const Category: Story = {
 		(Story) => {
 			const queryClient = createQueryClient();
 
-			queryClient.setQueryData(queryKeys.reviews.statistics, DEFAULT_STATISTICS);
+			queryClient.setQueryData(reviewsQueryKeys.reviews.statistics, DEFAULT_STATISTICS);
 			queryClient.setQueryData(
-				queryKeys.reviews.categories.statistics,
+				reviewsQueryKeys.reviews.categories.statistics,
 				DEFAULT_CATEGORIES_STATISTICS,
 			);
 
@@ -121,8 +121,8 @@ export const Empty: Story = {
 		(Story) => {
 			const queryClient = createQueryClient();
 
-			queryClient.setQueryData(queryKeys.reviews.statistics, EMPTY_STATISTICS);
-			queryClient.setQueryData(queryKeys.reviews.categories.statistics, []);
+			queryClient.setQueryData(reviewsQueryKeys.reviews.statistics, EMPTY_STATISTICS);
+			queryClient.setQueryData(reviewsQueryKeys.reviews.categories.statistics, []);
 
 			return (
 				<QueryClientProvider client={queryClient}>
