@@ -11,7 +11,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const containerStyle =
-	"relative flex h-[19.375rem] w-full max-w-[18.4375rem] flex-col rounded-xl overflow-hidden bg-white sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]";
+	"relative flex h-[19.375rem] w-full max-w-[18.5rem] flex-col rounded-xl overflow-hidden bg-white sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]";
 
 function ConnectCardSkeleton() {
 	return (
@@ -40,7 +40,7 @@ export default function ConnectCard({
 		/* 카드 전체 */
 		<div
 			onClick={onClick}
-			className="relative flex h-[19.375rem] w-full max-w-[18.4375rem] cursor-pointer flex-col rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
+			className="relative flex h-[19.375rem] w-full max-w-[18.4375rem] cursor-pointer flex-col overflow-hidden rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
 			{/* 로딩 오버레이 */}
 			{isLoading && (
 				<div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/60">
@@ -53,7 +53,7 @@ export default function ConnectCard({
 			</h3>
 
 			{/* 썸네일 이미지 */}
-			<div className="relative order-2 h-[9rem] w-[18.375rem] shrink-0 overflow-hidden rounded-xl sm:order-1 sm:h-full sm:w-[12.5rem]">
+			<div className="relative order-2 h-[9rem] w-full shrink-0 overflow-hidden rounded-xl sm:order-1 sm:h-full sm:w-[12.5rem]">
 				{imageUrl ? (
 					<Image src={imageUrl} alt={title} fill className="object-cover" />
 				) : (
@@ -73,7 +73,7 @@ export default function ConnectCard({
 				</div>
 
 				{/* 하단 메타 정보 */}
-				<div className="mt-auto flex items-center justify-between pb-6 text-xs leading-4 font-normal text-gray-500 sm:pb-6">
+				<div className="mt-auto flex items-center justify-between border-b border-gray-200 pb-6 text-xs leading-4 font-normal text-gray-500 sm:pb-6">
 					{/* 작성자 + 날짜 */}
 					<div className="flex items-center gap-2">
 						<div className="flex items-center gap-1">
