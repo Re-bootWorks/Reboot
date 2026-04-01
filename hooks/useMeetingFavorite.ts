@@ -4,6 +4,7 @@ import { CreatedList, CursorPageResponse, MeetupList } from "@/features/mypage/t
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import { headerQueryKeys } from "@/features/header/queries";
 import { deleteMeetingsFavorites, postMeetingsFavorites } from "@/features/mypage/apis";
+import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 
 /**
  * 찜 추가 시 낙관적 업데이트 및 롤백 하는 훅
@@ -59,9 +60,13 @@ export default function useMeetingFavorite() {
 			// 백업데이터 전달
 			return { prevDataList };
 		},
-		// 성공시 header count
-		onSuccess: () => {
+
+		onSuccess: (_data, variables) => {
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites });
+			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
+			queryClient.invalidateQueries({
+				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
+			});
 		},
 		// 실패시 롤백
 		onError: (_error, _variables, context) => {
