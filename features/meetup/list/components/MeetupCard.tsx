@@ -1,7 +1,7 @@
 "use client";
 
 import GroupCard from "@/components/ui/GroupCard";
-import { formatDateTime, isDeadlinePassed, uiFormatDeadline } from "@/utils/date";
+import { formatDateTime, uiFormatDeadline } from "@/utils/date";
 import type { MeetupItem, MeetupItemSelected } from "../../types";
 import { checkIsConfirmed, checkIsRegClosed } from "../utils";
 import { useDeleteMeetupFavorite, usePostMeetupFavorite } from "../../queries";
@@ -68,11 +68,7 @@ export default function MeetupCard({ data, setSelectedData, openModalFn }: Meetu
 				<GroupCard.BadgeGroup
 					date={date}
 					time={time}
-					deadlineText={
-						!isDeadlinePassed(data.registrationEnd)
-							? uiFormatDeadline(data.registrationEnd)
-							: undefined
-					}
+					deadlineText={!status.isRegClosed ? uiFormatDeadline(data.registrationEnd) : undefined}
 				/>
 				<GroupCard.ParticipantBar
 					capacity={data.capacity}

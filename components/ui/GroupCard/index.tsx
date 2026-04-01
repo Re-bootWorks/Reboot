@@ -38,6 +38,7 @@ interface GroupCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "id"
 }
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
+/** isCompleted 가 되지 않은 모든 모임 목록에서 표시되는 카드 */
 function GroupCard({ id, href, status, children, className, ...props }: GroupCardProps) {
 	return (
 		<GroupCardContext.Provider value={status}>
@@ -217,7 +218,7 @@ function JoinButton({ onClick, isPending, ...props }: ButtonProp) {
 
 	return (
 		<Button
-			disabled={isRegClosed}
+			disabled={!isJoined && isRegClosed}
 			colors="purpleBorder"
 			className="relative z-2 mt-auto h-10 w-20 text-sm font-semibold [grid-area:join-button] md:h-12 md:w-[103px] md:text-base"
 			onClick={handleClick}
