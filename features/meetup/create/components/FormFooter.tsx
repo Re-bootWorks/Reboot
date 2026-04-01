@@ -22,9 +22,9 @@ export default function FormFooter({ onClose, onSuccess }: FormFooterProps) {
 	const queryClient = useQueryClient();
 	const postMeetupMutation = usePostMeetup({
 		onSuccess: (data) => {
-			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
+			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list }); // 모임 목록
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups }); // 참여한 모임 목록
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created }); // 만든 모임 목록
 			onSuccess(data.id);
 		},
 		onError: (error) => {
