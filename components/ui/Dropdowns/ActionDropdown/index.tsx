@@ -49,7 +49,7 @@ interface ActionDropdownProps extends Omit<ButtonHTMLAttributes<HTMLButtonElemen
 	menuClassName?: string;
 	triggerClassName?: string;
 	triggerType?: "actions" | "profile";
-	actionsSize?: "md" | "xl";
+	actionsSize?: "md" | "lg" | "xl";
 	profileImage?: string | null;
 }
 
