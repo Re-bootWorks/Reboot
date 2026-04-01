@@ -5,14 +5,15 @@ import Button from "@/components/ui/Buttons/Button";
 import InputTextarea from "@/components/ui/Inputs/InputTextarea";
 import CommentCard from "@/features/connect/components/CommentCard";
 import { mapCommentToCard } from "@/features/connect/comment/mappers";
-import type { Comment } from "@/features/connect/comment/types";
-import { useState } from "react";
+import type { ConnectPost } from "@/features/connect/post/types";
+import { useState, useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createComment } from "@/features/connect/apis/createComment";
 import { useQuery } from "@tanstack/react-query";
 import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
 import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/providers/toast-provider";
+import Loading from "@/components/ui/Loading";
 
 interface CommentSectionProps {
 	postId: number;
@@ -20,16 +21,45 @@ interface CommentSectionProps {
 
 export default function CommentSection({ postId }: CommentSectionProps) {
 	const [comment, setComment] = useState("");
+	const [visibleCount, setVisibleCount] = useState(3);
+	const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+	const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
 	const queryClient = useQueryClient();
 	const { user } = useUserStore();
 	const currentUserId = user?.id;
 	const { handleShowToast } = useToast();
 
-	const { data } = useQuery<{ comments: Comment[] }>({
+	const { data, isLoading } = useQuery<ConnectPost>({
 		queryKey: ["postDetail", postId],
-		queryFn: () => getPostDetailClient(String(postId)),
+		queryFn: () => getPostDetailClient(postId),
 	});
 
+	// 무한스크롤
+	useEffect(() => {
+		if (!loadMoreRef.current) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries[0].isIntersecting && visibleCount < (data?.comments?.length ?? 0)) {
+					setIsFetchingMore(true);
+
+					setTimeout(() => {
+						setVisibleCount((prev) => Math.min(prev + 3, data?.comments?.length ?? 0));
+						setIsFetchingMore(false);
+					}, 300);
+				}
+			},
+			{ threshold: 1 },
+		);
+
+		observer.observe(loadMoreRef.current);
+
+		return () => observer.disconnect();
+	}, [visibleCount, data]);
+
+	// 댓글 생성 mutation
 	const mutation = useMutation({
 		mutationFn: createComment,
 
@@ -48,6 +78,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 							//임시 데이터 (fake 데이터)
 							id: Date.now(),
 							content: newComment.content,
+							isPending: true,
 							author: {
 								id: currentUserId!,
 								name: user?.name ?? "사용자",
@@ -62,27 +93,37 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 					],
 				}),
 			);
+			setComment("");
 
 			return { previousData }; //새로운 캐시 데이터
 		},
 
 		onError: (_err, _newComment, context) => {
 			if (context?.previousData) {
-				queryClient.setQueryData(["postDetail", postId], context.previousData);
+				queryClient.setQueryData(["postComments", postId], context.previousData);
 			}
 			handleShowToast({ message: "댓글 등록에 실패했습니다.", status: "error" });
 		},
 
 		onSuccess: () => {
-			setComment(""); // 입력 비워줘버리기~
-			queryClient.invalidateQueries({ queryKey: ["postDetail", postId] });
+			setComment("");
+			queryClient.invalidateQueries({ queryKey: ["postComments", postId] });
 			//캐시를 무효화해서 데이터를 다시 불러오게 만드는 함수
 		},
 	});
 
+	if (isLoading) return <Loading />;
 	if (!data) return null;
 
 	const comments = data?.comments ?? [];
+
+	//  정렬
+	const sortedComments = [...comments].sort(
+		(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+	);
+
+	//  보여줄 댓글
+	const visibleComments = sortedComments.slice(0, visibleCount);
 
 	const handleSubmit = () => {
 		if (!comment.trim()) return;
@@ -125,22 +166,28 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
 			{/* 댓글 리스트 */}
 			<ul className="mt-6 flex flex-col gap-2 md:mt-8">
-				{[...comments]
-					.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-					.map((comment) => {
-						const mapped = mapCommentToCard(comment);
+				{visibleComments.map((comment) => {
+					const mapped = mapCommentToCard(comment);
 
-						return (
-							<li key={mapped.id}>
-								<CommentCard
-									{...mapped}
-									authorId={comment.author.id}
-									currentUserId={user?.id ?? null}
-								/>
-							</li>
-						);
-					})}
+					return (
+						<li key={mapped.id}>
+							<CommentCard
+								{...mapped}
+								postId={postId}
+								authorId={comment.author.id}
+								currentUserId={user?.id ?? null}
+								isPending={comment.isPending}
+							/>
+						</li>
+					);
+				})}
 			</ul>
+
+			{/* 무한스크롤 트리거 */}
+			<div ref={loadMoreRef} className="h-10" />
+
+			{/* 하단 로딩 */}
+			{isFetchingMore && <Loading />}
 		</section>
 	);
 }

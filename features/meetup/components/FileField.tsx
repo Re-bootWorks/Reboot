@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import InputFile, { type InputFileHandle } from "@/components/ui/Inputs/InputFile";
 import { useToast } from "@/providers/toast-provider";
 import type { UploadImageFn } from "@/apis/images";
@@ -26,14 +26,17 @@ export default function FileField({
 }: FileFieldProps) {
 	const { handleShowToast } = useToast();
 	const inputFileRef = useRef<InputFileHandle>(null);
+	const [isPending, setIsPending] = useState(false);
 
 	async function handleUploadImage(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
+		setIsPending(true);
 		try {
 			const res = await uploadImageFn(file);
 			onChange(res, e);
+			handleShowToast({ message: "이미지가 업로드되었습니다.", status: "success" });
 		} catch (error) {
 			let message: string;
 			if (error instanceof Error) {
@@ -43,6 +46,8 @@ export default function FileField({
 			}
 			handleShowToast({ message, status: "error" });
 			inputFileRef.current?.reset();
+		} finally {
+			setIsPending(false);
 		}
 	}
 
@@ -53,6 +58,7 @@ export default function FileField({
 			label="이미지"
 			name={name}
 			isRequired={isRequired}
+			isPending={isPending}
 			onChange={handleUploadImage}
 		/>
 	);

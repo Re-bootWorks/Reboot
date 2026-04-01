@@ -1,5 +1,7 @@
 import { REGION_DATA } from "@/constants/region";
 import { Option } from "@/components/ui/Filter/RegionFilter/option";
+import { SortBy, SortOrder } from "./types";
+import { REVIEWS_SORT_BY_OPTIONS, REVIEWS_SORT_ORDER_OPTIONS } from "./constants/filers";
 
 export interface RegionFilterValue {
 	region: Option | null;
@@ -39,4 +41,72 @@ export function buildRegionParam(region: Option | null, district: Option | null)
 	}
 
 	return `${region.label} ${district.label}`;
+}
+
+const DATE_ONLY_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+const DATE_START_SUFFIX = "T00:00:00+09:00";
+const DATE_END_SUFFIX = "T23:59:59+09:00";
+
+export function toDateTimeRangeStart(value?: string | null): string | undefined {
+	if (!value) return undefined;
+	if (value.includes("T")) return value;
+	if (DATE_ONLY_REGEX.test(value)) return `${value}${DATE_START_SUFFIX}`;
+	return value;
+}
+
+export function toDateTimeRangeEnd(value?: string | null): string | undefined {
+	if (!value) return undefined;
+	if (value.includes("T")) return value;
+	if (DATE_ONLY_REGEX.test(value)) return `${value}${DATE_END_SUFFIX}`;
+	return value;
+}
+
+/** 객체를 API 요청 쿼리 스트링 문자열 만들기 */
+export function buildQuery(params: Record<string, string | number | undefined | null>) {
+	const queryParams = new URLSearchParams();
+	for (const [key, value] of Object.entries(params)) {
+		if (value === undefined || value === null || value === "") continue;
+		queryParams.append(key, String(value));
+	}
+
+	return queryParams.toString();
+}
+
+/** 상태 코드별 리뷰 목록 에러 메시지 반환 */
+export function getErrorMessage(status: number) {
+	switch (status) {
+		case 400:
+			return "잘못된 요청입니다";
+		case 401:
+			return "인증이 필요합니다";
+		case 404:
+			return "요청한 정보를 찾을 수 없습니다";
+		default:
+			return "조회 실패";
+	}
+}
+
+export function isReviewsSortBy(value: string | null): value is SortBy {
+	return value === "dateTime" || value === "registrationEnd" || value === "participantCount";
+}
+
+export function isReviewsSortOrder(value: string | null): value is SortOrder {
+	return value === "asc" || value === "desc";
+}
+
+export function toOptionalNumber(value: string | null): number | undefined {
+	if (!value) return undefined;
+
+	const numberValue = Number(value);
+	return Number.isNaN(numberValue) ? undefined : numberValue;
+}
+
+/** 정렬 기준 항목 조회 */
+export function getSortByItem(param: string | null) {
+	return REVIEWS_SORT_BY_OPTIONS.find((o) => o.value === param) ?? REVIEWS_SORT_BY_OPTIONS[0];
+}
+
+/** 정렬 순서 항목 조회 */
+export function getSortOrderItem(param: string | null) {
+	return REVIEWS_SORT_ORDER_OPTIONS.find((o) => o.value === param) ?? REVIEWS_SORT_ORDER_OPTIONS[0];
 }

@@ -27,12 +27,13 @@ type SignUpFormData = z.infer<typeof signUpSchema>;
 
 interface SignUpFormProps {
 	onSuccess: () => void;
+	onAutoLoginFail?: () => void;
 }
 
-export function SignUpForm({ onSuccess }: SignUpFormProps) {
+export function SignUpForm({ onSuccess, onAutoLoginFail }: SignUpFormProps) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] = useState(false);
-	const { mutate: signUp, isPending } = useSignUp(onSuccess);
+	const { mutate: signUp, isPending } = useSignUp(onSuccess, onAutoLoginFail);
 	const [isSocialPending, setIsSocialPending] = useState(false);
 
 	const {

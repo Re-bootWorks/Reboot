@@ -2,8 +2,8 @@
 
 import { CreatedList, CursorPageResponse, MeetupList } from "@/features/mypage/types";
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteMeetingFavorite, postMeetingFavorite } from "@/features/mypage/apis";
 import { headerQueryKeys } from "@/features/header/queries";
+import { deleteMeetingsFavorites, postMeetingsFavorites } from "@/features/mypage/apis";
 
 /**
  * 찜 추가 시 낙관적 업데이트 및 롤백 하는 훅
@@ -23,7 +23,7 @@ export default function useMeetingFavorite() {
 
 	const { mutate } = useMutation({
 		mutationFn: ({ meetingId, currentState }: { meetingId: number; currentState: boolean }) =>
-			currentState ? deleteMeetingFavorite(meetingId) : postMeetingFavorite(meetingId),
+			currentState ? deleteMeetingsFavorites(meetingId) : postMeetingsFavorites(meetingId),
 
 		// API 호출 전에 실행
 		onMutate: async ({ meetingId }) => {

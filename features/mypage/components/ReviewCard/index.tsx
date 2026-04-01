@@ -5,6 +5,7 @@ import { Rating } from "@smastrom/react-rating";
 import { RATING_STYLE } from "@/constants/ratingStyle";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { formatIsoDateWithDots } from "@/utils/date";
+import Link from "next/link";
 
 const STYLE = {
 	itemBox: "flex flex-col gap-3 md:flex-row md:items-center md:gap-8 group",
@@ -23,13 +24,18 @@ const EMPTY_PROFILE_IMAGE = "/assets/img/img_profile.svg";
 export default function ReviewCard({ user, item, handleEdit, handleDelete }: ReviewCardProps) {
 	return (
 		<li className={STYLE.itemBox}>
-			<Image
-				src={item.meetingImage ?? EMPTY_THUMBNAIL_IMAGE}
-				alt="모임 대표 이미지"
-				width={343}
-				height={343}
-				className={cn(STYLE.itemImage, !!item.meetingImage ? "" : "bg-purple-50 object-scale-down")}
-			/>
+			<Link href={`/meetup/${item.meetingId}`}>
+				<Image
+					src={item.meetingImage ?? EMPTY_THUMBNAIL_IMAGE}
+					alt="모임 대표 이미지"
+					width={343}
+					height={343}
+					className={cn(
+						STYLE.itemImage,
+						!!item.meetingImage ? "" : "bg-purple-50 object-scale-down",
+					)}
+				/>
+			</Link>
 			<ul className={STYLE.itemWrapper}>
 				<li>
 					<div className={STYLE.ratingWrapper}>
@@ -56,7 +62,9 @@ export default function ReviewCard({ user, item, handleEdit, handleDelete }: Rev
 						<div className={STYLE.caption}>{formatIsoDateWithDots(item.meetingDateTime)}</div>
 					</div>
 				</li>
-				<li className="text-sm text-gray-700 md:text-lg">{item.comment}</li>
+				<li className="text-sm text-gray-700 md:text-lg">
+					<Link href={`/meetup/${item.meetingId}`}>{item.comment}</Link>
+				</li>
 				<li className={STYLE.caption}>
 					{item.meetingName} · {item.meetingType}
 				</li>

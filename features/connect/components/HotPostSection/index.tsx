@@ -3,45 +3,54 @@
 import CompactCard from "@/features/connect/components/CompactCard";
 import type { Post } from "@/features/connect/post/types";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 import { fetchPostsClient } from "@/features/connect/apis/fetchPostsClient";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { mapPostToCard } from "@/features/connect/post/mappers";
+import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
 
 export default function HotPostSection() {
-	const { data, isLoading } = useQuery({
+	const { ref, style, overlays, ...events } = useDragScroll<HTMLDivElement>({
+		fadeColor: "#F6F7F9",
+	});
+	const { data } = useSuspenseQuery({
 		queryKey: ["hotPosts"],
-		queryFn: () =>
-			fetchPostsClient({
-				type: "best",
-				limit: 4,
-			}),
-		staleTime: 1000 * 60 * 5, // 5분 캐싱
-		retry: 1, // 과한 재요청 방지
+		queryFn: () => fetchPostsClient({ type: "best", limit: 20 }),
+		staleTime: 1000 * 60 * 5,
+		retry: 1,
 	});
 	const posts: Post[] = data?.data ?? [];
 	const router = useRouter();
 
-	if (isLoading) {
-		return <section>로딩중...</section>; //나중에 스켈레톤 ui 추가
-	}
-
 	if (!posts.length) {
-		return null; // 나중에 스켈레톤 ui 추가
+		return null;
 	}
 	return (
-		<section>
-			<div className="flex gap-6">
-				{posts.map((post) => (
-					<CompactCard
-						key={post.id}
-						id={post.id}
-						title={post.title}
-						image={post.image}
-						createdAt={post.createdAt}
-						likeCount={post.likeCount}
-						commentCount={post._count.comments}
-						onClick={() => router.push(`/connect/${post.id}`)}
-					/>
-				))}
+		<section className="mt-[81px] min-w-0 overflow-hidden">
+			{/* 제목 */}
+			<h2 className="text-2xl leading-8 font-semibold tracking-[-0.03rem] whitespace-nowrap">
+				이번주 HOT 게시물!
+			</h2>
+
+			{/* 카드 영역 */}
+			<div className="relative mt-6">
+				<div ref={ref} style={style} className={`${containerStyle} flex gap-6`} {...events}>
+					{posts.map((post) => {
+						const mapped = mapPostToCard(post);
+						return (
+							<CompactCard
+								key={post.id}
+								id={post.id}
+								title={mapped.title}
+								image={mapped.imageUrl ?? ""}
+								createdAt={post.createdAt}
+								likeCount={mapped.likeCount}
+								commentCount={mapped.commentCount}
+								onClick={() => router.push(`/connect/${post.id}`)}
+							/>
+						);
+					})}
+				</div>
+				{overlays}
 			</div>
 		</section>
 	);

@@ -5,18 +5,25 @@ import dayjs from "@/libs/dayjs";
 import Image from "next/image";
 import EmptyImage from "@/features/connect/ui/EmptyImage";
 import RelativeTime from "@/features/connect/ui/RelativeTime";
+import type { PostCardProps } from "@/features/connect/post/types";
+import LoaderDots from "@/components/ui/LoaderDots";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
-type PostCardProps = {
-	id: number;
-	title: string;
-	description: string;
-	imageUrl: string;
-	author: string;
-	date: number;
-	likeCount: number;
-	commentCount: number;
-	onClick?: () => void;
-};
+const containerStyle =
+	"relative flex h-[19.375rem] w-full max-w-[18.4375rem] flex-col rounded-xl overflow-hidden bg-white sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]";
+
+function ConnectCardSkeleton() {
+	return (
+		<div className={containerStyle}>
+			<Skeleton
+				height="100%"
+				containerClassName="block h-full w-full leading-none"
+				borderRadius={0}
+			/>
+		</div>
+	);
+}
 
 export default function ConnectCard({
 	title,
@@ -27,12 +34,19 @@ export default function ConnectCard({
 	likeCount,
 	commentCount,
 	onClick,
+	isLoading = false,
 }: PostCardProps) {
 	return (
 		/* 카드 전체 */
 		<div
 			onClick={onClick}
-			className="flex h-[19.375rem] w-full max-w-[18.4375rem] cursor-pointer flex-col rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
+			className="relative flex h-[19.375rem] w-full max-w-[18.4375rem] cursor-pointer flex-col rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
+			{/* 로딩 오버레이 */}
+			{isLoading && (
+				<div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/60">
+					<LoaderDots size="sm" />
+				</div>
+			)}
 			{/* 모바일 제목 */}
 			<h3 className="truncate pt-2 pb-3 text-base leading-6 font-bold tracking-[-0.02em] text-gray-900 sm:hidden">
 				{title}
@@ -88,3 +102,5 @@ export default function ConnectCard({
 		</div>
 	);
 }
+
+ConnectCard.Skeleton = ConnectCardSkeleton;

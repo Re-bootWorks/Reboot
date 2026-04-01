@@ -1,20 +1,19 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import Image from "next/image";
 import DeleteButton from "@/components/ui/Buttons/DeleteButton";
 import { IcEditOutline } from "@/components/ui/icons";
 import { cn } from "@/utils/cn";
 import useInputImage from "@/hooks/useInputImage";
 import z from "zod";
 import { useUploadProfileImage } from "../../mutations";
+import Avatar from "@/components/ui/Avatar";
 
-const EMPTY_PROFILE_IMAGE = "/assets/img/img_profile.svg";
 const ACCEPTED_IMAGE_TYPES: string[] = ["image/png", "image/jpeg", "image/gif", "image/webp"];
 const FILE_ACCEPT = ACCEPTED_IMAGE_TYPES.join(", ");
 
 const STYLE = {
-	profileImage: "size-11 rounded-full border border-gray-200 object-cover md:size-28",
+	profileImage: "size-11 md:size-28",
 	profileImageEdit: "flex items-center justify-center rounded-full border border-gray-200 bg-white",
 	profileButton: "absolute right-0 bottom-0 size-10 cursor-pointer",
 	inputHint: "mt-3 px-1 text-xs font-medium text-gray-500 md:text-sm",
@@ -80,7 +79,7 @@ export default function ProfileImage({
 	}, [isOpen]);
 
 	// 미리보기 이미지가 없으면 현재 폼 값, 이미지 등록 안했을 때 기본 이미지
-	const displayImage = previewUrl ?? value ?? EMPTY_PROFILE_IMAGE;
+	const displayImage = previewUrl ?? value;
 
 	// 원본과 다른 상태일 때 삭제 버튼 노출
 	const showDeleteButton = !!previewUrl || value !== initialImageUrl;
@@ -125,13 +124,7 @@ export default function ProfileImage({
 	return (
 		<div className="flex flex-col items-center">
 			<div className="relative w-fit">
-				<Image
-					src={displayImage}
-					alt="프로필 이미지"
-					className={STYLE.profileImage}
-					width={114}
-					height={114}
-				/>
+				<Avatar src={displayImage} width={114} height={114} className={STYLE.profileImage} />
 
 				<label
 					htmlFor={inputId}

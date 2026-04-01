@@ -1,9 +1,8 @@
 "use client";
 
-import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { createContext, useContext } from "react";
+import NextImage, { type ImageProps } from "next/image";
 import Link from "next/link";
-import NextImage from "next/image";
 import Skeleton from "react-loading-skeleton";
 import { cn } from "@/utils/cn";
 import { IcLocation, IcPerson } from "../icons";
@@ -45,7 +44,7 @@ function GroupCard({ id, href, status, children, className, ...props }: GroupCar
 			<div
 				data-groupid={id}
 				className={cn(
-					"relative isolate flex flex-col md:flex-row md:gap-x-5 md:p-6",
+					"relative isolate flex flex-col transition-shadow duration-300 hover:shadow-md md:flex-row md:gap-x-5 md:p-6",
 					containerStyle,
 					className,
 				)}
@@ -73,7 +72,7 @@ function GroupCardSkeleton() {
 
 interface GroupCardImageProps {
 	/** 이미지 경로 */
-	src?: string | StaticImport | null;
+	src?: ImageProps["src"] | null;
 	/** 이미지 대체 텍스트 */
 	alt: string;
 }

@@ -1,11 +1,10 @@
 "use client";
+import { useEffect } from "react";
 import PageTabs from "@/components/ui/PageTabs";
-import Meetup from "../../Meetup";
-import Review from "../../Review";
-import Created from "../../Created";
-import { Suspense, useEffect } from "react";
-import DetailCardSkeleton from "../../components/DetailCard/DetailCardSkeleton";
-import { useReplaceQueryParams } from "@/hooks/useReplaceQueryParams";
+import { useQueryParams } from "@/hooks/useQueryParams";
+import ReviewWrapper from "../../Review";
+import MeetupWrapper from "../../Meetup";
+import CreatedWrapper from "../../Created";
 
 const TABS = ["meetup", "review", "created"] as const;
 type TabId = (typeof TABS)[number];
@@ -16,7 +15,7 @@ function isTabId(value: string | null): value is TabId {
 }
 
 export default function TabWrapper() {
-	const { get, set } = useReplaceQueryParams();
+	const { get, set } = useQueryParams();
 	const tabQuery = get("tab");
 	const activeTab = isTabId(tabQuery) ? tabQuery : "meetup";
 
@@ -28,17 +27,9 @@ export default function TabWrapper() {
 	}, [tabQuery, set]);
 
 	const tabContents: Record<TabId, React.ReactNode> = {
-		meetup: (
-			<Suspense fallback={<DetailCardSkeleton />}>
-				<Meetup />
-			</Suspense>
-		),
-		review: <Review />,
-		created: (
-			<Suspense fallback={<DetailCardSkeleton />}>
-				<Created />
-			</Suspense>
-		),
+		meetup: <MeetupWrapper />,
+		review: <ReviewWrapper />,
+		created: <CreatedWrapper />,
 	};
 
 	return (
