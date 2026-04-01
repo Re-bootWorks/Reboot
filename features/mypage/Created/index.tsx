@@ -11,6 +11,10 @@ import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
 import { useDeleteMeetings } from "../mutations";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../components/ErrorFallback";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import QueryErrorBoundary from "../components/QueryErrorBoundary";
 
 // 모임 배지 상태
 function meetupBadges(item: CreatedItem): DetailCardBadge[] {
@@ -104,8 +108,10 @@ function Created() {
 
 export default function CreatedWrapper() {
 	return (
-		<Suspense fallback={<DetailCardSkeleton />}>
-			<Created />
-		</Suspense>
+		<QueryErrorBoundary prefix="내가 만든 모임을 ">
+			<Suspense fallback={<DetailCardSkeleton />}>
+				<Created />
+			</Suspense>
+		</QueryErrorBoundary>
 	);
 }

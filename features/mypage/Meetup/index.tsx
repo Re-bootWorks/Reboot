@@ -18,7 +18,9 @@ import {
 } from "../mutations";
 import { useUserStore } from "@/store/user.store";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
-
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../components/ErrorFallback";
+import QueryErrorBoundary from "../components/QueryErrorBoundary";
 interface MeetupActionHandlers {
 	/** 모임 확정 */
 	onConfirmMeetup: () => void;
@@ -143,6 +145,8 @@ function Meetup() {
 		isFetchingNextPage,
 	} = useMyMeetupInfinite();
 	const items = meetupData.pages.flatMap((page) => page.data) ?? [];
+
+	// 모임 목록 무한스크롤
 	const observerRef = useRef<HTMLDivElement>(null);
 	useIntersectionObserver({
 		targetRef: observerRef,
@@ -248,7 +252,6 @@ function Meetup() {
 			{ onSuccess: closeReviewModal, onError: closeReviewModal },
 		);
 	}
-
 	if (!userId) return null;
 
 	if (items.length === 0) return <Empty>아직 참여한 모임이 없어요</Empty>;
@@ -296,8 +299,10 @@ function Meetup() {
 }
 export default function MeetupWrapper() {
 	return (
-		<Suspense fallback={<DetailCardSkeleton />}>
-			<Meetup />
-		</Suspense>
+		<QueryErrorBoundary prefix="나의 모임을 ">
+			<Suspense fallback={<DetailCardSkeleton />}>
+				<Meetup />
+			</Suspense>
+		</QueryErrorBoundary>
 	);
 }

@@ -16,6 +16,9 @@ import Loading from "@/components/ui/Loading";
 import Empty from "@/components/layout/Empty";
 import { useUserStore } from "@/store/user.store";
 import { useDeleteReviews, usePatchReviews, usePostMeetingsReviews } from "../mutations";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../components/ErrorFallback";
+import QueryErrorBoundary from "../components/QueryErrorBoundary";
 
 type ReviewTabId = "writable" | "written";
 
@@ -208,14 +211,18 @@ export default function ReviewWrapper() {
 
 	const tabContents: Record<ReviewTabId, React.ReactNode> = {
 		writable: (
-			<Suspense fallback={<DetailCardSkeleton showBadge={false} />}>
-				<Writable />
-			</Suspense>
+			<QueryErrorBoundary prefix="작성 가능 한 리뷰를 ">
+				<Suspense fallback={<DetailCardSkeleton showBadge={false} />}>
+					<Writable />
+				</Suspense>
+			</QueryErrorBoundary>
 		),
 		written: (
-			<Suspense fallback={<ReviewCardSkeleton />}>
-				<Written />
-			</Suspense>
+			<QueryErrorBoundary prefix="작성한 리뷰를 ">
+				<Suspense fallback={<ReviewCardSkeleton />}>
+					<Written />
+				</Suspense>
+			</QueryErrorBoundary>
 		),
 	};
 	return (
