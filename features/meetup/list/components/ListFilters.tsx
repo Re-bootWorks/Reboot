@@ -92,7 +92,6 @@ export type RegionFilterParams = {
 	fullLabel: string;
 } & RegionFilterValue;
 function DropdownFilters() {
-	const { ref, overlays, ...events } = useDragScroll<HTMLDivElement>();
 	const { get, set } = useQueryParams();
 	const date = get(QUERY_KEYS.DATE_START) ?? "";
 	const region = transformRegionData(get(QUERY_KEYS.REGION));
@@ -113,22 +112,15 @@ function DropdownFilters() {
 	}
 
 	return (
-		<div className="relative lg:ml-auto">
-			<div ref={ref} className={cn(containerStyle, "flex items-center")} {...events}>
-				<DateFilter value={date} onChange={handleChangeDate} />
-				<RegionFilter value={region} onChange={handleChangeRegion} />
-				<FilterDropdown
-					value={sortBy.label}
-					items={SORT_BY_OPTIONS}
-					onChange={handleChangeSortBy}
-				/>
-				<FilterDropdown
-					value={sortOrder.label}
-					items={SORT_ORDER_OPTIONS}
-					onChange={handleChangeSortOrder}
-				/>
-			</div>
-			{overlays}
+		<div className="flex items-center lg:ml-auto">
+			<DateFilter value={date} onChange={handleChangeDate} />
+			<RegionFilter value={region} onChange={handleChangeRegion} />
+			<FilterDropdown value={sortBy.label} items={SORT_BY_OPTIONS} onChange={handleChangeSortBy} />
+			<FilterDropdown
+				value={sortOrder.label}
+				items={SORT_ORDER_OPTIONS}
+				onChange={handleChangeSortOrder}
+			/>
 		</div>
 	);
 }
