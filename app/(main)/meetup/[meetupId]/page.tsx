@@ -33,7 +33,14 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 	const meetingId = Number(meetupId);
 
 	if (isNaN(meetingId)) notFound();
-	const meeting = await getMeetingDetailServer(meetingId);
+	let meeting;
+	try {
+		meeting = await getMeetingDetailServer(meetingId);
+	} catch (error) {
+		notFound();
+	}
+
+	if (!meeting) notFound();
 
 	const queryClient = new QueryClient();
 

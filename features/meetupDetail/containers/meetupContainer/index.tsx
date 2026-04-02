@@ -147,6 +147,7 @@ function MeetupReviewSection({ meetupId }: { meetupId: number }) {
 	return (
 		<section className="mt-10 w-full md:mt-16 lg:mt-20">
 			<CommentCards
+				meetingId={meetupId}
 				comments={comments}
 				currentPage={currentPage}
 				hasMore={hasMoreReviews}
