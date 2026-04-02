@@ -20,7 +20,7 @@ export default function SignUpPage() {
 				</>
 			}>
 			<SignUpForm
-				onSuccess={() => router.push("/")}
+				onSuccess={() => router.push("/meetup/list")}
 				onAutoLoginFail={() => router.replace("/login")}
 			/>
 		</AuthFormContainer>
