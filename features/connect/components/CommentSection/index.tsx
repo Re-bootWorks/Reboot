@@ -86,8 +86,12 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
 			{/* 댓글 입력 영역 */}
 			<div className="mt-3 flex items-center md:mt-4 lg:mt-8">
-				<div className="pr-4">
-					<Image src="/assets/img/img_profile.svg" alt="profile" width={54} height={54} />
+				<div className="relative mr-4 h-[54px] w-[54px] shrink-0 overflow-hidden rounded-full">
+					{user?.image ? (
+						<Image src={user.image} alt="profile" fill className="object-cover" />
+					) : (
+						<Image src="/assets/img/img_profile.svg" alt="profile" fill className="object-cover" />
+					)}
 				</div>
 
 				<div className="flex flex-1 items-center gap-2.5 rounded-2xl bg-gray-100 px-[10px] py-[10px]">
