@@ -39,7 +39,7 @@ function CommentEditForm({
 					name="edit-comment"
 					value={value}
 					onChange={(e) => onChange(e.target.value)}
-					className="w-full rounded-2xl border-transparent px-3 py-2 text-sm text-gray-700 md:text-lg"
+					className="w-full rounded-2xl border-transparent bg-gray-50 px-3 py-2 text-sm text-gray-700 md:text-lg"
 				/>
 
 				{/* 메타 + 버튼 영역 */}
