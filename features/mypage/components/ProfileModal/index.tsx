@@ -3,14 +3,12 @@
 import { useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import Button from "@/components/ui/Buttons/Button";
 import InputField from "@/components/ui/Inputs/InputField";
 import { Modal } from "@/components/ui/Modals";
 import useToggle from "@/hooks/useToggle";
 import Alert from "@/components/ui/Modals/AlertModal";
-import { useUserStore } from "@/store/user.store";
 import ProfileImage from "./ProfileImage";
 import { usePatchUsersMe } from "../../mutations";
 import { PatchUserProfilePayload, UserProfile } from "../../types";
@@ -72,9 +70,9 @@ function buildProfilePayload(data: ProfileFormValues, user: UserProfile): PatchU
 // 프로필 폼 상태와 저장/취소
 export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProps) {
 	const { isOpen: alertOpen, open, close } = useToggle();
-	const { mutate, isPending } = usePatchUsersMe();
-	const queryClient = useQueryClient();
-	const setUser = useUserStore((state) => state.setUser);
+	const { mutate, isPending } = usePatchUsersMe({
+		onSuccessBeforeSync: handleModalClose,
+	});
 	const profileFormId = useId();
 	const [isImageUploading, setIsImageUploading] = useState(false);
 
@@ -95,7 +93,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 		if (!isOpen) return;
 
 		reset(getProfileDefaultValues(user));
-	}, [user, isOpen, reset]);
+	}, [isOpen, reset]);
 
 	// 수정 중 취소 시 Alert
 	function handleEditCancel() {
@@ -122,13 +120,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 			return;
 		}
 
-		mutate(payload, {
-			onSuccess: (updatedUser) => {
-				handleModalClose();
-				setUser(updatedUser);
-				queryClient.invalidateQueries({ queryKey: ["me"] });
-			},
-		});
+		mutate(payload);
 	});
 
 	return (
