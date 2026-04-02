@@ -40,8 +40,8 @@ function FilterGroup() {
 		{ label: "참여인원순", value: "participants" },
 	];
 	return (
-		<div className="p-10">
-			<div className="flex items-center gap-2">
+		<div className="">
+			<div className="flex items-center">
 				<DateFilter value={date} onChange={setDate} />
 
 				<RegionFilter value={region} onChange={setRegion} />

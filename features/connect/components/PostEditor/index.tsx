@@ -9,6 +9,7 @@ import Image from "@tiptap/extension-image";
 import { useEffect } from "react";
 import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
+import { useToast } from "@/providers/toast-provider";
 
 interface Props {
 	content: string;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function PostEditor({ content, onChange }: Props) {
+	const { handleShowToast } = useToast();
 	const editor = useEditor({
 		immediatelyRender: false,
 		extensions: [
@@ -53,7 +55,10 @@ export default function PostEditor({ content, onChange }: Props) {
 
 	return (
 		<div className="overflow-hidden bg-white px-2">
-			<Toolbar editor={editor} />
+			<Toolbar
+				editor={editor}
+				onError={(message) => handleShowToast({ message, status: "error" })}
+			/>
 
 			<div className="mt-6">
 				<EditorContent editor={editor} className="min-h-[518px]" />

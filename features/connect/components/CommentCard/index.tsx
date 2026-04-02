@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import IcPerson from "@/components/ui/icons/IcPerson";
 import type { CommentCardProps } from "@/features/connect/comment/types";
 import RelativeTime from "@/features/connect/ui/RelativeTime";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
@@ -16,6 +18,7 @@ interface CommentEditFormProps {
 	onCancel: () => void;
 	onSubmit: () => void;
 	authorName: string;
+	authorImage?: string;
 	date: number;
 }
 
@@ -25,6 +28,7 @@ function CommentEditForm({
 	onCancel,
 	onSubmit,
 	authorName,
+	authorImage,
 	date,
 }: CommentEditFormProps) {
 	return (
@@ -42,6 +46,13 @@ function CommentEditForm({
 				<div className="flex items-center justify-between pt-2">
 					{/* 작성자 + 날짜 */}
 					<div className="flex items-center gap-2 text-xs text-gray-500">
+						{authorImage ? (
+							<div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full">
+								<Image src={authorImage} alt={authorName} fill className="object-cover" />
+							</div>
+						) : (
+							<IcPerson color="gray-400" />
+						)}
 						<span>{authorName}</span>
 						<span>·</span>
 						<RelativeTime date={date} fallback="date" />
@@ -67,6 +78,7 @@ export default function CommentCard({
 	id,
 	content,
 	authorName,
+	authorImage,
 	date,
 	authorId,
 	currentUserId,
@@ -109,6 +121,7 @@ export default function CommentCard({
 				onCancel={handleCancel}
 				onSubmit={handleSubmit}
 				authorName={authorName}
+				authorImage={authorImage}
 				date={date}
 			/>
 		);
@@ -135,6 +148,13 @@ export default function CommentCard({
 
 					{/* 댓글 메타 영역 */}
 					<div className="flex items-center gap-2 text-xs text-gray-500">
+						{authorImage ? (
+							<div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full">
+								<Image src={authorImage} alt={authorName} fill className="object-cover" />
+							</div>
+						) : (
+							<IcPerson color="gray-400" />
+						)}
 						<span>{authorName}</span>
 						<span>·</span>
 						<RelativeTime date={date} fallback="date" />
