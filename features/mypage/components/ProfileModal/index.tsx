@@ -172,7 +172,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 					<InputField
 						label="닉네임"
 						isRequired={true}
-						placeholder="닉네임 입력해주세요"
+						placeholder="닉네임을 입력해주세요"
 						{...register("name")}
 						hintText={errors.name?.message}
 						isDestructive={!!errors.name}
