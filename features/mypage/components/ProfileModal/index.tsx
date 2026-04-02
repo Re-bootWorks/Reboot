@@ -19,7 +19,11 @@ const STYLE = {
 };
 
 const profileSchema = z.object({
-	name: z.string().trim().min(1, "이름은 필수 입력 항목입니다."),
+	name: z
+		.string()
+		.trim()
+		.min(1, "닉네임은 필수 입력 항목입니다.")
+		.max(8, "닉네임은 8자 이하로 입력해주세요."),
 	email: z.email("이메일 형식이 아닙니다."),
 	image: z.string().nullable().optional(),
 });
@@ -152,7 +156,6 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 					id={profileFormId}
 					onSubmit={handleProfileSubmit}
 					className="flex flex-col gap-4 md:gap-6">
-					{/* 이미지 필드는 custom ui라 Controller로 연결 */}
 					<Controller
 						control={control}
 						name="image"
@@ -166,11 +169,10 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 						)}
 					/>
 
-					{/* 일반 텍스트 필드는 register에 직접 연결 */}
 					<InputField
-						label="이름"
+						label="닉네임"
 						isRequired={true}
-						placeholder="이름을 입력해주세요"
+						placeholder="닉네임 입력해주세요"
 						{...register("name")}
 						hintText={errors.name?.message}
 						isDestructive={!!errors.name}
