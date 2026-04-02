@@ -39,23 +39,28 @@ export default function InputTextarea({
 			hintText={hintText}
 			isDestructive={isDestructive}>
 			{({ id, descriptionId }) => (
-				<textarea
-					id={id}
-					name={name}
-					required={isRequired}
-					placeholder={placeholder}
-					defaultValue={defaultValue}
+				<div
 					className={cn(
-						"min-h-[120px] w-full rounded-xl bg-gray-50 p-3 transition-colors outline-none placeholder:text-gray-500",
-						isResizeable ? "resize-y" : "resize-none",
+						"scrollbar w-full overflow-hidden rounded-xl transition-colors",
 						!isDestructive
 							? "border border-transparent focus-within:border-purple-500"
 							: "border-error border",
-						className,
-					)}
-					aria-describedby={hintText ? descriptionId : undefined}
-					{...props}
-				/>
+					)}>
+					<textarea
+						id={id}
+						name={name}
+						required={isRequired}
+						placeholder={placeholder}
+						defaultValue={defaultValue}
+						className={cn(
+							"min-h-[120px] w-full bg-gray-50 p-3 outline-none placeholder:text-gray-500",
+							isResizeable ? "resize-y" : "resize-none",
+							className,
+						)}
+						aria-describedby={hintText ? descriptionId : undefined}
+						{...props}
+					/>
+				</div>
 			)}
 		</InputFieldWrapper>
 	);

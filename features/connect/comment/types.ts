@@ -23,6 +23,7 @@ export interface CommentCardItem {
 	id: number;
 	content: string;
 	authorName: string;
+	authorImage?: string;
 	date: number;
 }
 

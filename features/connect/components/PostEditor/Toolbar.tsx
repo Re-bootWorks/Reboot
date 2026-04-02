@@ -10,11 +10,14 @@ import {
 } from "lucide-react";
 import { uploadImage } from "@/apis/images";
 
+const ALLOWED_CONTENT_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+
 interface Props {
 	editor: Editor | null;
+	onError?: (message: string) => void;
 }
 
-export default function Toolbar({ editor }: Props) {
+export default function Toolbar({ editor, onError }: Props) {
 	if (!editor) return null;
 
 	const btnClass = (active?: boolean) =>
@@ -76,21 +79,25 @@ export default function Toolbar({ editor }: Props) {
 				onClick={() => {
 					const input = document.createElement("input");
 					input.type = "file";
-					input.accept = "image/*";
+					input.accept = "image/jpeg,image/png,image/webp,image/gif";
 
 					input.onchange = async () => {
 						const file = input.files?.[0];
 						if (!file) return;
 
+						if (!ALLOWED_CONTENT_TYPES.includes(file.type)) {
+							onError?.("JPEG, PNG, WebP, GIF 형식만 업로드할 수 있습니다.");
+							return;
+						}
+
 						try {
 							const url = await uploadImage(file);
-
 							editor.chain().focus().setImage({ src: url }).run();
 						} catch (error) {
 							if (error instanceof Error) {
-								alert(error.message);
+								onError?.(error.message);
 							} else {
-								alert("이미지 업로드 실패");
+								onError?.("이미지 업로드에 실패했습니다.");
 							}
 						}
 					};

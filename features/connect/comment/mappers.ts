@@ -6,6 +6,7 @@ export function mapCommentToCard(comment: PostComment): CommentCardItem {
 		id: comment.id,
 		content: comment.content,
 		authorName: comment.author.name,
+		authorImage: comment.author.image,
 		date: new Date(comment.createdAt).getTime(),
 	};
 }

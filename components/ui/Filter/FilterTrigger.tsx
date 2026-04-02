@@ -20,11 +20,11 @@ export default function FilterTrigger({
 			colors="grayBorder"
 			className={cn(
 				//  Button 덮어쓰기
-				"h-8 w-auto px-3",
+				"h-6 w-auto px-0 md:h-8",
 				"rounded-lg",
 
 				// 폰트
-				"!text-base leading-6 !font-medium tracking-[-0.32px]",
+				"!text-sm leading-5 !font-medium tracking-[-0.32px] md:!text-base md:leading-6",
 
 				// 상태
 				isActive ? "border-gray-300 text-gray-800" : "border-gray-200 text-gray-600",

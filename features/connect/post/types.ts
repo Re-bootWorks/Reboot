@@ -42,13 +42,17 @@ export type ConnectPost = Post & {
 	};
 	comments: PostComment[];
 };
+
 // UI 타입 (PostCard용)
 export type PostCardItem = {
 	id: number;
 	title: string;
 	description: string;
 	imageUrl?: string;
-	author: string;
+	author: {
+		name: string;
+		image?: string;
+	};
 	date: number;
 	likeCount: number;
 	isLiked?: boolean;
