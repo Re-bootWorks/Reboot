@@ -39,7 +39,7 @@ export default function ConnectCard({
 	return (
 		<div
 			onClick={onClick}
-			className="relative flex h-[19.375rem] w-full max-w-[18.4375rem] cursor-pointer flex-col overflow-hidden rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
+			className="relative flex h-[19.375rem] w-full cursor-pointer flex-col overflow-hidden rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
 			{/* 로딩 오버레이 */}
 			{isLoading && (
 				<div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/60">
