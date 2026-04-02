@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -70,8 +70,11 @@ function buildProfilePayload(data: ProfileFormValues, user: UserProfile): PatchU
 // 프로필 폼 상태와 저장/취소
 export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProps) {
 	const { isOpen: alertOpen, open, close } = useToggle();
-	const { mutate, isPending } = usePatchUsersMe();
+	const { mutate, isPending } = usePatchUsersMe({
+		onSuccessBeforeSync: handleModalClose,
+	});
 	const profileFormId = useId();
+	const [isImageUploading, setIsImageUploading] = useState(false);
 
 	// RHF으로 이름, 이메일, 이미지 필드 관리
 	const {
@@ -90,7 +93,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 		if (!isOpen) return;
 
 		reset(getProfileDefaultValues(user));
-	}, [user, isOpen, reset]);
+	}, [isOpen, reset]);
 
 	// 수정 중 취소 시 Alert
 	function handleEditCancel() {
@@ -117,11 +120,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 			return;
 		}
 
-		mutate(payload, {
-			onSuccess: () => {
-				handleModalClose();
-			},
-		});
+		mutate(payload);
 	});
 
 	return (
@@ -146,7 +145,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 							form={profileFormId}
 							colors="purple"
 							sizes="medium"
-							isPending={isPending}
+							isPending={isPending || isImageUploading}
 							className={STYLE.modalButton}>
 							수정하기
 						</Button>
@@ -165,6 +164,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 								initialImageUrl={user.image}
 								value={field.value ?? null}
 								handleImageChange={field.onChange}
+								handleUploadPendingChange={setIsImageUploading}
 							/>
 						)}
 					/>
