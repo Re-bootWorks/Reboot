@@ -19,7 +19,7 @@ export default function LoginPage() {
 					</Link>
 				</>
 			}>
-			<LoginForm onSuccess={() => router.push("/")} />
+			<LoginForm onSuccess={() => router.push("/meetup/list")} />
 		</AuthFormContainer>
 	);
 }

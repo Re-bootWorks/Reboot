@@ -1,7 +1,13 @@
 import { Meeting } from "@/features/meetupDetail/types";
 import { MeetupEditData } from "./types";
 import dayjs from "@/libs/dayjs";
-import { splitAddress, validateCapacity, validateText } from "@/features/meetup/utils";
+import {
+	MAX_ADDRESS_LENGTH,
+	MAX_NAME_LENGTH,
+	splitAddress,
+	validateCapacity,
+	validateText,
+} from "@/features/meetup/utils";
 import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/PersonnelContainer";
 
 export function toMeetupEditData(meeting: Meeting): MeetupEditData {
@@ -74,6 +80,16 @@ export const EDIT_VALIDATIONS: {
 	{
 		test: (d) => validateText(d.address),
 		message: "모임 장소를 입력해 주세요.",
+		tab: TAB_IDS.BASIC,
+	},
+	{
+		test: (d) => validateText(d.name) && d.name.length <= MAX_NAME_LENGTH,
+		message: `모임 이름은, ${MAX_NAME_LENGTH}자 이하로 입력해 주세요.`,
+		tab: TAB_IDS.BASIC,
+	},
+	{
+		test: (d) => validateText(d.address) && d.address.length <= MAX_ADDRESS_LENGTH,
+		message: `주소는 ${MAX_ADDRESS_LENGTH}자 이하로 입력해주세요.`,
 		tab: TAB_IDS.BASIC,
 	},
 	{

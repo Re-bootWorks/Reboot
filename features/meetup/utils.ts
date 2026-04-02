@@ -1,3 +1,6 @@
+export const MAX_NAME_LENGTH = 20;
+export const MAX_ADDRESS_LENGTH = 50;
+
 /** 텍스트 유효성 검사 */
 export function validateText(value: string) {
 	return !!value.trim();
