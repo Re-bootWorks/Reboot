@@ -106,22 +106,25 @@ export function useCreateComment(postId: number, onSuccess?: () => void) {
 
 			queryClient.setQueryData(
 				connectQueryKeys.postDetail(postId),
-				(old: { comments?: Comment[] } | undefined) => ({
-					...old,
-					comments: [
-						{
-							id: Date.now(),
-							content: newComment.content,
-							isPending: true,
-							author: {
-								id: user?.id ?? 0,
-								name: user?.name ?? "사용자",
+				(old: ConnectPost | undefined) => {
+					if (!old) return old;
+					return {
+						...old,
+						comments: [
+							{
+								id: Date.now(),
+								content: newComment.content,
+								isPending: true,
+								author: {
+									id: user?.id ?? 0,
+									name: user?.name ?? "사용자",
+								},
+								createdAt: new Date().toISOString(),
 							},
-							createdAt: new Date().toISOString(),
-						},
-						...(old?.comments ?? []),
-					],
-				}),
+							...old.comments,
+						],
+					};
+				},
 			);
 
 			return { previousData };
