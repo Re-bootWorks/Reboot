@@ -33,7 +33,7 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 
 	return (
 		<li className={STYLE.itemBgBox}>
-			<Link href={`/meetup/${item.id}`}>
+			<Link href={`/meetup/${item.id}`} className="shrink-0">
 				<Image
 					src={item.image ?? EMPTY_THUMBNAIL_IMAGE}
 					alt="모임 대표 이미지"

@@ -24,7 +24,7 @@ const EMPTY_PROFILE_IMAGE = "/assets/img/img_profile.svg";
 export default function ReviewCard({ user, item, handleEdit, handleDelete }: ReviewCardProps) {
 	return (
 		<li className={STYLE.itemBox}>
-			<Link href={`/meetup/${item.meetingId}`}>
+			<Link href={`/meetup/${item.meetingId}`} className="shrink-0">
 				<Image
 					src={item.meetingImage ?? EMPTY_THUMBNAIL_IMAGE}
 					alt="모임 대표 이미지"

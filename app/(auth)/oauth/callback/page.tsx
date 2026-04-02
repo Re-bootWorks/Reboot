@@ -21,7 +21,7 @@ function OAuthCallbackContent() {
 		const handleCallback = async () => {
 			try {
 				await postSocialLogin({ accessToken, refreshToken });
-				window.location.href = "/";
+				window.location.href = "/meetup/list";
 			} catch {
 				router.replace("/login");
 			}

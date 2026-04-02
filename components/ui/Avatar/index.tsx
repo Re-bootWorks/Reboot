@@ -28,7 +28,7 @@ export default function Avatar({
 		<Image
 			src={imageSrc}
 			alt={alt}
-			className={cn("rounded-full border border-gray-200 object-cover", className)}
+			className={cn("aspect-square rounded-full border border-gray-200 object-cover", className)}
 			width={width}
 			height={height}
 		/>

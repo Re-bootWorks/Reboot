@@ -2,6 +2,7 @@
 
 import { Modal } from "@/components/ui/Modals";
 import { useModalStore } from "@/store/modal.store";
+import { usePathname, useRouter } from "next/navigation";
 import { SignUpForm } from "./SignUpForm";
 
 interface SignUpModalProps {
@@ -10,6 +11,13 @@ interface SignUpModalProps {
 
 export function SignUpModal({ hideCloseButton }: SignUpModalProps) {
 	const { signupOpen, closeSignup, openLogin } = useModalStore();
+	const pathname = usePathname();
+	const router = useRouter();
+
+	function handleSuccess() {
+		closeSignup();
+		if (pathname === "/") router.push("/meetup/list");
+	}
 
 	return (
 		<Modal
@@ -34,7 +42,7 @@ export function SignUpModal({ hideCloseButton }: SignUpModalProps) {
 			footerClassName="md:pt-10 text-center text-sm font-medium text-gray-800 md:text-[15px] md:leading-normal"
 			className="max-h-[90vh] max-w-[343px] p-6 md:max-w-142 md:px-14 md:py-10">
 			<SignUpForm
-				onSuccess={closeSignup}
+				onSuccess={handleSuccess}
 				onAutoLoginFail={() => {
 					closeSignup();
 					openLogin();
