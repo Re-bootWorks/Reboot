@@ -9,7 +9,6 @@ import {
 	postMeetingsReviews,
 	uploadProfileImage,
 } from "./apis";
-import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/providers/toast-provider";
 import { mypageQueryKeys } from "./queries";
 import { meetupDetailQueryKeys } from "../meetupDetail/queries";
@@ -36,20 +35,16 @@ export function useUploadProfileImage() {
 }
 
 export function usePatchUsersMe() {
-	const queryClient = useQueryClient();
-	const setUser = useUserStore((state) => state.setUser);
 	const { handleShowToast } = useToast();
 
 	return useMutation({
 		mutationFn: patchUsersMe,
 
-		onSuccess: (updatedUser) => {
-			setUser(updatedUser);
+		onSuccess: () => {
 			handleShowToast({
 				message: "프로필이 수정되었습니다.",
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: ["me"] });
 		},
 
 		onError: () => {

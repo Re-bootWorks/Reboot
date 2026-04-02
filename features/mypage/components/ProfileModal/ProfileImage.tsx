@@ -13,7 +13,7 @@ const ACCEPTED_IMAGE_TYPES: string[] = ["image/png", "image/jpeg", "image/gif", 
 const FILE_ACCEPT = ACCEPTED_IMAGE_TYPES.join(", ");
 
 const STYLE = {
-	profileImage: "size-11 md:size-28",
+	profileImage: "size-28",
 	profileImageEdit: "flex items-center justify-center rounded-full border border-gray-200 bg-white",
 	profileButton: "absolute right-0 bottom-0 size-10 cursor-pointer",
 	inputHint: "mt-3 px-1 text-xs font-medium text-gray-500 md:text-sm",
@@ -24,6 +24,7 @@ interface ProfileImageProps {
 	value: string | null;
 	isOpen: boolean;
 	handleImageChange: (imageUrl: string | null) => void;
+	handleUploadPendingChange?: (isPending: boolean) => void; // 이미지 업로드 시 수정하기 비활성화
 }
 
 type ValidationResult = { success: true } | { success: false; error: string };
@@ -56,6 +57,7 @@ export default function ProfileImage({
 	value,
 	isOpen,
 	handleImageChange,
+	handleUploadPendingChange,
 }: ProfileImageProps) {
 	const inputId = useId();
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -66,6 +68,10 @@ export default function ProfileImage({
 	const [error, setError] = useState<string | null>(null);
 	// handler 내부에서 trycatch 사용을 위해  mutateAsync 사용
 	const { mutateAsync: uploadImage, isPending } = useUploadProfileImage();
+
+	useEffect(() => {
+		handleUploadPendingChange?.(isPending);
+	}, [isPending, handleUploadPendingChange]);
 
 	// 모달이 다시 열리면 초기화
 	useEffect(() => {

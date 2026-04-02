@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import Button from "@/components/ui/Buttons/Button";
 import InputField from "@/components/ui/Inputs/InputField";
 import { Modal } from "@/components/ui/Modals";
 import useToggle from "@/hooks/useToggle";
 import Alert from "@/components/ui/Modals/AlertModal";
+import { useUserStore } from "@/store/user.store";
 import ProfileImage from "./ProfileImage";
 import { usePatchUsersMe } from "../../mutations";
 import { PatchUserProfilePayload, UserProfile } from "../../types";
@@ -71,7 +73,10 @@ function buildProfilePayload(data: ProfileFormValues, user: UserProfile): PatchU
 export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProps) {
 	const { isOpen: alertOpen, open, close } = useToggle();
 	const { mutate, isPending } = usePatchUsersMe();
+	const queryClient = useQueryClient();
+	const setUser = useUserStore((state) => state.setUser);
 	const profileFormId = useId();
+	const [isImageUploading, setIsImageUploading] = useState(false);
 
 	// RHF으로 이름, 이메일, 이미지 필드 관리
 	const {
@@ -118,8 +123,10 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 		}
 
 		mutate(payload, {
-			onSuccess: () => {
+			onSuccess: (updatedUser) => {
 				handleModalClose();
+				setUser(updatedUser);
+				queryClient.invalidateQueries({ queryKey: ["me"] });
 			},
 		});
 	});
@@ -146,7 +153,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 							form={profileFormId}
 							colors="purple"
 							sizes="medium"
-							isPending={isPending}
+							isPending={isPending || isImageUploading}
 							className={STYLE.modalButton}>
 							수정하기
 						</Button>
@@ -165,6 +172,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 								initialImageUrl={user.image}
 								value={field.value ?? null}
 								handleImageChange={field.onChange}
+								handleUploadPendingChange={setIsImageUploading}
 							/>
 						)}
 					/>
