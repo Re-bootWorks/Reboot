@@ -41,7 +41,7 @@ export default function InputTextarea({
 			{({ id, descriptionId }) => (
 				<div
 					className={cn(
-						"scrollbar w-full overflow-hidden rounded-xl bg-gray-50 transition-colors",
+						"scrollbar w-full overflow-hidden rounded-xl transition-colors",
 						!isDestructive
 							? "border border-transparent focus-within:border-purple-500"
 							: "border-error border",
