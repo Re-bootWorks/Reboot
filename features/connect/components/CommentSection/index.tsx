@@ -6,13 +6,11 @@ import InputTextarea from "@/components/ui/Inputs/InputTextarea";
 import CommentCard from "@/features/connect/components/CommentCard";
 import { mapCommentToCard } from "@/features/connect/comment/mappers";
 import { useState, useEffect, useRef } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createComment } from "@/features/connect/apis/createComment";
 import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/providers/toast-provider";
+import { useCreateComment } from "@/features/connect/mutations";
 import Loading from "@/components/ui/Loading";
 import { useGetPostDetail } from "@/features/connect/queries";
-import { connectQueryKeys } from "@/features/connect/queries";
 import type { ConnectPost } from "@/features/connect/post/types";
 
 interface CommentSectionProps {
@@ -26,7 +24,6 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
 	const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-	const queryClient = useQueryClient();
 	const { user } = useUserStore();
 	const currentUserId = user?.id;
 	const { handleShowToast } = useToast();
@@ -57,50 +54,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 	}, [visibleCount, data]);
 
 	// 댓글 생성 mutation
-	const mutation = useMutation({
-		mutationFn: createComment,
-
-		onMutate: async (newComment: { postId: number; content: string }) => {
-			await queryClient.cancelQueries({ queryKey: connectQueryKeys.postDetail(postId) });
-
-			const previousData = queryClient.getQueryData(connectQueryKeys.postDetail(postId));
-
-			queryClient.setQueryData(
-				connectQueryKeys.postDetail(postId),
-				(old: { comments?: Comment[] } | undefined) => ({
-					...old,
-					comments: [
-						{
-							id: Date.now(),
-							content: newComment.content,
-							isPending: true,
-							author: {
-								id: currentUserId!,
-								name: user?.name ?? "사용자",
-							},
-							createdAt: new Date().toISOString(),
-						},
-						...(old?.comments ?? []),
-					],
-				}),
-			);
-			setComment("");
-
-			return { previousData };
-		},
-
-		onError: (_err, _newComment, context) => {
-			if (context?.previousData) {
-				queryClient.setQueryData(connectQueryKeys.postDetail(postId), context.previousData);
-			}
-			handleShowToast({ message: "댓글 등록에 실패했습니다.", status: "error" });
-		},
-
-		onSuccess: () => {
-			setComment("");
-			queryClient.invalidateQueries({ queryKey: connectQueryKeys.postDetail(postId) });
-		},
-	});
+	const mutation = useCreateComment(postId, () => setComment(""));
 
 	if (isLoading) return <Loading />;
 	if (!data) return null;

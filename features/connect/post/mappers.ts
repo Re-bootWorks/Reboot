@@ -17,7 +17,10 @@ export function mapPostToCard(post: Post) {
 		title: post.title,
 		description: stripHtml(post.content),
 		imageUrl: post.image ?? extractImage(post.content) ?? null,
-		author: post.author.name,
+		author: {
+			name: post.author.name,
+			image: (post.author as { name: string; image?: string }).image,
+		},
 		date: new Date(post.createdAt).getTime(),
 		likeCount: post.likeCount,
 		commentCount: post._count.comments,
