@@ -13,6 +13,7 @@ import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/providers/toast-provider";
 import { mypageQueryKeys } from "./queries";
 import { meetupDetailQueryKeys } from "../meetupDetail/queries";
+import { headerQueryKeys } from "../header/queries";
 
 export function useUploadProfileImage() {
 	const { handleShowToast } = useToast();
@@ -76,6 +77,7 @@ export function usePatchMeetingsStatus() {
 				message: `모임이 ${isConfirmed ? "확정" : "취소"}되었습니다.`,
 				status: "success",
 			});
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
 			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
 			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
 			queryClient.invalidateQueries({
@@ -107,6 +109,7 @@ export function useDeleteMeetings() {
 				message: "모임이 삭제 되었습니다.",
 				status: "success",
 			});
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
 			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
 			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
 			queryClient.invalidateQueries({
@@ -137,6 +140,7 @@ export function useDeleteMeetingsJoin() {
 				message: "모임 예약이 취소 되었습니다.",
 				status: "success",
 			});
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
 			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
 			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
 			queryClient.invalidateQueries({
