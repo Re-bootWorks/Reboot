@@ -21,6 +21,7 @@ export default function MeetupCard({ data, setSelectedData, openModalFn }: Meetu
 		isRegClosed: checkIsRegClosed(data.registrationEnd, data.participantCount, data.capacity),
 		isLiked: data.isFavorited,
 		isJoined: data.isJoined,
+		isCompleted: data.isCompleted,
 	};
 	const href = `/meetup/${data.id}`;
 

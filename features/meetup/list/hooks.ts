@@ -52,13 +52,16 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 		queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list }); // 모임 목록
 		queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) }); // 해당 모임 상세
 		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups }); // 참여한 모임 목록
-		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created }); // 만든 모임 목록
+		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created }); // 만든 모임 목록(주최자)
 
 		if (field === "isFavorited") {
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites }); // 찜 개수
 		}
 		if (field === "isJoined") {
 			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) }); // 해당 모임 참여자
+			// 참여 가능 인원이 초과되어 해당 모임이 확정되는 경우
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications }); // 알림 목록
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notificationsCount }); // 알림 개수
 		}
 	}
 

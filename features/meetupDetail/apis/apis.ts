@@ -4,7 +4,7 @@ import { MeetupEditData } from "@/features/meetupDetail/edit/types";
 import { MeetupListResponse } from "@/features/meetup/types";
 import { getMeetups } from "@/features/meetup/apis";
 import { filterRelatedMeetings } from "@/features/meetupDetail/util";
-
+import { ReviewScore } from "@/types/common";
 /** 모임 상세 조회 */
 export async function getMeetingDetail(meetingId: number): Promise<Meeting> {
 	const res = await clientFetch(`/meetings/${meetingId}`);
@@ -86,6 +86,27 @@ export async function deleteMeeting(meetingId: number) {
 	if (!res.ok) {
 		const error = await res.json().catch(() => null);
 		throw new Error(error?.message ?? "모임 삭제에 실패했습니다.");
+	}
+}
+
+/** 리뷰 수정 */
+export async function patchReview(reviewId: number, data: { score: ReviewScore; comment: string }) {
+	const res = await clientFetch(`/reviews/${reviewId}`, {
+		method: "PATCH",
+		body: JSON.stringify(data),
+	});
+	if (!res.ok) {
+		const error = await res.json().catch(() => null);
+		throw new Error(error?.message ?? "리뷰 수정에 실패했습니다.");
+	}
+}
+
+/** 리뷰 삭제 */
+export async function deleteReview(reviewId: number) {
+	const res = await clientFetch(`/reviews/${reviewId}`, { method: "DELETE" });
+	if (!res.ok) {
+		const error = await res.json().catch(() => null);
+		throw new Error(error?.message ?? "리뷰 삭제에 실패했습니다.");
 	}
 }
 

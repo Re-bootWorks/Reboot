@@ -36,6 +36,10 @@ const NOTIFICATION_TYPE_UI = {
 		label: "모임 취소",
 		icon: null,
 	},
+	MEETING_DELETED: {
+		label: "모임 삭제",
+		icon: null,
+	},
 } as const;
 
 export default function NotificationCard({

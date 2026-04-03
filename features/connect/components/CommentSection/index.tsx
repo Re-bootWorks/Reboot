@@ -86,7 +86,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
 			{/* 댓글 입력 영역 */}
 			<div className="mt-3 flex items-center md:mt-4 lg:mt-8">
-				<div className="relative mr-4 h-[54px] w-[54px] shrink-0 overflow-hidden rounded-full">
+				<div className="relative mr-4 h-14 w-14 shrink-0 overflow-hidden rounded-full">
 					{user?.image ? (
 						<Image src={user.image} alt="profile" fill className="object-cover" />
 					) : (
@@ -94,7 +94,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 					)}
 				</div>
 
-				<div className="flex flex-1 items-center gap-2.5 rounded-2xl bg-gray-100 px-[10px] py-[10px]">
+				<div className="flex flex-1 items-center gap-2.5 rounded-2xl bg-gray-100 px-2 py-2">
 					<InputTextarea
 						name="comment"
 						placeholder="여기에 댓글을 남겨보세요"
