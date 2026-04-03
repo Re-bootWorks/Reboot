@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
+import { useGetPostDetail } from "@/features/connect/queries";
 import { useUpdatePost } from "@/features/connect/mutations";
 import PostEditor from "@/features/connect/components/PostEditor";
 import Container from "@/components/layout/Container";
@@ -14,11 +13,7 @@ export default function EditPostContainer({ id }: { id: number }) {
 	const router = useRouter();
 	const { handleShowToast } = useToast();
 
-	const { data } = useQuery({
-		queryKey: ["postDetail", id],
-		queryFn: () => getPostDetailClient(id),
-	});
-
+	const { data } = useGetPostDetail(id);
 	const { mutate: updatePost, isPending } = useUpdatePost(id);
 
 	const [title, setTitle] = useState("");
@@ -45,12 +40,12 @@ export default function EditPostContainer({ id }: { id: number }) {
 		const isEmptyContent = content.replace(/<[^>]*>/g, "").trim().length === 0;
 
 		if (!title.trim()) {
-			handleShowToast({ message: "제목을 입력해주세요", status: "error" }); // ✅
+			handleShowToast({ message: "제목을 입력해주세요", status: "error" });
 			return;
 		}
 
 		if (isEmptyContent) {
-			handleShowToast({ message: "내용을 입력해주세요", status: "error" }); // ✅
+			handleShowToast({ message: "내용을 입력해주세요", status: "error" });
 			return;
 		}
 
@@ -58,13 +53,13 @@ export default function EditPostContainer({ id }: { id: number }) {
 			{ title, content },
 			{
 				onSuccess: () => {
-					handleShowToast({ message: "게시글이 수정되었습니다", status: "success" }); // ✅
+					handleShowToast({ message: "게시글이 수정되었습니다", status: "success" });
 					setTimeout(() => {
 						router.replace(`/connect/${id}`);
 					}, 800);
 				},
 				onError: () => {
-					handleShowToast({ message: "게시글 수정 실패", status: "error" }); // ✅
+					handleShowToast({ message: "게시글 수정 실패", status: "error" });
 				},
 			},
 		);
@@ -88,7 +83,6 @@ export default function EditPostContainer({ id }: { id: number }) {
 							placeholder="제목을 입력해주세요"
 							className="w-full border-b border-gray-200 bg-transparent px-2 py-1.5 text-base leading-6 font-semibold tracking-[-0.32px] outline-none placeholder:text-gray-400 md:text-[32px] md:leading-[36px] md:tracking-[-0.64px]"
 						/>
-
 						<span className="absolute top-1/2 right-2 -translate-y-1/2 text-sm text-gray-400">
 							{title.length}/30
 						</span>
@@ -106,8 +100,6 @@ export default function EditPostContainer({ id }: { id: number }) {
 				<div className="min-w-[343px] rounded-3xl bg-gray-50 px-1">
 					<div className="flex flex-col rounded-[24px] bg-white p-4 md:p-10">
 						<PostEditor content={content} onChange={setContent} />
-
-						{/* 글자수 */}
 						<div className="mt-4 text-xs text-gray-400">
 							공백포함 : {withSpace}자 | 공백제외 : {withoutSpace}자
 						</div>

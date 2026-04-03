@@ -13,7 +13,10 @@ import { KAKAO_LOGIN_URL, GOOGLE_LOGIN_URL } from "@/constants/auth";
 
 const signUpSchema = z
 	.object({
-		name: z.string().min(1, "이름은 필수 입력 항목입니다."),
+		name: z
+			.string()
+			.min(1, "닉네임은 필수 입력 항목입니다.")
+			.max(8, "닉네임은 8자 이하로 입력해주세요."),
 		email: z.email("이메일 형식이 아닙니다."),
 		password: z.string().min(8, "8자 이상 입력해주세요."),
 		passwordConfirm: z.string().min(1, "비밀번호를 한 번 더 입력해주세요"),
@@ -58,9 +61,9 @@ export function SignUpForm({ onSuccess, onAutoLoginFail }: SignUpFormProps) {
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex flex-col gap-6 md:gap-4">
 				<InputField
-					label="이름"
+					label="닉네임"
 					isRequired={true}
-					placeholder="이름을 입력해주세요"
+					placeholder="닉네임을 입력해주세요"
 					{...register("name")}
 					hintText={errors.name?.message}
 					isDestructive={!!errors.name}

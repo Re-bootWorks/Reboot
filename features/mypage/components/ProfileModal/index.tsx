@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -19,7 +19,11 @@ const STYLE = {
 };
 
 const profileSchema = z.object({
-	name: z.string().trim().min(1, "이름은 필수 입력 항목입니다."),
+	name: z
+		.string()
+		.trim()
+		.min(1, "닉네임은 필수 입력 항목입니다.")
+		.max(8, "닉네임은 8자 이하로 입력해주세요."),
 	email: z.email("이메일 형식이 아닙니다."),
 	image: z.string().nullable().optional(),
 });
@@ -66,8 +70,11 @@ function buildProfilePayload(data: ProfileFormValues, user: UserProfile): PatchU
 // 프로필 폼 상태와 저장/취소
 export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProps) {
 	const { isOpen: alertOpen, open, close } = useToggle();
-	const { mutate, isPending } = usePatchUsersMe();
+	const { mutate, isPending } = usePatchUsersMe({
+		onSuccessBeforeSync: handleModalClose,
+	});
 	const profileFormId = useId();
+	const [isImageUploading, setIsImageUploading] = useState(false);
 
 	// RHF으로 이름, 이메일, 이미지 필드 관리
 	const {
@@ -86,7 +93,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 		if (!isOpen) return;
 
 		reset(getProfileDefaultValues(user));
-	}, [user, isOpen, reset]);
+	}, [isOpen, reset]);
 
 	// 수정 중 취소 시 Alert
 	function handleEditCancel() {
@@ -113,11 +120,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 			return;
 		}
 
-		mutate(payload, {
-			onSuccess: () => {
-				handleModalClose();
-			},
-		});
+		mutate(payload);
 	});
 
 	return (
@@ -142,7 +145,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 							form={profileFormId}
 							colors="purple"
 							sizes="medium"
-							isPending={isPending}
+							isPending={isPending || isImageUploading}
 							className={STYLE.modalButton}>
 							수정하기
 						</Button>
@@ -152,7 +155,6 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 					id={profileFormId}
 					onSubmit={handleProfileSubmit}
 					className="flex flex-col gap-4 md:gap-6">
-					{/* 이미지 필드는 custom ui라 Controller로 연결 */}
 					<Controller
 						control={control}
 						name="image"
@@ -162,15 +164,15 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 								initialImageUrl={user.image}
 								value={field.value ?? null}
 								handleImageChange={field.onChange}
+								handleUploadPendingChange={setIsImageUploading}
 							/>
 						)}
 					/>
 
-					{/* 일반 텍스트 필드는 register에 직접 연결 */}
 					<InputField
-						label="이름"
+						label="닉네임"
 						isRequired={true}
-						placeholder="이름을 입력해주세요"
+						placeholder="닉네임을 입력해주세요"
 						{...register("name")}
 						hintText={errors.name?.message}
 						isDestructive={!!errors.name}

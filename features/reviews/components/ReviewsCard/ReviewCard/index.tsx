@@ -13,6 +13,11 @@ import Avatar from "@/components/ui/Avatar";
 
 const EMPTY_THUMBNAIL_SRC = "/assets/img/img_empty_purple.svg";
 
+type Props = ReviewCardProps & {
+	handleEdit?: () => void;
+	handleDelete?: () => void;
+};
+
 export default function ReviewCard({
 	meetingId,
 	meetingImage,
@@ -24,16 +29,18 @@ export default function ReviewCard({
 	meetingName,
 	meetingType,
 	userId,
-}: ReviewCardProps) {
+	handleEdit,
+	handleDelete,
+}: Props) {
 	const loggedInUserId = useUserStore((state) => state.user?.id);
 	const isMyReview = userId === loggedInUserId;
 
 	const handleEditButtonClick = () => {
-		// TODO: 리뷰 수정 기능 추후 구현 예정
+		handleEdit?.();
 	};
 
 	const handleDeleteButtonClick = () => {
-		// TODO: 리뷰 삭제 기능 추후 구현 예정
+		handleDelete?.();
 	};
 
 	const handleProfileClick = () => {
@@ -41,7 +48,7 @@ export default function ReviewCard({
 	};
 
 	return (
-		<article className="flex w-full flex-col gap-3 md:flex-row md:gap-8">
+		<article className="flex w-full flex-col gap-4 md:flex-row md:gap-8">
 			{/* 모임 이미지 */}
 			<Link
 				href={`/meetup/${meetingId}`}
@@ -71,8 +78,8 @@ export default function ReviewCard({
 			<div className="flex w-full flex-col gap-3 border-b border-b-gray-200 pb-6 md:gap-0">
 				<div className="flex flex-col gap-3 md:gap-6">
 					<div className="relative flex flex-col gap-2 md:gap-3.5 md:pt-4">
-						{/* 별점 + 액션 버튼 */}
-						<div className="flex items-center justify-between">
+						{/* 별점 + 수정·삭제 버튼 */}
+						<div className="flex h-6 items-center justify-between">
 							<Rating
 								value={score}
 								readOnly
@@ -82,6 +89,8 @@ export default function ReviewCard({
 
 							{isMyReview ? (
 								<ActionDropdown
+									actionsSize="lg"
+									className="flex items-end"
 									items={[
 										{
 											label: "수정하기",

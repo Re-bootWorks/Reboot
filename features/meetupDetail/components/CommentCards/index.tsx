@@ -1,12 +1,18 @@
-import React from "react";
-import Image from "next/image";
+"use client";
+
+import React, { useState } from "react";
 import Pagination from "@/components/ui/Pagination";
 import { ReviewScore } from "@/types/common";
 import { Rating, Heart } from "@smastrom/react-rating";
 import { formatIsoDateWithDots } from "@/utils/date";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { User } from "@/features/meetupDetail/types";
-import { useGetMe } from "@/features/auth/queries";
+import Empty from "@/components/layout/Empty";
+import { useUserStore } from "@/store/user.store";
+import ReviewModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
+import { useDeleteReviewMutation, useEditReviewMutation } from "@/features/meetupDetail/mutations";
+import Alert from "@/components/ui/Modals/AlertModal";
+import Avatar from "@/components/ui/Avatar";
 
 export interface CommentProps {
 	id: number;
@@ -16,22 +22,25 @@ export interface CommentProps {
 	user: User;
 }
 
-const EMPTY_IMAGE = "/assets/img/img_empty_purple.svg";
-const DEFAULT_PROFILE = "/assets/img/img_profile.svg";
+interface CommentItemProps extends CommentProps {
+	onEdit: () => void;
+	onDelete: () => void;
+}
 
-function CommentItem({ score, comment, createdAt, user }: Omit<CommentProps, "id">) {
-	const { data: me } = useGetMe();
-	const myReview = me?.id === user.id;
-	const heartStyles = {
-		itemShapes: Heart,
-		activeFillColor: "#7566E5",
-		inactiveFillColor: "#DDD",
-	};
+const heartStyles = {
+	itemShapes: Heart,
+	activeFillColor: "#7566E5",
+	inactiveFillColor: "#DDD",
+};
+
+function CommentItem({ score, comment, createdAt, user, onEdit, onDelete }: CommentItemProps) {
+	const { user: me, isPending } = useUserStore();
+	const myReview = !isPending && me?.id === user.id;
 
 	return (
 		<div className="h-fit w-full border-b border-gray-200 pt-2 pb-6 last:border-none md:pt-4">
 			<div className="flex h-fit w-full flex-col gap-3">
-				<div className="h-fit w-full gap-1.5">
+				<div className="flex h-fit w-full flex-col gap-3">
 					<Rating
 						value={score}
 						readOnly
@@ -40,24 +49,23 @@ function CommentItem({ score, comment, createdAt, user }: Omit<CommentProps, "id
 					/>
 					<div className="flex h-fit w-full justify-between gap-2">
 						<div className="flex h-fit w-fit items-center gap-1.5">
-							<Image
-								src={user.image ?? DEFAULT_PROFILE}
+							<Avatar
+								src={user.image}
 								alt={user.name}
 								width={24}
 								height={24}
-								className="rounded-full object-cover"
+								className="shrink-0"
 							/>
 							<div className="flex h-fit w-fit items-center gap-1 text-xs font-normal text-gray-500 md:gap-1.5 md:text-sm">
 								<span>{user.name}</span>
 								<time dateTime={createdAt}>{formatIsoDateWithDots(createdAt)}</time>
 							</div>
 						</div>
-						{/* TODO: 해당 부분은 리뷰 관련 API 구현 완료 후 진행 */}
 						{myReview && (
 							<ActionDropdown
 								items={[
-									{ label: "수정하기", onClick: () => {} },
-									{ label: "삭제하기", onClick: () => {} },
+									{ label: "수정하기", onClick: onEdit },
+									{ label: "삭제하기", onClick: onDelete },
 								]}
 							/>
 						)}
@@ -72,6 +80,7 @@ function CommentItem({ score, comment, createdAt, user }: Omit<CommentProps, "id
 }
 
 interface CommentCardsProps {
+	meetingId: number;
 	comments: CommentProps[];
 	currentPage: number;
 	hasMore: boolean;
@@ -79,12 +88,41 @@ interface CommentCardsProps {
 }
 
 export default function CommentCards({
+	meetingId,
 	comments,
 	currentPage,
 	hasMore,
 	onPageChange,
 }: CommentCardsProps) {
 	const hasComments = comments.length > 0;
+
+	const [editTarget, setEditTarget] = useState<CommentProps | null>(null);
+	const [editInitialValue, setEditInitialValue] = useState<Partial<ReviewFormValues>>();
+	const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+
+	const { mutate: editReview, isPending: isEditPending } = useEditReviewMutation(meetingId);
+	const { mutate: deleteReview, isPending: isDeletePending } = useDeleteReviewMutation(meetingId);
+
+	const handleEditOpen = (comment: CommentProps) => {
+		setEditInitialValue({ score: comment.score, comment: comment.comment });
+		setEditTarget(comment);
+	};
+
+	const handleReviewSubmit = (reviewFormValues: ReviewFormValues) => {
+		if (!editTarget) return;
+		editReview(
+			{
+				reviewId: editTarget.id,
+				data: { score: reviewFormValues.score as ReviewScore, comment: reviewFormValues.comment },
+			},
+			{ onSuccess: () => setEditTarget(null) },
+		);
+	};
+
+	const handleReviewDelete = () => {
+		if (!deleteTargetId) return;
+		deleteReview(deleteTargetId, { onSuccess: () => setDeleteTargetId(null) });
+	};
 
 	return (
 		<div className="flex h-fit w-full flex-col gap-3 md:gap-4 lg:gap-5">
@@ -97,22 +135,18 @@ export default function CommentCards({
 					{hasComments ? (
 						<div className="flex h-fit w-full flex-col">
 							{comments.map((comment) => (
-								<CommentItem key={comment.id} {...comment} />
+								<CommentItem
+									key={comment.id}
+									{...comment}
+									onEdit={() => handleEditOpen(comment)}
+									onDelete={() => setDeleteTargetId(comment.id)}
+								/>
 							))}
 						</div>
 					) : (
-						<div className="flex h-fit w-full flex-col items-center gap-5 md:gap-6">
-							<Image
-								src={EMPTY_IMAGE}
-								alt={"빈 이미지"}
-								width={200}
-								height={200}
-								className="flex h-fit w-fit flex-col gap-2.5 object-cover"
-							/>
-							<span className="h-fit w-full text-center text-sm font-medium text-gray-500 md:text-base">
-								아직 작성된 리뷰가 없어요.
-							</span>
-						</div>
+						<Empty section className="w-full">
+							아직 작성된 리뷰가 없어요.
+						</Empty>
 					)}
 				</div>
 				{(hasMore || currentPage > 1) && (
@@ -123,6 +157,27 @@ export default function CommentCards({
 					/>
 				)}
 			</div>
+
+			{/* 수정 모달 */}
+			<ReviewModal
+				mode="edit"
+				initialValue={editInitialValue}
+				isOpen={!!editTarget}
+				isPending={isEditPending}
+				onClose={() => setEditTarget(null)}
+				handleFormSubmit={handleReviewSubmit}
+			/>
+
+			{/* 삭제 확인 모달 */}
+			<Alert
+				isOpen={!!deleteTargetId}
+				isPending={isDeletePending}
+				onClose={() => setDeleteTargetId(null)}
+				confirmLabel="삭제하기"
+				handleConfirmButton={handleReviewDelete}>
+				<p>리뷰를 정말 삭제하시겠어요?</p>
+				<p className="mt-1 text-sm font-normal text-gray-500">삭제 후에는 되돌릴 수 없습니다.</p>
+			</Alert>
 		</div>
 	);
 }

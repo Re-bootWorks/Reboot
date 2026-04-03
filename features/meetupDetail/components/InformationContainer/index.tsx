@@ -7,7 +7,6 @@ import Button from "@/components/ui/Buttons/Button";
 import UtilityButton from "@/components/ui/Buttons/UtilityButton";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { isDeadlinePassed, uiFormatDate, uiFormatDeadline, uiFormatTime } from "@/utils/date";
-import { useGetMe } from "@/features/auth/queries";
 import useToggle from "@/hooks/useToggle";
 import EditMeetup from "@/features/meetupDetail/edit";
 import { MeetupEditData } from "@/features/meetupDetail/edit/types";
@@ -15,15 +14,19 @@ import Alert from "@/components/ui/Modals/AlertModal";
 import {
 	useCancelJoinMutation,
 	useDeleteMeetingMutation,
+	useFavoriteMutation,
 	useJoinMutation,
 } from "@/features/meetupDetail/mutations";
-import useMeetingFavorite from "@/hooks/useMeetingFavorite";
 import { useToast } from "@/providers/toast-provider";
+import { useModalStore } from "@/store/modal.store";
+import { useUserStore } from "@/store/user.store";
+import SendButton from "@/components/ui/Buttons/SendButton";
 
 interface InformationContainerProps {
 	id: number;
 	name: string;
 	type: string;
+	capacity: number;
 	region: string;
 	dateTime: string;
 	registrationEnd: string;
@@ -42,6 +45,7 @@ export default function InformationContainer({
 	region,
 	dateTime,
 	registrationEnd,
+	capacity,
 	canceledAt,
 	participantCount,
 	isHost,
@@ -49,9 +53,10 @@ export default function InformationContainer({
 	isFavorited,
 	editInitialData,
 }: InformationContainerProps) {
-	const { data: me } = useGetMe();
-	const isLoggedIn = !!me;
+	const { user, isPending: isMePending } = useUserStore();
+	const isLoggedIn = !!user;
 
+	const { openLogin } = useModalStore();
 	const { isOpen: isLoginModalOpen, open: openLoginModal, close: closeLoginModal } = useToggle();
 	const { isOpen: isEditModalOpen, open: openEditModal, close: closeEditModal } = useToggle();
 	const { isOpen: isDeleteModalOpen, open: openDeleteModal, close: closeDeleteModal } = useToggle();
@@ -59,14 +64,17 @@ export default function InformationContainer({
 	const { mutate: join, isPending: isJoinPending } = useJoinMutation(id);
 	const { mutate: cancelJoin, isPending: isCancelPending } = useCancelJoinMutation(id);
 	const { mutate: deleteMeeting, isPending: isDeletePending } = useDeleteMeetingMutation(id);
-	const { handleWishToggle } = useMeetingFavorite();
+	const { mutate: toggleFavorite, isPending: isFavoritePending } = useFavoriteMutation(id);
+
 	const { handleShowToast } = useToast();
 
 	const isJoinPendingAny = isJoinPending || isCancelPending;
 
 	const isClosed = isDeadlinePassed(registrationEnd);
+	const isRegClosed = isClosed || participantCount >= capacity;
 
 	const handleJoinClick = () => {
+		if (isMePending) return;
 		if (!isLoggedIn) {
 			openLoginModal();
 			return;
@@ -74,20 +82,32 @@ export default function InformationContainer({
 		if (isJoined) {
 			cancelJoin();
 		} else {
+			if (isRegClosed) return;
 			join();
 		}
 	};
 
 	const handleShareClick = () => {
 		navigator.clipboard.writeText(window.location.href);
+		handleShowToast({ message: "모임 링크가 복사되었습니다!", status: "success" });
 	};
 
 	const handleLoginConfirm = () => {
 		closeLoginModal();
+		openLogin();
 	};
 
 	const handleDeleteConfirm = () => {
 		deleteMeeting();
+	};
+
+	const handleFavoriteConfirm = () => {
+		if (isMePending) return;
+		if (!isLoggedIn) {
+			openLoginModal();
+			return;
+		}
+		toggleFavorite({ currentState: isFavorited });
 	};
 
 	const actionItems = [
@@ -108,7 +128,7 @@ export default function InformationContainer({
 				<div className="flex w-full flex-col gap-4 lg:gap-6">
 					<div className={`flex w-full items-center gap-2 ${isHost ? "justify-between" : ""}`}>
 						<div className="flex items-center gap-2">
-							{!isClosed && (
+							{!isRegClosed && (
 								<DeadlineTag size="sm" className="md:h-6 md:text-sm">
 									{uiFormatDeadline(registrationEnd)}
 								</DeadlineTag>
@@ -139,22 +159,21 @@ export default function InformationContainer({
 				</div>
 
 				<div className="flex w-full items-center gap-4">
-					<UtilityButton
-						sizes="small"
-						className="lg:size-15"
-						pressed={isFavorited}
-						onClick={() => {
-							handleWishToggle(id, isFavorited);
-							handleShowToast({
-								message: isFavorited ? "모임이 찜 해제되었습니다." : "모임이 찜 추가되었습니다.",
-								status: "success",
-							});
-						}}
-					/>
+					{isRegClosed ? (
+						<SendButton sizes="small" className="pointer-events-none lg:size-15" />
+					) : (
+						<UtilityButton
+							sizes="small"
+							className="lg:size-15"
+							pressed={isFavorited}
+							isPending={isFavoritePending}
+							onClick={handleFavoriteConfirm}
+						/>
+					)}
 					<Button
 						sizes="small"
 						colors={isJoined ? "purpleBorder" : "purple"}
-						disabled={!isHost && isClosed}
+						disabled={!isHost && isRegClosed && !isJoined}
 						isPending={!isHost && isJoinPendingAny}
 						onClick={isHost ? handleShareClick : handleJoinClick}
 						className="flex-1 lg:h-15 lg:rounded-2xl lg:px-7.5 lg:text-xl">

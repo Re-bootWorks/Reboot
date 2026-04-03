@@ -8,6 +8,8 @@ import RelativeTime from "@/features/connect/ui/RelativeTime";
 import dayjs from "@/libs/dayjs";
 import { useRouter } from "next/navigation";
 import { useDeletePost, useToggleConnectLike } from "@/features/connect/mutations";
+import { useUserStore } from "@/store/user.store";
+import { useToast } from "@/providers/toast-provider";
 import Alert from "@/components/ui/Modals/AlertModal";
 import { useState } from "react";
 
@@ -39,6 +41,8 @@ export default function PostDetailCard({
 	isLiked,
 }: Props) {
 	const router = useRouter();
+	const { user } = useUserStore();
+	const { handleShowToast } = useToast();
 	const { mutate: deletePost } = useDeletePost(id);
 	const { mutate: toggleLike } = useToggleConnectLike(id);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -76,7 +80,7 @@ export default function PostDetailCard({
 				</div>
 				{/* 내용 */}
 				<div
-					className="mt-6 min-h-[140px] text-base leading-6 tracking-[-0.32px] text-gray-700 md:mt-10 [&_img]:my-4 [&_img]:rounded-[24px]"
+					className="mt-6 min-h-[140px] max-w-none overflow-hidden text-base leading-6 tracking-[-0.32px] text-gray-700 md:mt-10 [&_em]:italic [&_img]:my-4 [&_img]:rounded-[24px] [&_ol]:list-decimal [&_ol]:pl-5 [&_strong]:font-bold [&_u]:underline [&_ul]:list-disc [&_ul]:pl-5"
 					dangerouslySetInnerHTML={{ __html: content }}
 				/>
 				{/* 이미지 */}
@@ -94,7 +98,13 @@ export default function PostDetailCard({
 					<div className="flex items-center gap-3">
 						{/* 좋아요 */}
 						<button
-							onClick={() => toggleLike(isLiked)}
+							onClick={() => {
+								if (!user) {
+									handleShowToast({ message: "로그인이 필요합니다.", status: "error" });
+									return;
+								}
+								toggleLike(isLiked);
+							}}
 							className="flex items-center gap-1 text-gray-500">
 							<IcThumbOutline color={isLiked ? "purple-500" : "gray-400"} />
 							<span className={isLiked ? "text-purple-500" : ""}>{likeCount}</span>

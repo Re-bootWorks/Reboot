@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { InfiniteData, QueryKey, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/providers/toast-provider";
+import { meetupQueryKeys } from "../queries";
 import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 import { mypageQueryKeys } from "@/features/mypage/queries";
-import { meetupQueryKeys } from "../queries";
+import { headerQueryKeys } from "@/features/header/queries";
 
 interface ToggleItem {
 	id: number;
@@ -48,16 +49,19 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 	function onSuccess(message: string) {
 		handleShowToast({ message, status: "success" });
 		// 목록 쿼리를 포함한 연관 쿼리 무효화
-		queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
-		queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
-		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
-		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
+		queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list }); // 모임 목록
+		queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) }); // 해당 모임 상세
+		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups }); // 참여한 모임 목록
+		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created }); // 만든 모임 목록(주최자)
 
 		if (field === "isFavorited") {
-			queryClient.invalidateQueries({ queryKey: ["header", "favorites"] });
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites }); // 찜 개수
 		}
 		if (field === "isJoined") {
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) });
+			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) }); // 해당 모임 참여자
+			// 참여 가능 인원이 초과되어 해당 모임이 확정되는 경우
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications }); // 알림 목록
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notificationsCount }); // 알림 개수
 		}
 	}
 

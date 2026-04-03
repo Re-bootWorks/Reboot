@@ -9,7 +9,7 @@ import { KakaoPlaceItem } from "../types";
 import { getKakaoPlaceFn } from "../apis";
 import { debounce } from "@/utils/performance";
 import { useToast } from "@/providers/toast-provider";
-import { getRegion, validatePlaceSearch, validateText } from "../utils";
+import { getRegion, MAX_ADDRESS_LENGTH, validatePlaceSearch, validateText } from "../utils";
 
 interface AddressFieldProps<N extends string = "addressName", D extends string = "addressDetail"> {
 	/** 주소 검색 콤보박스 열림 여부 */
@@ -141,6 +141,7 @@ export default function AddressField<
 				onChange={handleChangeInput}
 				spellCheck={false}
 				autoComplete="off"
+				maxLength={MAX_ADDRESS_LENGTH}
 			/>
 		</div>
 	);

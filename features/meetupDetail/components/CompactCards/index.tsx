@@ -6,17 +6,19 @@ import { TimeTag } from "@/components/ui/Tags/TimeTag";
 import { IcLocation } from "@/components/ui/icons";
 import { isDeadlinePassed, uiFormatDate, uiFormatDeadline, uiFormatTime } from "@/utils/date";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/user.store";
+import { useModalStore } from "@/store/modal.store";
+import { useFavoriteMutation } from "@/features/meetupDetail/mutations";
 
 interface CompactCardsProps {
 	id: number;
+	isFavorited: boolean;
 	registrationEnd: string;
 	dateTime: string;
 	name: string;
 	type: string;
 	region: string;
-	isPressed: boolean;
 	image: string;
-	onPress: () => void;
 }
 
 export default function CompactCards({
@@ -27,11 +29,24 @@ export default function CompactCards({
 	type,
 	region,
 	image,
-	isPressed,
-	onPress,
+	isFavorited,
 }: CompactCardsProps) {
+	const { user, isPending: isMePending } = useUserStore();
+	const { openLogin } = useModalStore();
+	const { mutate: toggleFavorite, isPending: isFavoritePending } = useFavoriteMutation(id);
+
 	const router = useRouter();
 	const isClosed = isDeadlinePassed(registrationEnd);
+
+	const handleFavoriteClick = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		if (isMePending) return;
+		if (!user) {
+			openLogin();
+			return;
+		}
+		toggleFavorite({ currentState: isFavorited });
+	};
 	return (
 		<div
 			className="flex w-full shrink-0 flex-col gap-2.5 md:gap-3.5"
@@ -40,11 +55,9 @@ export default function CompactCards({
 				<Image alt={name} src={image} fill className="object-cover" />
 				<UtilityButton
 					sizes="small"
-					pressed={isPressed}
-					onClick={(e) => {
-						e.stopPropagation();
-						onPress();
-					}}
+					pressed={isFavorited}
+					isPending={isFavoritePending}
+					onClick={handleFavoriteClick}
 					className="absolute right-3.5 bottom-3.5 md:right-5 md:bottom-5 md:h-12 md:w-12"
 				/>
 			</div>

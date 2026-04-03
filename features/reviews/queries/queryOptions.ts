@@ -5,7 +5,7 @@ import {
 	ReviewsListRequest,
 	ReviewsListResponse,
 } from "../types";
-import { queryKeys } from "./queryKeys";
+import { reviewsQueryKeys } from "./queryKeys";
 
 export function reviewsInfiniteOptions(
 	params: ReviewsListRequest,
@@ -15,7 +15,7 @@ export function reviewsInfiniteOptions(
 	const querykeyParams = { ...rest };
 
 	return {
-		queryKey: queryKeys.reviews.list(querykeyParams),
+		queryKey: reviewsQueryKeys.reviews.list(querykeyParams),
 		queryFn: ({ pageParam }: { pageParam: string | undefined }) =>
 			getReviews({
 				...params,
@@ -36,7 +36,7 @@ export function reviewsStatisticsOptions(
 	initialData?: RatingSummaryResponse,
 ) {
 	return queryOptions({
-		queryKey: queryKeys.reviews.statistics,
+		queryKey: reviewsQueryKeys.reviews.statistics,
 		queryFn: () => getReviewsStatistics(),
 		initialData,
 		staleTime: 60 * 1000,
@@ -49,7 +49,7 @@ export function reviewsCategoriesStatisticsOptions(
 	initialData?: ReviewCategoryStatistics,
 ) {
 	return queryOptions({
-		queryKey: queryKeys.reviews.categories.statistics,
+		queryKey: reviewsQueryKeys.reviews.categories.statistics,
 		queryFn: () => getReviewsCategoriesStatistics(),
 		initialData,
 		staleTime: 60 * 1000,

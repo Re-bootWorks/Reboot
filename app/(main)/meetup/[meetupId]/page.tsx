@@ -33,7 +33,14 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 	const meetingId = Number(meetupId);
 
 	if (isNaN(meetingId)) notFound();
-	const meeting = await getMeetingDetailServer(meetingId);
+	let meeting;
+	try {
+		meeting = await getMeetingDetailServer(meetingId);
+	} catch (error) {
+		notFound();
+	}
+
+	if (!meeting) notFound();
 
 	const queryClient = new QueryClient();
 
@@ -54,7 +61,7 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 			staleTime: 1000 * 60 * 10,
 		}),
 		queryClient.prefetchQuery({
-			queryKey: meetupDetailQueryKeys.related(meetingId, meeting.region, meeting.type),
+			queryKey: meetupDetailQueryKeys.related.detail(meetingId, meeting.region, meeting.type),
 			queryFn: () => getRelatedMeetingsServer(meetingId, meeting.region, meeting.type),
 			staleTime: 1000 * 60 * 10,
 		}),

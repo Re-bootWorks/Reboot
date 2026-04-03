@@ -1,6 +1,7 @@
 "use client";
 
 import InputField from "@/components/ui/Inputs/InputField";
+import { MAX_NAME_LENGTH } from "../utils";
 
 interface NameFieldProps {
 	/** 필드 이름 @default "name" */
@@ -32,6 +33,7 @@ export default function NameField({
 			className={className}
 			isRequired={isRequired}
 			value={value}
+			maxLength={MAX_NAME_LENGTH}
 			onChange={handleChangeInput}
 		/>
 	);

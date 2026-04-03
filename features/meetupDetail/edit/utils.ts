@@ -1,7 +1,14 @@
 import { Meeting } from "@/features/meetupDetail/types";
 import { MeetupEditData } from "./types";
 import dayjs from "@/libs/dayjs";
-import { splitAddress, validateCapacity, validateText } from "@/features/meetup/utils";
+import {
+	MAX_ADDRESS_LENGTH,
+	MAX_NAME_LENGTH,
+	splitAddress,
+	validateCapacity,
+	validateText,
+} from "@/features/meetup/utils";
+import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/PersonnelContainer";
 
 export function toMeetupEditData(meeting: Meeting): MeetupEditData {
 	const {
@@ -52,6 +59,11 @@ export function validateDateTimeIsFuture(dateTime: string) {
 	return dayjs(dateTime).isAfter(dayjs());
 }
 
+/** 최대 정원이 최소 인원보다 크거나 같은지 검사 */
+export function validateMaxCapacity(capacity: number, MIN_CONFIRMED_COUNT: number) {
+	return capacity >= MIN_CONFIRMED_COUNT;
+}
+
 /** 모집 마감이 모임 일정보다 이전인지 검사 */
 export function validateDateTimeOrder(dateTime: string, registrationEnd: string) {
 	return dayjs(registrationEnd).isBefore(dayjs(dateTime));
@@ -68,6 +80,16 @@ export const EDIT_VALIDATIONS: {
 	{
 		test: (d) => validateText(d.address),
 		message: "모임 장소를 입력해 주세요.",
+		tab: TAB_IDS.BASIC,
+	},
+	{
+		test: (d) => validateText(d.name) && d.name.length <= MAX_NAME_LENGTH,
+		message: `모임 이름은, ${MAX_NAME_LENGTH}자 이하로 입력해 주세요.`,
+		tab: TAB_IDS.BASIC,
+	},
+	{
+		test: (d) => validateText(d.address) && d.address.length <= MAX_ADDRESS_LENGTH,
+		message: `주소는 ${MAX_ADDRESS_LENGTH}자 이하로 입력해주세요.`,
 		tab: TAB_IDS.BASIC,
 	},
 	{
@@ -103,6 +125,11 @@ export const EDIT_VALIDATIONS: {
 	{
 		test: (d) => validateCapacity(d.capacity),
 		message: "모임 정원을 입력해 주세요.",
+		tab: TAB_IDS.SCHEDULE,
+	},
+	{
+		test: (d) => validateMaxCapacity(d.capacity, MIN_CONFIRMED_COUNT),
+		message: `최대 인원은 ${MIN_CONFIRMED_COUNT}이상이어야 합니다.`,
 		tab: TAB_IDS.SCHEDULE,
 	},
 ];

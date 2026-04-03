@@ -4,10 +4,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/utils/cn";
 import CreateButton from "@/components/ui/Buttons/CreateButton";
 import { useUserStore } from "@/store/user.store";
+import { useModalStore } from "@/store/modal.store";
 import { useToast } from "@/providers/toast-provider";
 
 export default function CreateOpenButton({ className }: { className?: string }) {
 	const { user } = useUserStore();
+	const { openLogin } = useModalStore();
 	const { handleShowToast } = useToast();
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -23,6 +25,7 @@ export default function CreateOpenButton({ className }: { className?: string }) 
 					router.push(url, { scroll: false });
 				} else {
 					handleShowToast({ message: "로그인 후 이용해주세요.", status: "error" });
+					openLogin();
 				}
 			}}>
 			모임 만들기
