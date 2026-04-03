@@ -23,6 +23,8 @@ interface GroupCardStatus {
 	isLiked: boolean;
 	/** 사용자의 참여 여부 */
 	isJoined: boolean;
+	/** 모임 완료 여부 */
+	isCompleted?: boolean;
 }
 interface GroupCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "id"> {
 	/** 모임 ID */
@@ -38,6 +40,7 @@ interface GroupCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "id"
 }
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
+// TODO: 리팩토링 시 status 값 제거
 function GroupCard({ id, href, status, children, className, ...props }: GroupCardProps) {
 	return (
 		<GroupCardContext.Provider value={status}>
@@ -207,7 +210,7 @@ interface ButtonProp extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	isPending?: boolean;
 }
 function JoinButton({ onClick, isPending, ...props }: ButtonProp) {
-	const { isRegClosed, isJoined } = useGroupCard();
+	const { isRegClosed, isJoined, isCompleted } = useGroupCard();
 
 	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
@@ -217,7 +220,7 @@ function JoinButton({ onClick, isPending, ...props }: ButtonProp) {
 
 	return (
 		<Button
-			disabled={!isJoined && isRegClosed}
+			disabled={(!isJoined && isRegClosed) || isCompleted}
 			colors="purpleBorder"
 			className="relative z-2 mt-auto h-10 w-20 text-sm font-semibold [grid-area:join-button] md:h-12 md:w-[103px] md:text-base"
 			onClick={handleClick}
@@ -229,7 +232,7 @@ function JoinButton({ onClick, isPending, ...props }: ButtonProp) {
 }
 
 function LikeButton({ onClick, isPending, ...props }: ButtonProp) {
-	const { isRegClosed, isLiked } = useGroupCard();
+	const { isRegClosed, isLiked, isCompleted } = useGroupCard();
 
 	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
@@ -238,7 +241,7 @@ function LikeButton({ onClick, isPending, ...props }: ButtonProp) {
 	}
 
 	// SendButton 은 모임 마감 여부 표시, 클릭 이벤트 없음
-	return !isRegClosed ? (
+	return !isRegClosed && !isCompleted ? (
 		<UtilityButton
 			pressed={isLiked}
 			className={likeButtonStyle}
