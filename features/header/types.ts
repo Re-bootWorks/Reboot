@@ -43,7 +43,11 @@ export interface CommentNotificationRes extends NotificationBase {
 export type NotificationRes = MeetingNotificationRes | CommentNotificationRes;
 
 // 알림 타입
-export type NotificationType = "MEETING_CONFIRMED" | "MEETING_CANCELED" | "COMMENT";
+export type NotificationType =
+	| "MEETING_CONFIRMED"
+	| "MEETING_CANCELED"
+	| "COMMENT"
+	| "MEETING_DELETED";
 
 /* ------- component ------- */
 
