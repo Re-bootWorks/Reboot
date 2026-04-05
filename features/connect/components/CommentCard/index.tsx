@@ -11,6 +11,7 @@ import Button from "@/components/ui/Buttons/Button";
 import { useUpdateComment } from "@/features/connect/mutations";
 import { useDeleteComment } from "@/features/connect/mutations";
 import Alert from "@/components/ui/Modals/AlertModal";
+import UserProfileModal from "@/components/ui/Modals/UserProfileModal";
 
 interface CommentEditFormProps {
 	value: string;
@@ -89,7 +90,7 @@ export default function CommentCard({
 	const [editValue, setEditValue] = useState(content);
 	const isMine = authorId === currentUserId;
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
+	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const deleteMutation = useDeleteComment(postId);
 
 	const mutation = useUpdateComment({
@@ -147,7 +148,9 @@ export default function CommentCard({
 					</div>
 
 					{/* 댓글 메타 영역 */}
-					<div className="flex items-center gap-2 text-xs text-gray-500">
+					<div
+						className="flex cursor-pointer items-center gap-2 text-xs text-gray-500"
+						onClick={() => setIsProfileModalOpen(true)}>
 						{authorImage ? (
 							<div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full">
 								<Image src={authorImage} alt={authorName} fill className="object-cover" />
@@ -172,6 +175,13 @@ export default function CommentCard({
 				confirmLabel="삭제">
 				댓글을 삭제하시겠습니까?
 			</Alert>
+
+			<UserProfileModal
+				isOpen={isProfileModalOpen}
+				onClose={() => setIsProfileModalOpen(false)}
+				authorName={authorName}
+				authorImage={authorImage}
+			/>
 		</>
 	);
 }

@@ -1,0 +1,51 @@
+"use client";
+
+import Image from "next/image";
+import { Modal } from "@/components/ui/Modals";
+
+interface UserProfileModalProps {
+	isOpen: boolean;
+	onClose: () => void;
+	authorName: string;
+	authorImage?: string;
+	email?: string;
+}
+
+export default function UserProfileModal({
+	isOpen,
+	onClose,
+	authorName,
+	authorImage,
+	email,
+}: UserProfileModalProps) {
+	return (
+		<Modal
+			isOpen={isOpen}
+			onClose={onClose}
+			isCenterTitle
+			hideCloseButton={false}
+			className="max-w-[21rem]">
+			<div className="flex flex-col items-center gap-4">
+				{/* 프로필 이미지 */}
+				<div className="relative h-20 w-20 overflow-hidden rounded-full">
+					<Image
+						src={authorImage ?? "/assets/img/img_profile.svg"}
+						alt={authorName}
+						fill
+						className="object-cover"
+					/>
+				</div>
+
+				{/* 이름 */}
+				<span className="text-lg font-semibold text-gray-900">{authorName}</span>
+
+				{/* 이메일 */}
+				{email && (
+					<span className="rounded-full bg-purple-100 px-3 py-1 text-sm text-purple-600">
+						{email}
+					</span>
+				)}
+			</div>
+		</Modal>
+	);
+}
