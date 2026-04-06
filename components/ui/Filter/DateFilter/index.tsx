@@ -1,7 +1,7 @@
 "use client";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { type DateRange } from "react-day-picker";
 import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
 import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
@@ -69,12 +69,12 @@ function parseDateRangeValue(value: DateFilterValue): DateRange | undefined {
 export default function DateFilter({ value = { from: "", to: "" }, onChange }: DateFilterProps) {
 	const [month, setMonth] = useState<Date>(getKoreanToday());
 	const isLg = useIsLg();
-	const parsedRange = parseDateRangeValue(value);
+	const parsedRange = useMemo(() => parseDateRangeValue(value), [value.from, value.to]);
 	const [draftRange, setDraftRange] = useState<DateRange | undefined>(parsedRange);
 
 	useEffect(() => {
 		setDraftRange(parsedRange);
-	}, [value.from, value.to, parsedRange]);
+	}, [parsedRange]);
 
 	return (
 		<Popover className="relative">
