@@ -1,13 +1,5 @@
 import { clientFetch } from "@/libs/clientFetch";
-
-export type UserPublicProfile = {
-	id: number;
-	teamId: string;
-	email: string;
-	name: string;
-	companyName: string;
-	image: string | null;
-};
+import type { UserPublicProfile } from "@/types/user";
 
 export async function getUserProfile(userId: number): Promise<UserPublicProfile> {
 	const res = await clientFetch(`/users/${userId}`);
