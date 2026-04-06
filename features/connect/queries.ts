@@ -1,6 +1,7 @@
 import { fetchPostsClient } from "@/features/connect/apis/fetchPostsClient";
 import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
 import { useSuspenseQuery, useQuery, keepPreviousData } from "@tanstack/react-query";
+import { getUserProfile } from "@/features/connect/apis/getUserProfile";
 
 export const connectQueryKeys = {
 	posts: (page: number, sortBy: string, limit: number, keyword: string) =>
@@ -48,5 +49,13 @@ export function useGetPostDetail(postId: number) {
 	return useQuery({
 		queryKey: connectQueryKeys.postDetail(postId),
 		queryFn: () => getPostDetailClient(postId),
+	});
+}
+
+export function useGetUserProfile(userId: number | null) {
+	return useQuery({
+		queryKey: ["user", "profile", userId],
+		queryFn: () => getUserProfile(userId!),
+		enabled: !!userId,
 	});
 }

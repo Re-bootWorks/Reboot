@@ -3,11 +3,31 @@
 import Image from "next/image";
 import { Modal } from "@/components/ui/Modals";
 
+/**
+ * 유저 프로필 모달
+ *
+ * 유저 이름, 프로필 이미지, 이메일을 보여주는 모달입니다.
+ *
+ * @example
+ * <UserProfileModal
+ *   isOpen={isOpen}
+ *   onClose={() => setIsOpen(false)}
+ *   authorName="홍길동"
+ *   authorImage="/profile.png"
+ *   email="hong@example.com"
+ * />
+ */
+
 interface UserProfileModalProps {
+	/** 모달 열림 여부 */
 	isOpen: boolean;
+	/** 모달 닫기 핸들러 */
 	onClose: () => void;
+	/** 유저 이름 */
 	authorName: string;
+	/** 프로필 이미지 URL - 없으면 기본 이미지 표시 */
 	authorImage?: string;
+	/** 이메일 - 없으면 표시 안 함 */
 	email?: string;
 }
 

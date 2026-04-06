@@ -12,6 +12,7 @@ import { useUpdateComment } from "@/features/connect/mutations";
 import { useDeleteComment } from "@/features/connect/mutations";
 import Alert from "@/components/ui/Modals/AlertModal";
 import UserProfileModal from "@/components/ui/Modals/UserProfileModal";
+import { useGetUserProfile } from "@/features/connect/queries";
 
 interface CommentEditFormProps {
 	value: string;
@@ -92,6 +93,9 @@ export default function CommentCard({
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const deleteMutation = useDeleteComment(postId);
+	const { data: profileData } = useGetUserProfile(
+		isProfileModalOpen ? authorId : null, // 모달 열릴 때만 fetch
+	);
 
 	const mutation = useUpdateComment({
 		postId,
@@ -181,6 +185,7 @@ export default function CommentCard({
 				onClose={() => setIsProfileModalOpen(false)}
 				authorName={authorName}
 				authorImage={authorImage}
+				email={profileData?.email || ""}
 			/>
 		</>
 	);
