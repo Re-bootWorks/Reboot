@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import DateFilter from "@/components/ui/Filter/DateFilter";
 import RegionFilter from "@/components/ui/Filter/RegionFilter";
 import { FilterDropdown } from "@/components/ui/Filter/FilterDropdown";
@@ -28,14 +27,12 @@ export default function ListFilters() {
 	const sortOrder =
 		getSortOrderItem(get(QUERY_PARAM_KEYS.SORT_ORDER)) ?? REVIEWS_SORT_ORDER_OPTIONS[0].value;
 
-	const [dateRange, setDateRange] = useState({
+	const dateRange = {
 		from: dateStart ? dateStart.split("T")[0] : "",
 		to: dateEnd ? dateEnd.split("T")[0] : "",
-	});
+	};
 
 	function handleChangeDate(value: { from: string; to: string }) {
-		setDateRange(value);
-
 		set({
 			[QUERY_PARAM_KEYS.DATE_START]: value.from || null,
 			[QUERY_PARAM_KEYS.DATE_END]: value.to || null,

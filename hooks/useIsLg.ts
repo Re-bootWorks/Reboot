@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-// md 이상 여부를 반환하는 반응형 훅(캘린더 모달에서 사용)
+// lg 이상 여부를 반환하는 반응형 훅(캘린더 모달에서 사용)
 const MEDIA_QUERY = "(min-width:1280px)";
 
 const subscribe = (callback: () => void) => {

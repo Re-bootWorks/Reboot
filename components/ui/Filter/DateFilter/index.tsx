@@ -1,9 +1,9 @@
 "use client";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { type DateRange } from "react-day-picker";
-import { getKoreanToday } from "@/utils/date";
+import { formatDateString, getKoreanToday, parseDateString } from "@/utils/date";
 import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
 import Button from "@/components/ui/Buttons/Button";
@@ -40,21 +40,13 @@ function formatDisplayRange(range?: DateRange) {
 	return `${from} ~ ${to}`;
 }
 
-function formatDate(date: Date) {
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, "0");
-	const day = String(date.getDate()).padStart(2, "0");
-
-	return `${year}-${month}-${day}`;
-}
-
 function formatDateRangeValue(range?: DateRange): DateFilterValue {
 	if (!range?.from) {
 		return { from: "", to: "" };
 	}
 
-	const from = formatDate(range.from);
-	const to = formatDate(range.to ?? range.from);
+	const from = formatDateString(range.from);
+	const to = formatDateString(range.to ?? range.from);
 
 	return { from, to };
 }
@@ -62,11 +54,11 @@ function formatDateRangeValue(range?: DateRange): DateFilterValue {
 function parseDateRangeValue(value: DateFilterValue): DateRange | undefined {
 	if (!value.from) return undefined;
 
-	const fromDate = new Date(value.from);
-	const toDate = value.to ? new Date(value.to) : undefined;
+	const fromDate = parseDateString(value.from);
+	const toDate = value.to ? parseDateString(value.to) : undefined;
 
-	if (Number.isNaN(fromDate.getTime())) return undefined;
-	if (toDate && Number.isNaN(toDate.getTime())) return undefined;
+	if (!fromDate) return undefined;
+	if (value.to && !toDate) return undefined;
 
 	return {
 		from: fromDate,
@@ -79,6 +71,10 @@ export default function DateFilter({ value = { from: "", to: "" }, onChange }: D
 	const isLg = useIsLg();
 	const parsedRange = parseDateRangeValue(value);
 	const [draftRange, setDraftRange] = useState<DateRange | undefined>(parsedRange);
+
+	useEffect(() => {
+		setDraftRange(parsedRange);
+	}, [value.from, value.to, parsedRange]);
 
 	return (
 		<Popover className="relative">
