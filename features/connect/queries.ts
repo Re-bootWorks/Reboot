@@ -1,7 +1,7 @@
 import { fetchPostsClient } from "@/features/connect/apis/fetchPostsClient";
 import { getPostDetailClient } from "@/features/connect/apis/getPostDetailClient";
 import { useSuspenseQuery, useQuery, keepPreviousData } from "@tanstack/react-query";
-import { getUserProfile } from "@/features/connect/apis/getUserProfile";
+import { getUserProfile } from "@/apis/UserProfile";
 
 export const connectQueryKeys = {
 	posts: (page: number, sortBy: string, limit: number, keyword: string) =>
@@ -52,6 +52,7 @@ export function useGetPostDetail(postId: number) {
 	});
 }
 
+// 유저 프로필 조회 쿼리
 export function useGetUserProfile(userId: number | null) {
 	return useQuery({
 		queryKey: ["user", "profile", userId],
