@@ -46,13 +46,3 @@ export interface GetCommentsResponse {
 	nextCursor: string | null;
 	hasMore: boolean;
 }
-
-// 유저 공개 프로필
-export interface UserProfile {
-	id: number;
-	teamId: string;
-	email: string;
-	name: string;
-	companyName?: string;
-	image?: string | null;
-}

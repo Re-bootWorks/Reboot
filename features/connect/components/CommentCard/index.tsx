@@ -153,6 +153,7 @@ export default function CommentCard({
 
 					{/* 댓글 메타 영역 */}
 					<div
+						role="button"
 						className="flex cursor-pointer items-center gap-2 text-xs text-gray-500"
 						onClick={() => setIsProfileModalOpen(true)}>
 						{authorImage ? (

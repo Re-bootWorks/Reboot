@@ -4,5 +4,5 @@ export type UserPublicProfile = {
 	email: string;
 	name: string;
 	companyName?: string;
-	image: string | null;
+	image?: string | null;
 };
