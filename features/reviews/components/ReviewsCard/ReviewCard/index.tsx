@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
 import { Rating } from "@smastrom/react-rating";
@@ -10,8 +11,11 @@ import { ReviewCardProps } from "@/features/reviews/types";
 import Link from "next/link";
 import { useUserStore } from "@/store/user.store";
 import Avatar from "@/components/ui/Avatar";
+import ReviewComment from "@/components/ui/ReviewComment";
+import UserProfileModal from "@/components/ui/Modals/UserProfileModal";
 
 const EMPTY_THUMBNAIL_SRC = "/assets/img/img_empty_purple.svg";
+const CONTENT_HEIGHT_THRESHOLD = 200;
 
 type Props = ReviewCardProps & {
 	handleEdit?: () => void;
@@ -33,7 +37,48 @@ export default function ReviewCard({
 	handleDelete,
 }: Props) {
 	const loggedInUserId = useUserStore((state) => state.user?.id);
+	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const isMyReview = userId === loggedInUserId;
+
+	/** 실제 본문 높이만 측정할 래퍼 */
+	const contentMeasureRef = useRef<HTMLDivElement>(null);
+
+	/** 본문 높이가 기준을 넘어서 이미지에 mt-4를 넣을지 여부 */
+	const [shouldAddImageMarginTop, setShouldAddImageMarginTop] = useState(false);
+
+	useLayoutEffect(() => {
+		const element = contentMeasureRef.current;
+		if (!element) return;
+
+		const checkContentHeight = () => {
+			/**
+			 * rem 기반 spacing 때문에 소수점 높이가 나올 수 있어서
+			 * ceil로 올림해서 비교
+			 *
+			 * 예:
+			 * 199.2 -> 200
+			 * 200.1 -> 201
+			 */
+			const contentHeight = Math.ceil(element.getBoundingClientRect().height);
+			const nextShouldAddImageMarginTop = contentHeight > CONTENT_HEIGHT_THRESHOLD;
+
+			setShouldAddImageMarginTop((prev) =>
+				prev === nextShouldAddImageMarginTop ? prev : nextShouldAddImageMarginTop,
+			);
+		};
+
+		checkContentHeight();
+
+		const observer = new ResizeObserver(() => {
+			checkContentHeight();
+		});
+
+		observer.observe(element);
+
+		return () => {
+			observer.disconnect();
+		};
+	}, [comment]);
 
 	const handleEditButtonClick = () => {
 		handleEdit?.();
@@ -44,17 +89,18 @@ export default function ReviewCard({
 	};
 
 	const handleProfileClick = () => {
-		// TODO: 프로필 보기 구현 예정
+		setIsProfileModalOpen(!isProfileModalOpen);
 	};
 
 	return (
-		<article className="flex w-full flex-col gap-4 md:flex-row md:gap-8">
+		<article className="flex h-full w-full flex-col gap-4 md:flex-row md:gap-8">
 			{/* 모임 이미지 */}
 			<Link
 				href={`/meetup/${meetingId}`}
 				className={cn(
 					meetingImage ? "group relative overflow-hidden" : "flex items-center justify-center",
-					"h-36 rounded-xl bg-purple-50 select-none md:size-46 md:shrink-0",
+					shouldAddImageMarginTop && "mt-4",
+					"h-36 rounded-xl bg-purple-50 pt-4 select-none md:size-46 md:shrink-0",
 				)}>
 				{meetingImage ? (
 					<Image
@@ -75,82 +121,89 @@ export default function ReviewCard({
 			</Link>
 
 			{/* 본문 */}
-			<div className="flex w-full flex-col gap-3 border-b border-b-gray-200 pb-6 md:gap-0">
-				<div className="flex flex-col gap-3 md:gap-6">
-					<div className="relative flex flex-col gap-2 md:gap-3.5 md:pt-4">
-						{/* 별점 + 수정·삭제 버튼 */}
-						<div className="flex h-6 items-center justify-between">
-							<Rating
-								value={score}
-								readOnly
-								itemStyles={RATING_STYLE}
-								className="max-w-25 md:max-w-30"
-							/>
-
-							{isMyReview ? (
-								<ActionDropdown
-									actionsSize="lg"
-									className="flex items-end"
-									items={[
-										{
-											label: "수정하기",
-											onClick: handleEditButtonClick,
-										},
-										{
-											label: "삭제하기",
-											onClick: handleDeleteButtonClick,
-										},
-									]}
-									aria-label="리뷰 옵션 열기"
-									actionsIconClassName="md:size-10"
+			<div className="w-full border-b border-b-gray-200">
+				<div ref={contentMeasureRef} className="flex flex-col gap-3 pb-6 md:gap-0">
+					<div className="flex flex-col gap-3 md:gap-6">
+						<div className="relative flex flex-col gap-2 md:gap-3.5 md:pt-4">
+							{/* 별점 + 수정·삭제 버튼 */}
+							<div className="flex h-6 items-center justify-between">
+								<Rating
+									value={score}
+									readOnly
+									itemStyles={RATING_STYLE}
+									className="max-w-25 md:max-w-30"
 								/>
-							) : null}
+
+								{isMyReview ? (
+									<ActionDropdown
+										actionsSize="lg"
+										className="flex items-end"
+										items={[
+											{
+												label: "수정하기",
+												onClick: handleEditButtonClick,
+											},
+											{
+												label: "삭제하기",
+												onClick: handleDeleteButtonClick,
+											},
+										]}
+										aria-label="리뷰 옵션 열기"
+										actionsIconClassName="md:size-10"
+									/>
+								) : null}
+							</div>
+
+							{/* 작성자 / 날짜 */}
+							<div className="flex items-center gap-1 md:gap-1.5">
+								<button
+									type="button"
+									onClick={handleProfileClick}
+									className="flex cursor-pointer items-center gap-1.5 select-none">
+									<Avatar
+										src={userImage}
+										alt={userImage ? `${userName} 프로필 이미지` : "빈 프로필 이미지"}
+										width={24}
+										height={24}
+										className={
+											userImage?.trim()
+												? "size-6 border-0 object-cover"
+												: "size-6 border object-contain"
+										}
+									/>
+									<span className="text-xs text-gray-500 md:text-sm">{userName}</span>
+								</button>
+
+								<time dateTime={createdAt} className="text-xs text-gray-500 md:text-sm">
+									{formatIsoDateWithDots(createdAt)}
+								</time>
+							</div>
 						</div>
 
-						{/* 작성자 / 날짜 */}
-						<div className="flex items-center gap-1 md:gap-1.5">
-							<button
-								type="button"
-								onClick={handleProfileClick}
-								className="flex cursor-pointer items-center gap-1.5 select-none">
-								<Avatar
-									src={userImage}
-									alt={userImage ? `${userName} 프로필 이미지` : "빈 프로필 이미지"}
-									width={24}
-									height={24}
-									className={
-										userImage?.trim()
-											? "size-6 border-0 object-cover"
-											: "size-6 border object-contain"
-									}
-								/>
-								<span className="text-xs text-gray-500 md:text-sm">{userName}</span>
-							</button>
-
-							<time dateTime={createdAt} className="text-xs text-gray-500 md:text-sm">
-								{formatIsoDateWithDots(createdAt)}
-							</time>
-						</div>
+						{/* 리뷰 내용 */}
+						<ReviewComment comment={comment} />
 					</div>
 
-					{/* 리뷰 내용 */}
-					<Link href={`/meetup/${meetingId}`}>
-						<p className="text-sm whitespace-pre-line text-gray-700 md:mb-2 md:text-lg">
-							{comment}
-						</p>
-					</Link>
-				</div>
-				{/* 모임명 / 카테고리 */}
-				<div className="space-x-0.5 text-xs font-medium text-gray-500 md:text-sm">
-					<Link href={`/meetup/${meetingId}`} className="select-none">
-						{meetingName}
-					</Link>
-					<span aria-hidden="true" className="select-none">
-						·
-					</span>
-					<span>{meetingType}</span>
+					{/* 모임명 / 카테고리 */}
+					<div className="space-x-0.5 text-xs font-medium text-gray-500 md:text-sm">
+						<Link href={`/meetup/${meetingId}`} className="select-none">
+							{meetingName}
+						</Link>
+						<span aria-hidden="true" className="select-none">
+							·
+						</span>
+						<span>{meetingType}</span>
+					</div>
 				</div>
 			</div>
+
+			<UserProfileModal
+				isOpen={isProfileModalOpen}
+				onClose={() => setIsProfileModalOpen(false)}
+				authorName={userName}
+				authorImage={userImage || undefined}
+				// email={profileData?.email || ""}
+			/>
 		</article>
 	);
 }
