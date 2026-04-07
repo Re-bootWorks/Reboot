@@ -115,15 +115,18 @@ export default function CommentCard({
 				{/* 프로필 이미지 */}
 				<div
 					role="button"
+					tabIndex={0}
 					className="shrink-0 cursor-pointer"
-					onClick={() => setIsProfileModalOpen(true)}>
-					{authorImage ? (
-						<div className="relative h-10 w-10 overflow-hidden rounded-full md:h-14 md:w-14">
-							<Image src={authorImage} alt={authorName} fill className="object-cover" />
-						</div>
-					) : (
-						<IcPerson color="gray-400" />
-					)}
+					onClick={() => setIsProfileModalOpen(true)}
+					onKeyDown={(e) => e.key === "Enter" && setIsProfileModalOpen(true)}>
+					<div className="relative h-10 w-10 overflow-hidden rounded-full md:h-14 md:w-14">
+						<Image
+							src={authorImage || "/assets/img/img_profile.svg"}
+							alt={authorName}
+							fill
+							className="object-cover"
+						/>
+					</div>
 				</div>
 
 				{/* 오른쪽 콘텐츠 */}
