@@ -67,6 +67,7 @@ export default function PostContainer() {
 						if (e.key === "Enter") handleSearch();
 					}}
 					onSearchClick={handleSearch}
+					onClear={() => setKeyword("")}
 					placeholder="궁금한 내용을 검색해보세요."
 				/>
 				<FilterDropdown
@@ -117,7 +118,7 @@ export default function PostContainer() {
 					currentPage={page}
 					totalPages={totalPages}
 					handlePageChange={(newPage) => {
-						setPage(newPage); // router.push 제거
+						setPage(newPage);
 						containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 					}}
 				/>

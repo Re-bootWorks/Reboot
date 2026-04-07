@@ -41,7 +41,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 					<button
 						type="button"
 						onClick={onClear}
-						className="absolute top-0 right-12 bottom-0 flex items-center transition-colors"
+						className="absolute top-0 right-12 bottom-0 flex items-center text-gray-400 transition-colors hover:text-gray-600"
 						aria-label="입력 내용 지우기">
 						<svg
 							width="20"
@@ -65,7 +65,6 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 						</svg>
 					</button>
 				)}
-
 				<button
 					type="button"
 					onClick={onSearchClick}

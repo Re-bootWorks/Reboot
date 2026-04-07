@@ -1,34 +1,42 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Button from "@/components/ui/Buttons/Button";
-import InputTextarea from "@/components/ui/Inputs/InputTextarea";
+import Loading from "@/components/ui/Loading";
+import { useCreateComment } from "@/features/connect/mutations";
+import { useGetPostDetail } from "@/features/connect/queries";
 import CommentCard from "@/features/connect/components/CommentCard";
 import { mapCommentToCard } from "@/features/connect/comment/mappers";
-import { useState, useEffect, useRef } from "react";
+import type { ConnectPost } from "@/features/connect/post/types";
 import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/providers/toast-provider";
-import { useCreateComment } from "@/features/connect/mutations";
-import Loading from "@/components/ui/Loading";
-import { useGetPostDetail } from "@/features/connect/queries";
-import type { ConnectPost } from "@/features/connect/post/types";
+import CommentInput from "@/features/connect/components/CommentCard/CommentInput";
 
 interface CommentSectionProps {
 	postId: number;
 }
 
 export default function CommentSection({ postId }: CommentSectionProps) {
-	const [comment, setComment] = useState("");
+	// 상태
 	const [visibleCount, setVisibleCount] = useState(3);
 	const [isFetchingMore, setIsFetchingMore] = useState(false);
-
 	const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
+	// 스토어 / 공통
 	const { user } = useUserStore();
-	const currentUserId = user?.id;
 	const { handleShowToast } = useToast();
 
+	// 쿼리 / 뮤테이션
 	const { data, isLoading } = useGetPostDetail(postId);
+	const mutation = useCreateComment(postId);
+
+	// 파생 변수
+	const currentUserId = user?.id;
+	const comments = data?.comments ?? [];
+	const sortedComments = [...comments].sort(
+		(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+	);
+	const visibleComments = sortedComments.slice(0, visibleCount);
 
 	// 무한스크롤
 	useEffect(() => {
@@ -53,28 +61,17 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 		return () => observer.disconnect();
 	}, [visibleCount, data]);
 
-	// 댓글 생성 mutation
-	const mutation = useCreateComment(postId, () => setComment(""));
-
-	if (isLoading) return <Loading />;
-	if (!data) return null;
-
-	const comments = data?.comments ?? [];
-
-	const sortedComments = [...comments].sort(
-		(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-	);
-
-	const visibleComments = sortedComments.slice(0, visibleCount);
-
-	const handleSubmit = () => {
-		if (!comment.trim()) return;
+	// 핸들러
+	const handleSubmit = (content: string) => {
 		if (!currentUserId) {
 			handleShowToast({ message: "로그인이 필요합니다.", status: "error" });
 			return;
 		}
-		mutation.mutate({ postId, content: comment });
+		mutation.mutate({ postId, content });
 	};
+
+	if (isLoading) return <Loading />;
+	if (!data) return null;
 
 	return (
 		<section>
@@ -94,20 +91,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 					)}
 				</div>
 
-				<div className="flex flex-1 items-center gap-2.5 rounded-2xl bg-gray-100 px-2 py-2">
-					<InputTextarea
-						name="comment"
-						placeholder="여기에 댓글을 남겨보세요"
-						value={comment}
-						onChange={(e) => setComment(e.target.value)}
-						className="max-h-[3.25rem] min-h-12 min-w-0 flex-1 bg-gray-100"
-					/>
-					<Button
-						onClick={handleSubmit}
-						className="r-[10px] h-12 w-8 rounded-[0.75rem] px-6 py-2 text-base font-semibold">
-						등록
-					</Button>
-				</div>
+				<CommentInput onSubmit={handleSubmit} isPending={mutation.isPending} />
 			</div>
 
 			{/* 댓글 리스트 */}
