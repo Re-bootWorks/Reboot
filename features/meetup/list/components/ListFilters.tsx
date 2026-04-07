@@ -112,7 +112,7 @@ function DropdownFilters() {
 	}
 
 	return (
-		<div className="flex items-center lg:ml-auto">
+		<div className="flex items-center gap-x-1.5 lg:ml-auto">
 			<DateFilter value={date} onChange={handleChangeDate} />
 			<RegionFilter value={region} onChange={handleChangeRegion} />
 			<FilterDropdown value={sortBy.label} items={SORT_BY_OPTIONS} onChange={handleChangeSortBy} />
