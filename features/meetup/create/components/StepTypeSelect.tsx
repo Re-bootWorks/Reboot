@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import type { StaticImageData } from "next/image";
 import imgDefault from "@/public/assets/img/img_empty.svg";
 import { useCategoryStore, type CategoryName } from "@/store/category.store";
+import { validateText } from "../../utils";
 import CategoryTab from "@/components/ui/CategoryTab";
 import { useFormData } from "../providers/FormDataProvider";
 import imgHobby from "../assets/img_hobby.png";
@@ -29,7 +30,9 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 
 	// 유효성 검사
 	useEffect(() => {
-		setStepValid(step, true);
+		if (validateText(data.type)) {
+			setStepValid(step, true);
+		}
 	}, [data.type, setStepValid, step]);
 
 	return (
