@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import { uploadImage } from "@/apis/images";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
-import IcPerson from "@/components/ui/icons/IcPerson";
 import Alert from "@/components/ui/Modals/AlertModal";
 import UserProfileModal from "@/components/ui/Modals/UserProfileModal";
 import { useDeleteComment, useUpdateComment } from "@/features/connect/mutations";
