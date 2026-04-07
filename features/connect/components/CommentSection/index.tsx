@@ -54,7 +54,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 					}, 300);
 				}
 			},
-			{ threshold: 1 },
+			{ threshold: 0 },
 		);
 
 		observer.observe(loadMoreRef.current);
