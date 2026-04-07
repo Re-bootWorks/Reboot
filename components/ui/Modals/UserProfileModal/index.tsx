@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Modal } from "@/components/ui/Modals";
+import Avatar from "@/components/ui/Avatar";
 
 /**
  * 유저 프로필 모달
@@ -47,14 +48,7 @@ export default function UserProfileModal({
 			className="max-w-[21rem]">
 			<div className="flex flex-col items-center gap-4">
 				{/* 프로필 이미지 */}
-				<div className="relative h-20 w-20 overflow-hidden rounded-full">
-					<Image
-						src={authorImage ?? "/assets/img/img_profile.svg"}
-						alt={authorName}
-						fill
-						className="object-cover"
-					/>
-				</div>
+				<Avatar src={authorImage ?? null} width={80} height={80} alt={authorName} />
 
 				{/* 이름 */}
 				<span className="text-lg font-semibold text-gray-900">{authorName}</span>
