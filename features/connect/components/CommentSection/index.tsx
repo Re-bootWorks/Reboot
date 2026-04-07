@@ -11,6 +11,7 @@ import type { ConnectPost } from "@/features/connect/post/types";
 import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/providers/toast-provider";
 import CommentInput from "@/features/connect/components/CommentCard/CommentInput";
+import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 
 interface CommentSectionProps {
 	postId: number;
@@ -76,13 +77,14 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 	return (
 		<section>
 			{/* 댓글 개수 */}
-			<header className="flex h-6 w-full items-center text-base font-medium tracking-[-0.02rem] md:h-8">
+			<header className="flex h-6 w-full items-center gap-1 text-base font-medium tracking-[-0.02rem] md:h-8">
+				<IcMessageOutline color="gray-700" size={18} />
 				<span>댓글</span>
 				<span className="font-semibold text-purple-600">{comments.length}</span>
 			</header>
 
 			{/* 댓글 입력 영역 */}
-			<div className="mt-3 flex items-center md:mt-4 lg:mt-8">
+			<div className="mt-3 flex items-center border-b border-gray-200 pb-4 md:mt-4 lg:mt-8">
 				<div className="relative mr-4 h-14 w-14 shrink-0 overflow-hidden rounded-full">
 					{user?.image ? (
 						<Image src={user.image} alt="profile" fill className="object-cover" />
@@ -95,7 +97,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 			</div>
 
 			{/* 댓글 리스트 */}
-			<ul className="mt-6 flex flex-col gap-2 md:mt-8">
+			<ul className="flex flex-col gap-2">
 				{visibleComments.map((comment) => {
 					const mapped = mapCommentToCard(comment);
 

@@ -6,9 +6,10 @@ import dayjs from "@/libs/dayjs";
 type RelativeTimeProps = {
 	date: string | number | Date;
 	fallback?: "date" | "time" | "none";
+	className?: string;
 };
 
-export default function RelativeTime({ date, fallback = "date" }: RelativeTimeProps) {
+export default function RelativeTime({ date, fallback = "date", className }: RelativeTimeProps) {
 	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => {
@@ -17,15 +18,15 @@ export default function RelativeTime({ date, fallback = "date" }: RelativeTimePr
 
 	if (!mounted) {
 		if (fallback === "date") {
-			return <span>{dayjs(date).format("YYYY.MM.DD")}</span>;
+			return <span className={className}>{dayjs(date).format("YYYY.MM.DD")}</span>;
 		}
 
 		if (fallback === "time") {
-			return <span>{dayjs(date).format("HH:mm")}</span>;
+			return <span className={className}>{dayjs(date).format("HH:mm")}</span>;
 		}
 
-		return <span />;
+		return <span className={className} />;
 	}
 
-	return <span>{dayjs(date).fromNow()}</span>;
+	return <span className={className}>{dayjs(date).fromNow()}</span>;
 }

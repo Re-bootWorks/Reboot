@@ -4,6 +4,7 @@ import Image from "next/image";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
+import IcCalendarOutline from "@/components/ui/icons/IcCalendarOutline";
 import RelativeTime from "@/features/connect/ui/RelativeTime";
 import dayjs from "@/libs/dayjs";
 import { useRouter } from "next/navigation";
@@ -16,6 +17,7 @@ import { useState } from "react";
 interface Props {
 	id: number;
 	title: string;
+	authorImage?: string;
 	content: string;
 	imageUrl: string;
 	author: string;
@@ -30,6 +32,7 @@ interface Props {
 export default function PostDetailCard({
 	id,
 	title,
+	authorImage,
 	content,
 	imageUrl,
 	author,
@@ -49,7 +52,7 @@ export default function PostDetailCard({
 
 	return (
 		<>
-			<div className="w-full rounded-[48px] bg-white px-6 pt-6 pb-5 md:px-10 md:pt-10 md:pb-9 lg:px-16 lg:pt-16 lg:pb-14">
+			<div className="w-full rounded-[48px] bg-white px-6 pt-6 pb-5 md:px-10 md:pt-10 md:pb-9 lg:px-16 lg:pt-12 lg:pb-14">
 				{/* 제목 */}
 				<div className="flex items-start justify-between">
 					<h1 className="text-[20px] leading-[30px] font-bold tracking-[-0.4px] md:text-3xl md:leading-[2.25rem]">
@@ -72,11 +75,31 @@ export default function PostDetailCard({
 					)}
 				</div>
 				{/* 작성자 */}
-				<div className="mt-3 flex items-center gap-2 text-sm text-gray-500 md:mt-5">
-					<img src="/assets/img/img_profile.svg" alt="profile" className="h-4 w-4" />
-					<span>
-						{author} · {dayjs(createdAt).format("YYYY.MM.DD")}
-					</span>
+				<div className="mt-3 flex items-center justify-between border-b border-gray-200 pb-3 text-sm md:mt-5">
+					{/* 프로필 / 이름 / 날짜 */}
+					<div className="flex items-center gap-2">
+						<div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
+							<Image
+								src={authorImage || "/assets/img/img_profile.svg"}
+								alt="profile"
+								fill
+								className="object-cover"
+							/>
+						</div>
+						<span>
+							{author} · {dayjs(createdAt).format("YYYY.MM.DD")}
+						</span>
+					</div>
+
+					{/* 캘린더 아이콘 / 상대시간 */}
+					<div className="flex items-center gap-0.5 text-gray-500">
+						<IcCalendarOutline color="gray-800" size="sm" />
+						<RelativeTime
+							date={new Date(createdAt).getTime()}
+							fallback="date"
+							className="text-gray-800"
+						/>
+					</div>
 				</div>
 				{/* 내용 */}
 				<div
@@ -93,8 +116,6 @@ export default function PostDetailCard({
 				)}
 				{/* 하단 정보 */}
 				<div className="mt-10 flex items-center gap-2 text-sm tracking-[-0.28px] text-gray-500 md:mt-12">
-					<RelativeTime date={date} />
-
 					<div className="flex items-center gap-3">
 						{/* 좋아요 */}
 						<button
@@ -105,15 +126,15 @@ export default function PostDetailCard({
 								}
 								toggleLike(isLiked);
 							}}
-							className="flex items-center gap-1 text-gray-500">
-							<IcThumbOutline color={isLiked ? "purple-500" : "gray-400"} />
-							<span className={isLiked ? "text-purple-500" : ""}>{likeCount}</span>
+							className="flex items-center gap-0.5 text-gray-500">
+							<IcThumbOutline color={isLiked ? "purple-500" : "gray-400"} size={20} />
+							<span className={`text-base ${isLiked ? "text-purple-500" : ""}`}>{likeCount}</span>
 						</button>
 
 						{/* 댓글 */}
-						<div className="flex items-center gap-1 text-gray-500">
-							<IcMessageOutline color="gray-400" />
-							<span>{commentCount}</span>
+						<div className="flex items-center gap-0.5 text-gray-500">
+							<IcMessageOutline color="gray-400" size={20} />
+							<span className="text-base">{commentCount}</span>
 						</div>
 					</div>
 				</div>

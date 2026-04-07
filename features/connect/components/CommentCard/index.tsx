@@ -111,11 +111,35 @@ export default function CommentCard({
 
 	return (
 		<>
-			<div className="flex min-h-[96px] w-full flex-col gap-2 border-b border-gray-200">
-				<div className="pt-[8px] pb-[24px] md:pt-[16px]">
-					{/* 댓글 내용 */}
-					<div className="flex items-start justify-between pb-[8px]">
-						<div className="text-sm leading-[28px] font-normal tracking-[-0.36px] break-words text-gray-700 md:text-lg">
+			<div className="flex min-h-[96px] w-full gap-3 border-b border-gray-200 py-4">
+				{/* 프로필 이미지 */}
+				<div
+					role="button"
+					className="shrink-0 cursor-pointer"
+					onClick={() => setIsProfileModalOpen(true)}>
+					{authorImage ? (
+						<div className="relative h-10 w-10 overflow-hidden rounded-full md:h-14 md:w-14">
+							<Image src={authorImage} alt={authorName} fill className="object-cover" />
+						</div>
+					) : (
+						<IcPerson color="gray-400" />
+					)}
+				</div>
+
+				{/* 오른쪽 콘텐츠 */}
+				<div className="flex flex-1 flex-col gap-1">
+					{/* 유저이름 + 날짜 */}
+					<div
+						role="button"
+						className="md:text-md flex cursor-pointer items-center gap-2 text-sm text-gray-500"
+						onClick={() => setIsProfileModalOpen(true)}>
+						<span className="text-md font-semibold text-gray-800">{authorName}</span>
+						<RelativeTime date={date} fallback="date" />
+					</div>
+
+					{/* 댓글 내용 + 드롭다운 */}
+					<div className="flex items-start justify-between">
+						<div className="text-sm leading-[28px] font-normal tracking-[-0.36px] break-all text-gray-700 md:text-lg">
 							{parseCommentContent(content).map((part, i) =>
 								part.type === "image" ? (
 									<div key={i} className="relative mt-2 h-48 w-48">
@@ -139,23 +163,6 @@ export default function CommentCard({
 								]}
 							/>
 						)}
-					</div>
-
-					{/* 댓글 메타 영역 */}
-					<div
-						role="button"
-						className="text-md flex cursor-pointer items-center gap-2 text-gray-500"
-						onClick={() => setIsProfileModalOpen(true)}>
-						{authorImage ? (
-							<div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full">
-								<Image src={authorImage} alt={authorName} fill className="object-cover" />
-							</div>
-						) : (
-							<IcPerson color="gray-400" />
-						)}
-						<span>{authorName}</span>
-						<span>·</span>
-						<RelativeTime date={date} fallback="date" />
 					</div>
 				</div>
 			</div>
