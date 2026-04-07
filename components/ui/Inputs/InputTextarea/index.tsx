@@ -41,7 +41,7 @@ export default function InputTextarea({
 			{({ id, descriptionId }) => (
 				<div
 					className={cn(
-						"scrollbar w-full overflow-hidden rounded-xl transition-colors",
+						"scrollbar w-full overflow-hidden rounded-xl leading-0 transition-colors",
 						!isDestructive
 							? "border border-transparent focus-within:border-purple-500"
 							: "border-error border",
@@ -53,7 +53,7 @@ export default function InputTextarea({
 						placeholder={placeholder}
 						defaultValue={defaultValue}
 						className={cn(
-							"min-h-[120px] w-full bg-gray-50 p-3 outline-none placeholder:text-gray-500",
+							"min-h-[120px] w-full bg-gray-50 p-3 text-base outline-none placeholder:text-gray-500",
 							isResizeable ? "resize-y" : "resize-none",
 							className,
 						)}
