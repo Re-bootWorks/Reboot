@@ -3,21 +3,24 @@
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ErrorBoundary } from "react-error-boundary";
+import type { InfiniteData, UseInfiniteQueryResult } from "@tanstack/react-query";
+import type { MeetupItem, MeetupItemSelected, MeetupListResponse } from "../../types";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import { MeetupItem, MeetupItemSelected } from "../../types";
 import useToggle from "@/hooks/useToggle";
-import { useGetMeetups } from "@/features/meetup/queries";
 import MeetupCard from "@/features/meetup/list/components/MeetupCard";
-import GroupCard from "@/components/ui/GroupCard";
 import LoaderDots from "@/components/ui/LoaderDots";
 import Empty from "./Emtpy";
 import JoinModal from "./JoinModal";
 
-export default function MeetupCardItems({ size }: { size: number }) {
+interface MeetupCardItemsProps {
+	query: UseInfiniteQueryResult<InfiniteData<MeetupListResponse>>;
+}
+
+export default function MeetupCardItems({ query }: MeetupCardItemsProps) {
+	const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = query;
 	const [selectedData, setSelectedData] = useState<MeetupItemSelected>(null);
 	const { isOpen, open, close } = useToggle();
-	const { data, isLoading, isPending, isFetchingNextPage, hasNextPage, fetchNextPage } =
-		useGetMeetups(size);
+
 	const loadMoreRef = useRef<HTMLDivElement>(null);
 	useIntersectionObserver({
 		targetRef: loadMoreRef,
@@ -25,7 +28,6 @@ export default function MeetupCardItems({ size }: { size: number }) {
 		isEnabled: hasNextPage && !isFetchingNextPage,
 	});
 
-	if (isPending || isLoading) return <MeetupCardSkeletonItems size={size} />;
 	return (
 		<ErrorBoundary fallbackRender={() => <LastItem>에러가 발생했습니다.</LastItem>}>
 			<MeetupCardLoadedItems
@@ -98,14 +100,6 @@ const cardVariants = {
 		},
 	},
 };
-
-export function MeetupCardSkeletonItems({ size }: { size: number }) {
-	return Array.from({ length: size }).map((_, i) => (
-		<li key={i} className="w-full">
-			<GroupCard.Skeleton />
-		</li>
-	));
-}
 
 interface LastItemProps {
 	ref?: React.RefObject<HTMLDivElement | null>;

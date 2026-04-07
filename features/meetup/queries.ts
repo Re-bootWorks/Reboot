@@ -3,8 +3,9 @@ import {
 	useInfiniteQuery,
 	useMutation,
 	UseMutationOptions,
+	useQueryClient,
 } from "@tanstack/react-query";
-import { MeetupCreateRequest, MeetupItemResponse, MeetupListRequest } from "./types";
+import type { MeetupCreateRequest, MeetupItemResponse, MeetupListRequest } from "./types";
 import { getMeetups, postMeetup } from "./apis";
 import {
 	deleteMeetingsFavorite,
@@ -25,6 +26,7 @@ import {
 } from "./list/utils";
 import { QUERY_KEYS } from "./list/constants";
 import { useQueryParams } from "@/hooks/useQueryParams";
+import { useEffect } from "react";
 
 type MutationCallbacks<TData, TVariables = void> = Omit<
 	UseMutationOptions<TData, Error, TVariables>,
@@ -33,8 +35,7 @@ type MutationCallbacks<TData, TVariables = void> = Omit<
 
 export const meetupQueryKeys = {
 	list: ["meetup", "list"] as const,
-	listWithParams: (params: MeetupListRequest, userId: number | null) =>
-		[...meetupQueryKeys.list, params, userId] as const,
+	listWithParams: (params: MeetupListRequest) => [...meetupQueryKeys.list, params] as const,
 };
 
 export const meetupMutationKeys = {
@@ -48,7 +49,8 @@ export const meetupMutationKeys = {
 
 /** 모임 목록 조회 */
 export function useGetMeetups(size: number) {
-	const { isPending, user } = useUserStore();
+	const queryClient = useQueryClient();
+	const { user } = useUserStore();
 	const { get } = useQueryParams();
 	const params = {
 		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
@@ -60,14 +62,19 @@ export function useGetMeetups(size: number) {
 		size,
 	};
 
+	useEffect(() => {
+		queryClient.invalidateQueries({
+			queryKey: meetupQueryKeys.listWithParams(params),
+		});
+	}, [user?.id]);
+
 	// [FIX] useSuspenseInfiniteQuery + Suspense 사용 시 AnimatePresence 에서 렌더링 이슈 발생
 	return useInfiniteQuery({
-		queryKey: meetupQueryKeys.listWithParams(params, user?.id ?? null),
+		queryKey: meetupQueryKeys.listWithParams(params),
 		queryFn: ({ pageParam }) => getMeetups({ ...params, cursor: pageParam }),
 		getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
 		initialPageParam: undefined as string | undefined,
 		placeholderData: keepPreviousData,
-		enabled: !isPending,
 		refetchOnWindowFocus: false,
 		staleTime: 0,
 		gcTime: 5 * 60 * 1000, // 5분
