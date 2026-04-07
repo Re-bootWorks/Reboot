@@ -1,25 +1,21 @@
-import Button from "@/components/ui/Buttons/Button";
+// components/ui/Filter/FilterTrigger.tsx
+import { forwardRef } from "react";
 import { cn } from "@/utils/cn";
 
-interface FilterTriggerProps {
-	children: React.ReactNode;
+interface FilterTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	isActive?: boolean;
-	onClick?: () => void;
-	className?: string;
 }
 
-export default function FilterTrigger({
-	children,
-	isActive = false,
-	onClick,
-	className,
-}: FilterTriggerProps) {
+const FilterTrigger = forwardRef<HTMLButtonElement, FilterTriggerProps>(function FilterTrigger(
+	{ children, isActive = false, className, ...props },
+	ref,
+) {
 	return (
-		<Button
-			onClick={onClick}
-			colors="grayBorder"
+		<button
+			ref={ref}
+			type="button"
 			className={cn(
-				//  Button 덮어쓰기
+				// 사이즈
 				"h-6 w-auto px-0 md:h-8",
 				"rounded-lg",
 
@@ -29,15 +25,18 @@ export default function FilterTrigger({
 				// 상태
 				isActive ? "border-gray-300 text-gray-800" : "border-gray-200 text-gray-600",
 
-				// layout
+				// 레이아웃
 				"flex items-center gap-1 whitespace-nowrap",
 
-				"border-none shadow-none",
-				"bg-transparent",
+				// 리셋
+				"border-none bg-transparent shadow-none",
 
 				className,
-			)}>
+			)}
+			{...props}>
 			{children}
-		</Button>
+		</button>
 	);
-}
+});
+
+export default FilterTrigger;
