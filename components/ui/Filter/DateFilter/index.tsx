@@ -29,11 +29,9 @@ export default function DateFilter({ value = "", onChange }: DateFilterProps) {
 		<Popover className="relative">
 			{({ close }) => (
 				<>
-					<PopoverButton as="div">
-						<FilterTrigger isActive={!!parsed}>
-							<span>{parsed ? formatDisplayDate(parsed) : "날짜 전체"}</span>
-							<IcChevronDown className="h-4 w-4" />
-						</FilterTrigger>
+					<PopoverButton as={FilterTrigger} isActive={!!parsed}>
+						<span>{parsed ? formatDisplayDate(parsed) : "날짜 전체"}</span>
+						<IcChevronDown className="h-4 w-4" />
 					</PopoverButton>
 
 					<PopoverPanel
