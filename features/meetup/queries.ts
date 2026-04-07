@@ -1,6 +1,11 @@
-import { useMutation, UseMutationOptions, useSuspenseInfiniteQuery } from "@tanstack/react-query";
-import { getMeetups, postMeetup } from "./apis";
+import {
+	keepPreviousData,
+	useInfiniteQuery,
+	useMutation,
+	UseMutationOptions,
+} from "@tanstack/react-query";
 import { MeetupCreateRequest, MeetupItemResponse, MeetupListRequest } from "./types";
+import { getMeetups, postMeetup } from "./apis";
 import {
 	deleteMeetingsFavorite,
 	deleteMeetingsJoin,
@@ -10,6 +15,16 @@ import {
 } from "@/apis/meetings";
 import { uploadImage } from "@/apis/images";
 import { useUserStore } from "@/store/user.store";
+import {
+	transformDateEndQuery,
+	transformDateStartQuery,
+	transformQueryValue,
+	transformSortByQuery,
+	transformSortOrderQuery,
+	transformTypeValue,
+} from "./list/utils";
+import { QUERY_KEYS } from "./list/constants";
+import { useQueryParams } from "@/hooks/useQueryParams";
 
 type MutationCallbacks<TData, TVariables = void> = Omit<
 	UseMutationOptions<TData, Error, TVariables>,
@@ -32,14 +47,27 @@ export const meetupMutationKeys = {
 };
 
 /** 모임 목록 조회 */
-export function useGetMeetups(params: MeetupListRequest) {
-	const userId = useUserStore((state) => state.user?.id ?? null);
-	// 유저(미인증 포함)가 변경되면 refetch
-	return useSuspenseInfiniteQuery({
-		queryKey: meetupQueryKeys.listWithParams(params, userId),
+export function useGetMeetups(size: number) {
+	const { isPending, user } = useUserStore();
+	const { get } = useQueryParams();
+	const params = {
+		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
+		region: transformQueryValue(get(QUERY_KEYS.REGION)),
+		dateStart: transformDateStartQuery(get(QUERY_KEYS.DATE_START)),
+		dateEnd: transformDateEndQuery(get(QUERY_KEYS.DATE_END)),
+		sortBy: transformSortByQuery(get(QUERY_KEYS.SORT_BY)),
+		sortOrder: transformSortOrderQuery(get(QUERY_KEYS.SORT_ORDER)),
+		size,
+	};
+
+	// [FIX] useSuspenseInfiniteQuery + Suspense 사용 시 AnimatePresence 에서 렌더링 이슈 발생
+	return useInfiniteQuery({
+		queryKey: meetupQueryKeys.listWithParams(params, user?.id ?? null),
 		queryFn: ({ pageParam }) => getMeetups({ ...params, cursor: pageParam }),
 		getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
 		initialPageParam: undefined as string | undefined,
+		placeholderData: keepPreviousData,
+		enabled: !isPending,
 		refetchOnWindowFocus: false,
 		staleTime: 0,
 		gcTime: 5 * 60 * 1000, // 5분

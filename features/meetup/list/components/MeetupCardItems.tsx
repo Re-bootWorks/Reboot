@@ -3,47 +3,21 @@
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useQueryParams } from "@/hooks/useQueryParams";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import useToggle from "@/hooks/useToggle";
-import { QUERY_KEYS } from "../constants";
 import { MeetupItem, MeetupItemSelected } from "../../types";
-import {
-	transformQueryValue,
-	transformTypeValue,
-	transformSortByQuery,
-	transformSortOrderQuery,
-	transformDateStartQuery,
-	transformDateEndQuery,
-} from "../utils";
+import useToggle from "@/hooks/useToggle";
 import { useGetMeetups } from "@/features/meetup/queries";
 import MeetupCard from "@/features/meetup/list/components/MeetupCard";
 import GroupCard from "@/components/ui/GroupCard";
 import LoaderDots from "@/components/ui/LoaderDots";
 import Empty from "./Emtpy";
 import JoinModal from "./JoinModal";
-import { useUserStore } from "@/store/user.store";
 
 export default function MeetupCardItems({ size }: { size: number }) {
-	const { isPending } = useUserStore();
-	// 인증 여부가 결정되지 않은 경우 스켈레톤 표시(데이터 중복 호출 방지)
-	if (isPending) return <MeetupCardSkeletonItems size={size} />;
-	return <MeetupCardListContent size={size} />;
-}
-
-function MeetupCardListContent({ size }: { size: number }) {
 	const [selectedData, setSelectedData] = useState<MeetupItemSelected>(null);
 	const { isOpen, open, close } = useToggle();
-	const { get } = useQueryParams();
-	const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = useGetMeetups({
-		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
-		region: transformQueryValue(get(QUERY_KEYS.REGION)),
-		dateStart: transformDateStartQuery(get(QUERY_KEYS.DATE_START)),
-		dateEnd: transformDateEndQuery(get(QUERY_KEYS.DATE_END)),
-		sortBy: transformSortByQuery(get(QUERY_KEYS.SORT_BY)),
-		sortOrder: transformSortOrderQuery(get(QUERY_KEYS.SORT_ORDER)),
-		size,
-	});
+	const { data, isLoading, isPending, isFetchingNextPage, hasNextPage, fetchNextPage } =
+		useGetMeetups(size);
 	const loadMoreRef = useRef<HTMLDivElement>(null);
 	useIntersectionObserver({
 		targetRef: loadMoreRef,
@@ -51,6 +25,7 @@ function MeetupCardListContent({ size }: { size: number }) {
 		isEnabled: hasNextPage && !isFetchingNextPage,
 	});
 
+	if (isPending || isLoading) return <MeetupCardSkeletonItems size={size} />;
 	return (
 		<ErrorBoundary fallbackRender={() => <LastItem>에러가 발생했습니다.</LastItem>}>
 			<MeetupCardLoadedItems
