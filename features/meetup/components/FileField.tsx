@@ -5,6 +5,8 @@ import InputFile, { type InputFileHandle } from "@/components/ui/Inputs/InputFil
 import { useToast } from "@/providers/toast-provider";
 import type { UploadImageFn } from "@/apis/images";
 
+const ACCEPTED_TYPES: string[] = ["image/png", "image/jpeg", "image/gif", "image/webp"];
+const FILE_ACCEPT = ACCEPTED_TYPES.join(", ");
 interface FileFieldProps {
 	/** 기본 이미지 */
 	defaultUrl?: string;
@@ -17,6 +19,7 @@ interface FileFieldProps {
 	/** 필수 필드 여부 @default true */
 	isRequired?: boolean;
 }
+
 export default function FileField({
 	defaultUrl,
 	name = "imageUrl",
@@ -34,6 +37,10 @@ export default function FileField({
 
 		setIsPending(true);
 		try {
+			if (!ACCEPTED_TYPES.includes(file.type)) {
+				throw new Error("파일 형식이 올바르지 않습니다.");
+			}
+
 			const res = await uploadImageFn(file);
 			onChange(res, e);
 			handleShowToast({ message: "이미지가 업로드되었습니다.", status: "success" });
@@ -60,6 +67,7 @@ export default function FileField({
 			isRequired={isRequired}
 			isPending={isPending}
 			onChange={handleUploadImage}
+			accept={FILE_ACCEPT}
 		/>
 	);
 }
