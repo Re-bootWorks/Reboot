@@ -80,11 +80,9 @@ export default function DateFilter({ value = { from: "", to: "" }, onChange }: D
 		<Popover className="relative">
 			{({ close }) => (
 				<>
-					<PopoverButton as="div">
-						<FilterTrigger isActive={!!parsedRange?.from}>
-							<span>{formatDisplayRange(parsedRange)}</span>
-							<IcChevronDown className="h-4 w-4" />
-						</FilterTrigger>
+					<PopoverButton as={FilterTrigger} isActive={!!parsedRange}>
+						<span>{formatDisplayRange(parsedRange)}</span>
+						<IcChevronDown className="h-4 w-4" />
 					</PopoverButton>
 
 					<PopoverPanel
