@@ -3,47 +3,24 @@
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useQueryParams } from "@/hooks/useQueryParams";
+import type { InfiniteData, UseInfiniteQueryResult } from "@tanstack/react-query";
+import type { MeetupItem, MeetupItemSelected, MeetupListResponse } from "../../types";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import useToggle from "@/hooks/useToggle";
-import { QUERY_KEYS } from "../constants";
-import { MeetupItem, MeetupItemSelected } from "../../types";
-import {
-	transformQueryValue,
-	transformTypeValue,
-	transformSortByQuery,
-	transformSortOrderQuery,
-	transformDateStartQuery,
-	transformDateEndQuery,
-} from "../utils";
-import { useGetMeetups } from "@/features/meetup/queries";
 import MeetupCard from "@/features/meetup/list/components/MeetupCard";
-import GroupCard from "@/components/ui/GroupCard";
 import LoaderDots from "@/components/ui/LoaderDots";
 import Empty from "./Emtpy";
 import JoinModal from "./JoinModal";
-import { useUserStore } from "@/store/user.store";
 
-export default function MeetupCardItems({ size }: { size: number }) {
-	const { isPending } = useUserStore();
-	// 인증 여부가 결정되지 않은 경우 스켈레톤 표시(데이터 중복 호출 방지)
-	if (isPending) return <MeetupCardSkeletonItems size={size} />;
-	return <MeetupCardListContent size={size} />;
+interface MeetupCardItemsProps {
+	query: UseInfiniteQueryResult<InfiniteData<MeetupListResponse>>;
 }
 
-function MeetupCardListContent({ size }: { size: number }) {
+export default function MeetupCardItems({ query }: MeetupCardItemsProps) {
+	const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = query;
 	const [selectedData, setSelectedData] = useState<MeetupItemSelected>(null);
 	const { isOpen, open, close } = useToggle();
-	const { get } = useQueryParams();
-	const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = useGetMeetups({
-		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
-		region: transformQueryValue(get(QUERY_KEYS.REGION)),
-		dateStart: transformDateStartQuery(get(QUERY_KEYS.DATE_START)),
-		dateEnd: transformDateEndQuery(get(QUERY_KEYS.DATE_END)),
-		sortBy: transformSortByQuery(get(QUERY_KEYS.SORT_BY)),
-		sortOrder: transformSortOrderQuery(get(QUERY_KEYS.SORT_ORDER)),
-		size,
-	});
+
 	const loadMoreRef = useRef<HTMLDivElement>(null);
 	useIntersectionObserver({
 		targetRef: loadMoreRef,
@@ -123,14 +100,6 @@ const cardVariants = {
 		},
 	},
 };
-
-export function MeetupCardSkeletonItems({ size }: { size: number }) {
-	return Array.from({ length: size }).map((_, i) => (
-		<li key={i} className="w-full">
-			<GroupCard.Skeleton />
-		</li>
-	));
-}
 
 interface LastItemProps {
 	ref?: React.RefObject<HTMLDivElement | null>;
