@@ -19,7 +19,10 @@ type Story = StoryObj;
 
 function FilterGroup() {
 	// 날짜
-	const [date, setDate] = useState("");
+	const [date, setDate] = useState({
+		from: "",
+		to: "",
+	});
 
 	// 지역
 	const [region, setRegion] = useState<{

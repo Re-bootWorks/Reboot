@@ -93,13 +93,22 @@ export type RegionFilterParams = {
 } & RegionFilterValue;
 function DropdownFilters() {
 	const { get, set } = useQueryParams();
-	const date = get(QUERY_KEYS.DATE_START) ?? "";
+	const dateStart = get(QUERY_KEYS.DATE_START) ?? "";
+	const dateEnd = get(QUERY_KEYS.DATE_END) ?? "";
 	const region = transformRegionData(get(QUERY_KEYS.REGION));
 	const sortBy = getSortByItem(get(QUERY_KEYS.SORT_BY)) ?? SORT_BY_OPTIONS[0].value;
 	const sortOrder = getSortOrderItem(get(QUERY_KEYS.SORT_ORDER)) ?? SORT_ORDER_OPTIONS[0].value;
 
-	function handleChangeDate(v: string) {
-		set({ [QUERY_KEYS.DATE_START]: v, [QUERY_KEYS.DATE_END]: v });
+	const date = {
+		from: dateStart ? dateStart.split("T")[0] : "",
+		to: dateEnd ? dateEnd.split("T")[0] : "",
+	};
+
+	function handleChangeDate(v: { from: string; to: string }) {
+		set({
+			[QUERY_KEYS.DATE_START]: v.from,
+			[QUERY_KEYS.DATE_END]: v.to,
+		});
 	}
 	function handleChangeRegion(data: RegionFilterParams) {
 		set({ [QUERY_KEYS.REGION]: data.fullLabel });
@@ -112,7 +121,7 @@ function DropdownFilters() {
 	}
 
 	return (
-		<div className="flex items-center lg:ml-auto">
+		<div className="flex items-center gap-x-1.5 lg:ml-auto">
 			<DateFilter value={date} onChange={handleChangeDate} />
 			<RegionFilter value={region} onChange={handleChangeRegion} />
 			<FilterDropdown value={sortBy.label} items={SORT_BY_OPTIONS} onChange={handleChangeSortBy} />
