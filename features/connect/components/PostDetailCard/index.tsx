@@ -94,11 +94,7 @@ export default function PostDetailCard({
 					{/* 캘린더 아이콘 / 상대시간 */}
 					<div className="flex items-center gap-0.5 text-gray-500">
 						<IcCalendarOutline color="gray-800" size="sm" />
-						<RelativeTime
-							date={new Date(createdAt).getTime()}
-							fallback="date"
-							className="text-gray-800"
-						/>
+						<RelativeTime date={date} fallback="date" className="text-gray-800" />
 					</div>
 				</div>
 				{/* 내용 */}
