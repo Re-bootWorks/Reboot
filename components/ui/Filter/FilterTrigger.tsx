@@ -31,6 +31,7 @@ const FilterTrigger = forwardRef<HTMLButtonElement, FilterTriggerProps>(function
 				// 리셋
 				"border-none bg-transparent shadow-none",
 
+				"outline-none",
 				className,
 			)}
 			{...props}>
