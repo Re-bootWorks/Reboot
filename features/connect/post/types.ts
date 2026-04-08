@@ -84,3 +84,19 @@ export type GetPostsResponse = {
 	currentOffset?: number;
 	limit?: number;
 };
+
+// 게시물 상세 Props 타입
+export type PostDetailCardProps = {
+	id: number;
+	title: string;
+	authorImage?: string;
+	content: string;
+	imageUrl: string;
+	author: string;
+	createdAt: string;
+	likeCount: number;
+	commentCount: number;
+	date: number;
+	isAuthor: boolean;
+	isLiked: boolean;
+};

@@ -5,6 +5,7 @@ import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query
 import { Suspense } from "react";
 import { serverFetch } from "@/libs/serverFetch";
 import IntroSection from "@/features/connect/components/IntroSection";
+import { connectQueryKeys } from "@/features/connect/queries";
 
 // 서버 컴포넌트
 export default async function ConnectPage({
@@ -22,7 +23,7 @@ export default async function ConnectPage({
 
 	await Promise.all([
 		queryClient.prefetchQuery({
-			queryKey: ["posts", page, sortBy, LIMIT, ""],
+			queryKey: connectQueryKeys.list(page, sortBy, LIMIT, ""),
 			queryFn: async () => {
 				const queryParams = new URLSearchParams({
 					type: "all",
@@ -42,7 +43,7 @@ export default async function ConnectPage({
 			staleTime: 1000 * 60,
 		}),
 		queryClient.prefetchQuery({
-			queryKey: ["hotPosts"],
+			queryKey: connectQueryKeys.hotPosts(),
 			queryFn: async () => {
 				const res = await serverFetch(`/posts?type=best&limit=20`);
 
