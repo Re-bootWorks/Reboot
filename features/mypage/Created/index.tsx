@@ -11,7 +11,7 @@ import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
 import { useDeleteMeetings } from "../mutations";
-import QueryErrorBoundary from "../components/QueryErrorBoundary";
+import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 
 // 모임 배지 상태
 function meetupBadges(item: CreatedItem): DetailCardBadge[] {

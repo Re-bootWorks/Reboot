@@ -16,7 +16,7 @@ import Loading from "@/components/ui/Loading";
 import Empty from "@/components/layout/Empty";
 import { useUserStore } from "@/store/user.store";
 import { useDeleteReviews, usePatchReviews, usePostMeetingsReviews } from "../mutations";
-import QueryErrorBoundary from "../components/QueryErrorBoundary";
+import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 
 type ReviewTabId = "writable" | "written";
 
@@ -168,7 +168,7 @@ function Written() {
 
 	return (
 		<>
-			<ul className="flex flex-col gap-4 rounded-3xl bg-white px-6 py-4 md:rounded-4xl md:py-6 lg:gap-6 lg:p-8">
+			<ul className="flex flex-col rounded-3xl bg-white px-6 py-4 md:rounded-4xl md:py-6 lg:gap-6 lg:p-8">
 				{items.map((reviewItem) => (
 					<ReviewCard
 						key={reviewItem.id}

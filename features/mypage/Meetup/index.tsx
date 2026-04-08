@@ -18,7 +18,7 @@ import {
 } from "../mutations";
 import { useUserStore } from "@/store/user.store";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
-import QueryErrorBoundary from "../components/QueryErrorBoundary";
+import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 interface MeetupActionHandlers {
 	/** 모임 확정 */
 	onConfirmMeetup: () => void;
