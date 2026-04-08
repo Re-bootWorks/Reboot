@@ -8,7 +8,7 @@ import Alert from "@/components/ui/Modals/AlertModal";
 import UserProfileModal from "@/components/ui/Modals/UserProfileModal";
 import { useDeleteComment, useUpdateComment } from "@/features/connect/mutations";
 import { useGetUserProfile } from "@/features/connect/queries";
-import RelativeTime from "@/features/connect/ui/RelativeTime";
+import RelativeTime from "@/components/ui/RelativeTime";
 import type { CommentCardProps } from "@/features/connect/comment/types";
 import { parseCommentContent, buildCommentContent } from "./parseCommentContent";
 import CommentEditForm from "./CommentEditForm";

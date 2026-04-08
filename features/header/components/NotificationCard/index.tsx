@@ -2,7 +2,7 @@ import { IcCheckCircle, IcDelete } from "@/components/ui/icons";
 import { NotificationCardItem } from "../../types";
 import { cn } from "@/utils/cn";
 import Thumbnail from "@/components/ui/Thumbnail";
-import RelativeTime from "@/features/connect/ui/RelativeTime";
+import RelativeTime from "@/components/ui/RelativeTime";
 
 const NOTIFICATION_STYLE = {
 	card: "px-5 py-3 w-full block text-left hover:bg-purple-50 cursor-pointer",

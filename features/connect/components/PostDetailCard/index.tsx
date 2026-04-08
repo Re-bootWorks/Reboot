@@ -5,7 +5,7 @@ import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 import IcCalendarOutline from "@/components/ui/icons/IcCalendarOutline";
-import RelativeTime from "@/features/connect/ui/RelativeTime";
+import RelativeTime from "@/components/ui/RelativeTime";
 import dayjs from "@/libs/dayjs";
 import { useRouter } from "next/navigation";
 import { useDeletePost, useToggleConnectLike } from "@/features/connect/mutations";
