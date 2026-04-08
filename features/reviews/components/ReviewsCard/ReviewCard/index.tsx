@@ -13,6 +13,7 @@ import { useUserStore } from "@/store/user.store";
 import Avatar from "@/components/ui/Avatar";
 import { IcChevronDown } from "@/components/ui/icons";
 import { useExpandableText } from "@/hooks/useExpandableText";
+import ExpandToggleButton from "@/components/ui/Buttons/ExpandToggleButton";
 
 const EMPTY_THUMBNAIL_SRC = "/assets/img/img_empty_purple.svg";
 const CONTENT_HEIGHT_THRESHOLD = 200;
@@ -190,13 +191,7 @@ export default function ReviewCard({
 							</p>
 
 							{(isOverflow || isExpanded) && (
-								<button
-									type="button"
-									onClick={toggleExpanded}
-									className="flex cursor-pointer items-center gap-0.5 text-sm font-medium text-gray-700 underline underline-offset-3 select-none md:mb-2 md:text-lg">
-									{isExpanded ? "접기" : "더보기"}
-									<IcChevronDown color="gray-700" className={cn(isExpanded && "rotate-180")} />
-								</button>
+								<ExpandToggleButton isExpanded={isExpanded} onClick={toggleExpanded} />
 							)}
 						</div>
 					</div>
