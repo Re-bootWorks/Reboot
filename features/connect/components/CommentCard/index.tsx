@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { uploadImage } from "@/apis/images";
+import Image from "next/image";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import Alert from "@/components/ui/Modals/AlertModal";
 import UserProfileModal from "@/components/ui/Modals/UserProfileModal";
@@ -14,6 +14,7 @@ import { parseCommentContent, buildCommentContent } from "./parseCommentContent"
 import CommentEditForm from "./CommentEditForm";
 import { AnimatePresence, motion } from "motion/react";
 import { commentEditVariants } from "@/features/connect/animations";
+import Avatar from "@/components/ui/Avatar";
 
 export default function CommentCard({
 	id,
@@ -131,14 +132,13 @@ export default function CommentCard({
 								className="shrink-0 cursor-pointer"
 								onClick={() => setIsProfileModalOpen(true)}
 								onKeyDown={(e) => e.key === "Enter" && setIsProfileModalOpen(true)}>
-								<div className="relative h-10 w-10 overflow-hidden rounded-full md:h-14 md:w-14">
-									<Image
-										src={authorImage || "/assets/img/img_profile.svg"}
-										alt={authorName}
-										fill
-										className="object-cover"
-									/>
-								</div>
+								<Avatar
+									src={authorImage ?? null}
+									alt={authorName}
+									width={40}
+									height={40}
+									className="md:!h-14 md:!w-14"
+								/>
 							</div>
 
 							{/* 오른쪽 콘텐츠 */}

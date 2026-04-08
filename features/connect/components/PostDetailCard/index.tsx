@@ -44,7 +44,7 @@ export default function PostDetailCard({
 
 	return (
 		<>
-			{/* 1. 카드 전체 등장 */}
+			{/* 카드 전체 등장 */}
 			<motion.div
 				className="w-full rounded-[48px] bg-white px-6 pt-6 pb-5 md:px-10 md:pt-10 md:pb-9 lg:px-16 lg:pt-12 lg:pb-14"
 				variants={postDetailVariants}
@@ -88,8 +88,8 @@ export default function PostDetailCard({
 						</span>
 					</div>
 					<div className="flex items-center gap-0.5 text-gray-500">
-						<IcCalendarOutline color="gray-800" size="sm" />
-						<RelativeTime date={date} fallback="date" className="text-gray-800" />
+						<IcCalendarOutline color="gray-500" size="sm" />
+						<RelativeTime date={date} fallback="date" className="text-gray-500" />
 					</div>
 				</div>
 
@@ -99,7 +99,7 @@ export default function PostDetailCard({
 					dangerouslySetInnerHTML={{ __html: content }}
 				/>
 
-				{/* 4. 이미지 등장 */}
+				{/* 이미지 */}
 				{imageUrl && (
 					<motion.div
 						className="mt-8"
@@ -115,7 +115,7 @@ export default function PostDetailCard({
 				{/* 하단 정보 */}
 				<div className="mt-10 flex items-center gap-2 text-sm tracking-[-0.28px] text-gray-500 md:mt-12">
 					<div className="flex items-center gap-3">
-						{/* 2. 좋아요 버튼 - whileTap으로 클릭 피드백 */}
+						{/* 좋아요 버튼 */}
 						<motion.button
 							whileTap={{ scale: 0.85 }}
 							transition={{ type: "spring", stiffness: 400, damping: 15 }}
@@ -128,7 +128,7 @@ export default function PostDetailCard({
 							}}
 							className="flex items-center gap-0.5 text-gray-500">
 							<IcThumbOutline color={isLiked ? "purple-500" : "gray-400"} size={20} />
-							{/* 3. 좋아요 숫자 변경 - key로 re-mount 트리거 */}
+							{/*  좋아요 숫자 변경 */}
 							<AnimatePresence mode="wait">
 								<motion.span
 									key={likeCount}
