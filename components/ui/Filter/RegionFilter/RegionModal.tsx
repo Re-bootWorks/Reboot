@@ -79,7 +79,7 @@ export default function RegionModal({
 					<h2 className="text-lg leading-7 font-semibold md:text-2xl md:leading-8">지역 선택</h2>
 
 					{/* 모달 닫기 버튼 */}
-					<button onClick={onClose} className="cursor-pointer">
+					<button type="button" onClick={onClose} className="cursor-pointer">
 						<IcDelete />
 					</button>
 				</div>
