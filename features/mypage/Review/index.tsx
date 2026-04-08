@@ -188,6 +188,9 @@ function Written() {
 				isPending={isDeleteReviewsPending}
 				onClose={closeAlert}
 				handleConfirmButton={handleReviewDelete}>
+				<span className="text-purple-600">
+					{alertTarget?.meetingName} <br />
+				</span>
 				리뷰를 삭제하시겠습니까?
 			</Alert>
 

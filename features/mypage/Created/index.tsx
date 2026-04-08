@@ -97,6 +97,9 @@ function Created() {
 				isPending={isDeletePending}
 				onClose={closeAlert}
 				handleConfirmButton={handleAlertConfirm}>
+				<span className="text-purple-600">
+					{alertTarget?.name} <br />
+				</span>
 				모임을 삭제하시겠습니까?
 			</Alert>
 		</>
