@@ -64,7 +64,7 @@ function Created() {
 
 	return (
 		<>
-			<ul className="mt-6 flex flex-col gap-4 lg:mt-8 lg:gap-6">
+			<ul className="flex flex-col gap-4 lg:gap-6">
 				{items.map((item) => {
 					return (
 						<DetailCard

@@ -255,7 +255,7 @@ function Meetup() {
 	if (items.length === 0) return <Empty>아직 참여한 모임이 없어요</Empty>;
 	return (
 		<>
-			<ul className="mt-6 flex flex-col gap-4 lg:mt-8 lg:gap-6">
+			<ul className="flex flex-col gap-4 lg:gap-6">
 				{items.map((item) => {
 					const handlers = meetupActionHandlers(item);
 					return (
