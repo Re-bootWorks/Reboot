@@ -36,9 +36,7 @@ export const InsideScrollableContainer: Story = {
 						</div>
 					))}
 				</div>
-				<div className="absolute right-4 bottom-4">
-					<ScrollTopButton threshold={80} targetRef={contentRef} />
-				</div>
+				<ScrollTopButton threshold={80} targetRef={contentRef} />
 			</div>
 		);
 	},
