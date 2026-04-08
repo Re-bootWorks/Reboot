@@ -16,11 +16,11 @@ import { useDeleteReviews, usePatchReviews } from "../../mutations";
 
 export default function ReviewsCard() {
 	return (
-		<section>
+		<>
 			<Suspense fallback={<ReviewsSectionSkeleton />}>
 				<ReviewsCardContent />
 			</Suspense>
-		</section>
+		</>
 	);
 }
 
@@ -102,7 +102,7 @@ function ReviewsCardContent() {
 
 	return (
 		<>
-			<div className="rounded-3xl bg-white p-6 md:rounded-4xl md:p-8">
+			<section className="rounded-3xl bg-white p-6 md:rounded-4xl md:p-8">
 				{hasReviews ? (
 					<div className="flex flex-col gap-4 md:gap-8">
 						{reviews.map((review) => (
@@ -135,7 +135,7 @@ function ReviewsCardContent() {
 					onClose={closeReviewModal}
 					handleFormSubmit={handleReviewSubmit}
 				/>
-			</div>
+			</section>
 			{isFetchingNextPage && <Loading className="flex h-30 items-center justify-center" />}
 		</>
 	);

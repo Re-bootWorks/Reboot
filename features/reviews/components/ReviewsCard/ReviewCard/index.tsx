@@ -11,8 +11,8 @@ import { ReviewCardProps } from "@/features/reviews/types";
 import Link from "next/link";
 import { useUserStore } from "@/store/user.store";
 import Avatar from "@/components/ui/Avatar";
-import ReviewComment from "@/components/ui/ReviewComment";
-import UserProfileModal from "@/components/ui/Modals/UserProfileModal";
+import { IcChevronDown } from "@/components/ui/icons";
+import { useExpandableText } from "@/hooks/useExpandableText";
 
 const EMPTY_THUMBNAIL_SRC = "/assets/img/img_empty_purple.svg";
 const CONTENT_HEIGHT_THRESHOLD = 200;
@@ -37,7 +37,6 @@ export default function ReviewCard({
 	handleDelete,
 }: Props) {
 	const loggedInUserId = useUserStore((state) => state.user?.id);
-	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const isMyReview = userId === loggedInUserId;
 
 	/** 실제 본문 높이만 측정할 래퍼 */
@@ -45,6 +44,11 @@ export default function ReviewCard({
 
 	/** 본문 높이가 기준을 넘어서 이미지에 mt-4를 넣을지 여부 */
 	const [shouldAddImageMarginTop, setShouldAddImageMarginTop] = useState(false);
+
+	const { contentRef, isExpanded, isOverflow, toggleExpanded } =
+		useExpandableText<HTMLParagraphElement>({
+			content: comment,
+		});
 
 	useLayoutEffect(() => {
 		const element = contentMeasureRef.current;
@@ -78,7 +82,7 @@ export default function ReviewCard({
 		return () => {
 			observer.disconnect();
 		};
-	}, [comment]);
+	}, [comment, isExpanded]);
 
 	const handleEditButtonClick = () => {
 		handleEdit?.();
@@ -88,10 +92,6 @@ export default function ReviewCard({
 		handleDelete?.();
 	};
 
-	const handleProfileClick = () => {
-		setIsProfileModalOpen(!isProfileModalOpen);
-	};
-
 	return (
 		<article className="flex h-full w-full flex-col gap-4 md:flex-row md:gap-8">
 			{/* 모임 이미지 */}
@@ -99,7 +99,7 @@ export default function ReviewCard({
 				href={`/meetup/${meetingId}`}
 				className={cn(
 					meetingImage ? "group relative overflow-hidden" : "flex items-center justify-center",
-					shouldAddImageMarginTop && "mt-4",
+					shouldAddImageMarginTop && "md:mt-4",
 					"h-36 rounded-xl bg-purple-50 pt-4 select-none md:size-46 md:shrink-0",
 				)}>
 				{meetingImage ? (
@@ -156,23 +156,21 @@ export default function ReviewCard({
 
 							{/* 작성자 / 날짜 */}
 							<div className="flex items-center gap-1 md:gap-1.5">
-								<button
-									type="button"
-									onClick={handleProfileClick}
-									className="flex cursor-pointer items-center gap-1.5 select-none">
+								<div className="flex items-center gap-1.5">
 									<Avatar
 										src={userImage}
 										alt={userImage ? `${userName} 프로필 이미지` : "빈 프로필 이미지"}
 										width={24}
 										height={24}
-										className={
+										className={cn(
 											userImage?.trim()
 												? "size-6 border-0 object-cover"
-												: "size-6 border object-contain"
-										}
+												: "size-6 border object-contain",
+											"select-none",
+										)}
 									/>
 									<span className="text-xs text-gray-500 md:text-sm">{userName}</span>
-								</button>
+								</div>
 
 								<time dateTime={createdAt} className="text-xs text-gray-500 md:text-sm">
 									{formatIsoDateWithDots(createdAt)}
@@ -181,7 +179,26 @@ export default function ReviewCard({
 						</div>
 
 						{/* 리뷰 내용 */}
-						<ReviewComment comment={comment} />
+						<div className="flex flex-col items-start gap-2">
+							<p
+								ref={contentRef}
+								className={cn(
+									"text-sm whitespace-pre-line text-gray-700 md:text-lg",
+									!isExpanded && "line-clamp-2",
+								)}>
+								{comment}
+							</p>
+
+							{(isOverflow || isExpanded) && (
+								<button
+									type="button"
+									onClick={toggleExpanded}
+									className="flex cursor-pointer items-center gap-0.5 text-sm font-medium text-gray-700 underline underline-offset-3 select-none md:mb-2 md:text-lg">
+									{isExpanded ? "접기" : "더보기"}
+									<IcChevronDown color="gray-700" className={cn(isExpanded && "rotate-180")} />
+								</button>
+							)}
+						</div>
 					</div>
 
 					{/* 모임명 / 카테고리 */}
@@ -192,18 +209,10 @@ export default function ReviewCard({
 						<span aria-hidden="true" className="select-none">
 							·
 						</span>
-						<span>{meetingType}</span>
+						<span className="select-none">{meetingType}</span>
 					</div>
 				</div>
 			</div>
-
-			<UserProfileModal
-				isOpen={isProfileModalOpen}
-				onClose={() => setIsProfileModalOpen(false)}
-				authorName={userName}
-				authorImage={userImage || undefined}
-				// email={profileData?.email || ""}
-			/>
 		</article>
 	);
 }
