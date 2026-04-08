@@ -8,7 +8,7 @@ import { formatIsoDateWithDots } from "@/utils/date";
 import Link from "next/link";
 
 const STYLE = {
-	itemBox: "flex flex-col gap-3 md:flex-row md:items-center md:gap-8 group",
+	itemBox: "flex flex-col gap-3 md:flex-row md:gap-8 group",
 	itemImage: "h-39 w-full rounded-xl object-cover md:size-47 md:rounded-3xl",
 	itemWrapper:
 		"flex grow flex-col gap-3 border-b border-gray-200 pb-6 md:py-6 group-last-of-type:border-none",
@@ -24,7 +24,7 @@ const EMPTY_PROFILE_IMAGE = "/assets/img/img_profile.svg";
 export default function ReviewCard({ user, item, handleEdit, handleDelete }: ReviewCardProps) {
 	return (
 		<li className={STYLE.itemBox}>
-			<Link href={`/meetup/${item.meetingId}`} className="shrink-0">
+			<Link href={`/meetup/${item.meetingId}`} className="shrink-0 md:pt-6">
 				<Image
 					src={item.meetingImage ?? EMPTY_THUMBNAIL_IMAGE}
 					alt="모임 대표 이미지"

@@ -168,7 +168,7 @@ function Written() {
 
 	return (
 		<>
-			<ul className="flex flex-col rounded-3xl bg-white px-6 py-4 md:rounded-4xl md:py-6 lg:gap-6 lg:p-8">
+			<ul className="flex flex-col gap-4 rounded-3xl bg-white px-6 py-4 md:gap-0 md:rounded-4xl md:py-6 lg:p-8">
 				{items.map((reviewItem) => (
 					<ReviewCard
 						key={reviewItem.id}
