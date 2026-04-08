@@ -12,6 +12,8 @@ import RelativeTime from "@/features/connect/ui/RelativeTime";
 import type { CommentCardProps } from "@/features/connect/comment/types";
 import { parseCommentContent, buildCommentContent } from "./parseCommentContent";
 import CommentEditForm from "./CommentEditForm";
+import { AnimatePresence, motion } from "motion/react";
+import { commentEditVariants } from "@/features/connect/animations";
 
 export default function CommentCard({
 	id,
@@ -91,102 +93,116 @@ export default function CommentCard({
 		setEditImageUrl(null);
 	};
 
-	if (isEditing) {
-		return (
-			<CommentEditForm
-				value={editValue}
-				onChange={setEditValue}
-				onCancel={handleCancel}
-				onSubmit={handleSubmit}
-				authorName={authorName}
-				authorImage={authorImage}
-				date={date}
-				previewUrl={editPreviewUrl}
-				onImageChange={handleImageChange}
-				onImageRemove={handleImageRemove}
-			/>
-		);
-	}
-
 	return (
-		<>
-			<div className="flex min-h-[96px] w-full gap-3 border-b border-gray-200 py-4">
-				{/* 프로필 이미지 */}
-				<div
-					role="button"
-					tabIndex={0}
-					className="shrink-0 cursor-pointer"
-					onClick={() => setIsProfileModalOpen(true)}
-					onKeyDown={(e) => e.key === "Enter" && setIsProfileModalOpen(true)}>
-					<div className="relative h-10 w-10 overflow-hidden rounded-full md:h-14 md:w-14">
-						<Image
-							src={authorImage || "/assets/img/img_profile.svg"}
-							alt={authorName}
-							fill
-							className="object-cover"
-						/>
-					</div>
-				</div>
+		<AnimatePresence mode="wait">
+			{isEditing ? (
+				<motion.div
+					key="edit"
+					variants={commentEditVariants.edit}
+					initial="hidden"
+					animate="visible"
+					exit="exit">
+					<CommentEditForm
+						value={editValue}
+						onChange={setEditValue}
+						onCancel={handleCancel}
+						onSubmit={handleSubmit}
+						authorName={authorName}
+						authorImage={authorImage}
+						date={date}
+						previewUrl={editPreviewUrl}
+						onImageChange={handleImageChange}
+						onImageRemove={handleImageRemove}
+					/>
+				</motion.div>
+			) : (
+				<motion.div
+					key="view"
+					variants={commentEditVariants.view}
+					initial="hidden"
+					animate="visible"
+					exit="exit">
+					<>
+						<div className="flex min-h-[96px] w-full gap-3 border-b border-gray-200 py-4">
+							{/* 프로필 이미지 */}
+							<div
+								role="button"
+								tabIndex={0}
+								className="shrink-0 cursor-pointer"
+								onClick={() => setIsProfileModalOpen(true)}
+								onKeyDown={(e) => e.key === "Enter" && setIsProfileModalOpen(true)}>
+								<div className="relative h-10 w-10 overflow-hidden rounded-full md:h-14 md:w-14">
+									<Image
+										src={authorImage || "/assets/img/img_profile.svg"}
+										alt={authorName}
+										fill
+										className="object-cover"
+									/>
+								</div>
+							</div>
 
-				{/* 오른쪽 콘텐츠 */}
-				<div className="flex flex-1 flex-col gap-1">
-					{/* 유저이름 + 날짜 */}
-					<div
-						role="button"
-						className="md:text-md flex cursor-pointer items-center gap-2 text-sm text-gray-500"
-						onClick={() => setIsProfileModalOpen(true)}>
-						<span className="text-md font-semibold text-gray-800">{authorName}</span>
-						<RelativeTime date={date} fallback="date" />
-					</div>
+							{/* 오른쪽 콘텐츠 */}
+							<div className="flex flex-1 flex-col gap-1">
+								{/* 유저이름 + 날짜 */}
+								<div
+									role="button"
+									className="md:text-md flex cursor-pointer items-center gap-2 text-sm text-gray-500"
+									onClick={() => setIsProfileModalOpen(true)}>
+									<span className="text-md font-semibold text-gray-800">{authorName}</span>
+									<RelativeTime date={date} fallback="date" />
+								</div>
 
-					{/* 댓글 내용 + 드롭다운 */}
-					<div className="flex items-start justify-between">
-						<div className="text-sm leading-[28px] font-normal tracking-[-0.36px] break-all text-gray-700 md:text-lg">
-							{parseCommentContent(content).map((part, i) =>
-								part.type === "image" ? (
-									<div key={i} className="relative mt-2 h-48 w-48">
-										<Image
-											src={part.url}
-											alt="첨부 이미지"
-											fill
-											className="rounded-lg object-cover"
-										/>
+								{/* 댓글 내용 + 드롭다운 */}
+								<div className="flex items-start justify-between">
+									<div className="text-sm leading-[28px] font-normal tracking-[-0.36px] break-all text-gray-700 md:text-lg">
+										{parseCommentContent(content).map((part, i) =>
+											part.type === "image" ? (
+												<div key={i} className="relative mt-2 h-48 w-48">
+													<Image
+														src={part.url}
+														alt="첨부 이미지"
+														fill
+														className="rounded-lg object-cover"
+													/>
+												</div>
+											) : (
+												<p key={i}>{part.text}</p>
+											),
+										)}
 									</div>
-								) : (
-									<p key={i}>{part.text}</p>
-								),
-							)}
+									{isMine && !isPending && (
+										<ActionDropdown
+											items={[
+												{ label: "수정하기", onClick: handleEdit },
+												{ label: "삭제하기", onClick: handleDelete, danger: true },
+											]}
+										/>
+									)}
+								</div>
+							</div>
 						</div>
-						{isMine && !isPending && (
-							<ActionDropdown
-								items={[
-									{ label: "수정하기", onClick: handleEdit },
-									{ label: "삭제하기", onClick: handleDelete, danger: true },
-								]}
-							/>
-						)}
-					</div>
-				</div>
-			</div>
 
-			<Alert
-				isOpen={isDeleteModalOpen}
-				onClose={() => setIsDeleteModalOpen(false)}
-				handleConfirmButton={() => {
-					deleteMutation.mutate(id);
-					setIsDeleteModalOpen(false);
-				}}
-				confirmLabel="삭제">
-				댓글을 삭제하시겠습니까?
-			</Alert>
+						<Alert
+							isOpen={isDeleteModalOpen}
+							onClose={() => setIsDeleteModalOpen(false)}
+							handleConfirmButton={() => {
+								deleteMutation.mutate(id);
+								setIsDeleteModalOpen(false);
+							}}
+							confirmLabel="삭제">
+							댓글을 삭제하시겠습니까?
+						</Alert>
 
-			<UserProfileModal
-				isOpen={isProfileModalOpen}
-				onClose={() => setIsProfileModalOpen(false)}
-				authorName={authorName}
-				authorImage={authorImage}
-				email={profileData?.email || ""}
-			/>
-		</>
+						<UserProfileModal
+							isOpen={isProfileModalOpen}
+							onClose={() => setIsProfileModalOpen(false)}
+							authorName={authorName}
+							authorImage={authorImage}
+							email={profileData?.email || ""}
+						/>
+					</>
+				</motion.div>
+			)}
+		</AnimatePresence>
 	);
 }

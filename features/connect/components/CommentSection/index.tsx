@@ -12,6 +12,8 @@ import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/providers/toast-provider";
 import CommentInput from "@/features/connect/components/CommentCard/CommentInput";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
+import { AnimatePresence, motion } from "motion/react";
+import { commentVariants } from "@/features/connect/animations";
 
 interface CommentSectionProps {
 	postId: number;
@@ -98,25 +100,31 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
 			{/* 댓글 리스트 */}
 			<ul className="flex flex-col gap-2">
-				{visibleComments.map((comment) => {
-					const mapped = mapCommentToCard(comment);
-
-					return (
-						<li key={mapped.id}>
-							<CommentCard
-								{...mapped}
-								postId={postId}
-								authorId={comment.author.id}
-								currentUserId={user?.id ?? null}
-								isPending={
-									(comment as ConnectPost["comments"][number] & { isPending?: boolean }).isPending
-								}
-							/>
-						</li>
-					);
-				})}
+				<AnimatePresence mode="popLayout">
+					{visibleComments.map((comment, i) => {
+						const mapped = mapCommentToCard(comment);
+						return (
+							<motion.li
+								key={mapped.id}
+								variants={commentVariants}
+								initial="hidden"
+								animate="visible"
+								exit="exit"
+								custom={i}>
+								<CommentCard
+									{...mapped}
+									postId={postId}
+									authorId={comment.author.id}
+									currentUserId={user?.id ?? null}
+									isPending={
+										(comment as ConnectPost["comments"][number] & { isPending?: boolean }).isPending
+									}
+								/>
+							</motion.li>
+						);
+					})}
+				</AnimatePresence>
 			</ul>
-
 			{/* 무한스크롤 트리거 */}
 			<div ref={loadMoreRef} className="h-10" />
 
