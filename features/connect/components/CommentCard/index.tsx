@@ -15,6 +15,10 @@ import CommentEditForm from "./CommentEditForm";
 import { AnimatePresence, motion } from "motion/react";
 import { commentEditVariants } from "@/features/connect/animations";
 import Avatar from "@/components/ui/Avatar";
+import { useToast } from "@/providers/toast-provider";
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const MAX_SIZE = 1024 * 1024; // 1MB
 
 export default function CommentCard({
 	id,
@@ -43,6 +47,7 @@ export default function CommentCard({
 	const [editPreviewUrl, setEditPreviewUrl] = useState<string | null>(editImageUrl);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+	const { handleShowToast } = useToast();
 
 	// 파생 변수
 	const isMine = authorId === currentUserId;
@@ -84,9 +89,33 @@ export default function CommentCard({
 	const handleDelete = () => setIsDeleteModalOpen(true);
 
 	const handleImageChange = async (file: File) => {
+		// 타입 검사
+		if (!ALLOWED_TYPES.includes(file.type)) {
+			handleShowToast({
+				message: "JPEG, PNG, WebP, GIF 형식만 업로드 가능합니다.",
+				status: "error",
+			});
+			return;
+		}
+
+		// 크기 검사
+		if (file.size > MAX_SIZE) {
+			handleShowToast({
+				message: "파일 크기는 1MB를 초과할 수 없습니다.",
+				status: "error",
+			});
+			return;
+		}
+
 		setEditPreviewUrl(URL.createObjectURL(file));
-		const url = await uploadImage(file);
-		setEditImageUrl(url);
+
+		try {
+			const url = await uploadImage(file);
+			setEditImageUrl(url);
+		} catch {
+			handleShowToast({ message: "이미지 업로드에 실패했습니다.", status: "error" });
+			setEditPreviewUrl(null);
+		}
 	};
 
 	const handleImageRemove = () => {
