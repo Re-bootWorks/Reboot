@@ -11,7 +11,6 @@ import { ReviewCardProps } from "@/features/reviews/types";
 import Link from "next/link";
 import { useUserStore } from "@/store/user.store";
 import Avatar from "@/components/ui/Avatar";
-import { IcChevronDown } from "@/components/ui/icons";
 import { useExpandableText } from "@/hooks/useExpandableText";
 import ExpandToggleButton from "@/components/ui/Buttons/ExpandToggleButton";
 
