@@ -228,7 +228,7 @@ export default function ReviewWrapper() {
 	};
 	return (
 		<>
-			<div className="mb-6 flex items-center gap-2.5 md:mb-8">
+			<div className="mb-6 flex items-center gap-2.5">
 				<TabButton
 					selected={activeTab === "writable"}
 					onClick={() => {
