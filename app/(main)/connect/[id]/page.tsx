@@ -1,6 +1,8 @@
 import { getPostDetailServer } from "@/features/connect/apis/getPostDetailServer";
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import PostDetailContainer from "@/features/connect/containers/PostDetailContainer";
+import { ErrorBoundary } from "react-error-boundary";
+import ConnectErrorFallback from "@/features/connect/components/ErrorBoundary";
 
 export default async function DetailPage({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;
@@ -20,7 +22,9 @@ export default async function DetailPage({ params }: { params: Promise<{ id: str
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<PostDetailContainer id={numId} />
+			<ErrorBoundary FallbackComponent={ConnectErrorFallback}>
+				<PostDetailContainer id={numId} />
+			</ErrorBoundary>
 		</HydrationBoundary>
 	);
 }

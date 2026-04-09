@@ -8,6 +8,7 @@ import Container from "@/components/layout/Container";
 import Button from "@/components/ui/Buttons/Button";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/providers/toast-provider";
+import PostCreateSkeleton from "@/features/connect/containers/PostCreateContainer/Skeleton";
 
 export default function EditPostContainer({ id }: { id: number }) {
 	const router = useRouter();
@@ -65,7 +66,7 @@ export default function EditPostContainer({ id }: { id: number }) {
 		);
 	};
 
-	if (!data) return <div>로딩중...</div>;
+	if (!data) return <PostCreateSkeleton />;
 
 	return (
 		<Container narrow>
