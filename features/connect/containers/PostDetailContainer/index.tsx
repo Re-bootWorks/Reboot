@@ -22,6 +22,7 @@ export default function PostDetailContainer({ id }: { id: number }) {
 					content={data.content}
 					imageUrl={data.image}
 					author={data.author.name}
+					authorImage={data.author.image}
 					createdAt={data.createdAt}
 					likeCount={data.likeCount}
 					commentCount={data.comments?.length ?? 0}

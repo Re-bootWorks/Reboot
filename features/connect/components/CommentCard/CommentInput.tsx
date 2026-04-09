@@ -4,6 +4,11 @@ import { uploadImage } from "@/apis/images";
 import { buildCommentContent } from "./parseCommentContent";
 import Image from "next/image";
 import Button from "@/components/ui/Buttons/Button";
+import { useToast } from "@/providers/toast-provider";
+import { IcImagePlus } from "@/components/ui/icons";
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const MAX_SIZE = 1024 * 1024; // 1MB
 
 interface CommentInputProps {
 	onSubmit: (content: string) => void;
@@ -16,21 +21,39 @@ export default function CommentInput({ onSubmit, isPending }: CommentInputProps)
 	const [imageUrl, setImageUrl] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState(false);
 	const fileRef = useRef<HTMLInputElement>(null);
+	const { handleShowToast } = useToast();
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
-		setPreviewUrl(URL.createObjectURL(file)); // 로컬 미리보기
+		// 타입 검사 추가
+		if (!ALLOWED_TYPES.includes(file.type)) {
+			handleShowToast({
+				message: "JPEG, PNG, WebP, GIF 형식만 업로드 가능합니다.",
+				status: "error",
+			});
+			e.target.value = "";
+			return;
+		}
+
+		// 크기 검사 추가
+		if (file.size > MAX_SIZE) {
+			handleShowToast({ message: "파일 크기는 1MB를 초과할 수 없습니다.", status: "error" });
+			e.target.value = "";
+			return;
+		}
+
+		setPreviewUrl(URL.createObjectURL(file));
 		setIsUploading(true);
 		try {
-			const url = await uploadImage(file); // S3 업로드
+			const url = await uploadImage(file);
 			setImageUrl(url);
 		} catch {
-			alert("이미지 업로드에 실패했습니다.");
-			setPreviewUrl(null);
+			handleShowToast({ message: "이미지 업로드에 실패했습니다.", status: "error" });
 		} finally {
 			setIsUploading(false);
+			e.target.value = ""; // 같은 파일 재선택 가능하도록
 		}
 	};
 
@@ -51,9 +74,10 @@ export default function CommentInput({ onSubmit, isPending }: CommentInputProps)
 				<button
 					onClick={() => fileRef.current?.click()}
 					disabled={isUploading}
-					className="shrink-0 text-gray-400 hover:text-gray-600">
-					{isUploading ? "⏳" : "📎"}
+					className="shrink-0 px-1 text-gray-400 hover:text-gray-600 disabled:opacity-40">
+					<IcImagePlus size="sm" color="gray-400" />
 				</button>
+				<div className="h-4 w-px bg-gray-400" />
 				<input
 					ref={fileRef}
 					type="file"

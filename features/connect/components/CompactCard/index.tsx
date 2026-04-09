@@ -3,7 +3,6 @@ import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
 import EmptyImage from "@/features/connect/ui/EmptyImage";
 import dayjs from "@/libs/dayjs";
 import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 
 type CompactCardProps = {
 	id: number;
