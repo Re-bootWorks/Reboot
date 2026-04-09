@@ -116,20 +116,37 @@ function CreateForm({ onClose, onSuccess, footerClassName }: CreateFormProps) {
 	}
 
 	function handleKeyDownForm(e: React.KeyboardEvent<HTMLFormElement>) {
-		if (e.key !== "Enter" || e.nativeEvent.isComposing) return;
-		if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLButtonElement) return;
+		const isEnterKey = e.key === "Enter";
+		const isComposing = e.nativeEvent.isComposing;
+		if (!isEnterKey || isComposing) return;
+
+		// Enter 키의 기본 동작이 있는 요소는 제외
+		const isInteractiveElement =
+			e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLButtonElement;
+		if (isInteractiveElement) return;
+
+		// Tab focus를 위해 이후부터 preventDefault 처리
 		e.preventDefault();
 		void goNextStep();
 	}
 
-	// function handleBlurCaptureForm() {
-	// 	// textarea에서 onBlur될 때 body가 아닌 form에 focus가 되도록 함(캡쳐링)
-	// 	requestAnimationFrame(() => {
-	// 		if (!formRef.current?.contains(document.activeElement)) {
-	// 			formRef.current?.focus();
-	// 		}
-	// 	});
-	// }
+	function handleBlurCaptureForm() {
+		requestAnimationFrame(() => {
+			const form = formRef.current;
+			const focusedElement = document.activeElement;
+
+			// 폼 내부 요소에 포커스가 있는 경우 통과
+			const isOutsideForm = form?.contains(focusedElement);
+			if (isOutsideForm) return;
+
+			// 폼 내부에서 포털을 사용한 요소(드롭다운 등)를 클릭한 경우 통과
+			const isFocusLost = focusedElement === document.body;
+			const isFocusOnModal = focusedElement === form?.closest('[role="dialog"]');
+			if (!isFocusLost && !isFocusOnModal) return;
+
+			form?.focus();
+		});
+	}
 
 	function handleClickPrev() {
 		if (isFirstStep) {
@@ -147,7 +164,7 @@ function CreateForm({ onClose, onSuccess, footerClassName }: CreateFormProps) {
 		<form
 			ref={formRef}
 			tabIndex={-1}
-			// onBlurCapture={handleBlurCaptureForm}
+			onBlurCapture={handleBlurCaptureForm}
 			noValidate
 			className="flex min-h-0 w-full flex-1 flex-col overflow-hidden outline-none"
 			onSubmit={handleSubmitForm}
@@ -158,7 +175,9 @@ function CreateForm({ onClose, onSuccess, footerClassName }: CreateFormProps) {
 					return (
 						<div
 							className={cn("w-full shrink-0", isInvisible && "h-0 overflow-hidden")}
-							key={Comp.key}>
+							key={Comp.key}
+							inert={isInvisible || undefined}
+							aria-hidden={isInvisible ? "true" : "false"}>
 							{Comp}
 						</div>
 					);

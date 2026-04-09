@@ -16,6 +16,10 @@ export default function FormHeader({ className }: FormHeaderProps) {
 				<span>/</span>
 				<span>{totalSteps}</span>
 			</div>
+			{/* 스텝 변경 알림용 */}
+			<div aria-live="polite" className="sr-only">
+				{`${currentStep}단계`}
+			</div>
 		</div>
 	);
 }
