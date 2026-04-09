@@ -117,19 +117,19 @@ function CreateForm({ onClose, onSuccess, footerClassName }: CreateFormProps) {
 
 	function handleKeyDownForm(e: React.KeyboardEvent<HTMLFormElement>) {
 		if (e.key !== "Enter" || e.nativeEvent.isComposing) return;
-		if (e.target instanceof HTMLTextAreaElement) return;
+		if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLButtonElement) return;
 		e.preventDefault();
 		void goNextStep();
 	}
 
-	function handleBlurCaptureForm() {
-		// textarea에서 onBlur될 때 body가 아닌 form에 focus가 되도록 함(캡쳐링)
-		requestAnimationFrame(() => {
-			if (!formRef.current?.contains(document.activeElement)) {
-				formRef.current?.focus();
-			}
-		});
-	}
+	// function handleBlurCaptureForm() {
+	// 	// textarea에서 onBlur될 때 body가 아닌 form에 focus가 되도록 함(캡쳐링)
+	// 	requestAnimationFrame(() => {
+	// 		if (!formRef.current?.contains(document.activeElement)) {
+	// 			formRef.current?.focus();
+	// 		}
+	// 	});
+	// }
 
 	function handleClickPrev() {
 		if (isFirstStep) {
@@ -147,7 +147,7 @@ function CreateForm({ onClose, onSuccess, footerClassName }: CreateFormProps) {
 		<form
 			ref={formRef}
 			tabIndex={-1}
-			onBlurCapture={handleBlurCaptureForm}
+			// onBlurCapture={handleBlurCaptureForm}
 			noValidate
 			className="flex min-h-0 w-full flex-1 flex-col overflow-hidden outline-none"
 			onSubmit={handleSubmitForm}

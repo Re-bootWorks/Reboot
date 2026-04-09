@@ -30,9 +30,7 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 
 	// 유효성 검사
 	useEffect(() => {
-		if (validateText(data.type)) {
-			setStepValid(step, true);
-		}
+		setStepValid(step, validateText(data.type));
 	}, [data.type, setStepValid, step]);
 
 	return (

@@ -72,11 +72,11 @@ async function uploadToS3(presignedUrl: string, file: File): Promise<void> {
 
 	if (!res.ok) {
 		// 서버 에러 응답이 XML 형식이기 때문에 상태 코드로 분기 처리
-		if (res.status >= 400) {
-			throw new Error("잘못된 요청입니다.");
-		}
 		if (res.status >= 500) {
 			throw new Error("서버에 일시적인 문제가 발생했습니다.");
+		}
+		if (res.status >= 400) {
+			throw new Error("잘못된 요청입니다.");
 		}
 	}
 }

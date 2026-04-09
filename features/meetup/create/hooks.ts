@@ -19,7 +19,7 @@ export function useCreateMeetup({ close }: UseCreateMeetupProps = {}) {
 		createSessionStore.remove();
 		handleShowToast({ message: "모임 생성이 완료되었습니다!", status: "success" });
 		if (close) close();
-		setTimeout(() => router.replace(`/meetup/${id}`), 1000);
+		setTimeout(() => router.replace(`/meetup/${id}`), 2000);
 	}
 
 	return { onClose, onSuccess };
