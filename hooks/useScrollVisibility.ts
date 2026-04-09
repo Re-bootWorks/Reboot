@@ -50,7 +50,7 @@ export default function useScrollVisibility({
 		// requestAnimationFrame으로 한 프레임에 한 번만 상태를 갱신하도록 제한
 		function handleScroll() {
 			if (!ticking) {
-				requestAnimationFrame(updateScroll);
+				frameId = requestAnimationFrame(updateScroll);
 				ticking = true;
 			}
 		}
