@@ -136,8 +136,8 @@ function CreateForm({ onClose, onSuccess, footerClassName }: CreateFormProps) {
 			const focusedElement = document.activeElement;
 
 			// 폼 내부 요소에 포커스가 있는 경우 통과
-			const isOutsideForm = form?.contains(focusedElement);
-			if (isOutsideForm) return;
+			const isInsideForm = form?.contains(focusedElement);
+			if (isInsideForm) return;
 
 			// 폼 내부에서 포털을 사용한 요소(드롭다운 등)를 클릭한 경우 통과
 			const isFocusLost = focusedElement === document.body;
