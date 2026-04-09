@@ -24,7 +24,7 @@ import MeetupRelatedSkeleton from "@/features/meetupDetail/components/Skeletons/
 import MeetupReviewSkeleton from "@/features/meetupDetail/components/Skeletons/MeetupReviewSkeleton";
 import SectionErrorFallback from "@/features/meetupDetail/components/SectionErrorFallback";
 import { ErrorBoundary } from "react-error-boundary";
-import Empty from "@/components/layout/Empty";
+import Empty from "@/components/ui/Empty";
 import { useUserStore } from "@/store/user.store";
 
 interface MeetupDetailClientProps {

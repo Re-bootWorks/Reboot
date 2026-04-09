@@ -2,7 +2,7 @@
 
 import { Suspense, useRef, useState } from "react";
 import ReviewCard from "./ReviewCard";
-import Empty from "@/components/layout/Empty";
+import Empty from "@/components/ui/Empty";
 import { ReviewCardProps, ReviewsListRequest } from "../../types";
 import { toDateTimeRangeEnd, toDateTimeRangeStart } from "../../utils";
 import { useReviewsInfiniteQuery } from "../../queries/infiniteQuery";
@@ -11,7 +11,7 @@ import Loading from "@/components/ui/Loading";
 import { useSearchParams } from "next/navigation";
 import ReviewsSectionSkeleton from "./reviewsSkeleton";
 import Alert from "@/components/ui/Modals/AlertModal";
-import ReviewModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
+import ReviewModal, { ReviewFormValues } from "@/features/shared/components/ReviewModal";
 import { useDeleteReviews, usePatchReviews } from "../../mutations";
 
 export default function ReviewsCard() {

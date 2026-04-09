@@ -5,7 +5,7 @@ import { DetailCardBadge } from "@/features/mypage/types";
 import { CreatedItem } from "@/features/mypage/types";
 import Alert from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/hooks/useMeetingFavorite";
-import Empty from "@/components/layout/Empty";
+import Empty from "@/components/ui/Empty";
 import { useMyCreatedInfinite } from "../queries";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";

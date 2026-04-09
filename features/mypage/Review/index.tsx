@@ -1,7 +1,7 @@
 "use client";
 import { Suspense, useRef, useState } from "react";
 import DetailCard from "../components/DetailCard";
-import ReviewModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
+import ReviewModal, { ReviewFormValues } from "@/features/shared/components/ReviewModal";
 import { WritableReviewItem } from "@/features/mypage/types";
 import useMeetingFavorite from "@/hooks/useMeetingFavorite";
 import TabButton from "@/components/ui/Buttons/TabButton";
@@ -13,7 +13,7 @@ import ReviewCardSkeleton from "../components/ReviewCard/ReviewCardSkeleton";
 import { useMyMeetupInfinite, useMyReviewInfinite } from "../queries";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
-import Empty from "@/components/layout/Empty";
+import Empty from "@/components/ui/Empty";
 import { useUserStore } from "@/store/user.store";
 import { useDeleteReviews, usePatchReviews, usePostMeetingsReviews } from "../mutations";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";

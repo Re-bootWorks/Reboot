@@ -2,12 +2,12 @@
 import { Suspense, useRef, useState } from "react";
 import DetailCard from "../components/DetailCard";
 import { DetailCardAction, DetailCardBadge } from "@/features/mypage/types";
-import ReviewModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
+import ReviewModal, { ReviewFormValues } from "@/features/shared/components/ReviewModal";
 import { MeetupItem } from "@/features/mypage/types";
 import Alert from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/hooks/useMeetingFavorite";
 import { useMyMeetupInfinite } from "@/features/mypage/queries";
-import Empty from "@/components/layout/Empty";
+import Empty from "@/components/ui/Empty";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
 import {
