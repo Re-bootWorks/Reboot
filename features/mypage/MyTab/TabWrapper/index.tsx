@@ -83,11 +83,11 @@ export default function TabWrapper() {
 
 			<div ref={contentRef} className="scrollbar pt-6 lg:max-h-[calc(100vh-214px)]">
 				{tabContents[activeTab]}
-				<ScrollTopButton
-					targetRef={contentRef}
-					className={contentRef ? "absolute min-[1400px]:-right-8" : ""}
-				/>
 			</div>
+			<ScrollTopButton
+				targetRef={contentRef}
+				className={isLg ? "absolute min-[1400px]:-right-8" : ""}
+			/>
 		</div>
 	);
 }
