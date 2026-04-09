@@ -85,7 +85,7 @@ export default function TabWrapper() {
 				{tabContents[activeTab]}
 				<ScrollTopButton
 					targetRef={contentRef}
-					className={contentRef ? "absolute min-[1400px]:-right-6" : ""}
+					className={contentRef ? "absolute min-[1400px]:-right-8" : ""}
 				/>
 			</div>
 		</div>
