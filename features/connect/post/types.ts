@@ -100,3 +100,14 @@ export type PostDetailCardProps = {
 	isAuthor: boolean;
 	isLiked: boolean;
 };
+
+// CompactCard UI 타입
+export type CompactCardItem = {
+	id: number;
+	title: string;
+	image: string;
+	createdAt: string;
+	likeCount: number;
+	commentCount: number;
+	onClick?: () => void;
+};
