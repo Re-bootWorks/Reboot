@@ -11,8 +11,8 @@ const meta: Meta<typeof CategoryTab> = {
 	args: {
 		imageSrc: "https://placehold.co/80x80",
 		name: "type",
-		title: "취미",
-		value: "hobby",
+		title: "타이틀",
+		value: "자기계발",
 	},
 };
 export default meta;

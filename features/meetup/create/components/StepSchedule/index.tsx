@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { useFormData } from "../providers/FormDataProvider";
-import CapacityField from "../../components/CapacityField";
-import DateTimeField from "../../components/DateTimeField";
-import { validateCapacity, validateDateTime } from "../../utils";
+import { useFormData } from "../../providers/FormDataProvider";
+import CapacityField from "@/features/meetup/components/CapacityField";
+import DateTimeField from "@/features/meetup/components/DateTimeField";
+import { validateCapacity, validateDateTime } from "../../../utils";
 import { validateMaxCapacity } from "@/features/meetupDetail/edit/utils";
 import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/PersonnelContainer";
 

@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { getKakaoPlaceFn } from "../../apis";
+import type { getKakaoPlaceFn } from "../../../apis";
 import type { UploadImageFn } from "@/apis/images";
-import { useFormData } from "../providers/FormDataProvider";
-import AddressField from "../../components/AddressField";
-import NameField from "../../components/NameField";
-import FileField from "../../components/FileField";
+import { useFormData } from "../../providers/FormDataProvider";
+import AddressField from "@/features/meetup/components/AddressField";
+import NameField from "@/features/meetup/components/NameField";
+import FileField from "@/features/meetup/components/FileField";
 
 interface StepInfoProps {
 	/** 단계 숫자 */

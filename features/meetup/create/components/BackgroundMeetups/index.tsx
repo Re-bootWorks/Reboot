@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import { cn } from "@/utils/cn";
-import styles from "./BackgroundMeetups.module.css";
-import ImgMeetup01 from "../assets/img_meetup_01.svg";
-import ImgMeetup02 from "../assets/img_meetup_02.svg";
-import ImgMeetup03 from "../assets/img_meetup_03.svg";
-import ImgMeetup04 from "../assets/img_meetup_04.svg";
-import ImgMeetup05 from "../assets/img_meetup_05.svg";
+import styles from "./style.module.css";
+import ImgMeetup01 from "@/features/meetup/create/assets/img_meetup_01.svg";
+import ImgMeetup02 from "@/features/meetup/create/assets/img_meetup_02.svg";
+import ImgMeetup03 from "@/features/meetup/create/assets/img_meetup_03.svg";
+import ImgMeetup04 from "@/features/meetup/create/assets/img_meetup_04.svg";
+import ImgMeetup05 from "@/features/meetup/create/assets/img_meetup_05.svg";
 
 const MEETUP_IMAGES = [ImgMeetup01, ImgMeetup02, ImgMeetup03, ImgMeetup04, ImgMeetup05] as const;
 const directionStyles = {

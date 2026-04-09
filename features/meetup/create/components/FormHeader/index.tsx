@@ -1,5 +1,5 @@
 import { cn } from "@/utils/cn";
-import { useFormStep } from "../providers/FormStepProvider";
+import { useFormStep } from "../../providers/FormStepProvider";
 
 interface FormHeaderProps {
 	/** 추가 클래스명 */

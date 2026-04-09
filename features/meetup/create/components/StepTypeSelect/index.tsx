@@ -4,16 +4,16 @@ import { useEffect } from "react";
 import { motion } from "motion/react";
 import type { StaticImageData } from "next/image";
 import { useCategoryStore, type CategoryName } from "@/store/category.store";
-import { useFormData } from "../providers/FormDataProvider";
-import { validateText } from "../../utils";
+import { useFormData } from "../../providers/FormDataProvider";
+import { validateText } from "../../../utils";
 import CategoryTab from "@/components/ui/CategoryTab";
 import imgDefault from "@/public/assets/img/img_empty.svg";
-import imgGrowth from "../assets/img_growth.svg";
-import imgFitness from "../assets/img_fitness.svg";
-import imgCulture from "../assets/img_culture.svg";
-import imgTravel from "../assets/img_travel.svg";
-import imgPets from "../assets/img_pets.svg";
-import imgVibes from "../assets/img_vibes.svg";
+import imgGrowth from "@/features/meetup/create/assets/img_growth.svg";
+import imgFitness from "@/features/meetup/create/assets/img_fitness.svg";
+import imgCulture from "@/features/meetup/create/assets/img_culture.svg";
+import imgTravel from "@/features/meetup/create/assets/img_travel.svg";
+import imgPets from "@/features/meetup/create/assets/img_pets.svg";
+import imgVibes from "@/features/meetup/create/assets/img_vibes.svg";
 
 interface StepTypeSelectProps {
 	/** 단계 숫자 */

@@ -1,5 +1,5 @@
-import { useFormStep } from "../providers/FormStepProvider";
-import { useFormData } from "../providers/FormDataProvider";
+import { useFormStep } from "../../providers/FormStepProvider";
+import { useFormData } from "../../providers/FormDataProvider";
 import Button from "@/components/ui/Buttons/Button";
 import { cn } from "@/utils/cn";
 

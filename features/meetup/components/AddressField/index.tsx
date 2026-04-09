@@ -5,11 +5,16 @@ import { cn } from "@/utils/cn";
 import Input from "@/components/ui/Inputs/Input";
 import InputField from "@/components/ui/Inputs/InputField";
 import { IcLocation } from "@/components/ui/icons";
-import { KakaoPlaceItem } from "../types";
-import { getKakaoPlaceFn } from "../apis";
+import type { KakaoPlaceItem } from "../../types";
+import type { getKakaoPlaceFn } from "../../apis";
 import { debounce } from "@/utils/performance";
 import { useToast } from "@/providers/toast-provider";
-import { getRegion, MAX_ADDRESS_LENGTH, validatePlaceSearch, validateText } from "../utils";
+import {
+	getRegion,
+	MAX_ADDRESS_LENGTH,
+	validatePlaceSearch,
+	validateText,
+} from "@/features/meetup/utils";
 
 interface AddressFieldProps<N extends string = "addressName", D extends string = "addressDetail"> {
 	/** 주소 검색 콤보박스 열림 여부 */
