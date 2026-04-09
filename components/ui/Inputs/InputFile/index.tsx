@@ -22,7 +22,10 @@ interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	hintText?: string;
 	/** 에러 상태 여부 */
 	isDestructive?: boolean;
-	/** 첨부 파일 타입 */
+	/**
+	 * `input`의 accept
+	 * @default PNG·JPEG·GIF·WebP
+	 */
 	accept?: string;
 	/** 썸네일 이미지 크기 */
 	thumbSize?: "large" | "small";
@@ -43,6 +46,9 @@ export interface InputFileHandle {
 	reset: () => void;
 }
 
+export const IMAGE_ACCEPT = "image/png, image/jpeg, image/gif, image/webp";
+export const IMAGE_ACCEPTED_EXTS: string[] = IMAGE_ACCEPT.split(", ");
+
 export default function InputFile({
 	label,
 	ref,
@@ -50,7 +56,7 @@ export default function InputFile({
 	isRequired = false,
 	defaultUrl = null,
 	thumbSize = "large",
-	accept = "image/*",
+	accept = IMAGE_ACCEPT,
 	hintText,
 	isDestructive = false,
 	isPending = false,

@@ -1,12 +1,15 @@
 "use client";
 
-import { useRef, useState } from "react";
-import InputFile, { type InputFileHandle } from "@/components/ui/Inputs/InputFile";
+import { useRef } from "react";
+import InputFile, {
+	IMAGE_ACCEPTED_EXTS,
+	type InputFileHandle,
+} from "@/components/ui/Inputs/InputFile";
 import { useToast } from "@/providers/toast-provider";
 import type { UploadImageFn } from "@/apis/images";
+import { useMutation } from "@tanstack/react-query";
+import { meetupMutationKeys } from "../../queries";
 
-const ACCEPTED_TYPES: string[] = ["image/png", "image/jpeg", "image/gif", "image/webp"];
-const FILE_ACCEPT = ACCEPTED_TYPES.join(", ");
 interface FileFieldProps {
 	/** 기본 이미지 */
 	defaultUrl?: string;
@@ -29,33 +32,35 @@ export default function FileField({
 }: FileFieldProps) {
 	const { handleShowToast } = useToast();
 	const inputFileRef = useRef<InputFileHandle>(null);
-	const [isPending, setIsPending] = useState(false);
+	const uploadImageMutation = useMutation({
+		mutationKey: meetupMutationKeys.uploadImage,
+		mutationFn: uploadImageFn,
+	});
 
-	async function handleUploadImage(e: React.ChangeEvent<HTMLInputElement>) {
+	function failUpload(message: string) {
+		handleShowToast({ message, status: "error" });
+		inputFileRef.current?.reset();
+	}
+
+	function handleUploadImage(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
-		setIsPending(true);
-		try {
-			if (!ACCEPTED_TYPES.includes(file.type)) {
-				throw new Error("파일 형식이 올바르지 않습니다.");
-			}
-
-			const res = await uploadImageFn(file);
-			onChange(res, e);
-			handleShowToast({ message: "이미지가 업로드되었습니다.", status: "success" });
-		} catch (error) {
-			let message: string;
-			if (error instanceof Error) {
-				message = error.message;
-			} else {
-				message = "이미지 업로드 중 오류가 발생했습니다.";
-			}
-			handleShowToast({ message, status: "error" });
-			inputFileRef.current?.reset();
-		} finally {
-			setIsPending(false);
+		if (!IMAGE_ACCEPTED_EXTS.includes(file.type)) {
+			failUpload(`'${file.type}'는 지원하지 않는 파일 형식입니다.`);
+			return;
 		}
+
+		uploadImageMutation.mutate(file, {
+			onSuccess: (data) => {
+				onChange(data, e);
+				handleShowToast({ message: "이미지가 업로드되었습니다.", status: "success" });
+			},
+			onError: (error) => {
+				const message = error?.message ?? "이미지 업로드 중 오류가 발생했습니다.";
+				failUpload(message);
+			},
+		});
 	}
 
 	return (
@@ -65,9 +70,8 @@ export default function FileField({
 			label="이미지"
 			name={name}
 			isRequired={isRequired}
-			isPending={isPending}
+			isPending={uploadImageMutation.isPending}
 			onChange={handleUploadImage}
-			accept={FILE_ACCEPT}
 		/>
 	);
 }
