@@ -5,7 +5,7 @@ import Image from "next/image";
 import Button from "@/components/ui/Buttons/Button";
 import IcPerson from "@/components/ui/icons/IcPerson";
 import InputTextarea from "@/components/ui/Inputs/InputTextarea";
-import RelativeTime from "@/features/connect/ui/RelativeTime";
+import RelativeTime from "@/components/ui/RelativeTime";
 
 export interface CommentEditFormProps {
 	value: string;

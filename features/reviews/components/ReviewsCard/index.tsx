@@ -2,7 +2,7 @@
 
 import { Suspense, useRef, useState } from "react";
 import ReviewCard from "./ReviewCard";
-import Empty from "@/components/layout/Empty";
+import Empty from "@/components/ui/Empty";
 import { ReviewCardProps, ReviewsListRequest } from "../../types";
 import { toDateTimeRangeEnd, toDateTimeRangeStart } from "../../utils";
 import { useReviewsInfiniteQuery } from "../../queries/infiniteQuery";
@@ -11,16 +11,16 @@ import Loading from "@/components/ui/Loading";
 import { useSearchParams } from "next/navigation";
 import ReviewsSectionSkeleton from "./reviewsSkeleton";
 import Alert from "@/components/ui/Modals/AlertModal";
-import ReviewModal, { ReviewFormValues } from "@/components/ui/Modals/ReviewModal";
+import ReviewModal, { ReviewFormValues } from "@/features/shared/components/ReviewModal";
 import { useDeleteReviews, usePatchReviews } from "../../mutations";
 
 export default function ReviewsCard() {
 	return (
-		<section className="rounded-3xl bg-white p-6 md:rounded-4xl md:p-8">
+		<>
 			<Suspense fallback={<ReviewsSectionSkeleton />}>
 				<ReviewsCardContent />
 			</Suspense>
-		</section>
+		</>
 	);
 }
 
@@ -102,40 +102,41 @@ function ReviewsCardContent() {
 
 	return (
 		<>
-			{hasReviews ? (
-				<div className="flex flex-col gap-4 md:gap-8">
-					{reviews.map((review) => (
-						<ReviewCard
-							key={review.id}
-							handleEdit={() => handleReviewEdit(review)}
-							handleDelete={() => setAlertTarget(review)}
-							{...review}
-						/>
-					))}
-				</div>
-			) : (
-				<Empty>아직 리뷰가 없어요</Empty>
-			)}
-			<div ref={bottomRef} />
+			<section className="rounded-3xl bg-white p-6 md:rounded-4xl md:p-8">
+				{hasReviews ? (
+					<div className="flex flex-col gap-4 md:gap-8">
+						{reviews.map((review) => (
+							<ReviewCard
+								key={review.id}
+								handleEdit={() => handleReviewEdit(review)}
+								handleDelete={() => setAlertTarget(review)}
+								{...review}
+							/>
+						))}
+					</div>
+				) : (
+					<Empty>아직 리뷰가 없어요</Empty>
+				)}
+				<div ref={bottomRef} />
 
+				<Alert
+					isOpen={!!alertTarget}
+					isPending={isDeleteReviewsPending}
+					onClose={closeAlert}
+					handleConfirmButton={handleReviewDelete}>
+					리뷰를 삭제하시겠습니까?
+				</Alert>
+
+				<ReviewModal
+					mode="edit"
+					initialValue={reviewInitialValue}
+					isOpen={!!reviewTarget}
+					isPending={isPatchReviewsPending}
+					onClose={closeReviewModal}
+					handleFormSubmit={handleReviewSubmit}
+				/>
+			</section>
 			{isFetchingNextPage && <Loading className="flex h-30 items-center justify-center" />}
-
-			<Alert
-				isOpen={!!alertTarget}
-				isPending={isDeleteReviewsPending}
-				onClose={closeAlert}
-				handleConfirmButton={handleReviewDelete}>
-				리뷰를 삭제하시겠습니까?
-			</Alert>
-
-			<ReviewModal
-				mode="edit"
-				initialValue={reviewInitialValue}
-				isOpen={!!reviewTarget}
-				isPending={isPatchReviewsPending}
-				onClose={closeReviewModal}
-				handleFormSubmit={handleReviewSubmit}
-			/>
 		</>
 	);
 }

@@ -4,7 +4,7 @@ import IcPerson from "@/components/ui/icons/IcPerson";
 import dayjs from "@/libs/dayjs";
 import Image from "next/image";
 import EmptyImage from "@/features/connect/ui/EmptyImage";
-import RelativeTime from "@/features/connect/ui/RelativeTime";
+import RelativeTime from "@/components/ui/RelativeTime";
 import type { PostCardProps } from "@/features/connect/post/types";
 import LoaderDots from "@/components/ui/LoaderDots";
 import Skeleton from "react-loading-skeleton";

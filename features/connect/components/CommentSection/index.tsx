@@ -11,6 +11,9 @@ import type { ConnectPost } from "@/features/connect/post/types";
 import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/providers/toast-provider";
 import CommentInput from "@/features/connect/components/CommentCard/CommentInput";
+import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
+import { AnimatePresence, motion } from "motion/react";
+import { commentVariants } from "@/features/connect/animations";
 
 interface CommentSectionProps {
 	postId: number;
@@ -53,7 +56,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 					}, 300);
 				}
 			},
-			{ threshold: 1 },
+			{ threshold: 0 },
 		);
 
 		observer.observe(loadMoreRef.current);
@@ -76,13 +79,14 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 	return (
 		<section>
 			{/* 댓글 개수 */}
-			<header className="flex h-6 w-full items-center text-base font-medium tracking-[-0.02rem] md:h-8">
+			<header className="flex h-6 w-full items-center gap-1 text-base font-medium tracking-[-0.02rem] md:h-8">
+				<IcMessageOutline color="gray-700" size={18} />
 				<span>댓글</span>
 				<span className="font-semibold text-purple-600">{comments.length}</span>
 			</header>
 
 			{/* 댓글 입력 영역 */}
-			<div className="mt-3 flex items-center md:mt-4 lg:mt-8">
+			<div className="mt-3 flex items-center border-b border-gray-200 pb-4 md:mt-4 lg:mt-8">
 				<div className="relative mr-4 h-14 w-14 shrink-0 overflow-hidden rounded-full">
 					{user?.image ? (
 						<Image src={user.image} alt="profile" fill className="object-cover" />
@@ -95,26 +99,32 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 			</div>
 
 			{/* 댓글 리스트 */}
-			<ul className="mt-6 flex flex-col gap-2 md:mt-8">
-				{visibleComments.map((comment) => {
-					const mapped = mapCommentToCard(comment);
-
-					return (
-						<li key={mapped.id}>
-							<CommentCard
-								{...mapped}
-								postId={postId}
-								authorId={comment.author.id}
-								currentUserId={user?.id ?? null}
-								isPending={
-									(comment as ConnectPost["comments"][number] & { isPending?: boolean }).isPending
-								}
-							/>
-						</li>
-					);
-				})}
+			<ul className="flex flex-col gap-2">
+				<AnimatePresence mode="popLayout">
+					{visibleComments.map((comment, i) => {
+						const mapped = mapCommentToCard(comment);
+						return (
+							<motion.li
+								key={mapped.id}
+								variants={commentVariants}
+								initial="hidden"
+								animate="visible"
+								exit="exit"
+								custom={i}>
+								<CommentCard
+									{...mapped}
+									postId={postId}
+									authorId={comment.author.id}
+									currentUserId={user?.id ?? null}
+									isPending={
+										(comment as ConnectPost["comments"][number] & { isPending?: boolean }).isPending
+									}
+								/>
+							</motion.li>
+						);
+					})}
+				</AnimatePresence>
 			</ul>
-
 			{/* 무한스크롤 트리거 */}
 			<div ref={loadMoreRef} className="h-10" />
 
