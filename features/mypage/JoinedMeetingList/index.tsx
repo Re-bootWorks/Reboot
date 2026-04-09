@@ -124,7 +124,7 @@ function meetupActions(
 	];
 }
 
-function Meetup() {
+function JoinedMeetingList() {
 	const userId = useUserStore((state) => state.user?.id);
 
 	const { handleWishToggle } = useMeetingFavorite();
@@ -299,11 +299,11 @@ function Meetup() {
 		</>
 	);
 }
-export default function MeetupWrapper() {
+export default function JoinedMeetingListWrapper() {
 	return (
 		<QueryErrorBoundary prefix="나의 모임을 ">
 			<Suspense fallback={<DetailCardSkeleton />}>
-				<Meetup />
+				<JoinedMeetingList />
 			</Suspense>
 		</QueryErrorBoundary>
 	);
