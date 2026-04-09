@@ -1,51 +1,83 @@
 "use client";
 
-import { useState } from "react";
-import { Participant } from "@/features/meetupDetail/types";
+import { useEffect, useRef, useState } from "react";
 import Avatar from "@/components/ui/Avatar";
-
+import ParticipantDropdown from "@/features/meetupDetail/components/Participants/ParticipantDropdown";
+import { AnimatePresence } from "motion/react";
+import { useParticipants } from "@/features/meetupDetail/queries";
 interface ParticipantsImageProps {
-	participants: Participant[];
+	meetingId: number;
+	participantCount: number;
+	hostId: number;
 }
 
 const MAX_VISIBLE = 4;
 
-export function Participants({ participants }: ParticipantsImageProps) {
+export function Participants({ meetingId, participantCount, hostId }: ParticipantsImageProps) {
 	const [isExpanded, setIsExpanded] = useState(false);
+	const containerRef = useRef<HTMLDivElement>(null);
+	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const visibleParticipants = isExpanded ? participants : participants.slice(0, MAX_VISIBLE);
+	const {
+		data: allParticipants,
+		hasNextPage,
+		isFetchingNextPage,
+		fetchNextPage,
+	} = useParticipants(meetingId);
 
-	const overCount = participants.length - MAX_VISIBLE;
-	const showOverCount = !isExpanded && overCount > 0;
+	useEffect(() => {
+		function handleClickOutside(e: MouseEvent) {
+			const target = e.target as Node;
+			const isOutsideContainer = containerRef.current && !containerRef.current.contains(target);
+			const isOutsideDropdown = dropdownRef.current && !dropdownRef.current.contains(target);
+			if (isOutsideContainer && isOutsideDropdown) {
+				setIsExpanded(false);
+			}
+		}
+
+		if (isExpanded) document.addEventListener("mousedown", handleClickOutside);
+		return () => document.removeEventListener("mousedown", handleClickOutside);
+	}, [isExpanded]);
+
+	const visibleParticipants = allParticipants.slice(0, MAX_VISIBLE);
+	const overCount = participantCount - MAX_VISIBLE;
+	const showOverCount = overCount > 0;
 
 	return (
-		<div className="flex items-center -space-x-2 overflow-x-auto">
-			{visibleParticipants.map((participant) => (
-				<Avatar
-					key={participant.id}
-					src={participant.user.image}
-					alt={participant.user.name}
-					width={32}
-					height={32}
-					className="shrink-0"
-				/>
-			))}
-			{showOverCount && (
-				<button
-					type="button"
-					onClick={() => setIsExpanded(true)}
-					className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-xs text-gray-700 hover:bg-gray-100">
-					+{overCount}
-				</button>
-			)}
-			{isExpanded && (
-				<button
-					type="button"
-					onClick={() => setIsExpanded(false)}
-					className="ml-3 shrink-0 text-xs whitespace-nowrap text-gray-500 hover:text-gray-700">
-					접기
-				</button>
-			)}
+		<div ref={containerRef} className="relative">
+			<div className="scrollbar-hide flex w-full items-center -space-x-2 overflow-x-auto py-1">
+				{visibleParticipants.map((participant) => (
+					<div key={participant.id} className="shrink-0">
+						<Avatar
+							src={participant.user.image}
+							alt={participant.user.name}
+							width={32}
+							height={32}
+						/>
+					</div>
+				))}
+				{showOverCount && (
+					<button
+						type="button"
+						onClick={() => setIsExpanded((prev) => !prev)}
+						className="z-10 flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-xs text-gray-700 hover:bg-gray-100">
+						+{overCount}
+					</button>
+				)}
+			</div>
+
+			<AnimatePresence>
+				{isExpanded && (
+					<ParticipantDropdown
+						participants={allParticipants}
+						hasNextPage={hasNextPage}
+						isFetchingNextPage={isFetchingNextPage}
+						onLoadMore={fetchNextPage}
+						dropdownRef={dropdownRef}
+						hostId={hostId}
+					/>
+				)}
+			</AnimatePresence>
 		</div>
 	);
 }

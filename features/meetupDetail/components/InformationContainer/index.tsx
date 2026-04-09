@@ -21,6 +21,7 @@ import { useToast } from "@/providers/toast-provider";
 import { useModalStore } from "@/store/modal.store";
 import { useUserStore } from "@/store/user.store";
 import SendButton from "@/components/ui/Buttons/SendButton";
+import { cn } from "@/utils/cn";
 
 interface InformationContainerProps {
 	id: number;
@@ -164,7 +165,10 @@ export default function InformationContainer({
 					) : (
 						<UtilityButton
 							sizes="small"
-							className="lg:size-15"
+							className={cn(
+								"transition-colors lg:size-15",
+								isFavorited ? "border-purple-500" : "hover:border-purple-500",
+							)}
 							pressed={isFavorited}
 							isPending={isFavoritePending}
 							onClick={handleFavoriteConfirm}

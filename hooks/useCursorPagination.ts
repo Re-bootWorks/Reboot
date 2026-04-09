@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 interface CursorPaginationResult {
 	currentPage: number;
@@ -14,19 +14,25 @@ export function useCursorPagination(): CursorPaginationResult {
 	const currentPage = pageIndex + 1;
 	const currentCursor = cursorHistory[pageIndex];
 
-	const handlePageChange = (page: number, nextCursor?: string, hasMore?: boolean) => {
-		if (page > currentPage && hasMore) {
-			setCursorHistory((prev) => [...prev.slice(0, pageIndex + 1), nextCursor]);
-			setPageIndex(page - 1);
-		} else if (page < currentPage) {
-			setPageIndex(page - 1);
-		}
-	};
+	const handlePageChange = useCallback((page: number, nextCursor?: string, hasMore?: boolean) => {
+		setPageIndex((prevIndex) => {
+			const prevPage = prevIndex + 1;
 
-	const reset = () => {
+			if (page > prevPage && hasMore) {
+				setCursorHistory((prev) => [...prev.slice(0, prevIndex + 1), nextCursor]);
+				return page - 1;
+			} else if (page < prevPage) {
+				return page - 1;
+			}
+
+			return prevIndex;
+		});
+	}, []);
+
+	const reset = useCallback(() => {
 		setCursorHistory([undefined]);
 		setPageIndex(0);
-	};
+	}, []);
 
 	return { currentPage, currentCursor, handlePageChange, reset };
 }

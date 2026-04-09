@@ -1,10 +1,11 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
 	getMeetingDetail,
 	getParticipants,
 	getRelatedMeetings,
 	getReviews,
 } from "@/features/meetupDetail/apis/apis";
+import { ParticipantsResponse } from "@/features/meetupDetail/types";
 
 export const meetupDetailQueryKeys = {
 	meeting: (meetingId: number) => ["meetupDetail", "meeting", meetingId] as const,
@@ -27,11 +28,31 @@ export function useMeetingDetail(meetingId: number) {
 }
 
 export function useParticipants(meetingId: number) {
-	return useSuspenseQuery({
+	const response = useSuspenseInfiniteQuery({
 		queryKey: meetupDetailQueryKeys.participants(meetingId),
-		queryFn: () => getParticipants(meetingId),
-		staleTime: 1000 * 60 * 3, // 참여자: 3분 (실시간성 필요하므로)
+		queryFn: ({ pageParam }: { pageParam: string | undefined }) =>
+			getParticipants(meetingId, pageParam),
+		initialPageParam: undefined as string | undefined,
+		getNextPageParam: (lastPage: ParticipantsResponse) => {
+			if (!lastPage.hasMore) return undefined;
+			return lastPage.nextCursor ?? undefined;
+		},
+		staleTime: 1000 * 60 * 3,
 	});
+
+	const flatData = response.data?.pages.flatMap((page) => page.data ?? []) ?? [];
+
+	const dedupedData = (() => {
+		const seen = new Set<number>();
+
+		return flatData.filter((p) => {
+			if (seen.has(p.id)) return false;
+			seen.add(p.id);
+			return true;
+		});
+	})();
+
+	return { ...response, data: dedupedData };
 }
 
 export function useReviews(meetingId: number, cursor?: string) {

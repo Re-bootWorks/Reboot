@@ -72,7 +72,9 @@ function CommentItem({ score, comment, createdAt, user, onEdit, onDelete }: Comm
 					</div>
 				</div>
 				<div className="flex h-fit w-full justify-between text-gray-700 md:gap-2">
-					<p className="h-fit w-full text-sm font-normal md:text-lg">{comment}</p>
+					<p className="h-fit w-full text-sm font-normal whitespace-pre-line md:text-lg">
+						{comment}
+					</p>
 				</div>
 			</div>
 		</div>
