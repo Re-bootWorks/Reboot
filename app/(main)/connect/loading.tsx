@@ -1,7 +1,6 @@
 import Container from "@/components/layout/Container";
 import CompactCard from "@/features/connect/components/CompactCard";
 import ConnectCard from "@/features/connect/components/PostCard";
-import IntroSection from "@/features/connect/components/IntroSection";
 import SearchInput from "@/components/ui/SearchInput";
 
 export default function Loading() {
