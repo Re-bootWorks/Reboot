@@ -16,11 +16,11 @@ import { useDeleteReviews, usePatchReviews } from "../../mutations";
 
 export default function ReviewsCard() {
 	return (
-		<section className="rounded-3xl bg-white p-6 md:rounded-4xl md:p-8">
+		<>
 			<Suspense fallback={<ReviewsSectionSkeleton />}>
 				<ReviewsCardContent />
 			</Suspense>
-		</section>
+		</>
 	);
 }
 
@@ -102,40 +102,41 @@ function ReviewsCardContent() {
 
 	return (
 		<>
-			{hasReviews ? (
-				<div className="flex flex-col gap-4 md:gap-8">
-					{reviews.map((review) => (
-						<ReviewCard
-							key={review.id}
-							handleEdit={() => handleReviewEdit(review)}
-							handleDelete={() => setAlertTarget(review)}
-							{...review}
-						/>
-					))}
-				</div>
-			) : (
-				<Empty>아직 리뷰가 없어요</Empty>
-			)}
-			<div ref={bottomRef} />
+			<section className="rounded-3xl bg-white p-6 md:rounded-4xl md:p-8">
+				{hasReviews ? (
+					<div className="flex flex-col gap-4 md:gap-8">
+						{reviews.map((review) => (
+							<ReviewCard
+								key={review.id}
+								handleEdit={() => handleReviewEdit(review)}
+								handleDelete={() => setAlertTarget(review)}
+								{...review}
+							/>
+						))}
+					</div>
+				) : (
+					<Empty>아직 리뷰가 없어요</Empty>
+				)}
+				<div ref={bottomRef} />
 
+				<Alert
+					isOpen={!!alertTarget}
+					isPending={isDeleteReviewsPending}
+					onClose={closeAlert}
+					handleConfirmButton={handleReviewDelete}>
+					리뷰를 삭제하시겠습니까?
+				</Alert>
+
+				<ReviewModal
+					mode="edit"
+					initialValue={reviewInitialValue}
+					isOpen={!!reviewTarget}
+					isPending={isPatchReviewsPending}
+					onClose={closeReviewModal}
+					handleFormSubmit={handleReviewSubmit}
+				/>
+			</section>
 			{isFetchingNextPage && <Loading className="flex h-30 items-center justify-center" />}
-
-			<Alert
-				isOpen={!!alertTarget}
-				isPending={isDeleteReviewsPending}
-				onClose={closeAlert}
-				handleConfirmButton={handleReviewDelete}>
-				리뷰를 삭제하시겠습니까?
-			</Alert>
-
-			<ReviewModal
-				mode="edit"
-				initialValue={reviewInitialValue}
-				isOpen={!!reviewTarget}
-				isPending={isPatchReviewsPending}
-				onClose={closeReviewModal}
-				handleFormSubmit={handleReviewSubmit}
-			/>
 		</>
 	);
 }
