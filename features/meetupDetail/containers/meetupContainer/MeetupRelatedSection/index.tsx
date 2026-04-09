@@ -2,6 +2,8 @@ import { useMeetingDetail, useRelatedMeetings } from "@/features/meetupDetail/qu
 import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
 import Empty from "@/components/ui/Empty";
 import CompactCards from "@/features/meetupDetail/components/CompactCards";
+import { sectionVariants } from "@/features/meetupDetail/animations";
+import { motion } from "motion/react";
 
 export default function MeetupRelatedSection({ meetupId }: { meetupId: number }) {
 	const { data: meeting } = useMeetingDetail(meetupId);
@@ -12,7 +14,12 @@ export default function MeetupRelatedSection({ meetupId }: { meetupId: number })
 	const { ref, style, overlays, ...dragScrollEvents } = useDragScroll<HTMLDivElement>();
 
 	return (
-		<section className="mt-17 flex h-fit w-full flex-col gap-3 md:mt-18 md:gap-4 lg:mt-22">
+		<motion.section
+			variants={sectionVariants}
+			initial="hidden"
+			whileInView="visible"
+			viewport={{ once: true, amount: 0.1 }}
+			className="mt-17 flex h-fit w-full flex-col gap-3 md:mt-18 md:gap-4 lg:mt-22">
 			<div className="pl-1.5 lg:pl-2.5">
 				<h3 className="text-base font-semibold md:text-xl lg:text-2xl">이런 모임은 어떠세요?</h3>
 			</div>
@@ -36,6 +43,6 @@ export default function MeetupRelatedSection({ meetupId }: { meetupId: number })
 					{overlays}
 				</div>
 			)}
-		</section>
+		</motion.section>
 	);
 }

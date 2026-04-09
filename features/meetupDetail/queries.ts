@@ -6,6 +6,7 @@ import {
 	getReviews,
 } from "@/features/meetupDetail/apis/apis";
 import { ParticipantsResponse } from "@/features/meetupDetail/types";
+import { useMemo } from "react";
 
 export const meetupDetailQueryKeys = {
 	meeting: (meetingId: number) => ["meetupDetail", "meeting", meetingId] as const,
@@ -40,9 +41,9 @@ export function useParticipants(meetingId: number) {
 		staleTime: 1000 * 60 * 3,
 	});
 
-	const flatData = response.data?.pages.flatMap((page) => page.data ?? []) ?? [];
+	const dedupedData = useMemo(() => {
+		const flatData = response.data?.pages.flatMap((page) => page.data ?? []) ?? [];
 
-	const dedupedData = (() => {
 		const seen = new Set<number>();
 
 		return flatData.filter((p) => {
@@ -50,7 +51,7 @@ export function useParticipants(meetingId: number) {
 			seen.add(p.id);
 			return true;
 		});
-	})();
+	}, [response.data]);
 
 	return { ...response, data: dedupedData };
 }

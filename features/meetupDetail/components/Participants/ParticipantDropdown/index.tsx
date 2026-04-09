@@ -50,7 +50,7 @@ export default function ParticipantDropdown({
 			initial={{ opacity: 0, y: -8 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: -8 }}
-			transition={{ duration: 0.5, ease: "easeOut" }}
+			transition={{ duration: 0.3, ease: "easeOut" }}
 			className="scrollbar-hide absolute top-10 left-24 z-50 min-w-48 rounded-2xl border border-gray-100 bg-white py-2 shadow-lg">
 			<div ref={scrollRef} className="max-h-60 overflow-y-auto">
 				{participants.map((participant) => (

@@ -4,6 +4,8 @@ import { toMeetupEditData } from "@/features/meetupDetail/edit/utils";
 import Image from "next/image";
 import InformationContainer from "@/features/meetupDetail/components/InformationContainer";
 import PersonnelContainer from "@/features/meetupDetail/components/PersonnelContainer";
+import { slideFromLeftVariants, slideFromRightVariants } from "@/features/meetupDetail/animations";
+import { motion } from "motion/react";
 
 export default function MeetupIntroSection({ meetupId }: { meetupId: number }) {
 	const { data: meeting } = useMeetingDetail(meetupId);
@@ -14,10 +16,20 @@ export default function MeetupIntroSection({ meetupId }: { meetupId: number }) {
 
 	return (
 		<section className="flex w-full flex-col gap-4 md:flex-row lg:gap-5">
-			<div className="relative aspect-343/241 w-full overflow-hidden rounded-2xl md:aspect-auto md:w-1/2 md:self-stretch lg:rounded-4xl">
+			<motion.div
+				variants={slideFromLeftVariants}
+				initial="hidden"
+				whileInView="visible"
+				viewport={{ once: true, amount: 0.1 }}
+				className="relative aspect-343/241 w-full overflow-hidden rounded-2xl md:aspect-auto md:w-1/2 md:self-stretch lg:rounded-4xl">
 				<Image alt={meeting.name} src={meeting.image} fill className="object-cover" priority />
-			</div>
-			<div className="flex w-full flex-col gap-5 md:w-1/2">
+			</motion.div>
+			<motion.div
+				variants={slideFromRightVariants}
+				initial="hidden"
+				whileInView="visible"
+				viewport={{ once: true, amount: 0.1 }}
+				className="flex w-full flex-col gap-5 md:w-1/2">
 				<InformationContainer {...meeting} isHost={isHost} editInitialData={editInitialData} />
 				<PersonnelContainer
 					meetingId={meetupId}
@@ -26,7 +38,7 @@ export default function MeetupIntroSection({ meetupId }: { meetupId: number }) {
 					confirmedAt={meeting.confirmedAt}
 					hostId={meeting.hostId}
 				/>
-			</div>
+			</motion.div>
 		</section>
 	);
 }

@@ -38,9 +38,9 @@ function CommentItem({ score, comment, createdAt, user, onEdit, onDelete }: Comm
 	const myReview = !isPending && me?.id === user.id;
 
 	return (
-		<div className="h-fit w-full border-b border-gray-200 pt-2 pb-6 last:border-none md:pt-4">
+		<div className="h-fit w-full border-b border-gray-200 pb-6 last:border-none">
 			<div className="flex h-fit w-full flex-col gap-3">
-				<div className="flex h-fit w-full flex-col gap-3">
+				<div className="mt-4 flex h-fit w-full flex-col gap-3">
 					<Rating
 						value={score}
 						readOnly
@@ -133,7 +133,7 @@ export default function CommentCards({
 			</div>
 
 			<div className="flex h-fit w-full flex-col items-center gap-8 md:gap-10">
-				<div className="flex h-fit w-full flex-col items-center gap-2.5 overflow-hidden rounded-3xl bg-white px-5 pt-4 pb-2 md:rounded-4xl md:px-12 md:py-6">
+				<div className="flex h-fit w-full flex-col items-center gap-2.5 overflow-hidden rounded-3xl bg-white px-5 pb-2 md:rounded-4xl md:px-12 md:py-6">
 					{hasComments ? (
 						<div className="flex h-fit w-full flex-col">
 							{comments.map((comment) => (
