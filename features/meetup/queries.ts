@@ -19,6 +19,7 @@ import { useUserStore } from "@/store/user.store";
 import {
 	transformDateEndQuery,
 	transformDateStartQuery,
+	transformKeywordQuery,
 	transformQueryValue,
 	transformSortByQuery,
 	transformSortOrderQuery,
@@ -54,6 +55,7 @@ export function useGetMeetups(size: number) {
 	const { get } = useQueryParams();
 	const params = {
 		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
+		keyword: transformKeywordQuery(get(QUERY_KEYS.KEYWORD)),
 		region: transformQueryValue(get(QUERY_KEYS.REGION)),
 		dateStart: transformDateStartQuery(get(QUERY_KEYS.DATE_START)),
 		dateEnd: transformDateEndQuery(get(QUERY_KEYS.DATE_END)),

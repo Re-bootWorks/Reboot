@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useCategoryStore } from "@/store/category.store";
 import { CATEGORY_TYPE_ALL, QUERY_KEYS, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "../constants";
 import { getSortByItem, getSortOrderItem } from "../utils";
@@ -8,35 +9,88 @@ import TabButton from "@/components/ui/Buttons/TabButton";
 import DateFilter from "@/components/ui/Filter/DateFilter";
 import RegionFilter from "@/components/ui/Filter/RegionFilter";
 import type { Option } from "@/components/ui/Filter/RegionFilter/option";
-// import { REGION_DATA } from "@/constants/region";
 import { FilterDropdown } from "@/components/ui/Filter/FilterDropdown";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
+import useMediaQuery from "@/hooks/useMediaQuery";
+import { getBreakpoint } from "@/utils/style";
+import { validateText } from "../../utils";
 import { transformRegionData } from "../utils";
+import SearchInput from "@/components/ui/SearchInput";
+import IcSearch from "@/components/ui/icons/IcSearch";
 
 interface ListFiltersProps {
 	/** 최상위 컨테이너 클래스 */
 	className?: string;
 }
-
 export default function ListFilters({ className }: ListFiltersProps) {
+	const { ref, overlays, ...events } = useDragScroll<HTMLUListElement>();
+	const isLg = useMediaQuery(getBreakpoint("lg"));
+	const [isKeywordOpen, setIsKeywordOpen] = useState(isLg);
+	const [isLoaded, setIsLoaded] = useState(false);
+
+	useEffect(() => {
+		setIsLoaded(true);
+	}, []);
+
+	useEffect(() => {
+		if (!isLoaded) return;
+		setIsKeywordOpen(isLg);
+	}, [isLg, isLoaded]);
+
 	return (
 		<div
 			className={cn(
 				"flex flex-col justify-center gap-y-2 pl-1",
 				"md:gap-4 md:pl-2",
-				"lg:flex-row lg:items-center",
+				"lg:flex-row lg:items-start",
 				className,
 			)}>
-			<TypeFilters />
+			<div className="relative min-w-0">
+				<ul ref={ref} className={cn(containerStyle, "flex gap-x-2.5")} {...events}>
+					<KeywordToggle
+						isLoaded={isLoaded}
+						isKeywordOpen={isKeywordOpen}
+						onClick={() => setIsKeywordOpen((prev) => !prev)}
+					/>
+					<TypeFilters />
+				</ul>
+				{overlays}
+				<KeywordFilterWrapper isLoaded={isLoaded} isKeywordOpen={isKeywordOpen}>
+					<KeywordFilter />
+				</KeywordFilterWrapper>
+			</div>
 			<DropdownFilters />
 		</div>
 	);
 }
 
+interface FilterItemProps {
+	/** 텍스트 또는 컴포넌트 라벨 */
+	name?: string;
+	/** 컴포넌트 라벨 */
+	children?: React.ReactNode;
+	/** 선택 여부 */
+	selected: boolean;
+	/** 클릭 핸들러 */
+	onClick: () => void;
+	/** 비활성화 여부 */
+	disabled?: boolean;
+	/** 버튼 추가 클래스 */
+	className?: string;
+}
+function FilterItem({ name, children, selected, onClick, disabled, className }: FilterItemProps) {
+	return (
+		<li className="whitespace-nowrap">
+			<TabButton selected={selected} onClick={onClick} disabled={disabled} className={className}>
+				{children ?? name}
+			</TabButton>
+		</li>
+	);
+}
+
 // 좌측 모임 타입 버튼 목록
 function TypeFilters() {
-	const { ref, overlays, ...events } = useDragScroll<HTMLUListElement>();
 	const { get, set } = useQueryParams();
 	const { categories } = useCategoryStore();
 	const type = get(QUERY_KEYS.TYPE) ?? CATEGORY_TYPE_ALL.name;
@@ -46,40 +100,114 @@ function TypeFilters() {
 	}
 
 	return (
-		<div className="relative">
-			<ul ref={ref} className={cn(containerStyle, "flex gap-x-2.5")} {...events}>
-				<TypeFilterItem
-					key={CATEGORY_TYPE_ALL.id}
-					name={CATEGORY_TYPE_ALL.name}
-					selected={type === CATEGORY_TYPE_ALL.name}
-					onClick={() => handleChangeType(CATEGORY_TYPE_ALL.name)}
+		<>
+			<FilterItem
+				key={CATEGORY_TYPE_ALL.id}
+				name={CATEGORY_TYPE_ALL.name}
+				selected={type === CATEGORY_TYPE_ALL.name}
+				onClick={() => handleChangeType(CATEGORY_TYPE_ALL.name)}
+			/>
+			{categories.map((i) => (
+				<FilterItem
+					key={i.id}
+					name={i.name}
+					selected={type === i.name}
+					onClick={() => handleChangeType(i.name)}
 				/>
-				{categories.map((i) => (
-					<TypeFilterItem
-						key={i.id}
-						name={i.name}
-						selected={type === i.name}
-						onClick={() => handleChangeType(i.name)}
-					/>
-				))}
-			</ul>
-			{overlays}
+			))}
+		</>
+	);
+}
+
+// 검색창 토글 버튼
+interface KeywordToggleProps {
+	/** 미디어 쿼리 로드 여부 */
+	isLoaded: boolean;
+	/** 검색 키워드 필터 열림 여부 */
+	isKeywordOpen: boolean;
+	/** 검색 키워드 필터 열림 여부 변경 핸들러 */
+	onClick: () => void;
+}
+function KeywordToggle({ isLoaded, isKeywordOpen, onClick }: KeywordToggleProps) {
+	return (
+		<FilterItem
+			disabled={!isLoaded}
+			onClick={onClick}
+			selected={isLoaded && isKeywordOpen}
+			className={cn(
+				!isLoaded && "border-2 border-gray-200",
+				isLoaded && "border-2 border-purple-500",
+				isLoaded && isKeywordOpen && "bg-transparent text-purple-500 hover:text-purple-700",
+				isLoaded &&
+					!isKeywordOpen &&
+					"bg-purple-500 text-white hover:border-purple-600 hover:bg-purple-600",
+			)}>
+			<IcSearch color="currentColor" />
+		</FilterItem>
+	);
+}
+
+// 키워드 검색 필터 wrapper
+interface KeywordFilterWrapperProps {
+	/** 미디어 쿼리 로드 여부 */
+	isLoaded: boolean;
+	/** 검색 키워드 필터 열림 여부 */
+	isKeywordOpen: boolean;
+	/** 검색 키워드 필터 컴포넌트 */
+	children: React.ReactNode;
+}
+function KeywordFilterWrapper({ isLoaded, isKeywordOpen, children }: KeywordFilterWrapperProps) {
+	return (
+		<div
+			className={cn(
+				"grid transition-[grid-template-rows] duration-300 ease-out",
+				// JS 실행 전 CSS로 레이아웃 고정
+				!isLoaded && "grid-rows-[0fr] lg:grid-rows-[1fr]",
+				isLoaded && isKeywordOpen && "grid-rows-[1fr] lg:grid-rows-[1fr]",
+				isLoaded && !isKeywordOpen && "grid-rows-[0fr] lg:grid-rows-[0fr]",
+			)}>
+			<div className="min-h-0 overflow-hidden">
+				<div className="m-0.5 mt-2.5">{children}</div>
+			</div>
 		</div>
 	);
 }
 
-interface TypeFilterItemProps {
-	name: string;
-	selected: boolean;
-	onClick: () => void;
-}
-function TypeFilterItem({ name, selected, onClick }: TypeFilterItemProps) {
+// 키워드 검색 필터
+function KeywordFilter() {
+	const { get, set } = useQueryParams();
+	const keywordInputRef = useRef<HTMLInputElement>(null);
+	const [keyword, setKeyword] = useState(get(QUERY_KEYS.KEYWORD) ?? "");
+
+	function handleChangeKeyword(e: React.ChangeEvent<HTMLInputElement>) {
+		setKeyword(e.target.value);
+	}
+
+	function handleClickKeywordSubmit() {
+		if (validateText(keyword)) {
+			set({ [QUERY_KEYS.KEYWORD]: keyword });
+		}
+	}
+
+	function handleKeyDownKeyword(e: React.KeyboardEvent<HTMLInputElement>) {
+		if (e.key === "Enter") handleClickKeywordSubmit();
+	}
+
+	function handleClickKeywordClear() {
+		setKeyword("");
+		set({ [QUERY_KEYS.KEYWORD]: null });
+	}
+
 	return (
-		<li key={name} className="whitespace-nowrap">
-			<TabButton selected={selected} onClick={onClick}>
-				{name}
-			</TabButton>
-		</li>
+		<SearchInput
+			ref={keywordInputRef}
+			placeholder="모임을 검색해보세요."
+			value={keyword}
+			onChange={handleChangeKeyword}
+			onKeyDown={handleKeyDownKeyword}
+			onSearchClick={handleClickKeywordSubmit}
+			onClear={handleClickKeywordClear}
+		/>
 	);
 }
 

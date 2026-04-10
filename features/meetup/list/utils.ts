@@ -34,8 +34,13 @@ export function transformTypeValue(data: string | null | undefined): string | un
 	return !!data && data !== CATEGORY_TYPE_ALL.name ? data : undefined;
 }
 
+/** 검색 키워드 쿼리 값 -> 요청 파라미터 변환 */
+export function transformKeywordQuery(value: string | null | undefined): string | undefined {
+	return !!value ? value.trim() : undefined;
+}
+
 /** 정렬 기준 쿼리 값 → 요청 파라미터 변환 */
-const SORT_BY_VALUES = ["dateTime", "registrationEnd", "participantCount"];
+const SORT_BY_VALUES = SORT_BY_OPTIONS.map((o) => o.value);
 export function transformSortByQuery(value: string | null | undefined): SortBy | undefined {
 	if (value && SORT_BY_VALUES.includes(value)) {
 		return value as SortBy;
@@ -43,7 +48,7 @@ export function transformSortByQuery(value: string | null | undefined): SortBy |
 }
 
 /** 정렬 순서 쿼리 값 → 요청 파라미터 변환 */
-const SORT_ORDER_VALUES = ["asc", "desc"];
+const SORT_ORDER_VALUES = SORT_ORDER_OPTIONS.map((o) => o.value);
 export function transformSortOrderQuery(value: string | null | undefined): SortOrder | undefined {
 	if (value && SORT_ORDER_VALUES.includes(value)) {
 		return value as SortOrder;
