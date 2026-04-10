@@ -9,7 +9,7 @@ import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import useToggle from "@/hooks/useToggle";
 import MeetupCard from "@/features/meetup/list/components/MeetupCard";
 import LoaderDots from "@/components/ui/LoaderDots";
-import Empty from "./Emtpy";
+import Empty from "@/components/ui/Empty";
 import JoinModal from "./JoinModal";
 
 interface MeetupCardItemsProps {
@@ -62,7 +62,13 @@ interface MeetupCardLoadedItemsProps {
 }
 function MeetupCardLoadedItems({ data, setSelectedData, openModalFn }: MeetupCardLoadedItemsProps) {
 	if (data?.length === 0) {
-		return <Empty />;
+		return (
+			<Empty section>
+				아직 모임이 없어요
+				<br />
+				지금 바로 모임을 만들어보세요!
+			</Empty>
+		);
 	}
 	return (
 		<AnimatePresence mode="popLayout">
