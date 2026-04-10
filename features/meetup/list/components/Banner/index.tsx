@@ -1,6 +1,6 @@
 import Image from "next/image";
-import imgBannerLarge from "../assets/img_banner_large.svg";
-import imgBannerSmall from "../assets/img_banner_small.svg";
+import imgBannerLarge from "../../assets/img_banner_large.svg";
+import imgBannerSmall from "../../assets/img_banner_small.svg";
 import { cn } from "@/utils/cn";
 
 export default function Banner({ className }: { className?: string }) {

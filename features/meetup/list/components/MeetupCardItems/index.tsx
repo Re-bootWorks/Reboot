@@ -4,13 +4,13 @@ import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { InfiniteData, UseInfiniteQueryResult } from "@tanstack/react-query";
-import type { MeetupItem, MeetupItemSelected, MeetupListResponse } from "../../types";
+import type { MeetupItem, MeetupItemSelected, MeetupListResponse } from "../../../types";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import useToggle from "@/hooks/useToggle";
 import MeetupCard from "@/features/meetup/list/components/MeetupCard";
 import LoaderDots from "@/components/ui/LoaderDots";
 import Empty from "@/components/ui/Empty";
-import JoinModal from "./JoinModal";
+import JoinModal from "../JoinModal";
 
 interface MeetupCardItemsProps {
 	query: UseInfiniteQueryResult<InfiniteData<MeetupListResponse>>;

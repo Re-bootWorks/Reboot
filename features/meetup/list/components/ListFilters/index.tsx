@@ -2,20 +2,24 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useCategoryStore } from "@/store/category.store";
-import { CATEGORY_TYPE_ALL, QUERY_KEYS, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "../constants";
-import { getSortByItem, getSortOrderItem } from "../utils";
+import {
+	CATEGORY_TYPE_ALL,
+	QUERY_KEYS,
+	SORT_BY_OPTIONS,
+	SORT_ORDER_OPTIONS,
+} from "@/features/meetup/list/constants";
 import { cn } from "@/utils/cn";
+import { getBreakpoint } from "@/utils/style";
+import { getSortByItem, getSortOrderItem, transformRegionData } from "@/features/meetup/list/utils";
+import { validateText } from "@/features/meetup/utils";
+import { useQueryParams } from "@/hooks/useQueryParams";
+import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
+import useMediaQuery from "@/hooks/useMediaQuery";
 import TabButton from "@/components/ui/Buttons/TabButton";
 import DateFilter from "@/components/ui/Filter/DateFilter";
 import RegionFilter from "@/components/ui/Filter/RegionFilter";
 import type { Option } from "@/components/ui/Filter/RegionFilter/option";
 import { FilterDropdown } from "@/components/ui/Filter/FilterDropdown";
-import { useQueryParams } from "@/hooks/useQueryParams";
-import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
-import useMediaQuery from "@/hooks/useMediaQuery";
-import { getBreakpoint } from "@/utils/style";
-import { validateText } from "../../utils";
-import { transformRegionData } from "../utils";
 import SearchInput from "@/components/ui/SearchInput";
 import IcSearch from "@/components/ui/icons/IcSearch";
 

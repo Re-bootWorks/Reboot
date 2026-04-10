@@ -2,11 +2,11 @@
 
 import GroupCard from "@/components/ui/GroupCard";
 import { formatDateTime, uiFormatDeadline } from "@/utils/date";
-import type { MeetupItem, MeetupItemSelected } from "../../types";
-import { checkIsConfirmed, checkIsRegClosed } from "../utils";
-import { useDeleteMeetupFavorite, usePostMeetupFavorite } from "../../queries";
+import type { MeetupItem, MeetupItemSelected } from "@/features/meetup/types";
+import { checkIsConfirmed, checkIsRegClosed } from "@/features/meetup/list/utils";
+import { useDeleteMeetupFavorite, usePostMeetupFavorite } from "@/features/meetup/queries";
 import { useUser } from "@/hooks/useUser";
-import { useMeetupToggle } from "../hooks";
+import { useMeetupToggle } from "@/features/meetup/list/hooks";
 import { useToast } from "@/providers/toast-provider";
 
 interface MeetupCardProps {
