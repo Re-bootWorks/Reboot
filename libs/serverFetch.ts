@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { refreshToken } from "./refreshToken";
+import captureIfServerError from "@/libs/captureIfServerError";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -23,6 +24,7 @@ export async function serverFetch(endpoint: string, options: RequestInit = {}) {
 	const response = await fetchWithToken(endpoint, options, accessToken);
 
 	if (response.status !== 401) {
+		captureIfServerError(response, endpoint, options.method ?? "GET");
 		return response;
 	}
 
@@ -30,5 +32,7 @@ export async function serverFetch(endpoint: string, options: RequestInit = {}) {
 
 	if (!newAccessToken) return response;
 
-	return fetchWithToken(endpoint, options, newAccessToken);
+	const retryResponse = await fetchWithToken(endpoint, options, newAccessToken);
+	captureIfServerError(retryResponse, endpoint, options.method ?? "GET");
+	return retryResponse;
 }
