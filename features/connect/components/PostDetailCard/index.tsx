@@ -20,6 +20,7 @@ import {
 	likeCountVariants,
 } from "@/features/connect/animations";
 import type { PostDetailCardProps } from "@/features/connect/post/types";
+import IcVisibilityOnOutline from "@/components/ui/icons/IcVisibilityOnOutline";
 
 export default function PostDetailCard({
 	id,
@@ -31,6 +32,7 @@ export default function PostDetailCard({
 	createdAt,
 	likeCount,
 	commentCount,
+	viewCount,
 	date,
 	isAuthor,
 	isLiked,
@@ -128,7 +130,6 @@ export default function PostDetailCard({
 							}}
 							className="flex items-center gap-0.5 text-gray-500">
 							<IcThumbOutline color={isLiked ? "purple-500" : "gray-400"} size={20} />
-							{/*  좋아요 숫자 변경 */}
 							<AnimatePresence mode="wait">
 								<motion.span
 									key={likeCount}
@@ -145,6 +146,12 @@ export default function PostDetailCard({
 						<div className="flex items-center gap-0.5 text-gray-500">
 							<IcMessageOutline color="gray-400" size={20} />
 							<span className="text-base">{commentCount}</span>
+						</div>
+
+						{/* 조회수 */}
+						<div className="flex items-center gap-0.5 text-gray-500">
+							<IcVisibilityOnOutline color="gray-400" size={20} />
+							<span className="text-base">{viewCount}</span>
 						</div>
 					</div>
 				</div>

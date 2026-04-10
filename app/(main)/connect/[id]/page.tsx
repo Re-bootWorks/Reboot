@@ -3,22 +3,17 @@ import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query
 import PostDetailContainer from "@/features/connect/containers/PostDetailContainer";
 import { ErrorBoundary } from "react-error-boundary";
 import ConnectErrorFallback from "@/features/connect/components/ErrorBoundary";
+import { connectQueryKeys } from "@/features/connect/queries";
 
 export default async function DetailPage({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;
 	const numId = Number(id);
 	const queryClient = new QueryClient();
 
-	await Promise.all([
-		queryClient.prefetchQuery({
-			queryKey: ["postDetail", numId],
-			queryFn: () => getPostDetailServer(numId),
-		}),
-		queryClient.prefetchQuery({
-			queryKey: ["postComments", numId],
-			queryFn: () => getPostDetailServer(numId),
-		}),
-	]);
+	await queryClient.prefetchQuery({
+		queryKey: connectQueryKeys.detail(numId),
+		queryFn: () => getPostDetailServer(numId),
+	});
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>

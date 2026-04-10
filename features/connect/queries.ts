@@ -66,6 +66,7 @@ export function useGetPostDetail(postId: number) {
 	return useQuery({
 		queryKey: connectQueryKeys.detail(postId),
 		queryFn: () => getPostDetailClient(postId),
+		staleTime: 1000 * 60,
 	});
 }
 
