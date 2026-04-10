@@ -19,8 +19,10 @@ import {
 } from "@/features/meetupDetail/mutations";
 import { useToast } from "@/providers/toast-provider";
 import { useModalStore } from "@/store/modal.store";
-import { useUserStore } from "@/store/user.store";
 import SendButton from "@/components/ui/Buttons/SendButton";
+import { cn } from "@/utils/cn";
+import CancelJoinModal from "@/features/meetupDetail/components/InformationContainer/CancelJoinModal";
+import { useUser } from "@/hooks/useUser";
 
 interface InformationContainerProps {
 	id: number;
@@ -53,13 +55,18 @@ export default function InformationContainer({
 	isFavorited,
 	editInitialData,
 }: InformationContainerProps) {
-	const { user, isPending: isMePending } = useUserStore();
+	const { user, isPending: isMePending } = useUser();
 	const isLoggedIn = !!user;
 
 	const { openLogin } = useModalStore();
 	const { isOpen: isLoginModalOpen, open: openLoginModal, close: closeLoginModal } = useToggle();
 	const { isOpen: isEditModalOpen, open: openEditModal, close: closeEditModal } = useToggle();
 	const { isOpen: isDeleteModalOpen, open: openDeleteModal, close: closeDeleteModal } = useToggle();
+	const {
+		isOpen: isOpenCancelJoin,
+		open: openCancelJoinModal,
+		close: closeCancelJoinModal,
+	} = useToggle();
 
 	const { mutate: join, isPending: isJoinPending } = useJoinMutation(id);
 	const { mutate: cancelJoin, isPending: isCancelPending } = useCancelJoinMutation(id);
@@ -73,6 +80,11 @@ export default function InformationContainer({
 	const isClosed = isDeadlinePassed(registrationEnd);
 	const isRegClosed = isClosed || participantCount >= capacity;
 
+	const handelCancelJoinConfirm = () => {
+		cancelJoin();
+		closeCancelJoinModal();
+	};
+
 	const handleJoinClick = () => {
 		if (isMePending) return;
 		if (!isLoggedIn) {
@@ -80,7 +92,7 @@ export default function InformationContainer({
 			return;
 		}
 		if (isJoined) {
-			cancelJoin();
+			openCancelJoinModal();
 		} else {
 			if (isRegClosed) return;
 			join();
@@ -164,7 +176,10 @@ export default function InformationContainer({
 					) : (
 						<UtilityButton
 							sizes="small"
-							className="lg:size-15"
+							className={cn(
+								"transition-colors lg:size-15",
+								isFavorited ? "border-purple-500" : "hover:border-purple-500",
+							)}
 							pressed={isFavorited}
 							isPending={isFavoritePending}
 							onClick={handleFavoriteConfirm}
@@ -190,6 +205,14 @@ export default function InformationContainer({
 				handleConfirmButton={handleLoginConfirm}>
 				로그인이 필요한 서비스입니다.
 			</Alert>
+
+			{/* 모임 참여 취소 모달 */}
+			<CancelJoinModal
+				isOpen={isOpenCancelJoin}
+				isPending={isCancelPending}
+				onClose={closeCancelJoinModal}
+				onConfirm={handelCancelJoinConfirm}
+			/>
 
 			{/* 모임 수정 모달 */}
 			<EditMeetup

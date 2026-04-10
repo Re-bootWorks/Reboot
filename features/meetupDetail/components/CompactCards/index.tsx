@@ -6,9 +6,9 @@ import { TimeTag } from "@/components/ui/Tags/TimeTag";
 import { IcLocation } from "@/components/ui/icons";
 import { isDeadlinePassed, uiFormatDate, uiFormatDeadline, uiFormatTime } from "@/utils/date";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/store/user.store";
 import { useModalStore } from "@/store/modal.store";
 import { useFavoriteMutation } from "@/features/meetupDetail/mutations";
+import { useUser } from "@/hooks/useUser";
 
 interface CompactCardsProps {
 	id: number;
@@ -31,7 +31,7 @@ export default function CompactCards({
 	image,
 	isFavorited,
 }: CompactCardsProps) {
-	const { user, isPending: isMePending } = useUserStore();
+	const { user, isPending: isMePending } = useUser();
 	const { openLogin } = useModalStore();
 	const { mutate: toggleFavorite, isPending: isFavoritePending } = useFavoriteMutation(id);
 
