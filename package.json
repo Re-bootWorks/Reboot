@@ -6,6 +6,8 @@
 		"dev": "next dev --turbopack",
 		"build": "next build --turbopack",
 		"test": "jest --passWithNoTests",
+		"test:watch": "jest --watchAll",
+		"test:coverage": "jest --coverage",
 		"start": "next start",
 		"lint": "eslint",
 		"storybook": "storybook dev -p 6006",
