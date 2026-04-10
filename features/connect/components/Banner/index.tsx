@@ -7,6 +7,8 @@ import styles from "./index.module.css";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import IcThumbOutline from "@/components/ui/icons/IcThumbOutline";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
+import { useGetPosts } from "@/features/connect/queries";
+import SlotCounter from "react-slot-counter";
 
 //  문구 목록
 const TYPING_PHRASES = [
@@ -80,6 +82,13 @@ export default function ConnectBanner({ className }: { className?: string }) {
 	const [postIdx, setPostIdx] = useState(0);
 	const displayed = useTypingEffect(TYPING_PHRASES);
 	const bannerRef = useRef<HTMLDivElement>(null);
+	const { data: postsData } = useGetPosts({
+		page: 1,
+		sortBy: "createdAt",
+		keyword: "",
+		limit: 1,
+	});
+	const totalViewCount = postsData?.totalViewCount ?? 0;
 
 	// 마우스 위치를 0~1 범위로 추적
 	const mouseX = useMotionValue(0.5);
@@ -137,7 +146,7 @@ export default function ConnectBanner({ className }: { className?: string }) {
 			className={cn(
 				"relative h-48 w-full shrink-0 overflow-hidden",
 				"bg-gradient-to-br from-purple-100 to-purple-200",
-				"md:h-[244px] md:rounded-3xl lg:rounded-4xl",
+				"rounded-2xl md:h-[244px] md:rounded-3xl lg:rounded-4xl",
 				className,
 			)}>
 			{/* 배경 장식 원 — 마우스 트래킹으로 각각 다른 방향/속도로 움직임 */}
@@ -159,7 +168,7 @@ export default function ConnectBanner({ className }: { className?: string }) {
 			/>
 
 			{/* 왼쪽 — 타이핑 텍스트 / 서브 문구 / marquee 태그 */}
-			<div className="absolute top-1/2 right-4 left-4 z-[1] flex -translate-y-1/2 flex-col gap-3 md:right-auto md:left-10 lg:left-14">
+			<div className="absolute top-1/2 right-4 left-4 z-[1] flex -translate-y-1/2 flex-col gap-3 md:right-[320px] md:left-10 lg:right-[420px] lg:left-14">
 				{/* 타이핑 애니메이션 텍스트 + 커서 */}
 				<h1 className="min-h-[56px] text-lg leading-7 font-semibold tracking-[-0.36px] text-gray-900 md:min-h-[72px] md:text-[28px] md:leading-9 lg:min-h-[88px] lg:text-[34px] lg:leading-[1.2]">
 					{displayed.split("\n").map((line, i) => (
@@ -173,7 +182,7 @@ export default function ConnectBanner({ className }: { className?: string }) {
 				</h1>
 
 				{/* 서브 문구 */}
-				<p className="text-[12px] font-medium text-purple-700 md:text-[14px] lg:text-[15px]">
+				<p className="text-[12px] font-medium text-purple-600 md:text-[14px] lg:text-[15px]">
 					같은 관심사를 가진 사람들과 자유롭게 소통해보세요
 				</p>
 
@@ -183,7 +192,7 @@ export default function ConnectBanner({ className }: { className?: string }) {
 						{doubled.map((tag, i) => (
 							<span
 								key={i}
-								className="rounded-full bg-purple-200 px-3 py-1 text-[11px] font-medium whitespace-nowrap text-purple-800 lg:px-4 lg:py-1.5 lg:text-[13px]">
+								className="rounded-full bg-purple-200 px-3 py-1 text-[11px] font-medium whitespace-nowrap text-purple-600 lg:px-4 lg:py-1.5 lg:text-[13px]">
 								{tag}
 							</span>
 						))}
@@ -191,13 +200,30 @@ export default function ConnectBanner({ className }: { className?: string }) {
 				</div>
 			</div>
 
-			{/* 오른쪽 — HOT 게시글 슬라이드 카드 (md 이상에서만 노출) */}
+			{/* 가운데 — 누적 조회수 */}
+			<div className="absolute top-1/2 left-[60%] z-[1] hidden -translate-y-1/2 flex-col items-center gap-2 md:flex">
+				<div className="flex flex-col items-center gap-2">
+					<p className="text-[12px] font-medium tracking-widest text-purple-600 uppercase lg:text-[13px]">
+						누적 조회수
+					</p>
+					<div className="text-[36px] font-semibold text-gray-900 lg:text-[44px]">
+						<SlotCounter
+							value={totalViewCount.toLocaleString()}
+							duration={4}
+							dummyCharacters={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
+						/>
+					</div>
+					<p className="text-[11px] text-purple-600 lg:text-[12px]">게시글이 읽힌 횟수예요</p>
+				</div>
+			</div>
+
+			{/* 오른쪽 — HOT 게시글 슬라이드 카드 */}
 			{currentPost && (
-				<div className="absolute top-1/2 right-4 z-[1] hidden w-[180px] -translate-y-1/2 md:right-10 md:block md:w-[220px] lg:right-14 lg:w-[280px]">
+				<div className="absolute top-1/2 right-4 z-[1] hidden w-[180px] -translate-y-1/2 lg:right-14 lg:block lg:w-[280px]">
 					<div className="h-[130px] rounded-2xl border border-purple-200 bg-white/75 p-4 backdrop-blur-sm lg:h-[150px] lg:rounded-3xl lg:p-5">
 						<div className="mb-2 flex items-center gap-1.5">
 							<div className="h-1.5 w-1.5 rounded-full bg-purple-500" />
-							<p className="text-[11px] font-medium text-purple-700 lg:text-[13px]">
+							<p className="text-[11px] font-medium text-purple-600 lg:text-[13px]">
 								요즘 핫한 게시글
 							</p>
 						</div>

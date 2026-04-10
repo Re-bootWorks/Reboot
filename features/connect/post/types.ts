@@ -83,6 +83,7 @@ export type GetPostsResponse = {
 	totalCount?: number;
 	currentOffset?: number;
 	limit?: number;
+	totalViewCount?: number;
 };
 
 // 게시물 상세 Props 타입
@@ -96,6 +97,7 @@ export type PostDetailCardProps = {
 	createdAt: string;
 	likeCount: number;
 	commentCount: number;
+	viewCount: number;
 	date: number;
 	isAuthor: boolean;
 	isLiked: boolean;

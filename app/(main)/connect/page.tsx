@@ -46,6 +46,15 @@ export default async function ConnectPage({
 			},
 			staleTime: 1000 * 60 * 5,
 		}),
+		queryClient.prefetchQuery({
+			queryKey: connectQueryKeys.list(1, "createdAt", 1, ""),
+			queryFn: async () => {
+				const res = await serverFetch(`/posts?type=all&sortBy=createdAt&offset=0&limit=1`);
+				if (!res.ok) throw new Error("조회수 조회 실패");
+				return res.json();
+			},
+			staleTime: 1000 * 60,
+		}),
 	]);
 
 	return (
