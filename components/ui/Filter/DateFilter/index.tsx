@@ -8,13 +8,15 @@ import Calendar from "@/components/ui/Pickers/DatePicker/Calendar";
 import IcChevronDown from "@/components/ui/icons/IcChevronDown";
 import Button from "@/components/ui/Buttons/Button";
 import FilterTrigger from "@/components/ui/Filter/FilterTrigger";
-import { useIsLg } from "@/hooks/useIsLg";
 import { cn } from "@/utils/cn";
+import useMediaQuery from "@/hooks/useMediaQuery";
 
 export type DateFilterValue = {
 	from: string;
 	to: string;
 };
+
+const MEDIA_QUERY = "(min-width:1280px)";
 
 type DateFilterProps = {
 	value: DateFilterValue;
@@ -68,7 +70,7 @@ function parseDateRangeValue(value: DateFilterValue): DateRange | undefined {
 
 export default function DateFilter({ value = { from: "", to: "" }, onChange }: DateFilterProps) {
 	const [month, setMonth] = useState<Date>(getKoreanToday());
-	const isLg = useIsLg();
+	const isLg = useMediaQuery(MEDIA_QUERY);
 	const parsedRange = useMemo(() => parseDateRangeValue(value), [value.from, value.to]);
 	const [draftRange, setDraftRange] = useState<DateRange | undefined>(parsedRange);
 

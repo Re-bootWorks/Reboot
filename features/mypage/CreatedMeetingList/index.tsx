@@ -28,7 +28,7 @@ function meetupBadges(item: CreatedItem): DetailCardBadge[] {
 	return [{ label: "개설 대기", variant: "pending" }];
 }
 
-function Created() {
+function CreatedMeetingList() {
 	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 alert을 띄웠는지 타겟팅
 	const [alertTarget, setAlertTarget] = useState<CreatedItem | null>(null);
@@ -64,7 +64,7 @@ function Created() {
 
 	return (
 		<>
-			<ul className="mt-6 flex flex-col gap-4 lg:mt-8 lg:gap-6">
+			<ul className="flex flex-col gap-4 lg:gap-6">
 				{items.map((item) => {
 					return (
 						<DetailCard
@@ -97,17 +97,20 @@ function Created() {
 				isPending={isDeletePending}
 				onClose={closeAlert}
 				handleConfirmButton={handleAlertConfirm}>
+				<span className="text-purple-600">
+					{alertTarget?.name} <br />
+				</span>
 				모임을 삭제하시겠습니까?
 			</Alert>
 		</>
 	);
 }
 
-export default function CreatedWrapper() {
+export default function CreatedMeetingListWrapper() {
 	return (
 		<QueryErrorBoundary prefix="내가 만든 모임을 ">
 			<Suspense fallback={<DetailCardSkeleton />}>
-				<Created />
+				<CreatedMeetingList />
 			</Suspense>
 		</QueryErrorBoundary>
 	);
