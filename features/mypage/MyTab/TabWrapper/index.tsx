@@ -13,7 +13,11 @@ import WrittenReviewListWrapper from "../../WrittenReviewList";
 
 const MEDIA_QUERY_LG = "(min-width:1280px)";
 const MEDIA_QUERY_MD = "(min-width:744px)";
-const DEFAULT_TAB = "JoinedMeetingList";
+const TAB_STICKY_OFFSET = {
+	sm: 48,
+	md: 88,
+} as const;
+// STICKY 이후 스크롤 시 스타일 적용 임계값
 const THRESHOLD = {
 	lg: 20,
 	md: 320,
@@ -26,25 +30,26 @@ const STYLE = {
 		"h-4 shadow-[0_13px_16px_rgba(0,0,0,0.08)] overflow-hidden absolute bottom-px left-0 z-0 block w-full",
 };
 
-const TABS = [
-	"JoinedMeetingList",
-	"CreatedMeetingList",
-	"AvailableReviewList",
-	"WrittenReviewList",
+const TAB_ITEMS = [
+	{ id: "JoinedMeetingList", label: "참여 모임" },
+	{ id: "CreatedMeetingList", label: "개설 모임" },
+	{ id: "AvailableReviewList", label: "리뷰 작성" },
+	{ id: "WrittenReviewList", label: "리뷰 목록" },
 ] as const;
-type TabId = (typeof TABS)[number];
+type TabId = (typeof TAB_ITEMS)[number]["id"];
 
 // tab Query 검사 및 타입 가드
 function isTabId(value: string | null): value is TabId {
-	return value !== null && TABS.includes(value as TabId);
+	return value !== null && TAB_ITEMS.some((tabItem) => tabItem.id === value);
 }
 
 export default function TabWrapper() {
 	const { get, set } = useQueryParams();
 	const tabQuery = get("tab");
-	const activeTab = isTabId(tabQuery) ? tabQuery : DEFAULT_TAB;
+	const activeTab = isTabId(tabQuery) ? tabQuery : TAB_ITEMS[0].id;
 	const isLg = useMediaQuery(MEDIA_QUERY_LG);
 	const isMd = useMediaQuery(MEDIA_QUERY_MD);
+	const tabRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
 	const threshold = isLg ? THRESHOLD.lg : isMd ? THRESHOLD.md : THRESHOLD.sm;
 
@@ -71,14 +76,21 @@ export default function TabWrapper() {
 	useEffect(() => {
 		if (isLg) {
 			contentRef.current?.scrollTo({ top: 0, behavior: "auto" });
-		} else {
-			window.scrollTo({ top: isMd ? THRESHOLD.md - 20 : THRESHOLD.sm - 20, behavior: "smooth" });
+			return;
+		}
+		const stickyOffset = isMd ? TAB_STICKY_OFFSET.md : TAB_STICKY_OFFSET.sm;
+		const tabTop = tabRef.current?.getBoundingClientRect().top;
+
+		// 탭 영역이 sticky 기준보다 위로 올라가 있거나 정확히 붙은 상태일때만 이동
+		if (tabTop !== undefined && tabTop <= stickyOffset) {
+			const nextTop = threshold - 20;
+			window.scrollTo({ top: Math.max(nextTop, 0), behavior: "smooth" });
 		}
 	}, [activeTab]);
 
 	return (
 		<div className="min-w-0 grow">
-			<div className={STYLE.tabWrapper}>
+			<div className={STYLE.tabWrapper} ref={tabRef}>
 				<div className={cn("relative z-1")}>
 					<div className={isVisible ? STYLE.scroll : ""} />
 					<PageTabs
@@ -86,30 +98,15 @@ export default function TabWrapper() {
 						onChange={({ id }) => {
 							set({ tab: id });
 						}}>
-						<PageTabs.Item
-							id="JoinedMeetingList"
-							className="sm:grow md:grow-0"
-							btnClassName="min-w-auto w-full">
-							참여한 모임
-						</PageTabs.Item>
-						<PageTabs.Item
-							id="CreatedMeetingList"
-							className="sm:grow md:grow-0"
-							btnClassName="min-w-auto w-full">
-							만든 모임
-						</PageTabs.Item>
-						<PageTabs.Item
-							id="AvailableReviewList"
-							className="sm:grow md:grow-0"
-							btnClassName="min-w-auto w-full">
-							리뷰 작성
-						</PageTabs.Item>
-						<PageTabs.Item
-							id="WrittenReviewList"
-							className="sm:grow md:grow-0"
-							btnClassName="min-w-auto w-full">
-							리뷰 목록
-						</PageTabs.Item>
+						{TAB_ITEMS.map((tabItem) => (
+							<PageTabs.Item
+								key={tabItem.id}
+								id={tabItem.id}
+								className="sm:grow md:grow-0"
+								btnClassName="min-w-auto w-full">
+								{tabItem.label}
+							</PageTabs.Item>
+						))}
 					</PageTabs>
 				</div>
 			</div>
