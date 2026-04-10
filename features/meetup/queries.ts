@@ -15,7 +15,7 @@ import {
 	SuccessResponse,
 } from "@/apis/meetings";
 import { uploadImage } from "@/apis/images";
-import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
 import {
 	transformDateEndQuery,
 	transformDateStartQuery,
@@ -51,7 +51,7 @@ export const meetupMutationKeys = {
 /** 모임 목록 조회 */
 export function useGetMeetups(size: number) {
 	const queryClient = useQueryClient();
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const { get } = useQueryParams();
 	const params = {
 		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
