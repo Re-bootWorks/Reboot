@@ -25,6 +25,7 @@ export default function PostDetailContainer({ id }: { id: number }) {
 					createdAt={data.createdAt}
 					likeCount={data.likeCount}
 					commentCount={data.comments?.length ?? 0}
+					viewCount={data.viewCount}
 					date={new Date(data.createdAt).getTime()}
 					isAuthor={isAuthor}
 					isLiked={data.isLiked ?? false}

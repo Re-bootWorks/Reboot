@@ -16,9 +16,9 @@ import {
 	usePatchMeetingsStatus,
 	usePostMeetingsReviews,
 } from "../mutations";
-import { useUserStore } from "@/store/user.store";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
+import { useUser } from "@/hooks/useUser";
 interface MeetupActionHandlers {
 	/** 모임 확정 */
 	onConfirmMeetup: () => void;
@@ -38,7 +38,7 @@ type AlertAction = "confirm" | "delete" | "cancelMeetup" | "cancelReservation";
 const ALERT_MESSAGE = {
 	confirm: "모임을 확정하시겠습니까?",
 	delete: "모임을 삭제하시겠습니까?",
-	cancelMeetup: "모임 취소하시겠습니까? \n 	취소한 모임은 모임 이용이 불가능 합니다.",
+	cancelMeetup: "모임을 취소하시겠습니까?",
 	cancelReservation: "모임 예약을 취소하시겠습니까?",
 } satisfies Record<AlertAction, string>;
 
@@ -124,9 +124,9 @@ function meetupActions(
 	];
 }
 
-function Meetup() {
-	const userId = useUserStore((state) => state.user?.id);
-
+function JoinedMeetingList() {
+	const { user } = useUser();
+	const userId = user?.id;
 	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
 	const [reviewTarget, setReviewTarget] = useState<MeetupItem | null>(null);
@@ -255,7 +255,7 @@ function Meetup() {
 	if (items.length === 0) return <Empty>아직 참여한 모임이 없어요</Empty>;
 	return (
 		<>
-			<ul className="mt-6 flex flex-col gap-4 lg:mt-8 lg:gap-6">
+			<ul className="flex flex-col gap-4 lg:gap-6">
 				{items.map((item) => {
 					const handlers = meetupActionHandlers(item);
 					return (
@@ -282,7 +282,11 @@ function Meetup() {
 				isPending={isAlertPending}
 				onClose={closeAlert}
 				handleConfirmButton={handleAlertConfirm}>
-				{alertAction ? ALERT_MESSAGE[alertAction] : ""}
+				<span className="text-purple-600">
+					{alertTarget?.name} <br />
+				</span>
+				{alertAction && ALERT_MESSAGE[alertAction]}
+				{alertAction === "cancelMeetup" && <p>취소한 모임은 모임 이용이 불가능 합니다.</p>}
 			</Alert>
 
 			<ReviewModal
@@ -295,11 +299,11 @@ function Meetup() {
 		</>
 	);
 }
-export default function MeetupWrapper() {
+export default function JoinedMeetingListWrapper() {
 	return (
 		<QueryErrorBoundary prefix="나의 모임을 ">
 			<Suspense fallback={<DetailCardSkeleton />}>
-				<Meetup />
+				<JoinedMeetingList />
 			</Suspense>
 		</QueryErrorBoundary>
 	);

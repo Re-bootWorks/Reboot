@@ -2,22 +2,23 @@ import React from "react";
 import { StatusLabel } from "@/components/ui/StatusLabel";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { Participants } from "@/components/ui/Participants";
-import { Participant } from "@/features/meetupDetail/types";
 
 export const MIN_CONFIRMED_COUNT = 3;
 
 interface PersonnelProps {
+	meetingId: number;
 	capacity: number;
 	participantCount: number;
-	participants: Participant[];
 	confirmedAt: string | null;
+	hostId: number;
 }
 
 export default function PersonnelContainer({
+	meetingId,
 	capacity,
 	participantCount,
-	participants,
 	confirmedAt,
+	hostId,
 }: PersonnelProps) {
 	const isConfirmed = !!confirmedAt || participantCount >= MIN_CONFIRMED_COUNT;
 	return (
@@ -29,7 +30,11 @@ export default function PersonnelContainer({
 							{participantCount}
 							<span className="text-gray-700">명 참여</span>
 						</p>
-						<Participants participants={participants} />
+						<Participants
+							meetingId={meetingId}
+							participantCount={participantCount}
+							hostId={hostId}
+						/>
 					</div>
 					{isConfirmed && (
 						<StatusLabel size="sm" className="h-6 lg:text-sm">

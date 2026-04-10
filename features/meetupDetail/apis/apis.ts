@@ -13,8 +13,15 @@ export async function getMeetingDetail(meetingId: number): Promise<Meeting> {
 }
 
 /** 참가자 목록 조회 */
-export async function getParticipants(meetingId: number): Promise<ParticipantsResponse> {
-	const res = await clientFetch(`/meetings/${meetingId}/participants`);
+export async function getParticipants(
+	meetingId: number,
+	cursor?: string,
+): Promise<ParticipantsResponse> {
+	const params = new URLSearchParams();
+	if (cursor) params.append("cursor", cursor);
+	const res = await clientFetch(
+		`/meetings/${meetingId}/participants${params.toString() ? `?${params}` : ""}`,
+	);
 	if (!res.ok) throw new Error("참가자 목록을 불러오지 못했습니다.");
 	return res.json();
 }

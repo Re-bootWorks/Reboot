@@ -11,6 +11,7 @@ interface PageTabProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	isActive?: boolean;
 	/** 테두리 여부 */
 	hasBorder?: boolean;
+	className?: string;
 }
 
 export default function PageTab({
@@ -18,6 +19,7 @@ export default function PageTab({
 	children,
 	isActive = false,
 	hasBorder = true,
+	className,
 	...props
 }: PageTabProps) {
 	return (
@@ -26,6 +28,7 @@ export default function PageTab({
 				"flex min-w-28 cursor-pointer items-center justify-center gap-x-2 py-2 text-sm font-semibold transition-[color,border-color] duration-200 md:min-w-40 md:px-4 md:py-4 md:text-xl",
 				isActive ? "border-purple-600 text-purple-600" : "border-gray-200 text-gray-600",
 				hasBorder && "border-b-2",
+				className,
 			)}
 			role="tab"
 			aria-selected={isActive}

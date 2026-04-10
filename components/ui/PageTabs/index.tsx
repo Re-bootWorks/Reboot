@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
 import useIndicator from "./useIndicator";
 import PageTab from "../PageTab";
+import { cn } from "@/utils/cn";
 
 interface PageTabsProps {
 	/** 초기 활성 탭 ID (마운트 시 1회만 사용) */
@@ -12,9 +13,10 @@ interface PageTabsProps {
 	onChange?: ({ id, label }: OnChangeParams) => void;
 	/** 페이지 탭 아이템 컴포넌트들 */
 	children: React.ReactNode;
+	className?: string;
 }
 
-function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
+function PageTabs({ defaultId, onChange, children, className }: PageTabsProps) {
 	const listRef = useRef<HTMLUListElement>(null);
 	const [activeId, setActiveId] = useState(defaultId);
 	const { ref, overlays, style, ...events } = useDragScroll();
@@ -39,7 +41,7 @@ function PageTabs({ defaultId, onChange, children }: PageTabsProps) {
 
 	return (
 		<TabsContext.Provider value={{ activeId, updateActiveId, addTransition }}>
-			<div className="relative w-full">
+			<div className={cn("relative w-full", className)}>
 				<div ref={ref} className={containerStyle} style={style} {...events}>
 					<div className="relative w-fit min-w-full">
 						<ul className="flex w-full" ref={listRef} role="tablist">
@@ -70,14 +72,19 @@ interface TabItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	icon?: React.ReactNode;
 	/** 텍스트 또는 컴포넌트 라벨 */
 	children: React.ReactNode;
+	btnClassName?: string;
 }
 
-function TabItem({ id, icon, children, ...props }: TabItemProps) {
+function TabItem({ id, icon, children, className, btnClassName, ...props }: TabItemProps) {
 	const { activeId, updateActiveId, addTransition } = useTabs();
 
 	return (
-		<li data-id={id} className="flex grow justify-center sm:grow-0" role="presentation">
+		<li
+			data-id={id}
+			className={cn("flex grow justify-center sm:grow-0", className)}
+			role="presentation">
 			<PageTab
+				className={btnClassName}
 				isActive={activeId === id}
 				hasBorder={false}
 				onClick={() => {
