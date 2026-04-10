@@ -5,7 +5,6 @@ import { IcPerson } from "@/components/ui/icons";
 import { StatusLabel } from "@/components/ui/StatusLabel";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
-import SendButton from "@/components/ui/Buttons/SendButton";
 import { uiFormatDate, uiFormatTime } from "@/utils/date";
 import { DetailCardProps } from "@/features/mypage/types";
 import Link from "next/link";
@@ -29,8 +28,6 @@ const STYLE = {
 const EMPTY_THUMBNAIL_IMAGE = "/assets/img/img_empty_purple.svg";
 
 export default function DetailCard({ item, badges, actions, wishAction }: DetailCardProps) {
-	const isWishable = item.participantCount < item.capacity;
-
 	return (
 		<li className={STYLE.itemBgBox}>
 			<Link href={`/meetup/${item.id}`} className="shrink-0">
@@ -43,15 +40,11 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 				/>
 			</Link>
 			<div className={STYLE.wishBtn}>
-				{isWishable ? (
-					<UtilityButton
-						pressed={wishAction?.isWished}
-						isPending={wishAction?.isPending}
-						onClick={wishAction?.handleWishClick}
-					/>
-				) : (
-					<SendButton />
-				)}
+				<UtilityButton
+					pressed={wishAction?.isWished}
+					isPending={wishAction?.isPending}
+					onClick={wishAction?.handleWishClick}
+				/>
 			</div>
 
 			<div className={STYLE.itemWrapper}>
