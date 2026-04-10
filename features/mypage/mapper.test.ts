@@ -1,5 +1,6 @@
-import { mapJoinedMeeting, toReviewScore } from "./mapper";
-import { mockMeetingJoinedApiRes } from "./mockData";
+import { mapJoinedMeeting, mapMeetingsMy, mapMeReviews, toReviewScore } from "./mapper";
+import { mockMeetingJoinedApiRes, mockMeetingsMyApiRes, mockMeReviewsApiRes } from "./mockData";
+import { MeetingsMyApiRes } from "./types";
 
 describe("mypage mapper", () => {
 	describe("toReviewScore() 별점 확인", () => {
@@ -20,7 +21,7 @@ describe("mypage mapper", () => {
 	});
 
 	describe("mapJoinedMeeting() 필드 확인", () => {
-		test("API 응답을 JoinedMeeting 형태로 매핑한다", () => {
+		test("API 응답을 MeetupItem 형태로 매핑한다", () => {
 			const result = mapJoinedMeeting(mockMeetingJoinedApiRes);
 
 			expect(result).toEqual({
@@ -68,6 +69,66 @@ describe("mypage mapper", () => {
 
 			expect(result.canceledAt).toBe("2026-03-31T09:41:49.482Z");
 			expect(result.confirmedAt).toBe("2026-03-31T09:40:02.178Z");
+		});
+	});
+
+	describe("mapMeetingsMy() 필드 확인", () => {
+		test("API 응답을 CreatedItem 형태로 매핑한다", () => {
+			const result = mapMeetingsMy(mockMeetingsMyApiRes);
+
+			expect(result).toEqual({
+				id: 1000,
+				name: "코딩 스터디",
+				region: "경기 수원시 영통구",
+				dateTime: "2026-03-31T16:05:00.000Z",
+				capacity: 2,
+				participantCount: 2,
+				image: "https://example.com/host.jpg",
+				canceledAt: null,
+				confirmedAt: null,
+				isFavorited: false,
+				isCompleted: true,
+			});
+		});
+
+		test("mapJoinedMeeting에는 있지만 mapMeetingsMy에는 없는 필드가 포함되지 않는다 ", () => {
+			const result = mapMeetingsMy(mockMeetingsMyApiRes as MeetingsMyApiRes);
+
+			expect(result).not.toHaveProperty("registrationEnd");
+			expect(result).not.toHaveProperty("hostId");
+			expect(result).not.toHaveProperty("isReviewed");
+		});
+	});
+
+	describe("mapMeReviews() 필드 확인", () => {
+		test("중첩된 meeting 필드를 평탄화하여 반환한다", () => {
+			const result = mapMeReviews(mockMeReviewsApiRes);
+
+			expect(result).toEqual({
+				id: 123,
+				score: 5,
+				comment: "함께 공부해서 좋았어요",
+				meetingId: 1020,
+				meetingType: "자기계발",
+				meetingName: "코딩 스터디",
+				meetingImage: "https://example.com/image.jpg",
+				meetingDateTime: "2026-04-02T16:05:00.000Z",
+			});
+		});
+		test("score가 toReviewScore를 통해 ReviewScore 타입으로 반환된다", () => {
+			const result = mapMeReviews(mockMeReviewsApiRes);
+
+			expect(result.score).toBe(5);
+		});
+		test("score가 유효하지 않으면 에러를 던진다", () => {
+			const input = { ...mockMeReviewsApiRes, score: 0 };
+
+			expect(() => mapMeReviews(input)).toThrow("잘못된 별점 입니다. : 0");
+		});
+		test("원본 meeting 객체는 필드에 포함되지 않는다", () => {
+			const result = mapMeReviews(mockMeReviewsApiRes);
+
+			expect(result).not.toHaveProperty("meeting");
 		});
 	});
 });
