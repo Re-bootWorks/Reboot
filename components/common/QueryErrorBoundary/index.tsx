@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
-import Empty from "@/components/layout/Empty";
+import Empty from "@/components/ui/Empty";
 import Button from "@/components/ui/Buttons/Button";
 
 interface ErrorFallbackProps extends FallbackProps {
