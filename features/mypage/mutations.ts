@@ -10,7 +10,6 @@ import {
 	uploadProfileImage,
 } from "./apis";
 import { useToast } from "@/providers/toast-provider";
-import { useUserStore } from "@/store/user.store";
 import { mypageQueryKeys } from "./queries";
 import { meetupDetailQueryKeys } from "../meetupDetail/queries";
 import { headerQueryKeys } from "../header/queries";
