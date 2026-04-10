@@ -9,10 +9,11 @@ import { formatIsoDateWithDots } from "@/utils/date";
 import { RATING_STYLE } from "@/constants/ratingStyle";
 import { ReviewCardProps } from "@/features/reviews/types";
 import Link from "next/link";
-import { useUserStore } from "@/store/user.store";
 import Avatar from "@/components/ui/Avatar";
 import { useExpandableText } from "@/hooks/useExpandableText";
 import ExpandToggleButton from "@/components/ui/Buttons/ExpandToggleButton";
+import UserProfileModal from "@/components/ui/Modals/UserProfileModal";
+import { useUser } from "@/hooks/useUser";
 
 const EMPTY_THUMBNAIL_SRC = "/assets/img/img_empty_purple.svg";
 const CONTENT_HEIGHT_THRESHOLD = 200;
@@ -28,6 +29,7 @@ export default function ReviewCard({
 	score,
 	userImage,
 	userName,
+	userEmail,
 	createdAt,
 	comment,
 	meetingName,
@@ -36,7 +38,9 @@ export default function ReviewCard({
 	handleEdit,
 	handleDelete,
 }: Props) {
-	const loggedInUserId = useUserStore((state) => state.user?.id);
+	const [isOpen, setIsOpen] = useState(false);
+	const { user } = useUser();
+	const loggedInUserId = user?.id;
 	const isMyReview = userId === loggedInUserId;
 
 	/** 실제 본문 높이만 측정할 래퍼 */
@@ -156,7 +160,9 @@ export default function ReviewCard({
 
 							{/* 작성자 / 날짜 */}
 							<div className="flex items-center gap-1 md:gap-1.5">
-								<div className="flex items-center gap-1.5">
+								<button
+									onClick={() => setIsOpen(!isOpen)}
+									className="flex cursor-pointer items-center gap-1.5">
 									<Avatar
 										src={userImage}
 										alt={userImage ? `${userName} 프로필 이미지` : "빈 프로필 이미지"}
@@ -170,7 +176,7 @@ export default function ReviewCard({
 										)}
 									/>
 									<span className="text-xs text-gray-500 md:text-sm">{userName}</span>
-								</div>
+								</button>
 
 								<time dateTime={createdAt} className="text-xs text-gray-500 md:text-sm">
 									{formatIsoDateWithDots(createdAt)}
@@ -207,6 +213,14 @@ export default function ReviewCard({
 					</div>
 				</div>
 			</div>
+
+			<UserProfileModal
+				isOpen={isOpen}
+				onClose={() => setIsOpen(false)}
+				authorName={userName}
+				authorImage={userImage || undefined}
+				email={userEmail || undefined}
+			/>
 		</article>
 	);
 }
