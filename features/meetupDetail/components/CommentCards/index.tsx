@@ -8,11 +8,11 @@ import { formatIsoDateWithDots } from "@/utils/date";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { User } from "@/features/meetupDetail/types";
 import Empty from "@/components/ui/Empty";
-import { useUserStore } from "@/store/user.store";
 import ReviewModal, { ReviewFormValues } from "@/features/shared/components/ReviewModal";
 import { useDeleteReviewMutation, useEditReviewMutation } from "@/features/meetupDetail/mutations";
 import Alert from "@/components/ui/Modals/AlertModal";
 import Avatar from "@/components/ui/Avatar";
+import { useUser } from "@/hooks/useUser";
 
 export interface CommentProps {
 	id: number;
@@ -34,7 +34,7 @@ const heartStyles = {
 };
 
 function CommentItem({ score, comment, createdAt, user, onEdit, onDelete }: CommentItemProps) {
-	const { user: me, isPending } = useUserStore();
+	const { user: me, isPending } = useUser();
 	const myReview = !isPending && me?.id === user.id;
 
 	return (

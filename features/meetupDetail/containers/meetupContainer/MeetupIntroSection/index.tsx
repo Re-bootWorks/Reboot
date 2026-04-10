@@ -1,15 +1,15 @@
 import { useMeetingDetail } from "@/features/meetupDetail/queries";
-import { useUserStore } from "@/store/user.store";
 import { toMeetupEditData } from "@/features/meetupDetail/edit/utils";
 import Image from "next/image";
 import InformationContainer from "@/features/meetupDetail/components/InformationContainer";
 import PersonnelContainer from "@/features/meetupDetail/components/PersonnelContainer";
 import { slideFromLeftVariants, slideFromRightVariants } from "@/features/meetupDetail/animations";
 import { motion } from "motion/react";
+import { useUser } from "@/hooks/useUser";
 
 export default function MeetupIntroSection({ meetupId }: { meetupId: number }) {
 	const { data: meeting } = useMeetingDetail(meetupId);
-	const { user, isPending: isMePending } = useUserStore();
+	const { user, isPending: isMePending } = useUser();
 
 	const isHost = !isMePending && meeting.hostId === user?.id;
 	const editInitialData = toMeetupEditData(meeting);

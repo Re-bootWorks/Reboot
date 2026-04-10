@@ -19,10 +19,10 @@ import {
 } from "@/features/meetupDetail/mutations";
 import { useToast } from "@/providers/toast-provider";
 import { useModalStore } from "@/store/modal.store";
-import { useUserStore } from "@/store/user.store";
 import SendButton from "@/components/ui/Buttons/SendButton";
 import { cn } from "@/utils/cn";
 import CancelJoinModal from "@/features/meetupDetail/components/InformationContainer/CancelJoinModal";
+import { useUser } from "@/hooks/useUser";
 
 interface InformationContainerProps {
 	id: number;
@@ -55,7 +55,7 @@ export default function InformationContainer({
 	isFavorited,
 	editInitialData,
 }: InformationContainerProps) {
-	const { user, isPending: isMePending } = useUserStore();
+	const { user, isPending: isMePending } = useUser();
 	const isLoggedIn = !!user;
 
 	const { openLogin } = useModalStore();
