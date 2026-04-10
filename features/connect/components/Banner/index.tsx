@@ -48,6 +48,7 @@ function useTypingEffect(phrases: string[]) {
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	useEffect(() => {
+		if (!phrases.length) return;
 		const current = phrases[phraseIdx];
 		const speed = isDeleting ? 40 : 80; // 삭제 시 더 빠르게 호다닥...!
 
