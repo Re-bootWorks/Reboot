@@ -27,7 +27,9 @@ export function useJoinMutation(meetingId: number) {
 		mutationFn: () => postJoin(meetingId),
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
-			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) });
+			await queryClient.cancelQueries({
+				queryKey: meetupDetailQueryKeys.participants(meetingId),
+			});
 
 			const prevData = queryClient.getQueryData<Meeting>(meetupDetailQueryKeys.meeting(meetingId));
 
@@ -53,7 +55,9 @@ export function useJoinMutation(meetingId: number) {
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) });
+			queryClient.invalidateQueries({
+				queryKey: meetupDetailQueryKeys.participants(meetingId),
+			});
 			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
 			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
 			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
@@ -141,7 +145,9 @@ export function useCancelJoinMutation(meetingId: number) {
 		mutationFn: () => deleteJoin(meetingId),
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
-			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) });
+			await queryClient.cancelQueries({
+				queryKey: meetupDetailQueryKeys.participants(meetingId),
+			});
 
 			const prevData = queryClient.getQueryData<Meeting>(meetupDetailQueryKeys.meeting(meetingId));
 
@@ -171,7 +177,9 @@ export function useCancelJoinMutation(meetingId: number) {
 
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) });
+			queryClient.invalidateQueries({
+				queryKey: meetupDetailQueryKeys.participants(meetingId),
+			});
 			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
 			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
 			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });

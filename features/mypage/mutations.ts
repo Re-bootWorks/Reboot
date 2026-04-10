@@ -10,7 +10,6 @@ import {
 	uploadProfileImage,
 } from "./apis";
 import { useToast } from "@/providers/toast-provider";
-import { useUserStore } from "@/store/user.store";
 import { mypageQueryKeys } from "./queries";
 import { meetupDetailQueryKeys } from "../meetupDetail/queries";
 import { headerQueryKeys } from "../header/queries";
@@ -42,15 +41,13 @@ export function useUploadProfileImage() {
 
 export function usePatchUsersMe(options?: UsePatchUsersMeOptions) {
 	const queryClient = useQueryClient();
-	const setUser = useUserStore((state) => state.setUser);
 	const { handleShowToast } = useToast();
 
 	return useMutation({
 		mutationFn: patchUsersMe,
 
-		onSuccess: (updatedUser) => {
+		onSuccess: () => {
 			options?.onSuccessBeforeSync?.();
-			setUser(updatedUser);
 			handleShowToast({
 				message: "프로필이 수정되었습니다.",
 				status: "success",

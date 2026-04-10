@@ -710,3 +710,6 @@ FodyWeavers.xsd
 .vscode
 
 .env
+
+# Sentry Config File
+.env.sentry-build-plugin
