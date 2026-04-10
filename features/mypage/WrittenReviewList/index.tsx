@@ -9,12 +9,12 @@ import { useMyReviewInfinite } from "../queries";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
 import Empty from "@/components/ui/Empty";
-import { useUserStore } from "@/store/user.store";
 import { useDeleteReviews, usePatchReviews } from "../mutations";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
+import { useUser } from "@/hooks/useUser";
 
 function WrittenReviewList() {
-	const user = useUserStore((state) => state.user);
+	const { user } = useUser();
 
 	// 어떤 모임에 대해 alert을 띄웠는지
 	const [alertTarget, setAlertTarget] = useState<ReviewCardItem | null>(null);

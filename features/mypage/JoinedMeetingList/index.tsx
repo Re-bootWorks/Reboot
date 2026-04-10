@@ -16,9 +16,9 @@ import {
 	usePatchMeetingsStatus,
 	usePostMeetingsReviews,
 } from "../mutations";
-import { useUserStore } from "@/store/user.store";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
+import { useUser } from "@/hooks/useUser";
 interface MeetupActionHandlers {
 	/** 모임 확정 */
 	onConfirmMeetup: () => void;
@@ -125,8 +125,8 @@ function meetupActions(
 }
 
 function JoinedMeetingList() {
-	const userId = useUserStore((state) => state.user?.id);
-
+	const { user } = useUser();
+	const userId = user?.id;
 	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
 	const [reviewTarget, setReviewTarget] = useState<MeetupItem | null>(null);
