@@ -51,30 +51,29 @@ function GroupCard({ id, href, status, children, className, ...props }: GroupCar
 					className,
 				)}
 				{...props}>
-				{status.isJoined && (
-					<div className="transform-origin-center pointer-events-none absolute -top-1 -left-8.5 z-2 aspect-616/174 w-36 translate-y-1/2 -rotate-45">
-						<span className="absolute top-1/2 left-1/2 z-2 -translate-x-1/2 -translate-y-3/5 leading-10 font-bold tracking-widest text-white">
-							참여 모임
-						</span>
-						<NextImage
-							src={ImgRibbon}
-							fill
-							sizes="(max-width: 616px) 100vw, 616px"
-							alt="참여 완료"
-						/>
-					</div>
-				)}
+				{status.isJoined && <JoinedRibbon />}
 				<Link href={href} className="absolute inset-0 z-1" />
 				{children}
 			</div>
 		</GroupCardContext.Provider>
 	);
 }
-const containerStyle = "h-[346px] min-w-[343px] md:h-[219px] w-full rounded-4xl bg-white";
+const containerStyle = "h-[346px] w-[343px] min-w-0 md:h-[219px] w-full rounded-4xl bg-white";
+
+function JoinedRibbon() {
+	return (
+		<div className="transform-origin-center pointer-events-none absolute -top-1 -left-8.5 z-2 aspect-616/174 w-36 translate-y-1/2 -rotate-45">
+			<span className="absolute top-1/2 left-1/2 z-2 -translate-x-1/2 -translate-y-3/5 leading-10 font-bold tracking-widest text-white">
+				참여 모임
+			</span>
+			<NextImage src={ImgRibbon} fill sizes="(max-width: 616px) 100vw, 616px" alt="참여 완료" />
+		</div>
+	);
+}
 
 function GroupCardSkeleton() {
 	return (
-		<div className={containerStyle}>
+		<div className={cn(containerStyle, "overflow-hidden")}>
 			<Skeleton
 				height="100%"
 				containerClassName="block h-full w-full leading-none"
@@ -128,7 +127,7 @@ function Content({ children }: ContentProp) {
 		<div
 			className={cn(
 				"grid flex-1 px-4 py-4.5 md:px-0 md:py-2",
-				"grid-cols-[1fr_auto]",
+				"grid-cols-[1fr_auto] gap-x-1",
 				"md:grid-rows-[auto_auto_1fr_auto]",
 				"[grid-template-areas:'title_title'_'subtitle_subtitle'_'badge-group_badge-group'_'participant-bar_join-button']",
 				"md:[grid-template-areas:'title_title'_'subtitle_subtitle'_'._.'_'badge-group_join-button'_'participant-bar_join-button']",
