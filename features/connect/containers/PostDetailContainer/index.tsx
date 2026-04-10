@@ -4,11 +4,10 @@ import { useGetPostDetail } from "@/features/connect/queries";
 import CommentSection from "@/features/connect/components/CommentSection";
 import PostDetailCard from "@/features/connect/components/PostDetailCard";
 import Container from "@/components/layout/Container";
-import { useUserStore } from "@/store/user.store";
-
+import { useUser } from "@/hooks/useUser";
 export default function PostDetailContainer({ id }: { id: number }) {
 	const { data } = useGetPostDetail(id);
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const isAuthor = !!user && user.id === data?.authorId;
 
 	if (!data) return null;

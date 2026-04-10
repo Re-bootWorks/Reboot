@@ -8,7 +8,7 @@ import { useGetPostDetail } from "@/features/connect/queries";
 import CommentCard from "@/features/connect/components/CommentCard";
 import { mapCommentToCard } from "@/features/connect/comment/mappers";
 import type { ConnectPost } from "@/features/connect/post/types";
-import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
 import { useToast } from "@/providers/toast-provider";
 import CommentInput from "@/features/connect/components/CommentCard/CommentInput";
 import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
@@ -26,7 +26,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 	const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
 	// 스토어 / 공통
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const { handleShowToast } = useToast();
 
 	// 쿼리 / 뮤테이션

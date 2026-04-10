@@ -9,6 +9,7 @@ import { IcChevronRight, IcDelete, IcMenu } from "@/components/ui/icons";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import useToggle from "@/hooks/useToggle";
 import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
 import { useModalStore } from "@/store/modal.store";
 import { useLogout } from "@/features/auth/mutations";
 import { LoginModal } from "@/features/auth/components/LoginModal";
