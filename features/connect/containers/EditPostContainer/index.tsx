@@ -14,7 +14,7 @@ export default function EditPostContainer({ id }: { id: number }) {
 	const router = useRouter();
 	const { handleShowToast } = useToast();
 
-	const { data } = useGetPostDetail(id);
+	const { data, isLoading } = useGetPostDetail(id);
 	const { mutate: updatePost, isPending } = useUpdatePost(id);
 
 	const [title, setTitle] = useState("");
@@ -66,7 +66,11 @@ export default function EditPostContainer({ id }: { id: number }) {
 		);
 	};
 
-	if (!data) return <PostCreateSkeleton />;
+	// 로딩 중일 때만 스켈레톤
+	if (isLoading) return <PostCreateSkeleton />;
+
+	// 데이터가 없을 때 별도 처리
+	if (!data) return null;
 
 	return (
 		<Container narrow>

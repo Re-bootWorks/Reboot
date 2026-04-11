@@ -86,6 +86,9 @@ importers:
       react-loading-skeleton:
         specifier: ^3.5.0
         version: 3.5.0(react@19.1.0)
+      react-slot-counter:
+        specifier: ^3.3.3
+        version: 3.3.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tailwind-merge:
         specifier: ^3.5.0
         version: 3.5.0
@@ -5166,6 +5169,13 @@ packages:
     resolution: {integrity: sha512-gxxSyLbrEAdXTKgfbpBEFZCO/P153DnqSCQau2+o6lNy1jgMRr2MmRmOzMmyrwSaSYLRB8g7b0waYPmUjz7IhQ==}
     peerDependencies:
       react: '>=16.8.0'
+
+  react-slot-counter@3.3.3:
+    resolution: {integrity: sha512-sB5qwYmDFgYZsiG6zloSjzvJzYeeZgV5f/tHWdb8tKB+Jq6+NanvUV5Qbrii34TVP+ZFBeoI33VVvGLCVpiCsw==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
 
   react@19.1.0:
     resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==}
@@ -11599,6 +11609,11 @@ snapshots:
   react-loading-skeleton@3.5.0(react@19.1.0):
     dependencies:
       react: 19.1.0
+
+  react-slot-counter@3.3.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   react@19.1.0: {}
 
