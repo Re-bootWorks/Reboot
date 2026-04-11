@@ -161,7 +161,9 @@ export default function ReviewCard({
 							{/* 작성자 / 날짜 */}
 							<div className="flex items-center gap-1 md:gap-1.5">
 								<button
-									onClick={() => setIsOpen(!isOpen)}
+									type="button"
+									onClick={() => setIsOpen(true)}
+									aria-label={`${userName} 프로필 보기`}
 									className="flex cursor-pointer items-center gap-1.5">
 									<Avatar
 										src={userImage}
