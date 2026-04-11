@@ -8,7 +8,6 @@ import RelativeTime from "@/components/ui/RelativeTime";
 import type { PostCardProps } from "@/features/connect/post/types";
 import LoaderDots from "@/components/ui/LoaderDots";
 import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 
 const containerStyle =
 	"relative flex h-[19.375rem] w-full max-w-[18.5rem] flex-col rounded-xl overflow-hidden bg-white sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]";
@@ -75,13 +74,13 @@ export default function ConnectCard({
 						<div className="flex items-center gap-2">
 							<div className="flex items-center gap-1">
 								{author.image ? (
-									<div className="relative h-4 w-4 shrink-0 overflow-hidden rounded-full">
+									<div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full">
 										<Image src={author.image} alt={author.name} fill className="object-cover" />
 									</div>
 								) : (
-									<IcPerson color="gray-400" />
+									<IcPerson color="gray-400" size={24} />
 								)}
-								<span>{author.name}</span>
+								<span className="text-sm font-medium text-gray-700">{author.name}</span>
 							</div>
 						</div>
 

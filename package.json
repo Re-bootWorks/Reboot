@@ -42,6 +42,7 @@
 		"react-error-boundary": "^6.1.1",
 		"react-hook-form": "^7.71.2",
 		"react-loading-skeleton": "^3.5.0",
+		"react-slot-counter": "^3.3.3",
 		"tailwind-merge": "^3.5.0",
 		"zod": "^4.3.6",
 		"zustand": "^5.0.11"
