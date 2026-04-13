@@ -7,7 +7,7 @@ import {
 	categoryDefaultColors,
 	categoryDarkColors,
 	categoryLightColors,
-} from "@/providers/category-provider";
+} from "@/constants/category";
 
 interface CategoryTabProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	/** 카테고리 이미지 경로 또는 정적 import 결과 */

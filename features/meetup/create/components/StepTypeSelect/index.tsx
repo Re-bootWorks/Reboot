@@ -7,7 +7,7 @@ import { useFormData } from "../../providers/FormDataProvider";
 import { validateText } from "../../../utils";
 import CategoryTab from "@/components/ui/CategoryTab";
 import imgDefault from "@/public/assets/img/img_empty.svg";
-import { categoryImages } from "@/providers/category-provider";
+import { categoryImages } from "@/constants/category";
 
 interface StepTypeSelectProps {
 	/** 단계 숫자 */
