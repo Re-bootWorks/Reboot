@@ -7,7 +7,7 @@ if (!BASE_URL) {
 }
 
 const ROUTE_MEETING_TYPES = "/meeting-types";
-export async function getMeetingTypes(): Promise<MeetingTypeResponse> {
+export async function getMeetingTypes() {
 	const res = await fetch(`${BASE_URL}${ROUTE_MEETING_TYPES}`, {
 		method: "GET",
 		headers: { "Content-Type": "application/json" },
@@ -19,7 +19,7 @@ export async function getMeetingTypes(): Promise<MeetingTypeResponse> {
 }
 
 /** layout.tsx 에서 사용. 렌더링 blocking 방지 */
-export async function initMeetingTypes(): Promise<MeetingTypeResponse | null> {
+export async function initMeetingTypes() {
 	try {
 		return await getMeetingTypes();
 	} catch (e) {
