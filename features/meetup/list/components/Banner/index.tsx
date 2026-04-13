@@ -1,6 +1,6 @@
 import Image from "next/image";
-import imgBannerLarge from "../../assets/img_banner_large.svg";
-import imgBannerSmall from "../../assets/img_banner_small.svg";
+import imgBannerLarge from "./assets/img_banner_large.svg";
+import imgBannerSmall from "./assets/img_banner_small.svg";
 import { cn } from "@/utils/cn";
 
 export default function Banner({ className }: { className?: string }) {
@@ -29,9 +29,9 @@ export default function Banner({ className }: { className?: string }) {
 			</div>
 			<div
 				className={cn(
-					"absolute top-[35px] right-[-106px] h-[205px] w-[352px]",
-					"md:top-[28px] md:right-[-95px] md:h-[273px] md:w-[468px]",
-					"lg:top-2 lg:right-[84px] lg:h-[313.143px] lg:w-[536px]",
+					"absolute top-[10px] right-[-50px] h-[263px] w-[435px]",
+					"md:top-[-25px] md:right-[-50px] md:h-[376px] md:w-[536px]",
+					"lg:top-[-25px] lg:right-[80px] lg:h-[376px] lg:w-[536px]",
 				)}>
 				<Image
 					fetchPriority="high"
@@ -39,7 +39,7 @@ export default function Banner({ className }: { className?: string }) {
 					alt="banner"
 					fill
 					className="md:hidden"
-					sizes="352px"
+					sizes="435px"
 					priority
 				/>
 				<Image
