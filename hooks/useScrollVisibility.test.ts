@@ -49,7 +49,7 @@ describe("useScrollVisibility", () => {
 			.spyOn(window, "requestAnimationFrame")
 			.mockImplementation((callback: FrameRequestCallback) => {
 				// 즉시 실행하면 훅 내부의 ticking 플래그 흐름이 꼬일 수 있어
-				// callback만 저장해두고 각 테스트에서 runRaf()로 수동 실행
+				// callback만 저장해두고 각 테스트에서 runAnimationFrame()로 수동 실행
 				rafCallback = callback;
 				return 1; // frameId 반환
 			});
@@ -195,5 +195,3 @@ describe("useScrollVisibility", () => {
 		});
 	});
 });
-
-// requestAnimationFrame 기반으로 동작하는 훅이므로 scroll 이벤트 후 runAnimationFrame()로 상태 갱신을 직접 실행

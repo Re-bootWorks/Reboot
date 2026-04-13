@@ -42,7 +42,7 @@ describe("mypage mapper", () => {
 			});
 		});
 
-		test("mapper에 없는 필드는 포함하지 않는다 ", () => {
+		test("mapper에 없는 필드는 포함하지 않는다", () => {
 			const result = mapJoinedMeeting(mockMeetingJoinedApiRes);
 
 			expect(result).not.toHaveProperty("teamId");
@@ -92,7 +92,7 @@ describe("mypage mapper", () => {
 		});
 
 		test("mapJoinedMeeting에는 있지만 mapMeetingsMy에는 없는 필드가 포함되지 않는다 ", () => {
-			const result = mapMeetingsMy(mockMeetingsMyApiRes as MeetingsMyApiRes);
+			const result = mapMeetingsMy(mockMeetingsMyApiRes);
 
 			expect(result).not.toHaveProperty("registrationEnd");
 			expect(result).not.toHaveProperty("hostId");
