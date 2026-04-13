@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import ReviewCard from ".";
-import {mockMeReviewsApiRes, mockUserProfile } from "@/features/mypage/mockData";
+import { mockMeReviewsApiRes, mockUserProfile } from "@/features/mypage/mockData";
 import { ReviewList } from "../../types";
 import { mapMeReviews } from "../../mapper";
 
-const mockMyReviews: ReviewList = Array(mockMeReviewsApiRes).map(mapMeReviews);
+const mockMyReviews: ReviewList = [mockMeReviewsApiRes].map(mapMeReviews);
 
 const meta: Meta<typeof ReviewCard> = {
 	title: "Features/My/ReviewCard",
