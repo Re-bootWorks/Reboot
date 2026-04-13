@@ -15,6 +15,7 @@ import { validateText } from "@/features/meetup/utils";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import useScrollSticky from "@/hooks/useScrollSticky";
 import TabButton from "@/components/ui/Buttons/TabButton";
 import DateFilter from "@/components/ui/Filter/DateFilter";
 import RegionFilter from "@/components/ui/Filter/RegionFilter";
@@ -28,7 +29,12 @@ interface ListFiltersProps {
 	className?: string;
 }
 export default function ListFilters({ className }: ListFiltersProps) {
-	const { ref, overlays, ...events } = useDragScroll<HTMLUListElement>();
+	const containerRef = useRef<HTMLDivElement>(null);
+	const isExpanded = useScrollSticky({
+		topOffset: containerRef.current?.offsetTop,
+		collapsePx: 60,
+	});
+	const { ref: scrollRef, overlays, ...events } = useDragScroll<HTMLUListElement>();
 	const isLg = useMediaQuery(getBreakpoint("lg"));
 	const [isKeywordOpen, setIsKeywordOpen] = useState(isLg);
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -44,14 +50,17 @@ export default function ListFilters({ className }: ListFiltersProps) {
 
 	return (
 		<div
+			ref={containerRef}
 			className={cn(
-				"flex flex-col justify-center gap-y-2 pl-1",
-				"md:gap-4 md:pl-2",
-				"lg:flex-row lg:items-start",
+				"flex flex-col justify-center gap-y-2",
+				"md:gap-4 lg:flex-row lg:items-start",
+				"sticky top-12 md:top-[88px]",
+				"z-1 transition-transform duration-300",
+				!isExpanded && "-translate-y-[calc(100%+48px)] md:-translate-y-[calc(100%+88px)]",
 				className,
 			)}>
 			<div className="relative min-w-0">
-				<ul ref={ref} className={cn(containerStyle, "flex gap-x-2.5")} {...events}>
+				<ul ref={scrollRef} className={cn(containerStyle, "flex gap-x-2.5")} {...events}>
 					<KeywordToggle
 						isLoaded={isLoaded}
 						isKeywordOpen={isKeywordOpen}

@@ -40,6 +40,7 @@ export default function Banner({ className }: { className?: string }) {
 					fill
 					className="md:hidden"
 					sizes="352px"
+					priority
 				/>
 				<Image
 					fetchPriority="high"
@@ -48,6 +49,7 @@ export default function Banner({ className }: { className?: string }) {
 					fill
 					className="hidden md:block"
 					sizes="(max-width: 1280px) 468px, 536px"
+					priority
 				/>
 			</div>
 		</div>
