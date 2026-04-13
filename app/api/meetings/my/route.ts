@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverFetch } from "@/libs/serverFetch";
-import { nextJsonResponse } from "@/utils/api";
+import { nextJsonResponse } from "@/utils/api.server";
 
 // 내가 만든 모임 목록
 export async function GET(request: NextRequest) {

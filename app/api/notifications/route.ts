@@ -1,7 +1,7 @@
 // 알림 목록
 import { serverFetch } from "@/libs/serverFetch";
-import { nextJsonResponse } from "@/utils/api";
 import { NextRequest, NextResponse } from "next/server";
+import { nextJsonResponse } from "@/utils/api.server";
 
 export async function GET(request: NextRequest) {
 	try {
