@@ -50,9 +50,10 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 			queryFn: () => meeting,
 			staleTime: 1000 * 60 * 5,
 		}),
-		queryClient.prefetchQuery({
+		queryClient.prefetchInfiniteQuery({
 			queryKey: meetupDetailQueryKeys.participants(meetingId),
 			queryFn: () => getParticipantsServer(meetingId),
+			initialPageParam: undefined,
 			staleTime: 1000 * 60 * 3,
 		}),
 		queryClient.prefetchQuery({

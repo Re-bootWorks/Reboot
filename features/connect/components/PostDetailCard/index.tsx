@@ -9,7 +9,7 @@ import RelativeTime from "@/components/ui/RelativeTime";
 import dayjs from "@/libs/dayjs";
 import { useRouter } from "next/navigation";
 import { useDeletePost, useToggleConnectLike } from "@/features/connect/mutations";
-import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
 import { useToast } from "@/providers/toast-provider";
 import Alert from "@/components/ui/Modals/AlertModal";
 import { useState } from "react";
@@ -20,6 +20,7 @@ import {
 	likeCountVariants,
 } from "@/features/connect/animations";
 import type { PostDetailCardProps } from "@/features/connect/post/types";
+import IcVisibilityOnOutline from "@/components/ui/icons/IcVisibilityOnOutline";
 
 export default function PostDetailCard({
 	id,
@@ -31,12 +32,13 @@ export default function PostDetailCard({
 	createdAt,
 	likeCount,
 	commentCount,
+	viewCount,
 	date,
 	isAuthor,
 	isLiked,
 }: PostDetailCardProps) {
 	const router = useRouter();
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const { handleShowToast } = useToast();
 	const { mutate: deletePost } = useDeletePost(id);
 	const { mutate: toggleLike } = useToggleConnectLike(id);
@@ -128,7 +130,6 @@ export default function PostDetailCard({
 							}}
 							className="flex items-center gap-0.5 text-gray-500">
 							<IcThumbOutline color={isLiked ? "purple-500" : "gray-400"} size={20} />
-							{/*  좋아요 숫자 변경 */}
 							<AnimatePresence mode="wait">
 								<motion.span
 									key={likeCount}
@@ -145,6 +146,12 @@ export default function PostDetailCard({
 						<div className="flex items-center gap-0.5 text-gray-500">
 							<IcMessageOutline color="gray-400" size={20} />
 							<span className="text-base">{commentCount}</span>
+						</div>
+
+						{/* 조회수 */}
+						<div className="flex items-center gap-0.5 text-gray-500">
+							<IcVisibilityOnOutline color="gray-400" size={20} />
+							<span className="text-base">{viewCount}</span>
 						</div>
 					</div>
 				</div>

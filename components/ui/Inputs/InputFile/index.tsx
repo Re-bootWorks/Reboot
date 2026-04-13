@@ -1,6 +1,6 @@
 "use client";
 
-import NextImage from "next/image";
+import Image from "next/image";
 import { useEffect, useImperativeHandle, useRef } from "react";
 import { cn } from "@/utils/cn";
 import { InputFieldWrapper } from "../InputFieldWrapper";
@@ -22,7 +22,10 @@ interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	hintText?: string;
 	/** 에러 상태 여부 */
 	isDestructive?: boolean;
-	/** 첨부 파일 타입 */
+	/**
+	 * `input`의 accept
+	 * @default PNG·JPEG·GIF·WebP
+	 */
 	accept?: string;
 	/** 썸네일 이미지 크기 */
 	thumbSize?: "large" | "small";
@@ -43,6 +46,17 @@ export interface InputFileHandle {
 	reset: () => void;
 }
 
+export const IMAGE_ACCEPT = "image/png, image/jpeg, image/gif, image/webp";
+export const IMAGE_ACCEPTED_EXTS: string[] = IMAGE_ACCEPT.split(", ");
+const ImageSize = {
+	large: "147px",
+	small: "114px",
+};
+const imageSizeStyle = {
+	large: "w-[147px] h-[147px]",
+	small: "w-[114px] h-[114px]",
+};
+
 export default function InputFile({
 	label,
 	ref,
@@ -50,7 +64,7 @@ export default function InputFile({
 	isRequired = false,
 	defaultUrl = null,
 	thumbSize = "large",
-	accept = "image/*",
+	accept = IMAGE_ACCEPT,
 	hintText,
 	isDestructive = false,
 	isPending = false,
@@ -87,8 +101,7 @@ export default function InputFile({
 				<div
 					className={cn(
 						"overflow-hidden rounded-xl bg-gray-50 transition-colors",
-						thumbSize === "large" && "h-[147px] w-[147px]",
-						thumbSize === "small" && "h-[114px] w-[114px]",
+						imageSizeStyle[thumbSize],
 						!isDestructive
 							? "border border-transparent focus-within:border-purple-500"
 							: "border-error border",
@@ -107,7 +120,13 @@ export default function InputFile({
 						{!previewUrl && <NoPreview thumbSize={thumbSize} />}
 						{previewUrl && (
 							<>
-								<NextImage src={previewUrl} alt="thumbnail" fill className="object-cover" />
+								<Image
+									src={previewUrl}
+									alt="thumbnail"
+									fill
+									sizes={ImageSize[thumbSize]}
+									className="object-cover"
+								/>
 								<DeleteButton
 									className="absolute top-2.5 right-2.5 z-10 cursor-pointer"
 									onClick={handleDeleteButtonClick}

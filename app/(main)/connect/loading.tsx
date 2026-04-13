@@ -1,13 +1,13 @@
 import Container from "@/components/layout/Container";
 import CompactCard from "@/features/connect/components/CompactCard";
 import ConnectCard from "@/features/connect/components/PostCard";
-import IntroSection from "@/features/connect/components/IntroSection";
 import SearchInput from "@/components/ui/SearchInput";
 
 export default function Loading() {
 	return (
 		<Container>
-			<IntroSection />
+			{/* 배너 */}
+			<div className="mt-12 h-48 w-full animate-pulse rounded-none bg-gray-100 md:h-[244px] md:rounded-3xl lg:rounded-4xl" />
 
 			{/* HOT 게시물 섹션 */}
 			<section className="mt-[81px]">

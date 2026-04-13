@@ -5,7 +5,7 @@ import animations from "./style.module.css";
 import { ButtonHTMLAttributes } from "react";
 
 export const utilityVariants = cva(
-	"bg-gray-50 border border-gray-200 rounded-full flex justify-center items-center shrink-0 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 enabled:hover:bg-gray-100",
+	"bg-white border border-gray-200 rounded-full flex justify-center items-center shrink-0 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 transition-colors",
 	{
 		variants: {
 			sizes: {

@@ -1,0 +1,45 @@
+.row {
+	display: flex;
+	overflow: hidden;
+	height: 100%;
+}
+
+.contentLeft {
+	flex-shrink: 0;
+	display: flex;
+	min-width: 100%;
+	animation: scrollLeft 30s linear infinite;
+}
+
+.contentRight {
+	flex-shrink: 0;
+	display: flex;
+	min-width: 100%;
+	animation: scrollRight 30s linear infinite;
+}
+
+.image {
+	display: block;
+	height: 100%;
+	width: auto;
+	max-width: none;
+	flex-shrink: 0;
+}
+
+@keyframes scrollLeft {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-100%);
+	}
+}
+
+@keyframes scrollRight {
+	from {
+		transform: translateX(-100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
