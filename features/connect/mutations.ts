@@ -16,7 +16,8 @@ import { useToast } from "@/providers/toast-provider";
 import { deleteComment } from "@/features/connect/apis/deleteComment";
 import { connectQueryKeys } from "@/features/connect/queries";
 import { headerQueryKeys } from "@/features/header/queries";
-import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
+
 // 댓글/좋아요 뮤테이션 후 공통으로 무효화할 헤더 관련 쿼리
 function invalidateHeaderQueries(queryClient: ReturnType<typeof useQueryClient>) {
 	queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications }); // 알림 목록
@@ -133,7 +134,7 @@ export function useUpdatePost(postId: number) {
 // 댓글 작성 (Optimistic Update)
 export function useCreateComment(postId: number, onSuccess?: () => void) {
 	const queryClient = useQueryClient();
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const { handleShowToast } = useToast();
 
 	return useMutation({
