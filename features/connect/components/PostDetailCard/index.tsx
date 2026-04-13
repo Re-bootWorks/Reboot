@@ -9,7 +9,7 @@ import RelativeTime from "@/components/ui/RelativeTime";
 import dayjs from "@/libs/dayjs";
 import { useRouter } from "next/navigation";
 import { useDeletePost, useToggleConnectLike } from "@/features/connect/mutations";
-import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
 import { useToast } from "@/providers/toast-provider";
 import Alert from "@/components/ui/Modals/AlertModal";
 import { useState } from "react";
@@ -38,7 +38,7 @@ export default function PostDetailCard({
 	isLiked,
 }: PostDetailCardProps) {
 	const router = useRouter();
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const { handleShowToast } = useToast();
 	const { mutate: deletePost } = useDeletePost(id);
 	const { mutate: toggleLike } = useToggleConnectLike(id);

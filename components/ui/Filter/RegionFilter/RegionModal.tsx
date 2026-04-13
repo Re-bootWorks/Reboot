@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { REGION_DATA } from "@/constants/region";
 import IcDelete from "@/components/ui/icons/IcDelete";
 import IcCheck from "@/components/ui/icons/IcCheck";
@@ -31,6 +32,11 @@ export default function RegionModal({
 	// 모달 내부에서 임시로 관리하는 선택 상태
 	const [selectedRegion, setSelectedRegion] = useState<Option | null>(null);
 	const [selectedDistrict, setSelectedDistrict] = useState<Option | null>(null);
+	const [mounted, setMounted] = useState(false);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	// 모달이 열릴 때마다 부모의 값을 기준으로 상태 초기화
 	useEffect(() => {
@@ -41,7 +47,7 @@ export default function RegionModal({
 	}, [isOpen, initialRegion, initialDistrict]);
 
 	// 모달이 닫혀있으면 렌더링하지 않음
-	if (!isOpen) return null;
+	if (!mounted || !isOpen) return null;
 
 	// "지역 전체" 선택 여부 (UI 상태 판단)
 	const isAllSelected = !selectedRegion && !selectedDistrict;
@@ -71,7 +77,7 @@ export default function RegionModal({
 		onClose();
 	};
 
-	return (
+	return createPortal(
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
 			<div className="flex h-[36.5rem] w-[21.375rem] flex-col rounded-3xl bg-white px-6 pt-8 pb-6 md:h-[46rem] md:w-[34rem] md:rounded-[2.5rem] md:p-12">
 				{/* 헤더 영역 */}
@@ -134,6 +140,7 @@ export default function RegionModal({
 					</Button>
 				</div>
 			</div>
-		</div>
+		</div>,
+		document.body,
 	);
 }

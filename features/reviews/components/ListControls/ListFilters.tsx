@@ -53,7 +53,10 @@ export default function ListFilters() {
 	}
 
 	return (
-		<div role="group" aria-label="모임 필터 그룹" className="flex items-center justify-center">
+		<div
+			role="group"
+			aria-label="모임 필터 그룹"
+			className="flex items-center justify-center gap-x-1.5">
 			<DateFilter value={dateRange} onChange={handleChangeDate} />
 			<RegionFilter value={region} onChange={handleChangeLocation} />
 			<FilterDropdown

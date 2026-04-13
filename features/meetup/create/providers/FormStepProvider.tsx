@@ -24,7 +24,11 @@ export function useFormStep() {
 	if (!ctx) {
 		throw new Error("useFormStep는 FormStepProvider 안에서만 사용할 수 있습니다");
 	}
-	return ctx;
+	return {
+		...ctx,
+		isFirstStep: ctx.currentStep === 1,
+		isLastStep: ctx.currentStep === ctx.totalSteps,
+	};
 }
 
 export default function FormStepProvider({

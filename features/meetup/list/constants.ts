@@ -1,13 +1,3 @@
-export const MEETUP_TYPES = [
-	{ value: "all", label: "전체" },
-	{ value: "hobby", label: "취미/여가" },
-	{ value: "study", label: "스터디" },
-	{ value: "business", label: "비즈니스" },
-	{ value: "health", label: "운동/건강" },
-	{ value: "family", label: "가족/육아" },
-	{ value: "etc", label: "기타" },
-]; // TODO: 삭제 예정, category.store 로 변경 필요
-
 export const QUERY_KEYS = {
 	/** 모임 종류 */
 	TYPE: "type",
@@ -21,8 +11,6 @@ export const QUERY_KEYS = {
 	SORT_ORDER: "order",
 	/** 지역 */
 	REGION: "region",
-	/** 모임 날짜: TODO: 삭제 예정 */
-	DATE: "date",
 };
 
 /** 정렬 기준 항목 */

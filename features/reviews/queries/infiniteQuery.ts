@@ -19,6 +19,7 @@ export function useReviewsInfiniteQuery(params: ReviewsListRequest) {
 					score: review.score,
 					userImage: review.user.image,
 					userName: review.user.name,
+					userEmail: review.user.email,
 					createdAt: review.createdAt,
 					comment: review.comment,
 					meetingName: review.meeting.name,
