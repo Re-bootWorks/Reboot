@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Tektur:wght@800&display=swap");
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @import "./font.css";
@@ -106,6 +107,7 @@
 	/* ─── font family ─── */
 	--font-pretendard: "Pretendard";
 	--font-taenada: "Taenada";
+	--font-tektur: "Tektur";
 
 	/* ─── font ─── */
 	--text-xs: 0.75rem;
