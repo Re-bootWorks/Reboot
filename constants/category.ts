@@ -1,5 +1,5 @@
-import { StaticImageData } from "next/image";
-import { CategoryName } from "@/store/category.store";
+import type { StaticImageData } from "next/image";
+import type { CategoryName } from "@/store/category.store";
 import imgGrowth from "@/public/assets/img/img_meetup_growth.svg";
 import imgFitness from "@/public/assets/img/img_meetup_fitness.svg";
 import imgCulture from "@/public/assets/img/img_meetup_culture.svg";
