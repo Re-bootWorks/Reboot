@@ -16,6 +16,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { commentEditVariants } from "@/features/connect/animations";
 import Avatar from "@/components/ui/Avatar";
 import { useToast } from "@/providers/toast-provider";
+import { useUser } from "@/hooks/useUser";
 import { useToggleCommentLike } from "@/features/connect/mutations";
 import IcHeart from "@/components/ui/icons/IcHeart";
 import IcHeartOutline from "@/components/ui/icons/IcHeartOutline";
@@ -53,6 +54,7 @@ export default function CommentCard({
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const { handleShowToast } = useToast();
+	const { user } = useUser();
 
 	// 파생 변수
 	const isMine = authorId === currentUserId;
@@ -131,6 +133,10 @@ export default function CommentCard({
 
 	const handleLike = (e: React.MouseEvent) => {
 		e.stopPropagation();
+		if (!user) {
+			handleShowToast({ message: "로그인 후 이용해주세요.", status: "error" });
+			return;
+		}
 		likeMutation.mutate(isLiked);
 	};
 
