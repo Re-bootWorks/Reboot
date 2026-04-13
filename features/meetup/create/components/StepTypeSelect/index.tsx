@@ -2,18 +2,12 @@
 
 import { useEffect } from "react";
 import { motion } from "motion/react";
-import type { StaticImageData } from "next/image";
-import { useCategoryStore, type CategoryName } from "@/store/category.store";
+import { useCategoryStore } from "@/store/category.store";
 import { useFormData } from "../../providers/FormDataProvider";
 import { validateText } from "../../../utils";
 import CategoryTab from "@/components/ui/CategoryTab";
 import imgDefault from "@/public/assets/img/img_empty.svg";
-import imgGrowth from "@/features/meetup/create/assets/img_growth.svg";
-import imgFitness from "@/features/meetup/create/assets/img_fitness.svg";
-import imgCulture from "@/features/meetup/create/assets/img_culture.svg";
-import imgTravel from "@/features/meetup/create/assets/img_travel.svg";
-import imgPets from "@/features/meetup/create/assets/img_pets.svg";
-import imgVibes from "@/features/meetup/create/assets/img_vibes.svg";
+import { categoryImages } from "@/providers/category-provider";
 
 interface StepTypeSelectProps {
 	/** 단계 숫자 */
@@ -66,11 +60,3 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 }
 
 const DESC = "이 모임은 어떤 종류인가요?";
-const categoryImages = {
-	자기계발: imgGrowth,
-	"운동/스포츠": imgFitness,
-	문화생활: imgCulture,
-	여행: imgTravel,
-	반려동물: imgPets,
-	기타: imgVibes,
-} satisfies Record<CategoryName, StaticImageData>;
