@@ -14,3 +14,30 @@ Object.defineProperty(window, "matchMedia", {
 		dispatchEvent: jest.fn(),
 	})),
 });
+
+// IntersectionObserver 모킹
+class MockIntersectionObserver {
+	constructor(_callBack: IntersectionObserverCallback, _option?: IntersectionObserverInit) {}
+
+	observe() {
+		return null;
+	}
+
+	unobserve() {
+		return null;
+	}
+
+	disconnect() {
+		return null;
+	}
+
+	takeRecords() {
+		return [];
+	}
+}
+
+Object.defineProperty(globalThis, "IntersectionObserver", {
+	writable: true,
+	configurable: true,
+	value: MockIntersectionObserver,
+});
