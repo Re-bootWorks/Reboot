@@ -63,7 +63,7 @@ interface MeetupCardLoadedItemsProps {
 function MeetupCardLoadedItems({ data, setSelectedData, openModalFn }: MeetupCardLoadedItemsProps) {
 	if (data?.length === 0) {
 		return (
-			<Empty section>
+			<Empty section className="col-span-full">
 				아직 모임이 없어요
 				<br />
 				지금 바로 모임을 만들어보세요!
