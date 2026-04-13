@@ -7,9 +7,7 @@ import { Suspense } from "react";
 import { serverFetch } from "@/libs/serverFetch";
 import IntroSection from "@/features/connect/components/IntroSection";
 import { connectQueryKeys } from "@/features/connect/queries";
-import { ErrorBoundary } from "react-error-boundary";
-import ConnectErrorFallback from "@/features/connect/components/ErrorBoundary";
-
+import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 export default async function ConnectPage({
 	searchParams,
 }: {
@@ -62,17 +60,17 @@ export default async function ConnectPage({
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<Container className="min-w-[380px]">
 				<IntroSection />
-				<ErrorBoundary FallbackComponent={ConnectErrorFallback}>
+				<QueryErrorBoundary prefix="HOT 게시글 조회 중 오류 발생">
 					<Suspense fallback={null}>
 						<HotPostSection />
 					</Suspense>
-				</ErrorBoundary>
+				</QueryErrorBoundary>
 				<div className="mt-[6.125rem] pb-[8.75rem]">
-					<ErrorBoundary FallbackComponent={ConnectErrorFallback}>
+					<QueryErrorBoundary prefix="게시글 조회 중 오류 발생">
 						<Suspense fallback={null}>
 							<PostContainer />
 						</Suspense>
-					</ErrorBoundary>
+					</QueryErrorBoundary>
 				</div>
 			</Container>
 		</HydrationBoundary>

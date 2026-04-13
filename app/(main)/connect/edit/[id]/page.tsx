@@ -2,9 +2,8 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryClient } from "@/libs/getQueryClient";
 import EditPostContainer from "@/features/connect/containers/EditPostContainer";
 import { getPostDetailServer } from "@/features/connect/apis/getPostDetailServer";
-import { ErrorBoundary } from "react-error-boundary";
-import ConnectErrorFallback from "@/features/connect/components/ErrorBoundary";
 import { connectQueryKeys } from "@/features/connect/queries";
+import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
 	const { id: strId } = await params;
@@ -19,9 +18,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<ErrorBoundary FallbackComponent={ConnectErrorFallback}>
+			<QueryErrorBoundary prefix="게시글 상세 조회 중 오류 발생">
 				<EditPostContainer id={id} />
-			</ErrorBoundary>
+			</QueryErrorBoundary>
 		</HydrationBoundary>
 	);
 }

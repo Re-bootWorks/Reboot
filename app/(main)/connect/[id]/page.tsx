@@ -2,9 +2,8 @@ import { getPostDetailServer } from "@/features/connect/apis/getPostDetailServer
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryClient } from "@/libs/getQueryClient";
 import PostDetailContainer from "@/features/connect/containers/PostDetailContainer";
-import { ErrorBoundary } from "react-error-boundary";
-import ConnectErrorFallback from "@/features/connect/components/ErrorBoundary";
 import { connectQueryKeys } from "@/features/connect/queries";
+import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 
 export default async function DetailPage({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;
@@ -18,9 +17,9 @@ export default async function DetailPage({ params }: { params: Promise<{ id: str
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<ErrorBoundary FallbackComponent={ConnectErrorFallback}>
+			<QueryErrorBoundary prefix="게시글을 불러오는 중 오류 발생">
 				<PostDetailContainer id={numId} />
-			</ErrorBoundary>
+			</QueryErrorBoundary>
 		</HydrationBoundary>
 	);
 }
