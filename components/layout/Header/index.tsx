@@ -8,7 +8,6 @@ import { cn } from "@/utils/cn";
 import { IcChevronRight, IcDelete, IcMenu } from "@/components/ui/icons";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import useToggle from "@/hooks/useToggle";
-import { useUserStore } from "@/store/user.store";
 import { useModalStore } from "@/store/modal.store";
 import { useLogout } from "@/features/auth/mutations";
 import { LoginModal } from "@/features/auth/components/LoginModal";
@@ -18,6 +17,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useGetFavoritesCount } from "@/features/header/queries";
 import Notification from "@/features/header/components/Notification";
 import Image from "next/image";
+import { useUser } from "@/hooks/useUser";
 
 interface GNBProps {
 	showChevron?: boolean;
@@ -35,7 +35,7 @@ interface SidebarProps {
 }
 
 const STYLE = {
-	header: "sticky top-0 left-0 z-10 flex items-center justify-between bg-gray-50 py-2 md:py-4 ",
+	header: "sticky top-0 left-0 z-10 bg-gray-50/50 py-2 md:py-4 ",
 	gnb: "flex items-center gap-4",
 	sidebar:
 		"fixed inset-0 flex h-full max-w-xl w-11/12 flex-col justify-between rounded-r-3xl bg-white py-6",
@@ -200,65 +200,66 @@ export default function Header() {
 	const { mutate: logout, isPending } = useLogout();
 	const { isOpen: isSidebarOpen, open: openSidebar, close: closeSidebar } = useToggle();
 
-	const user = useUserStore((state) => state.user);
 	const pathname = usePathname();
 	const router = useRouter();
-	const isLoggedIn = !!user;
+	const { user, isLoggedIn } = useUser();
 
 	const { data: favoritesCount } = useGetFavoritesCount();
 	return (
 		<>
-			<Container as="header" className={STYLE.header}>
-				<div className={STYLE.gnb}>
-					<Link href="/">
-						<Image
-							src={LOGO}
-							height={42}
-							width={120}
-							alt="RE:BOOT"
-							className="h-8 w-fit md:h-10.5"
+			<div className={STYLE.header}>
+				<Container as="header" className="flex items-center justify-between">
+					<div className={STYLE.gnb}>
+						<Link href="/">
+							<Image
+								src={LOGO}
+								height={42}
+								width={120}
+								alt="RE:BOOT"
+								className="h-8 w-fit md:h-10.5"
+							/>
+						</Link>
+						<nav className="hidden md:flex" aria-label="상단 내비게이션">
+							<GNB favoritesCount={favoritesCount?.count} pathname={pathname} />
+						</nav>
+						<Sidebar
+							isOpen={isSidebarOpen}
+							isLogin={isLoggedIn}
+							handleSidebarClose={closeSidebar}
+							favoritesCount={favoritesCount?.count}
+							pathname={pathname}
 						/>
-					</Link>
-					<nav className="hidden md:flex" aria-label="상단 내비게이션">
-						<GNB favoritesCount={favoritesCount?.count} pathname={pathname} />
-					</nav>
-					<Sidebar
-						isOpen={isSidebarOpen}
-						isLogin={isLoggedIn}
-						handleSidebarClose={closeSidebar}
-						favoritesCount={favoritesCount?.count}
-						pathname={pathname}
-					/>
-				</div>
-				<div className={STYLE.etc}>
-					{isLoggedIn ? (
-						<>
-							<Notification />
-							<div className="hidden md:block">
-								<ActionDropdown
-									triggerType="profile"
-									menuClassName="z-10"
-									profileImage={user.image}
-									items={[
-										{ label: "마이페이지", onClick: () => router.push("/mypage") },
-										{
-											label: "로그아웃",
-											onClick: () => logout(),
-											disabled: isPending,
-											danger: true,
-										},
-									]}
-								/>
-							</div>
-						</>
-					) : (
-						<LoginButton />
-					)}
-					<button type="button" className="cursor-pointer md:hidden" onClick={openSidebar}>
-						<IcMenu />
-					</button>
-				</div>
-			</Container>
+					</div>
+					<div className={STYLE.etc}>
+						{isLoggedIn ? (
+							<>
+								<Notification />
+								<div className="hidden md:block">
+									<ActionDropdown
+										triggerType="profile"
+										menuClassName="z-10"
+										profileImage={user?.image}
+										items={[
+											{ label: "마이페이지", onClick: () => router.push("/mypage") },
+											{
+												label: "로그아웃",
+												onClick: () => logout(),
+												disabled: isPending,
+												danger: true,
+											},
+										]}
+									/>
+								</div>
+							</>
+						) : (
+							<LoginButton />
+						)}
+						<button type="button" className="cursor-pointer md:hidden" onClick={openSidebar}>
+							<IcMenu />
+						</button>
+					</div>
+				</Container>
+			</div>
 			<LoginModal />
 			<SignUpModal />
 		</>
