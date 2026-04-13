@@ -289,7 +289,7 @@ export function useToggleCommentLike(postId: number, commentId: number) {
 		},
 
 		onMutate: async (isLiked: boolean) => {
-			queryClient.cancelQueries({ queryKey: connectQueryKeys.detail(postId) });
+			await queryClient.cancelQueries({ queryKey: connectQueryKeys.detail(postId) });
 			const previous = queryClient.getQueryData<ConnectPost>(connectQueryKeys.detail(postId));
 
 			queryClient.setQueryData<ConnectPost>(connectQueryKeys.detail(postId), (old) => {
@@ -316,6 +316,10 @@ export function useToggleCommentLike(postId: number, commentId: number) {
 				queryClient.setQueryData(connectQueryKeys.detail(postId), context.previous);
 			}
 			handleShowToast({ message: "좋아요 처리에 실패했습니다.", status: "error" });
+		},
+
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: connectQueryKeys.detail(postId) });
 		},
 	});
 }
