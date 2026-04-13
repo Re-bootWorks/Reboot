@@ -23,6 +23,7 @@ const BASE_ARGS: ReviewCardProps = {
 	userImage:
 		"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80",
 	userName: "럽워즈올",
+	userEmail: "user@example.com",
 	createdAt: "2026-02-01T20:00:00.000Z",
 	comment: "혼자서 했다면 운동을 금방 잊었을 텐데, 모임 덕분에 꾸준히 하게 돼요.",
 	meetingName: "힐링 오피스 스트레칭",
