@@ -53,6 +53,7 @@ export interface ReviewCardProps {
 	score: ReviewsListItem["score"];
 	userImage: ReviewsListItem["user"]["image"];
 	userName: ReviewsListItem["user"]["name"];
+	userEmail: ReviewsListItem["user"]["email"];
 	createdAt: ReviewsListItem["createdAt"];
 	comment: ReviewsListItem["comment"];
 	meetingName: ReviewsListItem["meeting"]["name"];
@@ -70,6 +71,7 @@ export interface ReviewsListItem {
 	updatedAt: string;
 	user: {
 		id: number;
+		email: string | null;
 		name: string;
 		image: string | null;
 	};

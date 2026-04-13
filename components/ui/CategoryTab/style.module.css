@@ -1,6 +1,15 @@
+/* CSS 변수는 label 요소에서 설정됨 */
 .borderGlow {
-	/* 그라데이션 border: border-radius 까지 적용 */
 	background:
-		linear-gradient(var(--color-purple-100), var(--color-purple-100)) padding-box,
-		var(--gradient-purple-500) border-box;
+		linear-gradient(var(--category-tab-default), var(--category-tab-default)) padding-box,
+		linear-gradient(to bottom left, var(--category-tab-default), var(--category-tab-accent))
+			border-box;
+	background-clip: padding-box, border-box;
+	background-origin: padding-box, border-box;
+}
+
+.subTitle {
+	border-color: var(--category-tab-accent);
+	color: var(--category-tab-accent);
+	background-color: var(--category-tab-light);
 }

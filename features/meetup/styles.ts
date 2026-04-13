@@ -1,1 +1,1 @@
-export const modalSizeStyle = "max-h-fit w-[342px] md:w-[544px]";
+export const modalSizeStyle = "max-h-fit w-full max-w-[342px] md:max-w-[544px]";
