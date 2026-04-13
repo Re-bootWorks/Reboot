@@ -240,8 +240,8 @@ function DropdownFilters() {
 	const dateStart = get(QUERY_KEYS.DATE_START) ?? "";
 	const dateEnd = get(QUERY_KEYS.DATE_END) ?? "";
 	const region = transformRegionData(get(QUERY_KEYS.REGION));
-	const sortBy = getSortByItem(get(QUERY_KEYS.SORT_BY)) ?? SORT_BY_OPTIONS[0].value;
-	const sortOrder = getSortOrderItem(get(QUERY_KEYS.SORT_ORDER)) ?? SORT_ORDER_OPTIONS[0].value;
+	const sortBy = getSortByItem(get(QUERY_KEYS.SORT_BY));
+	const sortOrder = getSortOrderItem(get(QUERY_KEYS.SORT_ORDER));
 
 	const date = {
 		from: dateStart ? dateStart.split("T")[0] : "",

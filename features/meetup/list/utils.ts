@@ -44,7 +44,10 @@ const SORT_BY_VALUES = SORT_BY_OPTIONS.map((o) => o.value);
 export function transformSortByQuery(value: string | null | undefined): SortBy | undefined {
 	if (value && SORT_BY_VALUES.includes(value)) {
 		return value as SortBy;
-	} else return undefined;
+	} else {
+		// 클라이언트 기본값: createdAt, 서버 기본값: dateTime
+		return SORT_BY_OPTIONS[0].value as SortBy;
+	}
 }
 
 /** 정렬 순서 쿼리 값 → 요청 파라미터 변환 */
@@ -53,7 +56,7 @@ export function transformSortOrderQuery(value: string | null | undefined): SortO
 	if (value && SORT_ORDER_VALUES.includes(value)) {
 		return value as SortOrder;
 	} else {
-		// 서버 기본값: asc, 클라이언트 기본값: desc
+		// 클라이언트 기본값: desc, 서버 기본값: asc
 		return SORT_ORDER_OPTIONS[0].value as SortOrder;
 	}
 }

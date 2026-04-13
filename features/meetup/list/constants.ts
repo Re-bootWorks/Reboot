@@ -9,7 +9,10 @@ export const QUERY_KEYS = {
 	DATE_END: "dateEnd",
 	/** 지역 */
 	REGION: "region",
-	/** 정렬 기준 */
+	/** 정렬 기준
+	 * 클라이언트 기본값 createdAt
+	 * 서버 기본값 dateTime
+	 */
 	SORT_BY: "sort",
 	/** 정렬 순서 (오름차, 내림차)
 	 * 클라이언트 기본값 desc, 서버 기본값 asc
@@ -20,10 +23,10 @@ export const QUERY_KEYS = {
 
 /** 정렬 기준 항목 */
 export const SORT_BY_OPTIONS = [
+	{ value: "createdAt", label: "생성날짜순" },
 	{ value: "dateTime", label: "모임날짜순" },
 	{ value: "registrationEnd", label: "마감임박순" },
 	{ value: "participantCount", label: "참여인원순" },
-	{ value: "createdAt", label: "생성날짜순" },
 ];
 
 /** 정렬 순서 항목 */
