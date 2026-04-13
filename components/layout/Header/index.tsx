@@ -35,7 +35,7 @@ interface SidebarProps {
 }
 
 const STYLE = {
-	header: "sticky top-0 left-0 z-10 bg-gray-50/50 py-2 md:py-4 ",
+	header: "sticky top-0 left-0 z-10 py-2 md:py-4 ",
 	gnb: "flex items-center gap-4",
 	sidebar:
 		"fixed inset-0 flex h-full max-w-xl w-11/12 flex-col justify-between rounded-r-3xl bg-white py-6",
@@ -155,7 +155,7 @@ function LoginButton({
 			<span className={STYLE.link}>로그인</span>
 		</button>
 	) : (
-		<button type="button" className={cn(STYLE.link, "hidden md:block")} onClick={openLogin}>
+		<button type="button" className={cn(STYLE.link, "px-2 py-0 md:p-4")} onClick={openLogin}>
 			로그인
 		</button>
 	);
@@ -203,11 +203,16 @@ export default function Header() {
 	const pathname = usePathname();
 	const router = useRouter();
 	const { user, isLoggedIn } = useUser();
-
 	const { data: favoritesCount } = useGetFavoritesCount();
+
+	const isHome = pathname === "/";
 	return (
 		<>
-			<div className={STYLE.header}>
+			<div
+				className={cn(
+					STYLE.header,
+					isHome ? "bg-white/50 drop-shadow-lg backdrop-blur-md" : "bg-gray-50",
+				)}>
 				<Container as="header" className="flex items-center justify-between">
 					<div className={STYLE.gnb}>
 						<Link href="/">
