@@ -37,7 +37,7 @@ export default function StepCard({ steps, activeIndex }: StepCardProps) {
 									x: { duration: 0.45, ease: SLIDE_EASE },
 									opacity: { duration: 0.18, ease: "linear" },
 								}}>
-								<div className="py-[9px]items-center flex size-12 items-center justify-center rounded-lg bg-purple-500 text-xl font-bold text-white md:size-16 md:h-20 md:w-20 md:rounded-2xl md:text-3xl">
+								<div className="flex size-12 items-center justify-center rounded-lg bg-purple-500 py-[9px] text-xl font-bold text-white md:size-16 md:h-20 md:w-20 md:rounded-2xl md:text-3xl">
 									{String(activeStep.id).padStart(2, "0")}
 								</div>
 

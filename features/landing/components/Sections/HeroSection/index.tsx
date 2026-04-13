@@ -39,44 +39,19 @@ export default function HeroSection() {
 					</MotionFadeUp>
 
 					<MotionFadeUp delay={0.08}>
-						<>
-							{/* mobile */}
-							<h1 className="flex min-h-43 flex-col items-center gap-2.5 text-center text-5xl font-bold text-white md:hidden">
-								<TypingText text="오늘 당신의" delay={0} />
+						<h1 className="flex min-h-43 flex-col items-center gap-2.5 text-center text-5xl font-bold text-white md:min-h-31 md:text-6xl lg:min-h-17 lg:flex-row lg:gap-0">
+							<span className="flex flex-col items-center gap-2.5 md:flex-row md:gap-0">
+								<TypingText text="오늘 당신의" delay={0} wrapperClassName="md:mr-3" />
 								<TypingText
 									text="배터리는"
 									className="bg-[linear-gradient(90deg,#E65217_0%,#604CDE_100%)] bg-clip-text text-transparent"
-									delay={0.8}
+									delay={0.5}
+									wrapperClassName="md:mr-0 lg:mr-3"
 								/>
-								<TypingText text="몇 %인가요?" delay={1.5} showCursor cursorClassName="bg-white" />
-							</h1>
+							</span>
 
-							{/* tablet */}
-							<h1 className="hidden min-h-31 flex-col items-center gap-2.5 text-center text-6xl font-bold text-white md:flex lg:hidden">
-								<span className="flex items-center">
-									<TypingText text="오늘 당신의 " delay={0} className="mr-3" />
-									<TypingText
-										text="배터리는"
-										className="bg-[linear-gradient(90deg,#E65217_0%,#604CDE_100%)] bg-clip-text text-transparent"
-										delay={0.8}
-									/>
-								</span>
-
-								<TypingText text="몇 %인가요?" delay={1.5} showCursor cursorClassName="bg-white" />
-							</h1>
-
-							{/* desktop */}
-							<h1 className="hidden min-h-17 items-center text-center text-6xl font-bold text-white lg:flex">
-								<TypingText text="오늘 당신의" delay={0} wrapperClassName="mr-3" />
-								<TypingText
-									text="배터리는"
-									className="bg-[linear-gradient(90deg,#E65217_0%,#604CDE_100%)] bg-clip-text text-transparent"
-									delay={0.8}
-									wrapperClassName="mr-3"
-								/>
-								<TypingText text="몇 %인가요?" delay={1.5} showCursor cursorClassName="bg-white" />
-							</h1>
-						</>
+							<TypingText text="몇 %인가요?" delay={1} showCursor cursorClassName="bg-white" />
+						</h1>
 					</MotionFadeUp>
 
 					<MotionFadeUp delay={0.16}>
@@ -97,6 +72,7 @@ export default function HeroSection() {
 					</MotionFadeUp>
 				</div>
 			</SectionContainer>
+
 			<Image
 				src="/assets/img/img_plug_battery.svg"
 				alt="충전 플러그 꽂는 이미지"
@@ -104,6 +80,7 @@ export default function HeroSection() {
 				height={660}
 				className="mt-15 h-auto w-93 md:w-[32.75rem]"
 			/>
+
 			<motion.div
 				animate={{ opacity: [0.7, 1, 0.7] }}
 				transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}>
