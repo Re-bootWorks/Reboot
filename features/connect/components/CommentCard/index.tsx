@@ -16,6 +16,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { commentEditVariants } from "@/features/connect/animations";
 import Avatar from "@/components/ui/Avatar";
 import { useToast } from "@/providers/toast-provider";
+import { useToggleCommentLike } from "@/features/connect/mutations";
+import IcHeart from "@/components/ui/icons/IcHeart";
+import IcHeartOutline from "@/components/ui/icons/IcHeartOutline";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_SIZE = 1024 * 1024; // 1MB
@@ -30,6 +33,8 @@ export default function CommentCard({
 	currentUserId,
 	postId,
 	isPending = false,
+	likeCount,
+	isLiked,
 }: CommentCardProps) {
 	// 상태
 	const [isEditing, setIsEditing] = useState(false);
@@ -67,6 +72,7 @@ export default function CommentCard({
 		postId,
 		onSuccess: () => setIsEditing(false),
 	});
+	const likeMutation = useToggleCommentLike(postId, id);
 
 	// 핸들러
 	const handleEdit = () => {
@@ -123,6 +129,11 @@ export default function CommentCard({
 		setEditImageUrl(null);
 	};
 
+	const handleLike = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		likeMutation.mutate(isLiked);
+	};
+
 	return (
 		<AnimatePresence mode="wait">
 			{isEditing ? (
@@ -172,16 +183,25 @@ export default function CommentCard({
 
 							{/* 오른쪽 콘텐츠 */}
 							<div className="flex flex-1 flex-col gap-1">
-								{/* 유저이름 + 날짜 */}
-								<div
-									role="button"
-									className="md:text-md flex cursor-pointer items-center gap-2 text-sm text-gray-500"
-									onClick={() => setIsProfileModalOpen(true)}>
-									<span className="text-md font-semibold text-gray-800">{authorName}</span>
-									<RelativeTime date={date} fallback="date" />
+								{/* 유저이름 + 날짜 + 드롭다운 */}
+								<div className="flex items-center justify-between">
+									<div
+										role="button"
+										className="md:text-md flex cursor-pointer items-center gap-2 text-sm text-gray-500"
+										onClick={() => setIsProfileModalOpen(true)}>
+										<span className="text-md font-semibold text-gray-800">{authorName}</span>
+										<RelativeTime date={date} fallback="date" />
+									</div>
+									{isMine && !isPending && (
+										<ActionDropdown
+											items={[
+												{ label: "수정하기", onClick: handleEdit },
+												{ label: "삭제하기", onClick: handleDelete, danger: true },
+											]}
+										/>
+									)}
 								</div>
-
-								{/* 댓글 내용 + 드롭다운 */}
+								{/* 댓글 내용 + 드롭다운 + 좋아요 */}
 								<div className="flex items-start justify-between">
 									<div className="text-sm leading-[28px] font-normal tracking-[-0.36px] break-all text-gray-700 md:text-lg">
 										{parseCommentContent(content).map((part, i) =>
@@ -199,14 +219,23 @@ export default function CommentCard({
 											),
 										)}
 									</div>
-									{isMine && !isPending && (
-										<ActionDropdown
-											items={[
-												{ label: "수정하기", onClick: handleEdit },
-												{ label: "삭제하기", onClick: handleDelete, danger: true },
-											]}
-										/>
-									)}
+									<div className="ml-2 shrink-0">
+										<button
+											type="button"
+											onClick={handleLike}
+											disabled={likeMutation.isPending || isPending}
+											aria-label={isLiked ? "좋아요 취소" : "좋아요"}
+											className="flex flex-col items-center gap-0.5 text-sm transition-colors disabled:opacity-50">
+											{isLiked ? (
+												<IcHeart isGradient color="purple-400" size="sm" />
+											) : (
+												<IcHeartOutline color="gray-400" size="sm" />
+											)}
+											<span className={isLiked ? "text-purple-400" : "text-gray-400"}>
+												{likeCount}
+											</span>
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>

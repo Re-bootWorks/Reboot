@@ -1,6 +1,11 @@
 import type { ConnectPost } from "@/features/connect/post/types";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { toggleConnectLike, deleteConnectLike } from "./apis/fetchPostsClient";
+import {
+	toggleConnectLike,
+	deleteConnectLike,
+	toggleCommentLike,
+	deleteCommentLike,
+} from "./apis/fetchPostsClient";
 import { createPost } from "@/features/connect/apis/createPost";
 import { deletePost } from "@/features/connect/apis/deletePost";
 import { useRouter } from "next/navigation";
@@ -12,7 +17,6 @@ import { deleteComment } from "@/features/connect/apis/deleteComment";
 import { connectQueryKeys } from "@/features/connect/queries";
 import { headerQueryKeys } from "@/features/header/queries";
 import { useUserStore } from "@/store/user.store";
-
 // 댓글/좋아요 뮤테이션 후 공통으로 무효화할 헤더 관련 쿼리
 function invalidateHeaderQueries(queryClient: ReturnType<typeof useQueryClient>) {
 	queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications }); // 알림 목록
@@ -265,6 +269,52 @@ export function useDeleteComment(postId: number) {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: connectQueryKeys.detail(postId) }); // 게시글 상세(댓글 수 동기화)
 			invalidateHeaderQueries(queryClient);
+		},
+	});
+}
+
+// 댓글 좋아요 토글
+export function useToggleCommentLike(postId: number, commentId: number) {
+	const queryClient = useQueryClient();
+	const { handleShowToast } = useToast();
+
+	return useMutation({
+		mutationFn: async (isLiked: boolean) => {
+			if (isLiked) {
+				return deleteCommentLike(postId, commentId);
+			} else {
+				return toggleCommentLike(postId, commentId);
+			}
+		},
+
+		onMutate: async (isLiked: boolean) => {
+			queryClient.cancelQueries({ queryKey: connectQueryKeys.detail(postId) });
+			const previous = queryClient.getQueryData<ConnectPost>(connectQueryKeys.detail(postId));
+
+			queryClient.setQueryData<ConnectPost>(connectQueryKeys.detail(postId), (old) => {
+				if (!old) return old;
+				return {
+					...old,
+					comments: old.comments.map((c) =>
+						c.id === commentId
+							? {
+									...c,
+									isLiked: !isLiked,
+									likeCount: isLiked ? c.likeCount - 1 : c.likeCount + 1,
+								}
+							: c,
+					),
+				};
+			});
+
+			return { previous };
+		},
+
+		onError: (_err, _vars, context) => {
+			if (context?.previous) {
+				queryClient.setQueryData(connectQueryKeys.detail(postId), context.previous);
+			}
+			handleShowToast({ message: "좋아요 처리에 실패했습니다.", status: "error" });
 		},
 	});
 }

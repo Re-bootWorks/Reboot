@@ -41,3 +41,26 @@ export const deleteConnectLike = async (postId: number) => {
 		throw new Error("좋아요 취소 실패");
 	}
 };
+
+// 댓글 좋아요 추가
+export const toggleCommentLike = async (postId: number, commentId: number) => {
+	const res = await clientFetch(`/posts/${postId}/comments/${commentId}/like`, {
+		method: "POST",
+	});
+
+	if (!res.ok) {
+		// 409: 이미 좋아요한 경우도 throw
+		throw new Error("댓글 좋아요 요청 실패");
+	}
+};
+
+// 댓글 좋아요 취소
+export const deleteCommentLike = async (postId: number, commentId: number) => {
+	const res = await clientFetch(`/posts/${postId}/comments/${commentId}/like`, {
+		method: "DELETE",
+	});
+
+	if (!res.ok) {
+		throw new Error("댓글 좋아요 취소 실패");
+	}
+};
