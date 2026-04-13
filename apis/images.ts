@@ -24,14 +24,14 @@ export interface PresignedUrlResponse {
 }
 
 export const IMAGE_ACCEPT = "image/png, image/jpeg, image/gif, image/webp";
-export const IMAGE_ACCEPTED_EXTS: string[] = IMAGE_ACCEPT.split(", ");
+export const IMAGE_ACCEPTED_TYPES: string[] = IMAGE_ACCEPT.split(", ");
 
 /** 이미지 업로드 */
 export async function uploadImage(file: File) {
 	if (!file) {
 		throw new Error(`파일을 첨부해주세요.`);
 	}
-	if (!IMAGE_ACCEPTED_EXTS.includes(file.type)) {
+	if (!IMAGE_ACCEPTED_TYPES.includes(file.type)) {
 		throw new Error(`'${file.type}'는 지원하지 않는 파일 형식입니다.`);
 	}
 
