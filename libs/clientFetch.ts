@@ -1,3 +1,5 @@
+import captureIfServerError from "@/libs/captureIfServerError";
+
 export async function clientFetch(endpoint: string, options: RequestInit = {}) {
 	const { headers, ...rest } = options;
 
@@ -9,6 +11,8 @@ export async function clientFetch(endpoint: string, options: RequestInit = {}) {
 		credentials: "include",
 		...rest,
 	});
+
+	captureIfServerError(response, endpoint, options.method ?? "GET");
 
 	return response;
 }

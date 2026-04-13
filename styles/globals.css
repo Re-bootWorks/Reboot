@@ -1,9 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Tektur:wght@800&display=swap");
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
 @import "./font.css";
 @import "react-loading-skeleton/dist/skeleton.css";
 @import "@smastrom/react-rating/style.css";
+@plugin "@tailwindcss/typography";
 
 @theme static {
 	/* ─── Gray ─── */

@@ -6,8 +6,9 @@ import { Suspense } from "react";
 import { serverFetch } from "@/libs/serverFetch";
 import IntroSection from "@/features/connect/components/IntroSection";
 import { connectQueryKeys } from "@/features/connect/queries";
+import { ErrorBoundary } from "react-error-boundary";
+import ConnectErrorFallback from "@/features/connect/components/ErrorBoundary";
 
-// 서버 컴포넌트
 export default async function ConnectPage({
 	searchParams,
 }: {
@@ -17,7 +18,6 @@ export default async function ConnectPage({
 	const page = Number(pageParam ?? 1);
 
 	const queryClient = new QueryClient();
-
 	const sortBy = "createdAt";
 	const LIMIT = 5;
 
@@ -31,13 +31,8 @@ export default async function ConnectPage({
 					offset: String((page - 1) * LIMIT),
 					limit: String(LIMIT),
 				});
-
 				const res = await serverFetch(`/posts?${queryParams.toString()}`);
-
-				if (!res.ok) {
-					throw new Error("게시글 조회 실패");
-				}
-
+				if (!res.ok) throw new Error("게시글 조회 실패");
 				return res.json();
 			},
 			staleTime: 1000 * 60,
@@ -46,14 +41,19 @@ export default async function ConnectPage({
 			queryKey: connectQueryKeys.hotPosts(),
 			queryFn: async () => {
 				const res = await serverFetch(`/posts?type=best&limit=20`);
-
-				if (!res.ok) {
-					throw new Error("HOT 게시글 조회 실패");
-				}
-
+				if (!res.ok) throw new Error("HOT 게시글 조회 실패");
 				return res.json();
 			},
 			staleTime: 1000 * 60 * 5,
+		}),
+		queryClient.prefetchQuery({
+			queryKey: connectQueryKeys.list(1, "createdAt", 1, ""),
+			queryFn: async () => {
+				const res = await serverFetch(`/posts?type=all&sortBy=createdAt&offset=0&limit=1`);
+				if (!res.ok) throw new Error("조회수 조회 실패");
+				return res.json();
+			},
+			staleTime: 1000 * 60,
 		}),
 	]);
 
@@ -61,13 +61,17 @@ export default async function ConnectPage({
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<Container className="min-w-[380px]">
 				<IntroSection />
-				<Suspense fallback={null}>
-					<HotPostSection />
-				</Suspense>
-				<div className="mt-[6.125rem] pb-[8.75rem]">
+				<ErrorBoundary FallbackComponent={ConnectErrorFallback}>
 					<Suspense fallback={null}>
-						<PostContainer />
+						<HotPostSection />
 					</Suspense>
+				</ErrorBoundary>
+				<div className="mt-[6.125rem] pb-[8.75rem]">
+					<ErrorBoundary FallbackComponent={ConnectErrorFallback}>
+						<Suspense fallback={null}>
+							<PostContainer />
+						</Suspense>
+					</ErrorBoundary>
 				</div>
 			</Container>
 		</HydrationBoundary>

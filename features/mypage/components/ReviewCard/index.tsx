@@ -6,9 +6,11 @@ import { RATING_STYLE } from "@/constants/ratingStyle";
 import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 import { formatIsoDateWithDots } from "@/utils/date";
 import Link from "next/link";
+import { useExpandableText } from "@/hooks/useExpandableText";
+import ExpandToggleButton from "@/components/ui/Buttons/ExpandToggleButton";
 
 const STYLE = {
-	itemBox: "flex flex-col gap-3 md:flex-row md:items-center md:gap-8 group",
+	itemBox: "flex flex-col gap-3 md:flex-row md:gap-8 group",
 	itemImage: "h-39 w-full rounded-xl object-cover md:size-47 md:rounded-3xl",
 	itemWrapper:
 		"flex grow flex-col gap-3 border-b border-gray-200 pb-6 md:py-6 group-last-of-type:border-none",
@@ -22,9 +24,13 @@ const EMPTY_THUMBNAIL_IMAGE = "/assets/img/img_empty_purple.svg";
 const EMPTY_PROFILE_IMAGE = "/assets/img/img_profile.svg";
 
 export default function ReviewCard({ user, item, handleEdit, handleDelete }: ReviewCardProps) {
+	const { contentRef, isExpanded, isOverflow, toggleExpanded } =
+		useExpandableText<HTMLParagraphElement>({
+			content: item.comment,
+		});
 	return (
 		<li className={STYLE.itemBox}>
-			<Link href={`/meetup/${item.meetingId}`} className="shrink-0">
+			<Link href={`/meetup/${item.meetingId}`} className="shrink-0 md:pt-6">
 				<Image
 					src={item.meetingImage ?? EMPTY_THUMBNAIL_IMAGE}
 					alt="모임 대표 이미지"
@@ -62,8 +68,22 @@ export default function ReviewCard({ user, item, handleEdit, handleDelete }: Rev
 						<div className={STYLE.caption}>{formatIsoDateWithDots(item.meetingDateTime)}</div>
 					</div>
 				</li>
-				<li className="text-sm text-gray-700 md:text-lg">
-					<Link href={`/meetup/${item.meetingId}`}>{item.comment}</Link>
+				<li>
+					<p
+						ref={contentRef}
+						className={cn(
+							"text-sm break-all text-gray-700 md:text-lg",
+							!isExpanded ? "line-clamp-2" : "",
+						)}>
+						{item.comment}
+					</p>
+					{(isOverflow || isExpanded) && (
+						<ExpandToggleButton
+							isExpanded={isExpanded}
+							onClick={toggleExpanded}
+							className="mt-1 md:mb-0 md:text-base"
+						/>
+					)}
 				</li>
 				<li className={STYLE.caption}>
 					{item.meetingName} · {item.meetingType}

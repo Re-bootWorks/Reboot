@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import PageIntro from "@/components/ui/PageIntro";
 import ListControls from "@/features/reviews/components/ListControls";
 import RatingSummary from "@/features/reviews/components/RatingSummary";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { ReviewsListRequest } from "@/features/reviews/types";
 import {
 	prefetchReviewsStatistics,
@@ -13,6 +13,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import RatingSummarySkeleton from "@/features/reviews/components/RatingSummary/RatingSummarySkeleton";
 import ReviewsSection from "@/features/reviews/components/ReviewsCard/ReviewsSectionWrapper/ReviewsSection";
 import ErrorFallback from "@/features/reviews/components/ErrorBoundary";
+import { getQueryClient } from "@/libs/getQueryClient";
 
 type Props = {
 	searchParams: Promise<ReviewsListRequest>;
@@ -21,7 +22,7 @@ type Props = {
 export default async function ReviewsPage({ searchParams }: Props) {
 	const params = await searchParams;
 
-	const queryClient = new QueryClient();
+	const queryClient = getQueryClient();
 
 	const normalizedParams: ReviewsListRequest = {
 		type: params.type,
