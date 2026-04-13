@@ -62,11 +62,11 @@ const containerStyle = "h-[346px] w-[343px] min-w-0 md:h-[219px] w-full rounded-
 
 function JoinedRibbon() {
 	return (
-		<div className="transform-origin-center pointer-events-none absolute -top-1 -left-8.5 z-2 aspect-616/174 w-36 translate-y-1/2 -rotate-45">
+		<div className="pointer-events-none absolute -top-1 -left-8.5 z-2 aspect-616/174 w-36 origin-center translate-y-1/2 -rotate-45">
 			<span className="absolute top-1/2 left-1/2 z-2 -translate-x-1/2 -translate-y-3/5 leading-10 font-bold tracking-widest text-white">
 				참여 모임
 			</span>
-			<NextImage src={ImgRibbon} fill sizes="(max-width: 616px) 100vw, 616px" alt="참여 완료" />
+			<NextImage src={ImgRibbon} fill sizes="144px" alt="참여 완료" />
 		</div>
 	);
 }

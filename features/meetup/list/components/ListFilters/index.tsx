@@ -72,7 +72,7 @@ export default function ListFilters({ className }: ListFiltersProps) {
 			<DropdownFilters />
 			<style>
 				{`
-        *[role="menu"] {
+        #headlessui-portal-root *[role="menu"] {
           z-index: 50;
         }
         `}
@@ -202,6 +202,8 @@ function KeywordFilter() {
 	function handleClickKeywordSubmit() {
 		if (validateText(keyword)) {
 			set({ [QUERY_KEYS.KEYWORD]: keyword });
+		} else {
+			set({ [QUERY_KEYS.KEYWORD]: null });
 		}
 	}
 
