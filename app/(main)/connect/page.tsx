@@ -1,7 +1,8 @@
 import Container from "@/components/layout/Container";
 import PostContainer from "@/features/connect/containers/PostContainer";
 import HotPostSection from "@/features/connect/components/HotPostSection";
-import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { getQueryClient } from "@/libs/getQueryClient";
 import { Suspense } from "react";
 import { serverFetch } from "@/libs/serverFetch";
 import IntroSection from "@/features/connect/components/IntroSection";
@@ -17,7 +18,7 @@ export default async function ConnectPage({
 	const { page: pageParam } = await searchParams;
 	const page = Number(pageParam ?? 1);
 
-	const queryClient = new QueryClient();
+	const queryClient = getQueryClient();
 	const sortBy = "createdAt";
 	const LIMIT = 5;
 
