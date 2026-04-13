@@ -35,7 +35,7 @@ interface SidebarProps {
 }
 
 const STYLE = {
-	header: "sticky top-0 left-0 z-10 py-2 md:py-4 ",
+	header: "sticky top-0 left-0 z-40 py-2 md:py-4 ",
 	gnb: "flex items-center gap-4",
 	sidebar:
 		"fixed inset-0 flex h-full max-w-xl w-11/12 flex-col justify-between rounded-r-3xl bg-white py-6",
@@ -89,7 +89,7 @@ function GNB({
 // 모바일용 메뉴
 function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount, pathname }: SidebarProps) {
 	return (
-		<Dialog open={isOpen} onClose={handleSidebarClose} className={"relative z-30 md:hidden"}>
+		<Dialog open={isOpen} onClose={handleSidebarClose} className={"relative z-40 md:hidden"}>
 			<DialogBackdrop className="bg-black-50 fixed inset-0" />
 			<DialogPanel className={STYLE.sidebar}>
 				<div>
@@ -242,7 +242,7 @@ export default function Header() {
 								<div className="hidden md:block">
 									<ActionDropdown
 										triggerType="profile"
-										menuClassName="z-10"
+										menuClassName="z-50"
 										profileImage={user?.image}
 										items={[
 											{ label: "마이페이지", onClick: () => router.push("/mypage") },
