@@ -50,7 +50,7 @@ export default function SolutionSection() {
 										</div>
 										<div className="grid gap-2">
 											<p className="text-base text-gray-900 md:text-xl">{item.title}</p>
-											<p className="text-sm text-gray-900 md:text-base">{item.description}</p>
+											<p className="text-sm text-gray-700 md:text-base">{item.description}</p>
 										</div>
 									</div>
 								</MotionItem>

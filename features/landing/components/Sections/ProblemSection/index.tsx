@@ -16,7 +16,7 @@ export default function ProblemSection() {
 					<SectionHeader title="이런 고민 하고 계신가요?" />
 				</MotionFadeUp>
 
-				<MotionStagger className="my-12 grid w-full gap-4 md:grid-cols-3 lg:my-20">
+				<MotionStagger className="my-12 grid w-full gap-8 min-[1150px]:grid-cols-3 lg:my-20">
 					{PROBLEM_CARDS.map((card) => (
 						<MotionItem key={card.title} className="flex justify-center">
 							<ProblemCard {...card} />

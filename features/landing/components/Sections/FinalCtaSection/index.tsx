@@ -18,19 +18,25 @@ export default function FinalCtaSection() {
 				<div className="absolute right-[0px] bottom-[-180px] h-[240px] w-[200px] rotate-[42deg] rounded-full bg-[#DCDAF9]/50" />
 				<div className="absolute right-[100px] bottom-[-180px] h-[240px] w-[200px] rotate-[42deg] rounded-full bg-[#C9C4F4]/60" />
 
-				<IcTwinkle color="yellow-200" className="absolute top-32 left-2 size-11 md:hidden" />
+				<IcTwinkle color="#FCF0A2" className="absolute top-32 left-2 size-11 md:hidden" />
 				<IcTwinkle className="absolute top-10 right-10 hidden size-11 rotate-[5deg] md:block" />
 				<IcTwinkle className="absolute top-1/2 left-12 hidden -translate-y-1/2 rotate-[-2deg] text-orange-500 md:block" />
 
 				<div className="relative z-10 flex flex-col items-center justify-center text-center">
 					<MotionFadeUp>
-						<h2 className="text-xl font-bold text-gray-900 md:text-[48px]">
+						<h2 className="text-xl font-bold text-gray-900 md:text-[48px] md:leading-15">
 							지금 당신의 배터리를 충전하세요
 						</h2>
 					</MotionFadeUp>
 
 					<MotionFadeUp delay={0.08}>
-						<p className="mt-2 text-sm text-purple-600 md:mt-5 md:text-2xl">
+						<p className="mt-2 hidden text-2xl text-purple-600 lg:block">
+							혼자 시작하기 어려웠던 일들, RE:BOOT 에서 함께해요
+						</p>
+					</MotionFadeUp>
+
+					<MotionFadeUp delay={0.08}>
+						<p className="mt-2 text-sm text-purple-600 md:text-2xl">
 							새로운 모임, 새로운 에너지가 기다리고 있습니다
 						</p>
 					</MotionFadeUp>
