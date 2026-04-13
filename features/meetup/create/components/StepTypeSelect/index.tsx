@@ -3,16 +3,17 @@
 import { useEffect } from "react";
 import { motion } from "motion/react";
 import type { StaticImageData } from "next/image";
-import imgDefault from "@/public/assets/img/img_empty.svg";
 import { useCategoryStore, type CategoryName } from "@/store/category.store";
+import { useFormData } from "../../providers/FormDataProvider";
+import { validateText } from "../../../utils";
 import CategoryTab from "@/components/ui/CategoryTab";
-import { useFormData } from "../providers/FormDataProvider";
-import imgHobby from "../assets/img_hobby.png";
-import imgStudy from "../assets/img_study.png";
-import imgBusiness from "../assets/img_business.png";
-import imgSports from "../assets/img_sports.png";
-import imgFamily from "../assets/img_family.png";
-import imgEtc from "../assets/img_etc.png";
+import imgDefault from "@/public/assets/img/img_empty.svg";
+import imgGrowth from "@/features/meetup/create/assets/img_growth.svg";
+import imgFitness from "@/features/meetup/create/assets/img_fitness.svg";
+import imgCulture from "@/features/meetup/create/assets/img_culture.svg";
+import imgTravel from "@/features/meetup/create/assets/img_travel.svg";
+import imgPets from "@/features/meetup/create/assets/img_pets.svg";
+import imgVibes from "@/features/meetup/create/assets/img_vibes.svg";
 
 interface StepTypeSelectProps {
 	/** 단계 숫자 */
@@ -29,7 +30,7 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 
 	// 유효성 검사
 	useEffect(() => {
-		setStepValid(step, true);
+		setStepValid(step, validateText(data.type));
 	}, [data.type, setStepValid, step]);
 
 	return (
@@ -38,23 +39,20 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 				{DESC}
 				<span className="ml-0.5 text-purple-500">*</span>
 			</legend>
-			<motion.div
-				className="grid grid-cols-2 justify-items-center gap-5 md:grid-cols-3"
-				initial="hidden"
-				animate="visible"
-				variants={{
-					visible: { transition: { staggerChildren: 0.05 } },
-				}}>
-				{categories.map((type) => (
+			<div className="grid grid-cols-2 justify-items-center gap-5 md:grid-cols-3">
+				{categories.map((type, index) => (
 					<motion.div
 						key={type.id}
-						variants={{
-							hidden: { opacity: 0, y: 10 },
-							visible: { opacity: 1, y: 0 },
+						initial={{ opacity: 0, y: 10 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{
+							duration: 0.3,
+							delay: index * 0.06,
+							ease: "easeOut",
 						}}>
 						<CategoryTab
 							title={type.name}
-							imageSrc={CATEGORY_IMAGES[type.name] ?? imgDefault}
+							imageSrc={categoryImages[type.name] ?? imgDefault}
 							name="type"
 							value={type.name}
 							checked={data.type === type.name}
@@ -62,17 +60,17 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 						/>
 					</motion.div>
 				))}
-			</motion.div>
+			</div>
 		</fieldset>
 	);
 }
 
 const DESC = "이 모임은 어떤 종류인가요?";
-const CATEGORY_IMAGES = {
-	자기계발: imgStudy,
-	"운동/스포츠": imgSports,
-	문화생활: imgHobby,
-	여행: imgBusiness,
-	반려동물: imgFamily,
-	기타: imgEtc,
+const categoryImages = {
+	자기계발: imgGrowth,
+	"운동/스포츠": imgFitness,
+	문화생활: imgCulture,
+	여행: imgTravel,
+	반려동물: imgPets,
+	기타: imgVibes,
 } satisfies Record<CategoryName, StaticImageData>;

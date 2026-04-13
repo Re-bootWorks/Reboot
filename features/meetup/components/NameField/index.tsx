@@ -1,7 +1,7 @@
 "use client";
 
 import InputField from "@/components/ui/Inputs/InputField";
-import { MAX_NAME_LENGTH } from "../utils";
+import { MAX_NAME_LENGTH } from "@/features/meetup/utils";
 
 interface NameFieldProps {
 	/** 필드 이름 @default "name" */
