@@ -30,10 +30,7 @@ interface ListFiltersProps {
 }
 export default function ListFilters({ className }: ListFiltersProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
-	const isExpanded = useScrollSticky({
-		topOffset: containerRef.current?.offsetTop,
-		collapsePx: 60,
-	});
+	const isExpanded = useScrollSticky();
 	const { ref: scrollRef, overlays, ...events } = useDragScroll<HTMLUListElement>();
 	const isLg = useMediaQuery(getBreakpoint("lg"));
 	const [isKeywordOpen, setIsKeywordOpen] = useState(isLg);
@@ -54,9 +51,8 @@ export default function ListFilters({ className }: ListFiltersProps) {
 			className={cn(
 				"flex flex-col justify-center gap-y-2",
 				"md:gap-4 lg:flex-row lg:items-start",
-				"sticky top-12 md:top-[88px]",
-				"z-1 transition-transform duration-300",
-				!isExpanded && "-translate-y-[calc(100%+48px)] md:-translate-y-[calc(100%+88px)]",
+				"sticky z-1 transition-[top] duration-300",
+				isExpanded ? "top-12 md:top-[88px]" : "-top-full",
 				className,
 			)}>
 			<div className="relative min-w-0">
@@ -74,6 +70,13 @@ export default function ListFilters({ className }: ListFiltersProps) {
 				</KeywordFilterWrapper>
 			</div>
 			<DropdownFilters />
+			<style>
+				{`
+        *[role="menu"] {
+          z-index: 50;
+        }
+        `}
+			</style>
 		</div>
 	);
 }

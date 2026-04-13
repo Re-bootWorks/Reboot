@@ -21,8 +21,8 @@ type Options<T extends HTMLElement = HTMLElement> = {
 
 export default function useScrollSticky<T extends HTMLElement = HTMLElement>({
 	topOffset = 88,
-	collapsePx = 32,
-	revealPx = 20,
+	collapsePx = 80,
+	revealPx = 40,
 	cooldownMs = 100,
 	noisePx = 0.75,
 	suspend = false,
