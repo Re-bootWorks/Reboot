@@ -1,5 +1,12 @@
 import { ReviewScore } from "@/types/common";
-import { MeetingJoinedApiRes, MeetupItem, MeReviewsApiRes, ReviewCardItem } from "./types";
+import {
+	MeetingJoinedApiRes,
+	MeetupDetailItem,
+	MeetupItem,
+	MeMeetingApiRes,
+	MeReviewsApiRes,
+	ReviewCardItem,
+} from "./types";
 
 export function toReviewScore(score: number): ReviewScore {
 	if (score >= 1 && score <= 5) {
@@ -7,6 +14,25 @@ export function toReviewScore(score: number): ReviewScore {
 	}
 
 	throw new Error(`잘못된 별점 입니다. : ${score}`);
+}
+export function mapUsersMeMeetings(item: MeMeetingApiRes): MeetupDetailItem {
+	return {
+		id: item.id,
+		name: item.name,
+		region: item.region,
+		dateTime: item.dateTime,
+		registrationEnd: item.registrationEnd,
+		capacity: item.capacity,
+		participantCount: item.participantCount,
+		image: item.image,
+		canceledAt: item.canceledAt,
+		confirmedAt: item.confirmedAt,
+		hostId: item.hostId,
+		isFavorited: item.isFavorited,
+		isReviewed: item.isReviewed,
+		isCompleted: item.isCompleted,
+		role: item.role,
+	};
 }
 
 export function mapJoinedMeeting(item: MeetingJoinedApiRes): MeetupItem {

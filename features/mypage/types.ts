@@ -163,6 +163,10 @@ export interface MeetupItem extends DetailCardItem {
 	isCompleted: boolean;
 }
 export type MeetupList = MeetupItem[];
+export interface MeetupDetailItem extends MeetupItem {
+	role: Role;
+}
+export type MeetupDetailList = MeetupDetailItem[];
 
 export type WritableReviewItem = DetailCardItem;
 export type WritableReviewList = WritableReviewItem[];

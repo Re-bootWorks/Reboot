@@ -11,9 +11,10 @@ import {
 	PostReviewPayload,
 	PatchReviewPayload,
 	MeMeetingApiRes,
+	MeetupDetailList,
 } from "@/features/mypage/types";
 import { clientFetch } from "@/libs/clientFetch";
-import { mapJoinedMeeting, mapMeReviews } from "./mapper";
+import { mapJoinedMeeting, mapMeReviews, mapUsersMeMeetings } from "./mapper";
 import { throwApiError } from "@/utils/api";
 
 export interface BaseListParams {
@@ -82,12 +83,11 @@ async function mypageFetch<ApiItem, MappedItem, TParams extends object>(
 // 내가 참여한 모임 목록 or 내가 만든 모임 목록
 export async function getUsersMeMeetings(
 	params: GetUsersMeMeetingsParams = {},
-): Promise<CursorPageResponse<MeetupList>> {
-	console.log("getUsersMeMeetings", params);
-	return mypageFetch<MeMeetingApiRes, MeetupList[number], BaseListParams>(
+): Promise<CursorPageResponse<MeetupDetailList>> {
+	return mypageFetch<MeMeetingApiRes, MeetupDetailList[number], GetUsersMeMeetingsParams>(
 		"/users/me/meetings",
 		params,
-		mapJoinedMeeting,
+		mapUsersMeMeetings,
 	);
 }
 
