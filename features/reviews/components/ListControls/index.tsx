@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRef } from "react";
+import useScrollOnNextQueryChange from "@/hooks/useScrollOnNextQueryChange";
 import useScrollFloatingVisibility from "@/hooks/useScrollFloatingVisibility";
 import { cn } from "@/utils/cn";
 import CategoryTabs from "./CategoryTabs";
@@ -12,9 +12,10 @@ const MOBILE_STICKY_OFFSET = 48;
 interface ListControlsContentProps {
 	headingId: string;
 	className?: string;
+	onWillChange?: () => void;
 }
 
-function ListControlsContent({ headingId, className }: ListControlsContentProps) {
+function ListControlsContent({ headingId, className, onWillChange }: ListControlsContentProps) {
 	return (
 		<section
 			aria-labelledby={headingId}
@@ -25,41 +26,28 @@ function ListControlsContent({ headingId, className }: ListControlsContentProps)
 			<h2 id={headingId} className="sr-only">
 				리뷰 필터
 			</h2>
-			<CategoryTabs />
-			<ListFilters />
+			<CategoryTabs onWillChange={onWillChange} />
+			<ListFilters onWillChange={onWillChange} />
 		</section>
 	);
 }
 
 export default function ListControls() {
-	const searchParams = useSearchParams();
-	const searchParamsKey = searchParams.toString();
+	const { scrollAnchorRef, markWillChange } = useScrollOnNextQueryChange<HTMLDivElement>();
 	const triggerRef = useRef<HTMLDivElement>(null);
-	const hasMountedRef = useRef(false);
 	const { isVisible, hasPassedThreshold } = useScrollFloatingVisibility({
 		offset: MOBILE_STICKY_OFFSET,
 		triggerRef,
 	});
 	const showMobileFloating = hasPassedThreshold && isVisible;
 
-	useEffect(() => {
-		if (!hasMountedRef.current) {
-			hasMountedRef.current = true;
-			return;
-		}
-
-		triggerRef.current?.scrollIntoView({
-			behavior: "smooth",
-			block: "start",
-		});
-	}, [searchParamsKey]);
-
 	return (
 		<>
+			<div ref={scrollAnchorRef} aria-hidden="true" className="scroll-mt-12 md:scroll-mt-22" />
 			<div
 				ref={triggerRef}
 				className="w-full scroll-mt-12 md:sticky md:top-22 md:z-[9] md:scroll-mt-22 md:bg-gray-50 md:py-3">
-				<ListControlsContent headingId="review-filter-heading" />
+				<ListControlsContent headingId="review-filter-heading" onWillChange={markWillChange} />
 			</div>
 
 			<div
@@ -74,6 +62,7 @@ export default function ListControls() {
 					<ListControlsContent
 						headingId="review-filter-floating-heading"
 						className="pointer-events-auto"
+						onWillChange={markWillChange}
 					/>
 				</div>
 			</div>

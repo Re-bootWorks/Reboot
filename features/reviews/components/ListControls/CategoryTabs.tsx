@@ -7,14 +7,24 @@ import { useQueryParams } from "@/hooks/useQueryParams";
 import { cn } from "@/utils/cn";
 import { QUERY_PARAM_KEYS } from "../../constants/filers";
 
-export default function CategoryTabs() {
+interface CategoryTabsProps {
+	onWillChange?: () => void;
+}
+
+export default function CategoryTabs({ onWillChange }: CategoryTabsProps) {
 	const { ref, overlays, ...events } = useDragScroll<HTMLUListElement>();
 	const { get, set } = useQueryParams();
 	const { categories } = useCategoryStore();
 
-	const type = get(QUERY_PARAM_KEYS.TYPE) ?? "all";
+	const typeParam = get(QUERY_PARAM_KEYS.TYPE);
+	const type = typeParam ?? "all";
 
 	function handleChangeType(v: string | null) {
+		if ((typeParam ?? null) === v) {
+			return;
+		}
+
+		onWillChange?.();
 		set({ [QUERY_PARAM_KEYS.TYPE]: v });
 	}
 
