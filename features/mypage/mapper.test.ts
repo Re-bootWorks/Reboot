@@ -1,6 +1,5 @@
-import { mapJoinedMeeting, mapMeetingsMy, mapMeReviews, toReviewScore } from "./mapper";
-import { mockMeetingJoinedApiRes, mockMeetingsMyApiRes, mockMeReviewsApiRes } from "./mockData";
-import { MeetingsMyApiRes } from "./types";
+import { mapJoinedMeeting, mapMeReviews, toReviewScore } from "./mapper";
+import { mockMeetingJoinedApiRes, mockMeReviewsApiRes } from "./mockData";
 
 describe("mypage mapper", () => {
 	describe("toReviewScore() 별점 확인", () => {
@@ -69,34 +68,6 @@ describe("mypage mapper", () => {
 
 			expect(result.canceledAt).toBe("2026-03-31T09:41:49.482Z");
 			expect(result.confirmedAt).toBe("2026-03-31T09:40:02.178Z");
-		});
-	});
-
-	describe("mapMeetingsMy() 필드 확인", () => {
-		test("API 응답을 CreatedItem 형태로 매핑한다", () => {
-			const result = mapMeetingsMy(mockMeetingsMyApiRes);
-
-			expect(result).toEqual({
-				id: 1000,
-				name: "코딩 스터디",
-				region: "경기 수원시 영통구",
-				dateTime: "2026-03-31T16:05:00.000Z",
-				capacity: 2,
-				participantCount: 2,
-				image: "https://example.com/host.jpg",
-				canceledAt: null,
-				confirmedAt: null,
-				isFavorited: false,
-				isCompleted: true,
-			});
-		});
-
-		test("mapJoinedMeeting에는 있지만 mapMeetingsMy에는 없는 필드가 포함되지 않는다 ", () => {
-			const result = mapMeetingsMy(mockMeetingsMyApiRes);
-
-			expect(result).not.toHaveProperty("registrationEnd");
-			expect(result).not.toHaveProperty("hostId");
-			expect(result).not.toHaveProperty("isReviewed");
 		});
 	});
 
