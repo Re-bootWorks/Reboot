@@ -112,7 +112,9 @@ describe("ReviewModal", () => {
 			await user.click(screen.getByRole("button", { name: "작성 완료" }));
 
 			expect(handleFormSubmit).toHaveBeenCalledTimes(1);
-			expect(handleFormSubmit).toHaveBeenCalledWith(
+
+			const submittedData = handleFormSubmit.mock.calls[0][0];
+			expect(submittedData).toEqual(
 				expect.objectContaining({
 					score: 4,
 					comment: "리뷰를 작성합니다",
@@ -150,6 +152,7 @@ describe("ReviewModal", () => {
 
 			expect(onClose).toHaveBeenCalledTimes(1);
 		});
+
 		describe("Alert 동작 확인", () => {
 			test("작성 중 취소시 dirty 상태면 Alert이 열리는지 확인", async () => {
 				renderReviewModal();
@@ -161,6 +164,7 @@ describe("ReviewModal", () => {
 				const alert = screen.getByText("리뷰 작성을 취소하시겠습니까?");
 				expect(alert).toBeInTheDocument();
 			});
+
 			test("수정 중 취소시 dirty 상태면 Alert이 열리는지 확인", async () => {
 				renderReviewModal({ mode: "edit", initialValue: { score: 4, comment: "기존 리뷰" } });
 				const user = userEvent.setup();
