@@ -1,14 +1,6 @@
 import { MeetupItemResponse } from "@/features/meetup/types";
 import { filterRelatedMeetings } from "@/features/meetupDetail/util";
 
-jest.mock("@/utils/date", () => ({
-	...jest.requireActual("@/utils/date"),
-	isDeadlinePassed: (date: string) => {
-		const fixedNow = new Date("2026-04-10T03:00:00.000Z");
-		return fixedNow > new Date(date);
-	},
-}));
-
 const baseMeeting: MeetupItemResponse = {
 	id: 1,
 	teamId: "lucky7",

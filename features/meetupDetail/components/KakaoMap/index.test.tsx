@@ -23,6 +23,10 @@ const defaultProps = {
 // KakaoMap
 // ─────────────────────────────────────────────
 describe("모임 장소 지도 컴포넌트", () => {
+	beforeAll(() => {
+		process.env.NEXT_PUBLIC_KAKAO_JS_KEY = "test-kakao-key";
+	});
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 		Object.defineProperty(navigator, "clipboard", {

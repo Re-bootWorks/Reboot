@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import PersonnelContainer, {
-	MIN_CONFIRMED_COUNT,
-} from "@/features/meetupDetail/components/PersonnelContainer/index";
+import PersonnelContainer from "@/features/meetupDetail/components/PersonnelContainer/index";
 
 jest.mock("@/components/ui/Participants", () => ({
 	Participants: () => <div />,
 }));
+
+const MIN_CONFIRMED_COUNT = 3;
 
 const defaultProps = {
 	meetingId: 1,

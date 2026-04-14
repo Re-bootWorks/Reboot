@@ -13,6 +13,14 @@ jest.mock("@/features/meetup/components/AddressField", () => ({
 	),
 }));
 
+jest.mock("@/apis/images", () => ({
+	uploadImage: jest.fn(),
+}));
+
+jest.mock("@/features/meetup/apis", () => ({
+	getKakaoPlace: jest.fn(),
+}));
+
 jest.mock("@/features/meetup/components/FileField", () => ({
 	__esModule: true,
 	default: () => <div data-testid="file-field" />,

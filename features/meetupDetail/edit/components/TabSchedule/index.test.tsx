@@ -6,6 +6,10 @@ import EditFormDataProvider, {
 } from "@/features/meetupDetail/edit/providers/EditFormDataProvider";
 import { mockEditInitialData } from "@/features/meetupDetail/testUtils";
 
+jest.mock("@/features/meetupDetail/components/PersonnelContainer", () => ({
+	MIN_CONFIRMED_COUNT: 3,
+}));
+
 function DataChecker() {
 	const { data } = useEditFormData();
 	return (

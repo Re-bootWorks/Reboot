@@ -17,6 +17,10 @@ jest.mock("@/libs/dayjs", () => {
 	return { __esModule: true, default: mockDayjs };
 });
 
+jest.mock("@/features/meetupDetail/components/PersonnelContainer", () => ({
+	MIN_CONFIRMED_COUNT: 3,
+}));
+
 const mockMeeting: Meeting = {
 	id: 1,
 	teamId: "lucky7",

@@ -6,6 +6,10 @@ const mockHandleShowToast = jest.fn();
 const mockOnSubmit = jest.fn();
 const mockOnClose = jest.fn();
 
+jest.mock("@/features/meetupDetail/components/PersonnelContainer", () => ({
+	MIN_CONFIRMED_COUNT: 3,
+}));
+
 jest.mock("@/providers/toast-provider", () => ({
 	useToast: () => ({ handleShowToast: mockHandleShowToast }),
 }));
