@@ -11,7 +11,7 @@ export default function MeetupListPage() {
 			<Banner />
 			<div className="mt-6 mb-10 flex flex-1 flex-col gap-y-5 px-4 md:mt-10 md:mb-12 md:gap-y-4 md:px-0 lg:mt-12 lg:mb-26 lg:gap-y-6">
 				<Suspense fallback={null}>
-					<ListFilters />
+					<ListFilters className="-mx-4 bg-gray-50 px-4 pb-2 md:-mx-6 md:px-6" />
 					<MeetupCardList />
 				</Suspense>
 			</div>

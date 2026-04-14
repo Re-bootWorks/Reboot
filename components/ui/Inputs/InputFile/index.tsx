@@ -8,6 +8,7 @@ import { IcImagePlus } from "../../icons";
 import DeleteButton from "../../Buttons/DeleteButton";
 import LoaderDots from "../../LoaderDots";
 import useInputImage from "@/hooks/useInputImage";
+import { IMAGE_ACCEPT } from "@/apis/images";
 
 interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	/** 컴포넌트 제어 참조(reset) */
@@ -46,8 +47,6 @@ export interface InputFileHandle {
 	reset: () => void;
 }
 
-export const IMAGE_ACCEPT = "image/png, image/jpeg, image/gif, image/webp";
-export const IMAGE_ACCEPTED_EXTS: string[] = IMAGE_ACCEPT.split(", ");
 const ImageSize = {
 	large: "147px",
 	small: "114px",

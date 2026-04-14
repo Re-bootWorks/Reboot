@@ -104,3 +104,22 @@ export const uiFormatDeadline = (date: string | Date) => {
 export const isDeadlinePassed = (date: string | Date): boolean => {
 	return dayjs().tz(KOREAN_TIMEZONE).isAfter(dayjs(date).tz(KOREAN_TIMEZONE));
 };
+
+// 최근 3개월 이내 랜덤 Date 반환
+export const getRandomRecentDate = () => {
+	const end = dayjs().tz(KOREAN_TIMEZONE).endOf("day");
+	const start = end.subtract(3, "month").startOf("day");
+
+	const startMs = start.valueOf();
+	const endMs = end.valueOf();
+
+	const randomMs = Math.floor(Math.random() * (endMs - startMs + 1)) + startMs;
+
+	return new Date(randomMs);
+};
+
+// 최근 3개월 이내 랜덤 날짜를 "YYYY.MM.DD" 형식으로 반환
+export const getRandomRecentDateString = () => {
+	const randomDate = getRandomRecentDate();
+	return dayjs(randomDate).tz(KOREAN_TIMEZONE).format("YYYY.MM.DD");
+};

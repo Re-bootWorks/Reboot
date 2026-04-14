@@ -1,22 +1,31 @@
 export const QUERY_KEYS = {
 	/** 모임 종류 */
 	TYPE: "type",
+	/** 검색 키워드 */
+	KEYWORD: "keyword",
 	/** 모임 날짜 시작(ISO 형식, KST 시간대) */
 	DATE_START: "dateStart",
 	/** 모임 날짜 종료(ISO 형식, KST 시간대) */
 	DATE_END: "dateEnd",
-	/** 정렬 기준 */
-	SORT_BY: "sort",
-	/** 정렬 순서(오름차, 내림차) */
-	SORT_ORDER: "order",
 	/** 지역 */
 	REGION: "region",
+	/** 정렬 기준
+	 * 클라이언트 기본값 createdAt
+	 * 서버 기본값 dateTime
+	 */
+	SORT_BY: "sort",
+	/** 정렬 순서 (오름차, 내림차)
+	 * 클라이언트 기본값 desc, 서버 기본값 asc
+	 * sortBy=createAt의 경우 서버 기본값 desc
+	 */
+	SORT_ORDER: "order",
 };
 
 /** 정렬 기준 항목 */
 export const SORT_BY_OPTIONS = [
-	{ value: "dateTime", label: "모임 일시" },
-	{ value: "registrationEnd", label: "마감 임박" },
+	{ value: "createdAt", label: "생성날짜순" },
+	{ value: "dateTime", label: "모임날짜순" },
+	{ value: "registrationEnd", label: "마감임박순" },
 	{ value: "participantCount", label: "참여인원순" },
 ];
 

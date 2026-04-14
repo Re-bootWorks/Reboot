@@ -11,8 +11,8 @@ import { DeadlineTag } from "../Tags/DeadlineTag";
 import { TimeTag } from "../Tags/TimeTag";
 import ProgressBar from "../ProgressBar";
 import Button from "../Buttons/Button";
-import SendButton from "../Buttons/SendButton";
 import UtilityButton from "../Buttons/UtilityButton";
+import ImgRibbon from "./assets/img_ribbon.svg";
 
 interface GroupCardStatus {
 	/** 개설 확정 여부(confirmedAt) */
@@ -40,7 +40,6 @@ interface GroupCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "id"
 }
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
-// TODO: 리팩토링 시 status 값 제거
 function GroupCard({ id, href, status, children, className, ...props }: GroupCardProps) {
 	return (
 		<GroupCardContext.Provider value={status}>
@@ -52,18 +51,29 @@ function GroupCard({ id, href, status, children, className, ...props }: GroupCar
 					className,
 				)}
 				{...props}>
+				{status.isJoined && <JoinedRibbon />}
 				<Link href={href} className="absolute inset-0 z-1" />
 				{children}
 			</div>
 		</GroupCardContext.Provider>
 	);
 }
-const containerStyle =
-	"h-[346px] min-w-[343px] md:h-[219px] w-full rounded-4xl overflow-hidden bg-white";
+const containerStyle = "h-[346px] w-[343px] min-w-0 md:h-[219px] w-full rounded-4xl bg-white";
+
+function JoinedRibbon() {
+	return (
+		<div className="pointer-events-none absolute -top-1 -left-8.5 z-2 aspect-616/174 w-36 origin-center translate-y-1/2 -rotate-45">
+			<span className="absolute top-1/2 left-1/2 z-2 -translate-x-1/2 -translate-y-3/5 leading-10 font-bold tracking-widest text-white">
+				참여 모임
+			</span>
+			<NextImage src={ImgRibbon} fill sizes="144px" alt="참여 완료" />
+		</div>
+	);
+}
 
 function GroupCardSkeleton() {
 	return (
-		<div className={containerStyle}>
+		<div className={cn(containerStyle, "overflow-hidden")}>
 			<Skeleton
 				height="100%"
 				containerClassName="block h-full w-full leading-none"
@@ -80,19 +90,19 @@ interface GroupCardImageProps {
 	alt: string;
 }
 function Image({ src, alt }: GroupCardImageProps) {
-	const { isRegClosed } = useGroupCard();
+	const { isRegClosed, isCompleted } = useGroupCard();
 	const hasSrc = !!src;
 
-	// 모집 마감 시 오버레이 추가
+	// 모집 마감 또는 모임 완료 시 오버레이 추가
 	return (
 		<div className="relative flex h-full items-center justify-center overflow-hidden md:h-[170px] md:w-[170px] md:rounded-3xl">
 			{isRegClosed && (
 				<>
 					<span className="font-taenada pointer-events-none absolute top-1/2 left-1/2 z-2 -translate-x-1/2 -translate-y-1/2 text-2xl font-extrabold whitespace-nowrap text-white select-none">
-						모집 마감
+						{isCompleted ? "모임 완료" : isRegClosed ? "모집 마감" : ""}
 					</span>
 					<div
-						className="pointer-events-none absolute inset-0 z-1 bg-black tracking-[-0.72px] opacity-70"
+						className="pointer-events-none absolute inset-0 z-1 rounded-t-3xl bg-black tracking-[-0.72px] opacity-70"
 						aria-hidden="true"
 					/>
 				</>
@@ -102,7 +112,7 @@ function Image({ src, alt }: GroupCardImageProps) {
 				alt={alt}
 				fill
 				sizes="(max-width: 744px) 100vw, 170px"
-				className={hasSrc ? "object-cover" : "bg-purple-50 object-scale-down"}
+				className={cn(hasSrc ? "object-cover" : "bg-purple-50 object-scale-down", "rounded-t-3xl")}
 			/>
 		</div>
 	);
@@ -117,7 +127,7 @@ function Content({ children }: ContentProp) {
 		<div
 			className={cn(
 				"grid flex-1 px-4 py-4.5 md:px-0 md:py-2",
-				"grid-cols-[1fr_auto]",
+				"grid-cols-[1fr_auto] gap-x-1",
 				"md:grid-rows-[auto_auto_1fr_auto]",
 				"[grid-template-areas:'title_title'_'subtitle_subtitle'_'badge-group_badge-group'_'participant-bar_join-button']",
 				"md:[grid-template-areas:'title_title'_'subtitle_subtitle'_'._.'_'badge-group_join-button'_'participant-bar_join-button']",
@@ -219,20 +229,22 @@ function JoinButton({ onClick, isPending, ...props }: ButtonProp) {
 	}
 
 	return (
-		<Button
-			disabled={(!isJoined && isRegClosed) || isCompleted}
-			colors="purpleBorder"
-			className="relative z-2 mt-auto h-10 w-20 text-sm font-semibold [grid-area:join-button] md:h-12 md:w-[103px] md:text-base"
-			onClick={handleClick}
-			isPending={isPending}
-			{...props}>
-			{!isJoined ? "참여하기" : "참여 취소"}
-		</Button>
+		!isCompleted && (
+			<Button
+				disabled={(!isJoined && isRegClosed) || isCompleted}
+				colors={!isJoined ? "purple" : "purpleBorder"}
+				className="relative z-2 mt-auto h-10 w-20 text-sm font-semibold [grid-area:join-button] md:h-12 md:w-[103px] md:text-base"
+				onClick={handleClick}
+				isPending={isPending}
+				{...props}>
+				{!isJoined ? "참여하기" : "참여 취소"}
+			</Button>
+		)
 	);
 }
 
 function LikeButton({ onClick, isPending, ...props }: ButtonProp) {
-	const { isRegClosed, isLiked, isCompleted } = useGroupCard();
+	const { isLiked } = useGroupCard();
 
 	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
@@ -240,8 +252,7 @@ function LikeButton({ onClick, isPending, ...props }: ButtonProp) {
 		onClick(e);
 	}
 
-	// SendButton 은 모임 마감 여부 표시, 클릭 이벤트 없음
-	return !isRegClosed && !isCompleted ? (
+	return (
 		<UtilityButton
 			pressed={isLiked}
 			className={likeButtonStyle}
@@ -249,8 +260,6 @@ function LikeButton({ onClick, isPending, ...props }: ButtonProp) {
 			isPending={isPending}
 			{...props}
 		/>
-	) : (
-		<SendButton className={cn(likeButtonStyle, "pointer-events-none")} />
 	);
 }
 const likeButtonStyle = "z-2 absolute top-4 right-4 [grid-area:like-button] md:top-8 md:right-6";
