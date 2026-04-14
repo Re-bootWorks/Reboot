@@ -30,7 +30,7 @@ describe("참여자 목록 드롭다운 컴포넌트", () => {
 		jest.clearAllMocks();
 	});
 
-	describe("참여자가 없을 시, 아무것도 렌더링되지 않는다.", () => {
+	it("참여자가 없을 시, 아무것도 렌더링되지 않는다.", () => {
 		render(<ParticipantDropdown {...defaultProps} participants={[]} />);
 		expect(screen.queryByRole("img")).not.toBeInTheDocument();
 	});

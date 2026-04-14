@@ -17,7 +17,7 @@ describe("모임 참여 취소 확인 모달", () => {
 		jest.clearAllMocks();
 	});
 
-	describe("isOpen=false일 때 모달이 렌더링되지 않는다.", () => {
+	it("isOpen=false일 때 모달이 렌더링되지 않는다.", () => {
 		render(<CancelJoinModal {...defaultProps} isOpen={false} />);
 		expect(screen.queryByText("모임 참여를 취소하시겠어요?")).not.toBeInTheDocument();
 	});

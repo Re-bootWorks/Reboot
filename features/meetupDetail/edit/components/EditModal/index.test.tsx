@@ -2,7 +2,6 @@ import EditModal from "@/features/meetupDetail/edit/components/EditModal/index";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { mockEditInitialData } from "@/features/meetupDetail/testUtils";
-
 const mockHandleShowToast = jest.fn();
 const mockOnSubmit = jest.fn();
 const mockOnClose = jest.fn();
@@ -46,7 +45,7 @@ describe("모임 수정 모달 컴포넌트", () => {
 	describe("렌더링", () => {
 		it("isOpen이 false일 때, 모달이 렌더링되지 않는다.", () => {
 			render(<EditModal {...defaultProps} isOpen={false} />);
-			expect(screen.queryByTestId("modal")).not.toBeInTheDocument();
+			expect(screen.queryByText("모임 수정하기")).not.toBeInTheDocument();
 		});
 
 		it("'일정 및 인원' 탭 클릭 시, TabSchedule이 렌더링된다.", async () => {
@@ -73,13 +72,13 @@ describe("모임 수정 모달 컴포넌트", () => {
 			render(
 				<EditModal
 					{...defaultProps}
-					initialData={{ ...mockEditInitialData, capacity: 2 }}
+					initialData={{ ...mockEditInitialData, capacity: 3 }}
 					participantCount={5}
 				/>,
 			);
 			await user.click(screen.getByRole("button", { name: "수정하기" }));
 			expect(mockHandleShowToast).toHaveBeenCalledWith({
-				message: "최대 인원은 3이상이어야 합니다.",
+				message: `정원은 현재 참가자 수보다 적을 수 없습니다.`,
 				status: "error",
 			});
 			expect(mockOnSubmit).not.toHaveBeenCalled();

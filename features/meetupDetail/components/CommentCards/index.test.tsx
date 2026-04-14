@@ -69,13 +69,13 @@ const defaultProps = {
 // ─────────────────────────────────────────────
 // CommentCards
 // ─────────────────────────────────────────────
-describe("CommentCards - 리뷰 목록 컴포넌트", () => {
+describe("리뷰 목록 컴포넌트", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockUser(99);
 	});
 
-	describe("리뷰가 없을 시, 빈 상태 메시지가 렌더링된다.", () => {
+	it("리뷰가 없을 시, 빈 상태 메시지가 렌더링된다.", () => {
 		render(<CommentCards {...defaultProps} comments={[]} />);
 		expect(screen.getByText("아직 작성된 리뷰가 없어요.")).toBeInTheDocument();
 	});
