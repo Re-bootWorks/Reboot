@@ -60,13 +60,13 @@ export default async function ConnectPage({
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<Container className="min-w-[380px]">
 				<IntroSection />
-				<QueryErrorBoundary prefix="HOT 게시글 조회 중 오류 발생">
+				<QueryErrorBoundary prefix="HOT 게시글을">
 					<Suspense fallback={null}>
 						<HotPostSection />
 					</Suspense>
 				</QueryErrorBoundary>
 				<div className="mt-[6.125rem] pb-[8.75rem]">
-					<QueryErrorBoundary prefix="게시글 조회 중 오류 발생">
+					<QueryErrorBoundary prefix="게시글을">
 						<Suspense fallback={null}>
 							<PostContainer />
 						</Suspense>

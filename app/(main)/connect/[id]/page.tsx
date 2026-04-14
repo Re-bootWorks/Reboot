@@ -17,7 +17,7 @@ export default async function DetailPage({ params }: { params: Promise<{ id: str
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<QueryErrorBoundary prefix="게시글을 불러오는 중 오류 발생">
+			<QueryErrorBoundary prefix="게시글을">
 				<PostDetailContainer id={numId} />
 			</QueryErrorBoundary>
 		</HydrationBoundary>
