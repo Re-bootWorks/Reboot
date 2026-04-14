@@ -10,7 +10,7 @@ describe("toast box 확인", () => {
 	});
 });
 describe("toast 확인", () => {
-	test("토스트가 portal로 렌더링 되는지 확인", async () => {
+	test("토스트가 portal로 목록 개수만큼 렌더링 되는지 확인", async () => {
 		render(
 			<Toast
 				toasts={[
@@ -25,5 +25,8 @@ describe("toast 확인", () => {
 
 		const error = await screen.findByText("로그인에 실패했습니다");
 		expect(error).toBeInTheDocument();
+
+		const messages = await screen.findAllByText(/로그인/);
+		expect(messages).toHaveLength(2);
 	});
 });
