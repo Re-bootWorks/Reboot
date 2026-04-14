@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 interface ErrorResponse {
 	code?: string;
 	message?: string;
@@ -11,11 +10,6 @@ export async function parseJsonSafely(response: Response) {
 	} catch {
 		return null;
 	}
-}
-
-export async function nextJsonResponse(response: Response) {
-	const data = await parseJsonSafely(response);
-	return NextResponse.json(data, { status: response.status });
 }
 
 /**
@@ -33,7 +27,7 @@ export async function nextJsonResponse(response: Response) {
  *   body: JSON.stringify(payload),
  * });
  *
- * await throwErrorMessage(res, "프로필 수정에 실패했습니다.");
+ * await throwApiError(res, "프로필 수정에 실패했습니다.");
  * return res.json();
  */
 export async function throwApiError(response: Response, fallbackMessage: string): Promise<void> {
