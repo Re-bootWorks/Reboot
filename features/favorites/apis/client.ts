@@ -1,6 +1,6 @@
 import { clientFetch } from "@/libs/clientFetch";
 import { throwApiError } from "@/utils/api";
-import type { FavoritesListResponse, FavoritesListsRequest } from "../types";
+import type { FavoritesListResponse, FavoritesListRequest } from "../types";
 import {
 	buildQuery,
 	getFavoritesErrorMessage,
@@ -11,7 +11,7 @@ import { ROUTE_FAVORITES } from "../constants/routes";
 
 /** 찜 목록 조회 */
 export async function getFavorites(
-	params: FavoritesListsRequest = {},
+	params: FavoritesListRequest = {},
 ): Promise<FavoritesListResponse> {
 	const query = buildQuery({
 		type: params.type,

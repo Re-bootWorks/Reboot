@@ -56,7 +56,7 @@ function JoinModalContent({ selectedData, isOpen, onClose }: JoinModalContentPro
 	return (
 		<Modal
 			title={selectedData.meetingName}
-			isOpen={isOpen && !!selectedData}
+			isOpen={isOpen}
 			onClose={onClose}
 			className={modalSizeStyle}>
 			<div className="overflow-hidden rounded-xl bg-gray-50">

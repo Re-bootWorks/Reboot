@@ -24,7 +24,7 @@ function ListControlsContent({ headingId, className, onWillChange }: ListControl
 				className,
 			)}>
 			<h2 id={headingId} className="sr-only">
-				리뷰 필터
+				찜한 모임 목록 필터
 			</h2>
 			<CategoryTabs onWillChange={onWillChange} />
 			<ListFilters onWillChange={onWillChange} />
@@ -47,7 +47,7 @@ export default function ListControls() {
 
 			<div ref={triggerRef} className="scroll-mt-12 md:sticky md:top-22 md:z-9 md:scroll-mt-22">
 				<div className="md:relative md:left-1/2 md:w-screen md:max-w-[1300px] md:-translate-x-1/2 md:bg-gray-50 md:py-3 md:pl-6 lg:pl-0">
-					<ListControlsContent headingId="review-filter-heading" onWillChange={markWillChange} />
+					<ListControlsContent headingId="favorites-filter-heading" onWillChange={markWillChange} />
 				</div>
 			</div>
 

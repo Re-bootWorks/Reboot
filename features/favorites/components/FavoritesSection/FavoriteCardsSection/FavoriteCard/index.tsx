@@ -97,10 +97,7 @@ export default function FavoriteCard({
 					capacity={favorite.capacity}
 					participantCount={favorite.participantCount}
 				/>
-				<GroupCard.JoinButton
-					onClick={handleClickJoin}
-					isPending={postFavoriteMutation.isPending || deleteFavoriteMutation.isPending}
-				/>
+				<GroupCard.JoinButton onClick={handleClickJoin} />
 				<GroupCard.LikeButton
 					onClick={handleClickFavorite}
 					isPending={postFavoriteMutation.isPending || deleteFavoriteMutation.isPending}

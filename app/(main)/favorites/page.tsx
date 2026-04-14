@@ -1,6 +1,5 @@
 import PageIntro from "@/components/ui/PageIntro";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { ReviewsListRequest } from "@/features/reviews/types";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 import { getQueryClient } from "@/libs/getQueryClient";
 import { prefetchFavorites } from "@/features/favorites/queries/prefetchQueries";
@@ -9,7 +8,7 @@ import FavoritesSection from "@/features/favorites/components/FavoritesSection";
 import ListControls from "@/features/favorites/components/ListControls";
 
 type Props = {
-	searchParams: Promise<ReviewsListRequest>;
+	searchParams: Promise<FavoritesListRequest>;
 };
 
 export default async function FavoritesPage({ searchParams }: Props) {
