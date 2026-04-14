@@ -14,11 +14,6 @@ const DEFAULT_PARAMS = {
 	size: 10,
 } as const;
 
-const WRITTEN_REVIEW_PARAMS = {
-	...DEFAULT_PARAMS,
-	sortBy: "createdAt",
-} as const;
-
 const MYPAGE_QUERY_BASE_KEY = ["mypage"] as const;
 
 export const mypageQueryKeys = {
@@ -77,7 +72,12 @@ export function useMyJoinedInfinite(params: Omit<GetUsersMeMeetingsParams, "curs
 
 // 내가 만든 모임 목록
 export function useMyCreatedInfinite(params: Omit<GetUsersMeMeetingsParams, "cursor"> = {}) {
-	const mergedParams = { ...DEFAULT_PARAMS, ...params, type: "created" as const };
+	const mergedParams = {
+		...DEFAULT_PARAMS,
+		sortBy: "createdAt" as const,
+		...params,
+		type: "created" as const,
+	};
 
 	return useSuspenseInfiniteQuery({
 		queryKey: mypageQueryKeys.meetup.createdList(mergedParams),
@@ -118,7 +118,7 @@ export function useMyMeetupInfinite(params: Omit<GetMeetingsJoinedParams, "curso
 
 // 내가 작성한 리뷰 목록 조회
 export function useMyReviewInfinite(params: Omit<BaseListParams, "cursor"> = {}) {
-	const mergedParams = { ...WRITTEN_REVIEW_PARAMS, ...params };
+	const mergedParams = { ...DEFAULT_PARAMS, sortBy: "createdAt" as const, ...params };
 
 	return useSuspenseInfiniteQuery({
 		queryKey: mypageQueryKeys.review.writtenList(mergedParams),
