@@ -1,6 +1,24 @@
 import { act, render, screen } from "@testing-library/react";
 import { ToastProvider, useToast } from "./toast-provider";
 import userEvent from "@testing-library/user-event";
+// 애니메이션 타이밍으로 인한 flaky 테스트를 막기 위해 motion/react를 단순 mock으로 대체
+// motion 전용 props는 일반 div에 전달되면 React 경고가 발생하므로 제거
+jest.mock("motion/react", () => {
+	const actual = jest.requireActual("motion/react");
+	return {
+		...actual,
+		AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+		motion: {
+			div: ({
+				children,
+				layout,
+				...props
+			}: React.HTMLAttributes<HTMLDivElement> & {
+				layout?: boolean;
+			}) => <div {...props}>{children}</div>,
+		},
+	};
+});
 
 function TestComponent() {
 	const { handleShowToast } = useToast();
@@ -9,18 +27,16 @@ function TestComponent() {
 		<>
 			<button
 				type="button"
-				onClick={() => handleShowToast({ message: "로그인에 성공했습니다", status: "success" })}>
+				onClick={() =>
+					handleShowToast({ message: "로그인에 성공했습니다", status: "success", duration: 1000 })
+				}>
 				성공 토스트 버튼
 			</button>
 
 			<button
 				type="button"
 				onClick={() =>
-					handleShowToast({
-						message: "로그인에 실패했습니다",
-						status: "error",
-						duration: 1000,
-					})
+					handleShowToast({ message: "로그인에 실패했습니다", status: "error", duration: 1000 })
 				}>
 				실패 토스트 버튼
 			</button>
@@ -69,7 +85,7 @@ describe("ToastProvider", () => {
 			jest.advanceTimersByTime(1000); // duration 만큼 강제로 시간 흐르게 함
 		});
 
-		expect(screen.queryByText("로그인에 성공했습니다.")).not.toBeInTheDocument();
+		expect(screen.queryByText("로그인에 성공했습니다")).not.toBeInTheDocument();
 
 		jest.useRealTimers(); // 실제 타이머 복구
 	});
