@@ -29,9 +29,10 @@ export default function ListFilters({ onWillChange }: ListFiltersProps) {
 	const regionParam = get(QUERY_PARAM_KEYS.REGION);
 	const sortByParam = get(QUERY_PARAM_KEYS.SORT_BY);
 	const sortOrderParam = get(QUERY_PARAM_KEYS.SORT_ORDER);
+
 	const region = getRegionItem(regionParam);
-	const sortBy = getSortByItem(sortByParam) ?? REVIEWS_SORT_BY_OPTIONS[0].value;
-	const sortOrder = getSortOrderItem(sortOrderParam) ?? REVIEWS_SORT_ORDER_OPTIONS[0].value;
+	const sortBy = getSortByItem(sortByParam);
+	const sortOrder = getSortOrderItem(sortOrderParam);
 
 	const dateRange = {
 		from: dateStart ? dateStart.split("T")[0] : "",
@@ -56,7 +57,7 @@ export default function ListFilters({ onWillChange }: ListFiltersProps) {
 	function handleChangeLocation(data: RegionFilterValue) {
 		const param = buildRegionParam(data.region, data.district);
 
-		if (regionParam === param) {
+		if ((regionParam ?? null) === param) {
 			return;
 		}
 
@@ -65,7 +66,7 @@ export default function ListFilters({ onWillChange }: ListFiltersProps) {
 	}
 
 	function handleChangeSortOrder(v: string) {
-		if (sortOrderParam === v) {
+		if (sortOrder.value === v) {
 			return;
 		}
 
@@ -74,7 +75,7 @@ export default function ListFilters({ onWillChange }: ListFiltersProps) {
 	}
 
 	function handleChangeSortBy(v: string) {
-		if (sortByParam === v) {
+		if (sortBy.value === v) {
 			return;
 		}
 
@@ -89,11 +90,13 @@ export default function ListFilters({ onWillChange }: ListFiltersProps) {
 			className="flex items-center justify-center gap-x-1.5">
 			<DateFilter value={dateRange} onChange={handleChangeDate} />
 			<RegionFilter value={region} onChange={handleChangeLocation} />
+
 			<FilterDropdown
 				value={sortBy.label}
 				items={REVIEWS_SORT_BY_OPTIONS}
 				onChange={handleChangeSortBy}
 			/>
+
 			<FilterDropdown
 				value={sortOrder.label}
 				items={REVIEWS_SORT_ORDER_OPTIONS}

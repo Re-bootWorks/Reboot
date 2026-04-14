@@ -20,7 +20,7 @@ export default function CategoryTabs({ onWillChange }: CategoryTabsProps) {
 	const type = typeParam ?? "all";
 
 	function handleChangeType(v: string | null) {
-		if (typeParam === v) {
+		if ((typeParam ?? null) === v) {
 			return;
 		}
 
