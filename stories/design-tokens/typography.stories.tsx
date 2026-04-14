@@ -27,6 +27,7 @@ const meta: Meta = {
 사용 예시:
 - <p className="font-pretendard">본문</p>
 - <h2 className="font-taenada">포인트 타이틀</h2>
+
         `,
 			},
 		},
@@ -46,6 +47,11 @@ export const FontFamilies: Story = {
 			<section className="space-y-2">
 				<p className="text-sm text-gray-500">Accent / Display</p>
 				<p className="font-taenada text-3xl">Taenada: 강조 문구</p>
+			</section>
+
+			<section className="space-y-2">
+				<p className="text-sm text-gray-500">Accent / Display</p>
+				<p className="font-tektur text-5xl">Tektur: 랜딩페이지 로고 문구</p>
 			</section>
 		</div>
 	),

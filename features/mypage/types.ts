@@ -28,8 +28,8 @@ export interface MeetingJoinedApiRes {
 	participantCount: number;
 	image: string | null;
 	description: string;
-	canceledAt: string;
-	confirmedAt: string;
+	canceledAt: null | string;
+	confirmedAt: null | string;
 	hostId: number;
 	createdBy: number;
 	createdAt: string;

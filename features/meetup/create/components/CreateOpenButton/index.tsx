@@ -3,12 +3,12 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/utils/cn";
 import CreateButton from "@/components/ui/Buttons/CreateButton";
-import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
 import { useModalStore } from "@/store/modal.store";
 import { useToast } from "@/providers/toast-provider";
 
 export default function CreateOpenButton({ className }: { className?: string }) {
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const { openLogin } = useModalStore();
 	const { handleShowToast } = useToast();
 	const router = useRouter();

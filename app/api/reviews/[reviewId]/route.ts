@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverFetch } from "@/libs/serverFetch";
-import { nextJsonResponse } from "@/utils/api";
+import { nextJsonResponse } from "@/utils/api.server";
 
 // 모임 리뷰 수정하기
 export async function PATCH(
