@@ -1,9 +1,8 @@
 "use client";
 import { Suspense, useRef, useState } from "react";
 import DetailCard from "../components/DetailCard";
-import { DetailCardAction, DetailCardBadge } from "@/features/mypage/types";
+import { MeetupDetailItem } from "@/features/mypage/types";
 import ReviewModal, { ReviewFormValues } from "@/features/shared/components/ReviewModal";
-import { MeetupItem } from "@/features/mypage/types";
 import Alert from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/hooks/useMeetingFavorite";
 import { useMyJoinedInfinite } from "@/features/mypage/queries";
@@ -18,122 +17,22 @@ import {
 } from "../mutations";
 import DetailCardSkeleton from "../components/DetailCard/DetailCardSkeleton";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
-import { useUser } from "@/hooks/useUser";
-interface MeetupActionHandlers {
-	/** 모임 확정 */
-	onConfirmMeetup: () => void;
-	/** 모임 삭제 */
-	onDeleteMeetup: () => void;
-	/** 모임 취소 */
-	onCancelMeetup: () => void;
-	/** 모임 예약 취소 */
-	onCancelReservation: () => void;
-	/** 모임 리뷰 작성 */
-	onWriteReview: () => void;
-}
-
-type AlertAction = "confirm" | "delete" | "cancelMeetup" | "cancelReservation";
-
-// alert 메세지
-const ALERT_MESSAGE = {
-	confirm: "모임을 확정하시겠습니까?",
-	delete: "모임을 삭제하시겠습니까?",
-	cancelMeetup: "모임을 취소하시겠습니까?",
-	cancelReservation: "모임 예약을 취소하시겠습니까?",
-} satisfies Record<AlertAction, string>;
-
-// 모임 배지 상태
-function meetupBadges(item: MeetupItem): DetailCardBadge[] {
-	if (item.isCompleted) {
-		if (item.isReviewed)
-			return [
-				{ label: "이용 완료", variant: "completed" },
-				{ label: "리뷰 작성완료", variant: "completedAlt" },
-			];
-		return [{ label: "이용 완료", variant: "completed" }];
-	}
-
-	if (item.confirmedAt) {
-		return [
-			{ label: "이용 예정", variant: "scheduled" },
-			{ label: "개설확정", variant: "confirmed", showStatusLabel: true },
-		];
-	}
-
-	return [
-		{ label: "이용 예정", variant: "scheduled" },
-		{ label: "개설 대기", variant: "pending" },
-	];
-}
-
-// 모임 상태별 액션
-function meetupActions(
-	item: MeetupItem,
-	userId: number,
-	handlers: MeetupActionHandlers,
-): DetailCardAction[] {
-	const isHost = userId === item.hostId;
-
-	if (item.isCompleted) {
-		if (item.isReviewed) return [];
-		return [
-			{
-				label: "리뷰 작성하기",
-				variant: "purple",
-				handleCardButtonClick: handlers.onWriteReview,
-			},
-		];
-	}
-
-	if (isHost) {
-		if (item.confirmedAt) {
-			return [
-				{
-					label: "모임 삭제하기",
-					variant: "grayBorder",
-					handleCardButtonClick: handlers.onDeleteMeetup,
-					isDestructive: true,
-				},
-				{
-					label: "모임 취소하기",
-					variant: "grayBorder",
-					handleCardButtonClick: handlers.onCancelMeetup,
-				},
-			];
-		}
-		return [
-			{
-				label: "모임 취소하기",
-				variant: "grayBorder",
-				handleCardButtonClick: handlers.onCancelMeetup,
-			},
-			{
-				label: "모임 확정하기",
-				variant: "purple",
-				handleCardButtonClick: handlers.onConfirmMeetup,
-			},
-		];
-	}
-
-	return [
-		{
-			label: "예약 취소하기",
-			variant: "purpleBorder",
-			handleCardButtonClick: handlers.onCancelReservation,
-		},
-	];
-}
+import {
+	ALERT_MESSAGE,
+	AlertActionType,
+	MeetupActionHandlers,
+	meetupActions,
+	meetupBadges,
+} from "../utils";
 
 function JoinedMeetingList() {
-	const { user } = useUser();
-	const userId = user?.id;
 	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
-	const [reviewTarget, setReviewTarget] = useState<MeetupItem | null>(null);
+	const [reviewTarget, setReviewTarget] = useState<MeetupDetailItem | null>(null);
 	// 어떤 모임에 대해 alert을 띄웠는지
-	const [alertTarget, setAlertTarget] = useState<MeetupItem | null>(null);
+	const [alertTarget, setAlertTarget] = useState<MeetupDetailItem | null>(null);
 	// alert이 어떤 행동을 할것인지
-	const [alertAction, setAlertAction] = useState<AlertAction | null>(null);
+	const [alertAction, setAlertAction] = useState<AlertActionType | null>(null);
 
 	// 모임 목록 불러오기
 	const {
@@ -179,7 +78,7 @@ function JoinedMeetingList() {
 	}
 
 	// DetailCard 버튼 핸들러 - 실제 api 행동이 아닌 alert을 우선 띄움
-	function meetupActionHandlers(item: MeetupItem): MeetupActionHandlers {
+	function meetupActionHandlers(item: MeetupDetailItem): MeetupActionHandlers {
 		return {
 			// 모임 확정하기
 			onConfirmMeetup() {
@@ -212,7 +111,7 @@ function JoinedMeetingList() {
 	function handleAlertConfirm() {
 		if (!alertTarget || !alertAction) return;
 
-		const actionHandlers: Record<AlertAction, () => void> = {
+		const actionHandlers: Record<AlertActionType, () => void> = {
 			// 모임 확정
 			confirm: () =>
 				patchMeetingsStatus(
@@ -250,7 +149,6 @@ function JoinedMeetingList() {
 			{ onSuccess: closeReviewModal, onError: closeReviewModal },
 		);
 	}
-	if (!userId) return null;
 
 	if (items.length === 0) return <Empty>아직 참여한 모임이 없어요</Empty>;
 	return (
@@ -263,7 +161,8 @@ function JoinedMeetingList() {
 							key={item.id}
 							item={item}
 							badges={meetupBadges(item)}
-							actions={meetupActions(item, userId, handlers)}
+							actionDisplay={item.role === "host" ? "dropdown" : "buttons"}
+							actions={meetupActions(item, handlers)}
 							wishAction={{
 								isWished: item.isFavorited,
 								isPending: false,

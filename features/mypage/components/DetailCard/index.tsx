@@ -8,6 +8,7 @@ import { cn } from "@/utils/cn";
 import { uiFormatDate, uiFormatTime } from "@/utils/date";
 import { DetailCardProps } from "@/features/mypage/types";
 import Link from "next/link";
+import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 
 const STYLE = {
 	itemBgBox: "relative overflow-hidden rounded-3xl bg-white md:flex md:gap-6 md:rounded-4xl md:p-6",
@@ -27,7 +28,19 @@ const STYLE = {
 
 const EMPTY_THUMBNAIL_IMAGE = "/assets/img/img_empty_purple.svg";
 
-export default function DetailCard({ item, badges, actions, wishAction }: DetailCardProps) {
+export default function DetailCard({
+	item,
+	badges,
+	actions,
+	actionDisplay = "buttons",
+	wishAction,
+}: DetailCardProps) {
+	const dropdownItems = actions?.map((action) => ({
+		label: action.label,
+		onClick: action.handleCardButtonClick,
+		danger: action.isDestructive,
+	}));
+
 	return (
 		<li className={STYLE.itemBgBox}>
 			<Link href={`/meetup/${item.id}`} className="shrink-0">
@@ -91,17 +104,27 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 						</ul>
 					</div>
 					<div className={STYLE.btnWrapper}>
-						{actions &&
-							actions.map((action) => (
-								<Button
-									key={action.label}
-									onClick={action.handleCardButtonClick}
-									colors={action.variant}
-									sizes="smallMedium"
-									className={cn(STYLE.actionBtn, action.isDestructive ? "text-error" : "")}>
-									{action.label}
-								</Button>
-							))}
+						{actionDisplay === "dropdown"
+							? dropdownItems &&
+								dropdownItems.length > 0 && (
+									<ActionDropdown
+										className="leading-0"
+										aria-label="모임 관리 옵션 열기"
+										actionsIconClassName="md:size-10"
+										items={dropdownItems}
+									/>
+								)
+							: actions &&
+								actions.map((action) => (
+									<Button
+										key={action.label}
+										onClick={action.handleCardButtonClick}
+										colors={action.variant}
+										sizes="smallMedium"
+										className={cn(STYLE.actionBtn, action.isDestructive ? "text-error" : "")}>
+										{action.label}
+									</Button>
+								))}
 					</div>
 				</div>
 			</div>
