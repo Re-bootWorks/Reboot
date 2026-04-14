@@ -33,8 +33,6 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 	const { meetupId } = await params;
 	const meetingId = Number(meetupId);
 
-	throw new Error("이젠 절대 안할 오류 테스트 발생시키기");
-
 	if (isNaN(meetingId)) notFound();
 	let meeting;
 	try {
