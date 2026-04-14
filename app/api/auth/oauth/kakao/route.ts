@@ -14,7 +14,6 @@ export async function GET(request: NextRequest) {
 			return NextResponse.redirect(new URL("/login", request.url));
 		}
 
-		// 1. 콜백 페이지에서 인가 코드 → 토큰 교환
 		const tokenRes = await fetch("https://kauth.kakao.com/oauth/token", {
 			method: "POST",
 			headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -27,11 +26,12 @@ export async function GET(request: NextRequest) {
 			}),
 		});
 
-		const tokenData = await tokenRes.json();
-		console.log("tokenData:", tokenData);
-		const { access_token } = tokenData;
+		if (!tokenRes.ok) {
+			return NextResponse.redirect(new URL("/login", request.url));
+		}
 
-		// 2. 받은 토큰을 백엔드로 전달
+		const { access_token } = await tokenRes.json();
+
 		const response = await serverFetch("/oauth/kakao", {
 			method: "POST",
 			body: JSON.stringify({ token: access_token }),
@@ -40,8 +40,7 @@ export async function GET(request: NextRequest) {
 		let data;
 		try {
 			data = await response.json();
-		} catch (e) {
-			console.error("kakao callback error:", e);
+		} catch {
 			return NextResponse.redirect(new URL("/login", request.url));
 		}
 

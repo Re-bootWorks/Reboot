@@ -26,6 +26,10 @@ export async function POST(
 			return NextResponse.json(data, { status: response.status });
 		}
 
+		if (!data) {
+			throw new Error("유효하지 않은 응답 데이터입니다.");
+		}
+
 		const { accessToken, refreshToken, user } = data;
 
 		const res = NextResponse.json({ user }, { status: 200 });
