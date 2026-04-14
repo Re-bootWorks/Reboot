@@ -112,7 +112,7 @@ export interface DetailCardItem {
 }
 export interface DetailCardBadge {
 	label: string;
-	variant: "scheduled" | "confirmed" | "pending" | "completed" | "completedAlt";
+	variant: "scheduled" | "confirmed" | "pending" | "completed" | "completedAlt" | "reviewed";
 	showStatusLabel?: boolean;
 }
 
@@ -133,6 +133,7 @@ export interface DetailCardProps {
 	item: DetailCardItem;
 	badges?: DetailCardBadge[];
 	actions?: DetailCardAction[];
+	actionDisplay?: "buttons" | "dropdown";
 	wishAction?: DetailCardWishAction;
 }
 
