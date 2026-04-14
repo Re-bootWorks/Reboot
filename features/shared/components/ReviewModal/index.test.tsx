@@ -193,7 +193,7 @@ describe("ReviewModal", () => {
 
 				const textarea = screen.getByDisplayValue("기존 리뷰");
 				await user.clear(textarea);
-				await user.type(screen.getByRole("textbox"), "수정된 리뷰");
+				await user.type(textarea, "수정된 리뷰");
 				await user.click(screen.getByRole("button", { name: "취소" }));
 
 				const alert = screen.getByText("리뷰 수정을 취소하시겠습니까?");
