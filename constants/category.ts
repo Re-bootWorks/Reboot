@@ -51,3 +51,21 @@ export const categoryDarkColors = {
 	반려동물: "#B45309", // --color-orange-500
 	기타: "#334155",
 } satisfies Record<CategoryName, string>;
+
+export const categoryDisplayTitles = {
+	자기계발: "자기 계발",
+	"운동/스포츠": "운동 • 스포츠",
+	문화생활: "문화생활",
+	여행: "여행",
+	반려동물: "반려동물",
+	기타: "기타",
+} satisfies Record<CategoryName, string>;
+
+export const categoryTags = {
+	자기계발: ["#역량향상", "#취업성공"],
+	"운동/스포츠": ["#체력관리", "#다이어트"],
+	문화생활: ["#감성충전", "#덕질친구"],
+	여행: ["#일상탈출", "#맛집투어"],
+	반려동물: ["#산책친구", "#자랑대회"],
+	기타: ["#일상공유", "#봉사활동"],
+} satisfies Record<CategoryName, string[]>;

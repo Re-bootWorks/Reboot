@@ -12,13 +12,13 @@ import {
 	deleteMeetingsJoin,
 	postMeetingsFavorite,
 	postMeetingsJoin,
-	SuccessResponse,
 } from "@/apis/meetings";
 import { uploadImage } from "@/apis/images";
-import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
 import {
 	transformDateEndQuery,
 	transformDateStartQuery,
+	transformKeywordQuery,
 	transformQueryValue,
 	transformSortByQuery,
 	transformSortOrderQuery,
@@ -50,10 +50,11 @@ export const meetupMutationKeys = {
 /** 모임 목록 조회 */
 export function useGetMeetups(size: number) {
 	const queryClient = useQueryClient();
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const { get } = useQueryParams();
 	const params = {
 		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
+		keyword: transformKeywordQuery(get(QUERY_KEYS.KEYWORD)),
 		region: transformQueryValue(get(QUERY_KEYS.REGION)),
 		dateStart: transformDateStartQuery(get(QUERY_KEYS.DATE_START)),
 		dateEnd: transformDateEndQuery(get(QUERY_KEYS.DATE_END)),
@@ -101,7 +102,7 @@ export function useUploadMeetupImage() {
 }
 
 /** 모임 찜 추가 */
-export function usePostMeetupFavorite(id: number, options?: MutationCallbacks<MeetupItemResponse>) {
+export function usePostMeetupFavorite(id: number, options?: MutationCallbacks<void>) {
 	return useMutation({
 		mutationKey: meetupMutationKeys.postFavorite,
 		mutationFn: () => postMeetingsFavorite({ meetingId: id }),
@@ -110,7 +111,7 @@ export function usePostMeetupFavorite(id: number, options?: MutationCallbacks<Me
 }
 
 /** 모임 찜 해제 */
-export function useDeleteMeetupFavorite(id: number, options?: MutationCallbacks<SuccessResponse>) {
+export function useDeleteMeetupFavorite(id: number, options?: MutationCallbacks<void>) {
 	return useMutation({
 		mutationKey: meetupMutationKeys.deleteFavorite,
 		mutationFn: () => deleteMeetingsFavorite({ meetingId: id }),
@@ -119,7 +120,7 @@ export function useDeleteMeetupFavorite(id: number, options?: MutationCallbacks<
 }
 
 /** 모임 참여 */
-export function usePostMeetupJoin(id: number, options?: MutationCallbacks<SuccessResponse>) {
+export function usePostMeetupJoin(id: number, options?: MutationCallbacks<void>) {
 	return useMutation({
 		mutationKey: meetupMutationKeys.postJoin,
 		mutationFn: () => postMeetingsJoin({ meetingId: id }),
@@ -128,7 +129,7 @@ export function usePostMeetupJoin(id: number, options?: MutationCallbacks<Succes
 }
 
 /** 모임 참여 취소 */
-export function useDeleteMeetupJoin(id: number, options?: MutationCallbacks<SuccessResponse>) {
+export function useDeleteMeetupJoin(id: number, options?: MutationCallbacks<void>) {
 	return useMutation({
 		mutationKey: meetupMutationKeys.deleteJoin,
 		mutationFn: () => deleteMeetingsJoin({ meetingId: id }),

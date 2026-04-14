@@ -1,4 +1,9 @@
 import "@testing-library/jest-dom";
+import { server } from "@/mocks/server";
+
+beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 // 브라우저 API 모킹
 Object.defineProperty(window, "matchMedia", {
@@ -18,19 +23,15 @@ Object.defineProperty(window, "matchMedia", {
 // IntersectionObserver 모킹
 class MockIntersectionObserver {
 	constructor(_callBack: IntersectionObserverCallback, _option?: IntersectionObserverInit) {}
-
 	observe() {
 		return null;
 	}
-
 	unobserve() {
 		return null;
 	}
-
 	disconnect() {
 		return null;
 	}
-
 	takeRecords() {
 		return [];
 	}
