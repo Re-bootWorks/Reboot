@@ -6,6 +6,7 @@ if (!BASE_URL) {
 	throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
 }
 
+/** 모임 카테고리 목록 조회(빌드에서 실행) */
 const ROUTE_MEETING_TYPES = "/meeting-types";
 export async function getMeetingTypes() {
 	const res = await fetch(`${BASE_URL}${ROUTE_MEETING_TYPES}`, {

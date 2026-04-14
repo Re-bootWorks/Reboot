@@ -1,11 +1,5 @@
 import { clientFetch } from "@/libs/clientFetch";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
-if (!BASE_URL) {
-	throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
-}
-
 export interface ErrorResponse {
 	code: string;
 	message: string;
@@ -27,7 +21,7 @@ export const IMAGE_ACCEPT = "image/png, image/jpeg, image/gif, image/webp";
 export const IMAGE_ACCEPTED_TYPES: string[] = IMAGE_ACCEPT.split(", ");
 
 /** 이미지 업로드 */
-export async function uploadImage(file: File) {
+export async function uploadImage(file: File): Promise<string> {
 	if (!file) {
 		throw new Error(`파일을 첨부해주세요.`);
 	}
