@@ -23,11 +23,11 @@ export default function StepCard({ steps, activeIndex }: StepCardProps) {
 	const activeStep = steps[activeIndex];
 
 	return (
-		<div className="relative rounded-4xl bg-white p-6 pb-8 shadow-[0_0_20px_0_rgba(0,0,0,0.25)] md:p-8 lg:pb-12 lg:pl-12">
-			<div className="grid items-center gap-6 md:gap-7 lg:grid-cols-[minmax(0,1fr)_592px] lg:gap-12">
-				<div className="relative order-2 lg:order-1">
-					<div className="flex h-full flex-col justify-center">
-						<div className="relative overflow-hidden">
+		<div className="relative w-full rounded-4xl bg-white p-6 pb-8 shadow-[0_0_20px_0_rgba(0,0,0,0.25)] md:p-8 lg:pb-12 lg:pl-12">
+			<div className="grid w-full items-center gap-6 md:gap-7 lg:grid-cols-[minmax(0,1fr)_592px] lg:gap-12">
+				<div className="relative order-2 w-full min-w-0 lg:order-1">
+					<div className="flex h-full w-full flex-col justify-center">
+						<div className="relative w-full overflow-hidden">
 							<motion.div
 								key={`text-${activeStep.id}`}
 								initial={{ x: -32, opacity: 0 }}
@@ -40,13 +40,15 @@ export default function StepCard({ steps, activeIndex }: StepCardProps) {
 									{String(activeStep.id).padStart(2, "0")}
 								</div>
 
-								<p className="mt-6 text-sm text-gray-700 lg:mt-8 lg:text-xl">{activeStep.label}</p>
+								<p className="mt-6 w-full text-sm text-gray-700 lg:mt-8 lg:text-xl">
+									{activeStep.label}
+								</p>
 
 								<h3 className="my-1 text-xl font-bold text-gray-900 md:text-3xl lg:my-4 lg:text-5xl">
 									{activeStep.title}
 								</h3>
 
-								<p className="text-sm text-gray-600 md:text-base lg:text-xl">
+								<p className="text-sm text-gray-600 md:text-base lg:h-15 lg:text-xl">
 									{activeStep.description}
 								</p>
 							</motion.div>
@@ -76,7 +78,7 @@ export default function StepCard({ steps, activeIndex }: StepCardProps) {
 					</div>
 				</div>
 
-				<div className="relative order-1 h-51.5 overflow-hidden rounded-3xl bg-gray-50 md:h-58 lg:order-2 lg:h-[19rem]">
+				<div className="relative order-1 h-51.5 overflow-hidden rounded-3xl bg-gray-50 md:h-58 lg:order-2 lg:h-76">
 					<motion.div
 						key={`image-${activeStep.id}`}
 						className="absolute inset-0"

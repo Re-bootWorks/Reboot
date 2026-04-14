@@ -28,7 +28,7 @@ export default function SolutionSection() {
 					<div>
 						<MotionFadeUp className="flex" delay={0.08}>
 							<span className="text-xl font-bold whitespace-pre-line text-gray-800 md:text-4xl md:text-[40px] md:leading-14">
-								<span className="text-violet-500">RE:BOOT</span>
+								<span className="text-purple-500">RE:BOOT</span>
 								{"는\n당신의 일상을 바꿔주는\n도움을 연결합니다"}
 							</span>
 						</MotionFadeUp>
