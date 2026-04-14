@@ -208,11 +208,7 @@ export default function Header() {
 	const isHome = pathname === "/";
 	return (
 		<>
-			<div
-				className={cn(
-					STYLE.header,
-					isHome ? "bg-white/50 drop-shadow-lg backdrop-blur-md" : "bg-gray-50",
-				)}>
+			<div className={cn(STYLE.header, isHome ? "bg-white drop-shadow-lg" : "bg-gray-50")}>
 				<Container as="header" className="flex items-center justify-between">
 					<div className={STYLE.gnb}>
 						<Link href="/">
