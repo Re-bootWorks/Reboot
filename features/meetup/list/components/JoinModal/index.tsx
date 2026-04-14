@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { MeetupItemSelected } from "../../types";
-import { useDeleteMeetupJoin, usePostMeetupJoin } from "../../queries";
-import { useMeetupToggle } from "../hooks";
-import { modalSizeStyle } from "../../styles";
+import type { MeetupItemSelected } from "@/features/meetup/types";
+import { useDeleteMeetupJoin, usePostMeetupJoin } from "@/features/meetup/queries";
+import { useMeetupToggle } from "@/features/meetup/list/hooks";
+import { modalSizeStyle } from "@/features/meetup/styles";
 import Button from "@/components/ui/Buttons/Button";
 import { Modal } from "@/components/ui/Modals";
 import { IcCalendarOutline, IcChevronRight, IcDotPoints, IcLocation } from "@/components/ui/icons";

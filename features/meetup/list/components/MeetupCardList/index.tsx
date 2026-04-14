@@ -1,8 +1,8 @@
 "use client";
 
 import GroupCard from "@/components/ui/GroupCard";
-import { useGetMeetups } from "../../queries";
-import MeetupCardItems from "./MeetupCardItems";
+import { useGetMeetups } from "@/features/meetup/queries";
+import MeetupCardItems from "../MeetupCardItems";
 import { cn } from "@/utils/cn";
 
 const size = 10;

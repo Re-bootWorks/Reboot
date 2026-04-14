@@ -15,10 +15,11 @@ import {
 	SuccessResponse,
 } from "@/apis/meetings";
 import { uploadImage } from "@/apis/images";
-import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
 import {
 	transformDateEndQuery,
 	transformDateStartQuery,
+	transformKeywordQuery,
 	transformQueryValue,
 	transformSortByQuery,
 	transformSortOrderQuery,
@@ -50,10 +51,11 @@ export const meetupMutationKeys = {
 /** 모임 목록 조회 */
 export function useGetMeetups(size: number) {
 	const queryClient = useQueryClient();
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const { get } = useQueryParams();
 	const params = {
 		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
+		keyword: transformKeywordQuery(get(QUERY_KEYS.KEYWORD)),
 		region: transformQueryValue(get(QUERY_KEYS.REGION)),
 		dateStart: transformDateStartQuery(get(QUERY_KEYS.DATE_START)),
 		dateEnd: transformDateEndQuery(get(QUERY_KEYS.DATE_END)),

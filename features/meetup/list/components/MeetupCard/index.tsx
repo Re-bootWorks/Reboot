@@ -2,11 +2,11 @@
 
 import GroupCard from "@/components/ui/GroupCard";
 import { formatDateTime, uiFormatDeadline } from "@/utils/date";
-import type { MeetupItem, MeetupItemSelected } from "../../types";
-import { checkIsConfirmed, checkIsRegClosed } from "../utils";
-import { useDeleteMeetupFavorite, usePostMeetupFavorite } from "../../queries";
-import { useUserStore } from "@/store/user.store";
-import { useMeetupToggle } from "../hooks";
+import type { MeetupItem, MeetupItemSelected } from "@/features/meetup/types";
+import { checkIsConfirmed, checkIsRegClosed } from "@/features/meetup/list/utils";
+import { useDeleteMeetupFavorite, usePostMeetupFavorite } from "@/features/meetup/queries";
+import { useUser } from "@/hooks/useUser";
+import { useMeetupToggle } from "@/features/meetup/list/hooks";
 import { useToast } from "@/providers/toast-provider";
 
 interface MeetupCardProps {
@@ -25,7 +25,7 @@ export default function MeetupCard({ data, setSelectedData, openModalFn }: Meetu
 	};
 	const href = `/meetup/${data.id}`;
 
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const { handleShowToast } = useToast();
 	const { onMutate, onSuccess, onError } = useMeetupToggle(data.id, "isFavorited");
 	const postFavoriteMutation = usePostMeetupFavorite(data.id, {
@@ -40,7 +40,7 @@ export default function MeetupCard({ data, setSelectedData, openModalFn }: Meetu
 	});
 
 	function handleClickJoin() {
-		if (user) {
+		if (user?.id) {
 			setSelectedData({ ...data, date, time });
 			openModalFn();
 		} else {
@@ -49,7 +49,7 @@ export default function MeetupCard({ data, setSelectedData, openModalFn }: Meetu
 	}
 
 	function handleClickFavorite() {
-		if (user) {
+		if (user?.id) {
 			if (!data.isFavorited) {
 				postFavoriteMutation.mutate();
 			} else {
