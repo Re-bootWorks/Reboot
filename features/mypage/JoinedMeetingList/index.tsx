@@ -25,7 +25,11 @@ import {
 	meetupBadges,
 } from "../utils";
 
-function JoinedMeetingList() {
+interface JoinedMeetingListProps {
+	onDropdownOpenChange?: (open: boolean) => void;
+}
+
+function JoinedMeetingList({ onDropdownOpenChange }: JoinedMeetingListProps) {
 	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
 	const [reviewTarget, setReviewTarget] = useState<MeetupDetailItem | null>(null);
@@ -162,6 +166,7 @@ function JoinedMeetingList() {
 							item={item}
 							badges={meetupBadges(item)}
 							actionDisplay={item.role === "host" ? "dropdown" : "buttons"}
+							onDropdownOpenChange={item.role === "host" ? onDropdownOpenChange : undefined}
 							actions={meetupActions(item, handlers)}
 							wishAction={{
 								isWished: item.isFavorited,
@@ -198,11 +203,11 @@ function JoinedMeetingList() {
 		</>
 	);
 }
-export default function JoinedMeetingListWrapper() {
+export default function JoinedMeetingListWrapper({ onDropdownOpenChange }: JoinedMeetingListProps) {
 	return (
 		<QueryErrorBoundary prefix="나의 모임을 ">
 			<Suspense fallback={<DetailCardSkeleton />}>
-				<JoinedMeetingList />
+				<JoinedMeetingList onDropdownOpenChange={onDropdownOpenChange} />
 			</Suspense>
 		</QueryErrorBoundary>
 	);

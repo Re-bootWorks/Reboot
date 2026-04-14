@@ -33,6 +33,7 @@ export default function DetailCard({
 	badges,
 	actions,
 	actionDisplay = "buttons",
+	onDropdownOpenChange,
 	wishAction,
 }: DetailCardProps) {
 	const dropdownItems = actions?.map((action) => ({
@@ -112,6 +113,7 @@ export default function DetailCard({
 										aria-label="모임 관리 옵션 열기"
 										actionsIconClassName="md:size-10"
 										items={dropdownItems}
+										onOpenChange={onDropdownOpenChange}
 									/>
 								)
 							: actions &&

@@ -23,7 +23,13 @@ const STYLE = {
 const EMPTY_THUMBNAIL_IMAGE = "/assets/img/img_empty_purple.svg";
 const EMPTY_PROFILE_IMAGE = "/assets/img/img_profile.svg";
 
-export default function ReviewCard({ user, item, handleEdit, handleDelete }: ReviewCardProps) {
+export default function ReviewCard({
+	user,
+	item,
+	handleEdit,
+	handleDelete,
+	onDropdownOpenChange,
+}: ReviewCardProps) {
 	const { contentRef, isExpanded, isOverflow, toggleExpanded } =
 		useExpandableText<HTMLParagraphElement>({
 			content: item.comment,
@@ -50,6 +56,7 @@ export default function ReviewCard({ user, item, handleEdit, handleDelete }: Rev
 							className="leading-0"
 							aria-label="리뷰 옵션 열기"
 							actionsIconClassName="md:size-10"
+							onOpenChange={onDropdownOpenChange}
 							items={[
 								{ label: "수정하기", onClick: handleEdit },
 								{ label: "삭제하기", onClick: handleDelete },

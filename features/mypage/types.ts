@@ -134,6 +134,7 @@ export interface DetailCardProps {
 	badges?: DetailCardBadge[];
 	actions?: DetailCardAction[];
 	actionDisplay?: "buttons" | "dropdown";
+	onDropdownOpenChange?: (open: boolean) => void;
 	wishAction?: DetailCardWishAction;
 }
 
@@ -150,6 +151,7 @@ export interface ReviewCardProps {
 	item: ReviewCardItem;
 	handleEdit: () => void;
 	handleDelete: () => void;
+	onDropdownOpenChange?: (open: boolean) => void;
 }
 
 export type ReviewList = ReviewCardItem[];

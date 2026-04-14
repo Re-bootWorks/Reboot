@@ -20,7 +20,11 @@ import {
 } from "../utils";
 import ReviewModal, { ReviewFormValues } from "@/features/shared/components/ReviewModal";
 
-function CreatedMeetingList() {
+interface CreatedMeetingListProps {
+	onDropdownOpenChange?: (open: boolean) => void;
+}
+
+function CreatedMeetingList({ onDropdownOpenChange }: CreatedMeetingListProps) {
 	const { handleWishToggle } = useMeetingFavorite();
 	// 어떤 모임에 대해 리뷰 모달을 열었는지 추적 후 target의 item만 값 변경 가능
 	const [reviewTarget, setReviewTarget] = useState<MeetupDetailItem | null>(null);
@@ -144,6 +148,7 @@ function CreatedMeetingList() {
 							item={item}
 							badges={meetupBadges(item)}
 							actionDisplay="dropdown"
+							onDropdownOpenChange={onDropdownOpenChange}
 							actions={getHostMeetupActions(item, handlers)}
 							wishAction={{
 								isWished: item.isFavorited,
@@ -181,11 +186,13 @@ function CreatedMeetingList() {
 	);
 }
 
-export default function CreatedMeetingListWrapper() {
+export default function CreatedMeetingListWrapper({
+	onDropdownOpenChange,
+}: CreatedMeetingListProps) {
 	return (
 		<QueryErrorBoundary prefix="내가 만든 모임을 ">
 			<Suspense fallback={<DetailCardSkeleton />}>
-				<CreatedMeetingList />
+				<CreatedMeetingList onDropdownOpenChange={onDropdownOpenChange} />
 			</Suspense>
 		</QueryErrorBoundary>
 	);
