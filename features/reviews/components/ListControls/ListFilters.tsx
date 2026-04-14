@@ -17,15 +17,21 @@ import {
 	REVIEWS_SORT_ORDER_OPTIONS,
 } from "../../constants/filers";
 
-export default function ListFilters() {
+interface ListFiltersProps {
+	onWillChange?: () => void;
+}
+
+export default function ListFilters({ onWillChange }: ListFiltersProps) {
 	const { get, set } = useQueryParams();
 
 	const dateStart = get(QUERY_PARAM_KEYS.DATE_START);
 	const dateEnd = get(QUERY_PARAM_KEYS.DATE_END);
-	const region = getRegionItem(get(QUERY_PARAM_KEYS.REGION));
-	const sortBy = getSortByItem(get(QUERY_PARAM_KEYS.SORT_BY)) ?? REVIEWS_SORT_BY_OPTIONS[0].value;
-	const sortOrder =
-		getSortOrderItem(get(QUERY_PARAM_KEYS.SORT_ORDER)) ?? REVIEWS_SORT_ORDER_OPTIONS[0].value;
+	const regionParam = get(QUERY_PARAM_KEYS.REGION);
+	const sortByParam = get(QUERY_PARAM_KEYS.SORT_BY);
+	const sortOrderParam = get(QUERY_PARAM_KEYS.SORT_ORDER);
+	const region = getRegionItem(regionParam);
+	const sortBy = getSortByItem(sortByParam) ?? REVIEWS_SORT_BY_OPTIONS[0].value;
+	const sortOrder = getSortOrderItem(sortOrderParam) ?? REVIEWS_SORT_ORDER_OPTIONS[0].value;
 
 	const dateRange = {
 		from: dateStart ? dateStart.split("T")[0] : "",
@@ -33,22 +39,46 @@ export default function ListFilters() {
 	};
 
 	function handleChangeDate(value: { from: string; to: string }) {
+		const nextDateStart = value.from || null;
+		const nextDateEnd = value.to || null;
+
+		if ((dateStart ?? null) === nextDateStart && (dateEnd ?? null) === nextDateEnd) {
+			return;
+		}
+
+		onWillChange?.();
 		set({
-			[QUERY_PARAM_KEYS.DATE_START]: value.from || null,
-			[QUERY_PARAM_KEYS.DATE_END]: value.to || null,
+			[QUERY_PARAM_KEYS.DATE_START]: nextDateStart,
+			[QUERY_PARAM_KEYS.DATE_END]: nextDateEnd,
 		});
 	}
 
 	function handleChangeLocation(data: RegionFilterValue) {
 		const param = buildRegionParam(data.region, data.district);
+
+		if (regionParam === param) {
+			return;
+		}
+
+		onWillChange?.();
 		set({ [QUERY_PARAM_KEYS.REGION]: param });
 	}
 
 	function handleChangeSortOrder(v: string) {
+		if (sortOrderParam === v) {
+			return;
+		}
+
+		onWillChange?.();
 		set({ [QUERY_PARAM_KEYS.SORT_ORDER]: v });
 	}
 
 	function handleChangeSortBy(v: string) {
+		if (sortByParam === v) {
+			return;
+		}
+
+		onWillChange?.();
 		set({ [QUERY_PARAM_KEYS.SORT_BY]: v });
 	}
 
