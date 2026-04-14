@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import ReviewModal from ".";
 import userEvent from "@testing-library/user-event";
+
 jest.mock("@smastrom/react-rating", () => ({
 	Rating: ({
 		onChange,
@@ -18,6 +19,27 @@ jest.mock("@smastrom/react-rating", () => ({
 			</button>
 		</div>
 	),
+}));
+// HeadlessUI 테스트 경고로 인해 단순 모달 UI로 대체
+jest.mock("../../../../components/ui/Modals", () => ({
+	Modal: ({
+		isOpen,
+		title,
+		children,
+		footer,
+	}: {
+		isOpen: boolean;
+		title?: React.ReactNode;
+		children: React.ReactNode;
+		footer?: React.ReactNode;
+	}) =>
+		isOpen ? (
+			<div role="dialog" aria-modal="true">
+				{title && <h2>{title}</h2>}
+				<div>{children}</div>
+				{footer && <div>{footer}</div>}
+			</div>
+		) : null,
 }));
 
 function renderReviewModal(props = {}) {

@@ -2,6 +2,25 @@ import { render, screen } from "@testing-library/react";
 import Alert from ".";
 import userEvent from "@testing-library/user-event";
 
+// HeadlessUI 테스트 경고로 인해 단순 모달 UI로 대체
+jest.mock("..", () => ({
+	Modal: ({
+		isOpen,
+		children,
+		footer,
+	}: {
+		isOpen: boolean;
+		children: React.ReactNode;
+		footer?: React.ReactNode;
+	}) =>
+		isOpen ? (
+			<div role="dialog" aria-modal="true">
+				<div>{children}</div>
+				{footer && <div>{footer}</div>}
+			</div>
+		) : null,
+}));
+
 describe("AlertModal", () => {
 	describe("isOpen 상태에 따라 모달이 열리고 닫히는지 확인", () => {
 		test("isOpen이 true면 모달이 열리고 메세지가 보인다", () => {
