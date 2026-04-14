@@ -20,7 +20,7 @@ function ListControlsContent({ headingId, className, onWillChange }: ListControl
 		<section
 			aria-labelledby={headingId}
 			className={cn(
-				"flex w-full flex-col gap-2 px-1 md:gap-4 md:px-2 lg:flex-row lg:items-center lg:justify-between [&>*:nth-child(3)]:self-start",
+				"flex w-full flex-col gap-2 px-1 md:gap-4 md:px-4.5 lg:flex-row lg:items-center lg:justify-between [&>*:nth-child(3)]:self-start",
 				className,
 			)}>
 			<h2 id={headingId} className="sr-only">
@@ -44,10 +44,9 @@ export default function ListControls() {
 	return (
 		<>
 			<div ref={scrollAnchorRef} aria-hidden="true" className="scroll-mt-12 md:scroll-mt-22" />
-			<div
-				ref={triggerRef}
-				className="scroll-mt-12 md:sticky md:top-22 md:z-9 md:scroll-mt-22 md:bg-gray-50 md:py-3">
-				<div className="mx-auto w-full max-w-7xl px-2">
+
+			<div ref={triggerRef} className="scroll-mt-12 md:sticky md:top-22 md:z-9 md:scroll-mt-22">
+				<div className="md:relative md:left-1/2 md:w-screen md:max-w-[1300px] md:-translate-x-1/2 md:bg-gray-50 md:py-3 md:pl-6 lg:pl-0">
 					<ListControlsContent headingId="review-filter-heading" onWillChange={markWillChange} />
 				</div>
 			</div>
