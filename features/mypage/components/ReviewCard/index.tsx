@@ -18,6 +18,7 @@ const STYLE = {
 	profileWrapper: "mt-1.5 flex items-center gap-1.5",
 	profileImage: "size-6 rounded-full border border-gray-200 object-cover",
 	caption: "text-xs text-gray-500 md:text-sm",
+	transition: "transition-transform duration-450 ease-out",
 };
 
 const EMPTY_THUMBNAIL_IMAGE = "/assets/img/img_empty_purple.svg";
@@ -36,7 +37,7 @@ export default function ReviewCard({
 		});
 	return (
 		<li className={STYLE.itemBox}>
-			<Link href={`/meetup/${item.meetingId}`} className="shrink-0 md:pt-6">
+			<Link href={`/meetup/${item.meetingId}`} className="group shrink-0 md:pt-6">
 				<Image
 					src={item.meetingImage ?? EMPTY_THUMBNAIL_IMAGE}
 					alt="모임 대표 이미지"
@@ -44,7 +45,8 @@ export default function ReviewCard({
 					height={343}
 					className={cn(
 						STYLE.itemImage,
-						!!item.meetingImage ? "" : "bg-purple-50 object-scale-down",
+						STYLE.transition,
+						!!item.meetingImage ? "hover:scale-107" : "bg-purple-50 object-scale-down",
 					)}
 				/>
 			</Link>

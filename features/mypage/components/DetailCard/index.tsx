@@ -24,6 +24,7 @@ const STYLE = {
 		"text-xs text-gray-600 after:pl-2.5 after:text-gray-300 after:content-['|'] last:after:hidden sm:text-sm",
 	btnWrapper: "flex justify-end gap-4 ",
 	actionBtn: `h-12 w-fit min-w-[calc(50%-0.5rem)] rounded-xl min-[870px]:min-w-auto lg:min-w-39`,
+	transition: "transition-transform duration-450 ease-out",
 };
 
 const EMPTY_THUMBNAIL_IMAGE = "/assets/img/img_empty_purple.svg";
@@ -50,7 +51,11 @@ export default function DetailCard({
 					alt="모임 대표 이미지"
 					width={343}
 					height={343}
-					className={cn(STYLE.itemImage, !!item.image ? "" : "bg-purple-50 object-scale-down")}
+					className={cn(
+						STYLE.itemImage,
+						STYLE.transition,
+						!!item.image ? "hover:scale-107" : "bg-purple-50 object-scale-down",
+					)}
 				/>
 			</Link>
 			<div className={STYLE.wishBtn}>
