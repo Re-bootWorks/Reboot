@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import DetailCard from ".";
-import { mockMyMeetups } from "@/features/mypage/mockData";
+import { mockMeetingJoinedApiRes } from "@/features/mypage/mockData";
 
-const baseItem = mockMyMeetups[0];
+const baseItem = mockMeetingJoinedApiRes;
 
 const meta: Meta<typeof DetailCard> = {
 	title: "Features/My/DetailCard",

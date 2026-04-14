@@ -35,6 +35,7 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 					"p-1",
 					"flex flex-col gap-1",
 					"outline-none",
+					"z-10",
 				)}>
 				{items.map((item) => {
 					const selected = value === item.value;
