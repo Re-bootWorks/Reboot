@@ -1,10 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import InputFile, {
-	IMAGE_ACCEPTED_EXTS,
-	type InputFileHandle,
-} from "@/components/ui/Inputs/InputFile";
+import InputFile, { type InputFileHandle } from "@/components/ui/Inputs/InputFile";
 import { useToast } from "@/providers/toast-provider";
 import type { UploadImageFn } from "@/apis/images";
 import { useMutation } from "@tanstack/react-query";
@@ -45,11 +42,6 @@ export default function FileField({
 	function handleUploadImage(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
 		if (!file) return;
-
-		if (!IMAGE_ACCEPTED_EXTS.includes(file.type)) {
-			failUpload(`'${file.type}'는 지원하지 않는 파일 형식입니다.`);
-			return;
-		}
 
 		uploadImageMutation.mutate(file, {
 			onSuccess: (data) => {
