@@ -1,12 +1,5 @@
 import { ReviewScore } from "@/types/common";
-import {
-	CreatedItem,
-	MeetingJoinedApiRes,
-	MeetingsMyApiRes,
-	MeetupItem,
-	MeReviewsApiRes,
-	ReviewCardItem,
-} from "./types";
+import { MeetingJoinedApiRes, MeetupItem, MeReviewsApiRes, ReviewCardItem } from "./types";
 
 export function toReviewScore(score: number): ReviewScore {
 	if (score >= 1 && score <= 5) {
@@ -45,21 +38,5 @@ export function mapMeReviews(item: MeReviewsApiRes): ReviewCardItem {
 		meetingName: item.meeting.name,
 		meetingImage: item.meeting.image,
 		meetingDateTime: item.meeting.dateTime,
-	};
-}
-
-export function mapMeetingsMy(item: MeetingsMyApiRes): CreatedItem {
-	return {
-		id: item.id,
-		name: item.name,
-		region: item.region,
-		dateTime: item.dateTime,
-		capacity: item.capacity,
-		participantCount: item.participantCount,
-		image: item.image,
-		isFavorited: item.isFavorited,
-		isCompleted: item.isCompleted,
-		canceledAt: item.canceledAt,
-		confirmedAt: item.confirmedAt,
 	};
 }

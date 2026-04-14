@@ -4,17 +4,16 @@ import {
 	CursorPageResponse,
 	MeetupList,
 	ReviewList,
-	CreatedList,
 	PatchUserProfilePayload,
 	MeetingJoinedApiRes,
 	MeReviewsApiRes,
-	MeetingsMyApiRes,
 	PatchMeetingStatusParams,
 	PostReviewPayload,
 	PatchReviewPayload,
+	MeMeetingApiRes,
 } from "@/features/mypage/types";
 import { clientFetch } from "@/libs/clientFetch";
-import { mapJoinedMeeting, mapMeetingsMy, mapMeReviews } from "./mapper";
+import { mapJoinedMeeting, mapMeReviews } from "./mapper";
 import { throwApiError } from "@/utils/api";
 
 export interface BaseListParams {
@@ -24,6 +23,12 @@ export interface BaseListParams {
 	size?: number;
 }
 export interface GetMeetingsJoinedParams extends BaseListParams {
+	completed?: boolean;
+	reviewed?: boolean;
+}
+
+export interface GetUsersMeMeetingsParams extends BaseListParams {
+	type?: "joined" | "created";
 	completed?: boolean;
 	reviewed?: boolean;
 }
@@ -74,7 +79,19 @@ async function mypageFetch<ApiItem, MappedItem, TParams extends object>(
 	};
 }
 
-// 내가 참여한 모임 목록 , 작성하지 않은 리뷰 목록
+// 내가 참여한 모임 목록 or 내가 만든 모임 목록
+export async function getUsersMeMeetings(
+	params: GetUsersMeMeetingsParams = {},
+): Promise<CursorPageResponse<MeetupList>> {
+	console.log("getUsersMeMeetings", params);
+	return mypageFetch<MeMeetingApiRes, MeetupList[number], BaseListParams>(
+		"/users/me/meetings",
+		params,
+		mapJoinedMeeting,
+	);
+}
+
+// 작성 가능한 리뷰 목록 (참여한 모든 목록)
 export async function getMeetingsJoined(
 	params: GetMeetingsJoinedParams = {},
 ): Promise<CursorPageResponse<MeetupList>> {
@@ -93,17 +110,6 @@ export async function getUsersMeReviews(
 		"/users/me/reviews",
 		params,
 		mapMeReviews,
-	);
-}
-
-// 내가 만든 모임 목록
-export async function getMeetingsMy(
-	params: BaseListParams = {},
-): Promise<CursorPageResponse<CreatedList>> {
-	return mypageFetch<MeetingsMyApiRes, CreatedList[number], BaseListParams>(
-		"/meetings/my",
-		params,
-		mapMeetingsMy,
 	);
 }
 

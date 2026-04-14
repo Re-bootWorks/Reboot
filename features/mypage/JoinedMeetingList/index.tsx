@@ -6,7 +6,7 @@ import ReviewModal, { ReviewFormValues } from "@/features/shared/components/Revi
 import { MeetupItem } from "@/features/mypage/types";
 import Alert from "@/components/ui/Modals/AlertModal";
 import useMeetingFavorite from "@/hooks/useMeetingFavorite";
-import { useMyMeetupInfinite } from "@/features/mypage/queries";
+import { useMyJoinedInfinite } from "@/features/mypage/queries";
 import Empty from "@/components/ui/Empty";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import Loading from "@/components/ui/Loading";
@@ -141,7 +141,7 @@ function JoinedMeetingList() {
 		fetchNextPage,
 		hasNextPage,
 		isFetchingNextPage,
-	} = useMyMeetupInfinite();
+	} = useMyJoinedInfinite();
 	const items = meetupData.pages.flatMap((page) => page.data) ?? [];
 
 	// 모임 목록 무한스크롤

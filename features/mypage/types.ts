@@ -13,6 +13,9 @@ interface Host {
 	image: string;
 }
 
+export type Role = "participant" | "host";
+
+// 참여한 모임목록 전체 (작성하지 않은 리뷰에 사용)
 export interface MeetingJoinedApiRes {
 	id: number;
 	teamId: string;
@@ -40,7 +43,7 @@ export interface MeetingJoinedApiRes {
 	joinedAt: string;
 	isReviewed: boolean;
 }
-
+// 작성한 리뷰 목록
 export interface MeReviewsApiRes {
 	id: number;
 	score: number;
@@ -56,7 +59,10 @@ export interface MeReviewsApiRes {
 	createdAt: string;
 }
 
-export type MeetingsMyApiRes = Omit<MeetingJoinedApiRes, "joinedAt" | "isReviewed">;
+// 내가 참여한 모임 목록, 내가 만든 모임 목록
+export type MeMeetingApiRes = MeetingJoinedApiRes & {
+	role: Role;
+};
 
 export type MeetingStatus = "CONFIRMED" | "CANCELED";
 
@@ -160,9 +166,3 @@ export type MeetupList = MeetupItem[];
 
 export type WritableReviewItem = DetailCardItem;
 export type WritableReviewList = WritableReviewItem[];
-export interface CreatedItem extends DetailCardItem {
-	isCompleted: boolean;
-	canceledAt: string | null;
-	confirmedAt: string | null;
-}
-export type CreatedList = CreatedItem[];
