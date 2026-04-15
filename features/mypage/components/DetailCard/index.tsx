@@ -67,7 +67,7 @@ export default function DetailCard({
 			</div>
 
 			<div className={STYLE.itemWrapper}>
-				<div className="max-w[90%] min-w-0">
+				<div className="max-w-[90%] min-w-0">
 					{badges && (
 						<div className="mb-3 flex gap-2">
 							{badges.map((badge) => (
