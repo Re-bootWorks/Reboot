@@ -30,7 +30,7 @@ export default function HowItWorksSection() {
 
 	return (
 		<section ref={sectionRef} className="relative bg-gray-50" style={{ height: sectionHeight }}>
-			<div className="sticky top-0 flex min-h-svh items-center overflow-hidden lg:h-svh">
+			<div className="sticky top-3 flex min-h-svh items-center overflow-hidden lg:h-svh">
 				<SectionContainer className="w-full px-6 pt-12.5 pb-17 md:px-12 md:py-20 lg:flex lg:h-svh lg:max-w-7xl lg:items-center lg:py-0">
 					<div className="flex w-full flex-col items-center">
 						<SectionHeader
@@ -38,7 +38,7 @@ export default function HowItWorksSection() {
 							description="RE:BOOT와 함께하는 5단계 여정"
 						/>
 
-						<div className="mt-10 md:w-150 lg:mt-14 lg:w-full">
+						<div className="mt-10 w-full md:mt-7 md:w-150 lg:mt-14 lg:w-full">
 							<StepCard steps={HOW_IT_WORKS_STEPS} activeIndex={activeIndex} />
 						</div>
 					</div>
