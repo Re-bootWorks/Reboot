@@ -8,6 +8,7 @@ import { useDeleteMeetupFavorite, usePostMeetupFavorite } from "@/features/meetu
 import { useUser } from "@/hooks/useUser";
 import { useMeetupToggle } from "@/features/meetup/list/hooks";
 import { useToast } from "@/providers/toast-provider";
+import { MEETUP_DETAIL_PATH } from "@/constants/navigation";
 
 interface MeetupCardProps {
 	data: MeetupItem;
@@ -23,7 +24,7 @@ export default function MeetupCard({ data, setSelectedData, openModalFn }: Meetu
 		isJoined: data.isJoined,
 		isCompleted: data.isCompleted,
 	};
-	const href = `/meetup/${data.id}`;
+	const href = MEETUP_DETAIL_PATH(data.id);
 
 	const { user } = useUser();
 	const { handleShowToast } = useToast();
