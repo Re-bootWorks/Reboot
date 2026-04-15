@@ -1,8 +1,9 @@
+"use client";
 import { cn } from "@/utils/cn";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { cva } from "class-variance-authority";
 import Image from "next/image";
-import type { ButtonHTMLAttributes } from "react";
+import { useEffect, type ButtonHTMLAttributes } from "react";
 import { IcMeetBalls } from "../../icons";
 
 const menuVariants = cva(
@@ -35,6 +36,20 @@ const itemVariants = cva(
 	},
 );
 
+function OpenState({
+	open,
+	onOpenChange,
+}: {
+	open: boolean;
+	onOpenChange?: (open: boolean) => void;
+}) {
+	useEffect(() => {
+		onOpenChange?.(open);
+	}, [open, onOpenChange]);
+
+	return null;
+}
+
 export type ActionDropdownItem = {
 	label: string;
 	onClick: () => void;
@@ -51,6 +66,7 @@ interface ActionDropdownProps extends Omit<ButtonHTMLAttributes<HTMLButtonElemen
 	triggerType?: "actions" | "profile";
 	actionsSize?: "md" | "lg" | "xl";
 	profileImage?: string | null;
+	onOpenChange?: (open: boolean) => void;
 }
 
 export default function ActionDropdown({
@@ -63,6 +79,7 @@ export default function ActionDropdown({
 	actionsSize = "md",
 	profileImage,
 	type,
+	onOpenChange,
 	...props
 }: ActionDropdownProps) {
 	const ariaLabel = triggerType === "profile" ? "프로필 메뉴 열기" : "액션 메뉴 열기";
@@ -71,46 +88,52 @@ export default function ActionDropdown({
 
 	return (
 		<Menu as="div" className={cn("relative inline-block", className)}>
-			<MenuButton
-				type={type ?? "button"}
-				className={cn("cursor-pointer outline-none", triggerClassName)}
-				{...props}>
-				<span className="sr-only">{ariaLabel}</span>
+			{({ open }) => (
+				<>
+					<OpenState open={open} onOpenChange={onOpenChange} />
 
-				{triggerType === "profile" ? (
-					<Image
-						src={profileImageSrc}
-						alt="프로필 이미지"
-						width={42}
-						height={42}
-						className="size-10.5 rounded-full border border-gray-200 object-cover"
-					/>
-				) : (
-					<IcMeetBalls size={actionsSize} className={actionsIconClassName} />
-				)}
-			</MenuButton>
+					<MenuButton
+						type={type ?? "button"}
+						className={cn("cursor-pointer outline-none", triggerClassName)}
+						{...props}>
+						<span className="sr-only">{ariaLabel}</span>
 
-			<MenuItems
-				transition
-				anchor="bottom end"
-				className={cn(menuVariants(), "mt-2 p-1", menuClassName)}>
-				{items.map((item, index) => (
-					<MenuItem
-						key={`${item.label}-${index}`}
-						as="button"
-						type="button"
-						onClick={item.onClick}
-						disabled={item.disabled}
-						className={cn(
-							itemVariants({
-								danger: item.danger,
-							}),
-							item.className,
-						)}>
-						{item.label}
-					</MenuItem>
-				))}
-			</MenuItems>
+						{triggerType === "profile" ? (
+							<Image
+								src={profileImageSrc}
+								alt="프로필 이미지"
+								width={42}
+								height={42}
+								className="size-10.5 rounded-full border border-gray-200 object-cover"
+							/>
+						) : (
+							<IcMeetBalls size={actionsSize} className={actionsIconClassName} />
+						)}
+					</MenuButton>
+
+					<MenuItems
+						transition
+						anchor="bottom end"
+						className={cn(menuVariants(), "mt-2 p-1", menuClassName)}>
+						{items.map((item, index) => (
+							<MenuItem
+								key={`${item.label}-${index}`}
+								as="button"
+								type="button"
+								onClick={item.onClick}
+								disabled={item.disabled}
+								className={cn(
+									itemVariants({
+										danger: item.danger,
+									}),
+									item.className,
+								)}>
+								{item.label}
+							</MenuItem>
+						))}
+					</MenuItems>
+				</>
+			)}
 		</Menu>
 	);
 }
