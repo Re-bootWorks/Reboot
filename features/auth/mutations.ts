@@ -60,7 +60,7 @@ export function useLogout() {
 	return useMutation({
 		mutationFn: postLogout,
 		onSuccess: () => {
-			queryClient.removeQueries({ queryKey: ["me"] });
+			queryClient.clear();
 			handleShowToast({ message: "로그아웃 됐습니다.", status: "success" });
 			router.refresh();
 		},
