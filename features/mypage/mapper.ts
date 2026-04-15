@@ -64,5 +64,6 @@ export function mapMeReviews(item: MeReviewsApiRes): ReviewCardItem {
 		meetingName: item.meeting.name,
 		meetingImage: item.meeting.image,
 		meetingDateTime: item.meeting.dateTime,
+		createdAt: item.createdAt,
 	};
 }

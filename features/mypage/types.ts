@@ -138,7 +138,7 @@ export interface DetailCardProps {
 	wishAction?: DetailCardWishAction;
 }
 
-export type ReviewCardItem = Omit<MeReviewsApiRes, "score" | "createdAt" | "meeting"> & {
+export type ReviewCardItem = Omit<MeReviewsApiRes, "score" | "meeting"> & {
 	score: ReviewScore;
 	meetingType: string;
 	meetingName: string;

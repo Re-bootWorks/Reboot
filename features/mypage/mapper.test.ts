@@ -137,6 +137,7 @@ describe("mypage mapper", () => {
 				id: 123,
 				score: 5,
 				comment: "함께 공부해서 좋았어요",
+				createdAt: "2026-04-08T06:22:04.892Z",
 				meetingId: 1020,
 				meetingType: "자기계발",
 				meetingName: "코딩 스터디",
