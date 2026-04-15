@@ -31,7 +31,7 @@ export default function HowItWorksSection() {
 	return (
 		<section ref={sectionRef} className="relative bg-gray-50" style={{ height: sectionHeight }}>
 			<div className="sticky top-3 flex min-h-svh items-center overflow-hidden lg:h-svh">
-				<SectionContainer className="w-full px-6 pt-12.5 pb-17 md:px-12 md:py-20 lg:flex lg:h-svh lg:max-w-7xl lg:items-center lg:py-0">
+				<SectionContainer className="w-full px-6 pt-12.5 pb-17 md:px-12 md:py-20 lg:mt-16 lg:flex lg:h-svh lg:max-w-7xl lg:items-center lg:py-0">
 					<div className="flex w-full flex-col items-center">
 						<SectionHeader
 							title="충전은 이렇게 시작됩니다"
