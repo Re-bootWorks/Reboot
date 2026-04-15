@@ -71,22 +71,22 @@ describe("모임 수정 모달 컴포넌트", () => {
 			expect(mockOnSubmit).not.toHaveBeenCalled();
 		});
 
-		// it("정원이 참가자 수보다 적으면 에러 토스트가 호출된다", async () => {
-		// 	const user = userEvent.setup();
-		// 	render(
-		// 		<EditModal
-		// 			{...defaultProps}
-		// 			initialData={{ ...mockEditInitialData, capacity: 3 }}
-		// 			participantCount={5}
-		// 		/>,
-		// 	);
-		// 	await user.click(screen.getByRole("button", { name: "수정하기" }));
-		// 	expect(mockHandleShowToast).toHaveBeenCalledWith({
-		// 		message: `정원은 현재 참가자 수보다 적을 수 없습니다.`,
-		// 		status: "error",
-		// 	});
-		// 	expect(mockOnSubmit).not.toHaveBeenCalled();
-		// });
+		it("정원이 참가자 수보다 적으면 에러 토스트가 호출된다", async () => {
+			const user = userEvent.setup();
+			render(
+				<EditModal
+					{...defaultProps}
+					initialData={{ ...mockEditInitialData, capacity: 3 }}
+					participantCount={5}
+				/>,
+			);
+			await user.click(screen.getByRole("button", { name: "수정하기" }));
+			expect(mockHandleShowToast).toHaveBeenCalledWith({
+				message: `정원은 현재 참가자 수보다 적을 수 없습니다.`,
+				status: "error",
+			});
+			expect(mockOnSubmit).not.toHaveBeenCalled();
+		});
 
 		it("유효성 검사 실패 시 해당 탭으로 이동한다", async () => {
 			const user = userEvent.setup();
