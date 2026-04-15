@@ -48,7 +48,7 @@ export default function DetailCard({
 			<Link href={`/meetup/${item.id}`} className="shrink-0">
 				<Image
 					src={item.image ?? EMPTY_THUMBNAIL_IMAGE}
-					alt="모임 대표 이미지"
+					alt={`${item.name}모임 대표 이미지`}
 					width={343}
 					height={343}
 					className={cn(
