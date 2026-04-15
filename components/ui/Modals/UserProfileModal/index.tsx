@@ -47,7 +47,7 @@ export default function UserProfileModal({
 			className="max-w-[21rem]">
 			<div className="flex flex-col items-center gap-4">
 				{/* 프로필 이미지 */}
-				<Avatar src={authorImage ?? null} width={80} height={80} alt={authorName} />
+				<Avatar src={authorImage ?? null} width={100} height={100} alt={authorName} />
 
 				{/* 이름 */}
 				<span className="text-lg font-semibold text-gray-900">{authorName}</span>
