@@ -15,7 +15,13 @@ export async function getMeetingTypes() {
 		cache: "force-cache",
 	});
 
-	if (!res.ok) throw new Error(`모임 카테고리 조회에 실패했습니다. (${res.status})`);
+	if (!res.ok) {
+		const error = await res.json().catch(() => ({
+			code: "UNKNOWN_ERROR",
+			message: "모임 카테고리 조회에 실패했습니다.",
+		}));
+		throw new Error(error.message);
+	}
 	return res.json();
 }
 
