@@ -13,9 +13,10 @@ import { getBreakpoint } from "@/utils/style";
 import { getSortByItem, getSortOrderItem, transformRegionData } from "@/features/meetup/list/utils";
 import { validateText } from "@/features/meetup/utils";
 import { useQueryParams } from "@/hooks/useQueryParams";
+import { useMeetupListScroll } from "@/features/meetup/list/providers/MeetupListScrollProvider";
 import useDragScroll, { containerStyle } from "@/hooks/useDragScroll";
 import useMediaQuery from "@/hooks/useMediaQuery";
-import useScrollSticky from "@/hooks/useScrollSticky";
+import useScrollVisibilityDynamic from "@/hooks/useScrollVisibilityDynamic";
 import TabButton from "@/components/ui/Buttons/TabButton";
 import DateFilter from "@/components/ui/Filter/DateFilter";
 import RegionFilter from "@/components/ui/Filter/RegionFilter";
@@ -28,9 +29,11 @@ interface ListFiltersProps {
 	/** 최상위 컨테이너 클래스 */
 	className?: string;
 }
+
 export default function ListFilters({ className }: ListFiltersProps) {
-	const containerRef = useRef<HTMLDivElement>(null);
-	const isExpanded = useScrollSticky();
+	const { isVisible, hasPassedTopOffset } = useScrollVisibilityDynamic({
+		topOffset: 88,
+	});
 	const { ref: scrollRef, overlays, ...events } = useDragScroll<HTMLUListElement>();
 	const isLg = useMediaQuery(getBreakpoint("lg"));
 	const [isKeywordOpen, setIsKeywordOpen] = useState(isLg);
@@ -47,12 +50,12 @@ export default function ListFilters({ className }: ListFiltersProps) {
 
 	return (
 		<div
-			ref={containerRef}
 			className={cn(
 				"flex flex-col justify-center gap-y-2",
 				"md:gap-4 lg:flex-row lg:items-start",
-				"sticky z-1 transition-[top] duration-300",
-				isExpanded ? "top-12 md:top-[88px]" : "-top-full",
+				"sticky z-1 transition-[top] duration-300 md:shadow-none",
+				isVisible ? "top-12 md:top-[88px]" : "-top-full",
+				hasPassedTopOffset && "shadow-[0_12px_24px_rgba(0,0,0,0.08)]",
 				className,
 			)}>
 			<div className="relative min-w-0">
@@ -70,13 +73,6 @@ export default function ListFilters({ className }: ListFiltersProps) {
 				</KeywordFilterWrapper>
 			</div>
 			<DropdownFilters />
-			<style>
-				{`
-        #headlessui-portal-root *[role="menu"] {
-          z-index: 50;
-        }
-        `}
-			</style>
 		</div>
 	);
 }
@@ -108,10 +104,12 @@ function FilterItem({ name, children, selected, onClick, disabled, className }: 
 // 좌측 모임 타입 버튼 목록
 function TypeFilters() {
 	const { get, set } = useQueryParams();
+	const { markWillChange } = useMeetupListScroll();
 	const { categories } = useCategoryStore();
 	const type = get(QUERY_KEYS.TYPE) ?? CATEGORY_TYPE_ALL.name;
 
 	function handleChangeType(v: string | null) {
+		markWillChange();
 		set({ [QUERY_KEYS.TYPE]: v });
 	}
 
@@ -192,6 +190,7 @@ function KeywordFilterWrapper({ isLoaded, isKeywordOpen, children }: KeywordFilt
 // 키워드 검색 필터
 function KeywordFilter() {
 	const { get, set } = useQueryParams();
+	const { markWillChange } = useMeetupListScroll();
 	const keywordInputRef = useRef<HTMLInputElement>(null);
 	const [keyword, setKeyword] = useState(get(QUERY_KEYS.KEYWORD) ?? "");
 
@@ -200,6 +199,7 @@ function KeywordFilter() {
 	}
 
 	function handleClickKeywordSubmit() {
+		markWillChange();
 		if (validateText(keyword)) {
 			set({ [QUERY_KEYS.KEYWORD]: keyword });
 		} else {
@@ -212,6 +212,7 @@ function KeywordFilter() {
 	}
 
 	function handleClickKeywordClear() {
+		markWillChange();
 		setKeyword("");
 		set({ [QUERY_KEYS.KEYWORD]: null });
 	}
@@ -239,6 +240,7 @@ export type RegionFilterParams = {
 } & RegionFilterValue;
 function DropdownFilters() {
 	const { get, set } = useQueryParams();
+	const { markWillChange } = useMeetupListScroll();
 	const dateStart = get(QUERY_KEYS.DATE_START) ?? "";
 	const dateEnd = get(QUERY_KEYS.DATE_END) ?? "";
 	const region = transformRegionData(get(QUERY_KEYS.REGION));
@@ -251,18 +253,22 @@ function DropdownFilters() {
 	};
 
 	function handleChangeDate(v: { from: string; to: string }) {
+		markWillChange();
 		set({
 			[QUERY_KEYS.DATE_START]: v.from,
 			[QUERY_KEYS.DATE_END]: v.to,
 		});
 	}
 	function handleChangeRegion(data: RegionFilterParams) {
+		markWillChange();
 		set({ [QUERY_KEYS.REGION]: data.fullLabel });
 	}
 	function handleChangeSortOrder(v: string) {
+		markWillChange();
 		set({ [QUERY_KEYS.SORT_ORDER]: v });
 	}
 	function handleChangeSortBy(v: string) {
+		markWillChange();
 		set({ [QUERY_KEYS.SORT_BY]: v });
 	}
 

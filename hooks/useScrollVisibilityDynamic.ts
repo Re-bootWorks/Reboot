@@ -2,6 +2,13 @@
 
 import { useCallback, useRef, useSyncExternalStore } from "react";
 
+export type ScrollVisibilityDynamicState = {
+	/** 스크롤 누적 방향 등으로 계산한 펼침 여부 */
+	isVisible: boolean;
+	/** `topOffset` px 초과 스크롤 여부 */
+	hasPassedTopOffset: boolean;
+};
+
 type Options<T extends HTMLElement = HTMLElement> = {
 	/** `scrollY`가 이보다 작으면 항상 펼침 */
 	topOffset?: number;
@@ -19,7 +26,14 @@ type Options<T extends HTMLElement = HTMLElement> = {
 	targetRef?: React.RefObject<T | null>;
 };
 
-export default function useScrollSticky<T extends HTMLElement = HTMLElement>({
+/** SSR, 클라이언트 첫 스냅샷 공용 (hydration mismatch 방지) */
+const defaultServerSnapshot: ScrollVisibilityDynamicState = {
+	isVisible: true,
+	hasPassedTopOffset: false,
+};
+
+/** 가변 높이를 가진 요소를 sticky 처리하기 위한 훅 */
+export default function useScrollVisibilityDynamic<T extends HTMLElement = HTMLElement>({
 	topOffset = 88,
 	collapsePx = 80,
 	revealPx = 40,
@@ -28,9 +42,9 @@ export default function useScrollSticky<T extends HTMLElement = HTMLElement>({
 	suspend = false,
 	targetRef,
 }: Options<T> = {}) {
-	// 외부 저장소
+	// 외부 저장소: 스냅샷 + 구독자
 	const store = useRef({
-		expanded: true,
+		snapshot: defaultServerSnapshot,
 		listeners: new Set<() => void>(),
 	});
 
@@ -43,19 +57,19 @@ export default function useScrollSticky<T extends HTMLElement = HTMLElement>({
 		store.current.listeners.forEach((l) => l());
 	}, []);
 
-	// expanded가 실제로 바뀔 때만 구독자에게 알림 → 불필요한 리렌더 방지
-	const setExpanded = useCallback(
-		(next: boolean) => {
-			if (store.current.expanded === next) return;
-			store.current.expanded = next;
+	// 값이 바뀔 때만 스냅샷 교체 후 알림 → 불필요한 리렌더 방지
+	const publish = useCallback(
+		(next: ScrollVisibilityDynamicState) => {
+			const prev = store.current.snapshot;
+			if (prev.isVisible === next.isVisible && prev.hasPassedTopOffset === next.hasPassedTopOffset)
+				return;
+			store.current.snapshot = next;
 			emit();
 		},
 		[emit],
 	);
 
-	// useSyncExternalStore에 넘길 subscribe 함수
-	// React가 이 함수를 호출해 구독하고, 반환된 cleanup으로 해제
-	// useEffect 없이도 스크롤 리스너 생명주기가 자동 관리
+	// useSyncExternalStore에 넘길 subscribe — React가 구독/해제 관리
 	const subscribe = useCallback(
 		(onStoreChange: () => void) => {
 			const el = targetRef?.current;
@@ -67,7 +81,6 @@ export default function useScrollSticky<T extends HTMLElement = HTMLElement>({
 			acc.current = 0;
 			lastFlipAt.current = 0;
 
-			// React가 넘겨준 콜백을 구독자 목록에 등록
 			store.current.listeners.add(onStoreChange);
 
 			let raf = 0;
@@ -79,47 +92,59 @@ export default function useScrollSticky<T extends HTMLElement = HTMLElement>({
 				const d = cur - lastY.current; // 이번 프레임의 이동량
 				lastY.current = cur;
 
+				const hasPassedTopOffset = cur > topOffset;
+				let isVisible = store.current.snapshot.isVisible;
+
 				if (suspend) {
 					acc.current = 0;
+					publish({ isVisible, hasPassedTopOffset });
 					return;
 				}
 
 				// 페이지 최상단 근처일 때 무조건 펼침
 				if (cur < topOffset) {
 					acc.current = 0;
-					setExpanded(true);
+					isVisible = true;
+					publish({ isVisible, hasPassedTopOffset });
 					return;
 				}
 
 				const now = performance.now();
 
-				// 상태 전환 직후 떨림 방지
-				if (now - lastFlipAt.current < cooldownMs) return;
+				// 상태 전환 직후 떨림 방지 (hasPassedTopOffset만 바뀔 수 있어 publish는 호출)
+				if (now - lastFlipAt.current < cooldownMs) {
+					publish({ isVisible, hasPassedTopOffset });
+					return;
+				}
 
 				// 노이즈 필터: 터치 디바이스의 미세 진동 무시
-				if (Math.abs(d) < noisePx) return;
+				if (Math.abs(d) < noisePx) {
+					publish({ isVisible, hasPassedTopOffset });
+					return;
+				}
 
 				acc.current += d;
 
-				// 펼침 상태에서: 아래로 collapsePx 이상 누적되면 접기
-				if (store.current.expanded) {
+				if (isVisible) {
 					// 역방향(위) 이동이 끼면 누적 리셋. 의도적 스크롤만 감지
 					if (acc.current < 0) acc.current = 0;
+					// 펼침 상태에서: 아래로 collapsePx 이상 누적되면 접기
 					if (acc.current >= collapsePx) {
 						acc.current = 0;
 						lastFlipAt.current = now;
-						setExpanded(false);
+						isVisible = false;
 					}
-				}
-				// 접힘 상태에서 위로 revealPx 이상 누적되면 펼치기
-				else {
+				} else {
 					if (acc.current > 0) acc.current = 0;
+					// 접힘 상태에서 위로 revealPx 이상 누적되면 펼치기
 					if (acc.current <= -revealPx) {
 						acc.current = 0;
 						lastFlipAt.current = now;
-						setExpanded(true);
+						isVisible = true;
 					}
 				}
+
+				publish({ isVisible, hasPassedTopOffset });
 			};
 
 			// throttle: 스크롤 이벤트가 많더라도 프레임당 1회만 flush
@@ -129,18 +154,22 @@ export default function useScrollSticky<T extends HTMLElement = HTMLElement>({
 
 			root.addEventListener("scroll", onScroll, { passive: true });
 
+			// 마운트 직후 현재 스크롤 위치 반영
+			onScroll();
+
 			return () => {
 				if (raf) cancelAnimationFrame(raf);
 				root.removeEventListener("scroll", onScroll);
 				store.current.listeners.delete(onStoreChange);
 			};
 		},
-		[topOffset, collapsePx, revealPx, cooldownMs, noisePx, suspend, targetRef, setExpanded],
+		[topOffset, collapsePx, revealPx, cooldownMs, noisePx, suspend, targetRef, publish],
 	);
 
-	// getSnapshot: React가 현재 값을 읽을 때 호출
-	// 세 번째 인자(서버 스냅샷)도 같은 함수. SSR에서도 true(펼침)로 시작
-	const getSnapshot = useCallback(() => store.current.expanded, []);
+	// getSnapshot: 클라이언트에서 현재 스냅샷
+	const getSnapshot = useCallback(() => store.current.snapshot, []);
+	// getServerSnapshot: SSR 시 고정값 (펼침, 미통과)
+	const getServerSnapshot = useCallback(() => defaultServerSnapshot, []);
 
-	return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+	return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

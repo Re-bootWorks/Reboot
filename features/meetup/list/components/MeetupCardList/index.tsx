@@ -7,7 +7,10 @@ import { cn } from "@/utils/cn";
 
 const size = 10;
 
-export default function MeetupCardList() {
+interface MeetupCardListProps {
+	className?: string;
+}
+export default function MeetupCardList({ className }: MeetupCardListProps) {
 	const query = useGetMeetups(size);
 	const isRefetching = query.isFetching && !query.isFetchingNextPage && !query.isPending;
 
@@ -16,6 +19,7 @@ export default function MeetupCardList() {
 			className={cn(
 				"grid w-full content-start justify-items-stretch gap-4 transition-opacity duration-200 ease-in-out md:gap-6 lg:grid-cols-2",
 				isRefetching && "pointer-events-none opacity-50",
+				className,
 			)}>
 			{query.isPending ? (
 				<MeetupCardSkeletonItems size={size} />

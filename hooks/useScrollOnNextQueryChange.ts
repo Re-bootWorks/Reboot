@@ -3,7 +3,12 @@
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function useScrollOnNextQueryChange<T extends HTMLElement = HTMLDivElement>() {
+interface UseScrollOnNextQueryChangeProps {
+	behavior?: "auto" | "smooth";
+}
+export default function useScrollOnNextQueryChange<T extends HTMLElement = HTMLDivElement>({
+	behavior = "smooth",
+}: UseScrollOnNextQueryChangeProps = {}) {
 	const searchParams = useSearchParams();
 	const searchParamsKey = searchParams.toString();
 	const scrollAnchorRef = useRef<T>(null);
@@ -27,7 +32,7 @@ export default function useScrollOnNextQueryChange<T extends HTMLElement = HTMLD
 		shouldScrollOnNextQueryChangeRef.current = false;
 
 		scrollAnchorRef.current?.scrollIntoView({
-			behavior: "smooth",
+			behavior,
 			block: "start",
 		});
 	}, [searchParamsKey]);
