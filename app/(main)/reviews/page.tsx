@@ -13,6 +13,7 @@ import RatingSummarySkeleton from "@/features/reviews/components/RatingSummary/R
 import ReviewsSection from "@/features/reviews/components/ReviewsCard/ReviewsSectionWrapper/ReviewsSection";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 import { getQueryClient } from "@/libs/getQueryClient";
+import { ReviewsListScrollProvider } from "@/features/reviews/components/providers/ReviewsListScrollProvider";
 
 type Props = {
 	searchParams: Promise<ReviewsListRequest>;
@@ -40,8 +41,8 @@ export default async function ReviewsPage({ searchParams }: Props) {
 	await prefetchReviews(queryClient, normalizedParams);
 
 	return (
-		<>
-			<header className="mt-8.5 mb-8 md:mt-10 md:mb-14 lg:mt-[3.188rem]">
+		<ReviewsListScrollProvider>
+			<header className="mb-8 pt-8.5 md:mb-14 md:pt-10 lg:pt-[3.188rem]">
 				<PageIntro />
 			</header>
 
@@ -60,6 +61,6 @@ export default async function ReviewsPage({ searchParams }: Props) {
 					<ReviewsSection />
 				</HydrationBoundary>
 			</QueryErrorBoundary>
-		</>
+		</ReviewsListScrollProvider>
 	);
 }
