@@ -11,14 +11,19 @@ import ExpandToggleButton from "@/components/ui/Buttons/ExpandToggleButton";
 
 const STYLE = {
 	itemBox: "flex flex-col gap-3 md:flex-row md:gap-8 group",
-	itemImage: "h-39 w-full rounded-xl object-cover md:size-47 md:rounded-3xl",
+	itemImageLink:
+		"relative h-39 shrink-0 overflow-hidden rounded-xl md:size-46 md:rounded-3xl md:pt-6",
+	itemImage: "w-full object-cover transition-transform duration-450 ease-out",
 	itemWrapper:
 		"flex grow flex-col gap-3 border-b border-gray-200 pb-6 md:py-6 group-last-of-type:border-none",
 	ratingWrapper: "flex w-full items-center justify-between",
 	profileWrapper: "mt-1.5 flex items-center gap-1.5",
 	profileImage: "size-6 rounded-full border border-gray-200 object-cover",
 	caption: "text-xs text-gray-500 md:text-sm",
-	transition: "transition-transform duration-450 ease-out",
+	itemInfoList: "mt-1.5 flex flex-wrap gap-x-2.5 gap-y-2 md:mt-2.5",
+	itemInfoLabel: "pr-1.5 text-gray-500",
+	itemInfo:
+		"text-xs text-gray-600 after:pl-2.5 after:text-gray-300 after:content-['|'] last:after:hidden sm:text-sm",
 };
 
 const EMPTY_THUMBNAIL_IMAGE = "/assets/img/img_empty_purple.svg";
@@ -37,15 +42,13 @@ export default function ReviewCard({
 		});
 	return (
 		<li className={STYLE.itemBox}>
-			<Link href={`/meetup/${item.meetingId}`} className="group shrink-0 md:pt-6">
+			<Link href={`/meetup/${item.meetingId}`} className={STYLE.itemImageLink}>
 				<Image
 					src={item.meetingImage ?? EMPTY_THUMBNAIL_IMAGE}
-					alt="모임 대표 이미지"
-					width={343}
-					height={343}
+					alt={`${item.meetingName}모임 대표 이미지`}
+					fill
 					className={cn(
 						STYLE.itemImage,
-						STYLE.transition,
 						!!item.meetingImage ? "hover:scale-107" : "bg-purple-50 object-scale-down",
 					)}
 				/>
@@ -94,8 +97,18 @@ export default function ReviewCard({
 						/>
 					)}
 				</li>
-				<li className={STYLE.caption}>
-					{item.meetingName} · {item.meetingType}
+				<li>
+					<ul className={STYLE.itemInfoList}>
+						<li className={STYLE.itemInfo}>{item.meetingName}</li>
+						<li className={STYLE.itemInfo}>
+							<span className={STYLE.itemInfoLabel}>카테고리</span>
+							{item.meetingType}
+						</li>
+						<li className={STYLE.itemInfo}>
+							<span className={STYLE.itemInfoLabel}>작성 일시</span>
+							{formatIsoDateWithDots(item.createdAt)}
+						</li>
+					</ul>
 				</li>
 			</ul>
 		</li>
