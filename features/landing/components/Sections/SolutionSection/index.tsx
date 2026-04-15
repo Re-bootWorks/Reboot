@@ -10,7 +10,7 @@ import MotionItemRightToLeft from "../../Motions/MotionItemRightToLeft";
 
 export default function SolutionSection() {
 	return (
-		<div className="bg-purple-50">
+		<div className="overflow-x-hidden bg-purple-50">
 			<SectionContainer className="py-12.5 md:py-20 lg:py-37.5">
 				<div className="grid items-center gap-10 md:grid-cols-2">
 					<MotionFadeLeftToRight>
