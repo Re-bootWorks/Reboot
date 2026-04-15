@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useFormData } from "../../providers/FormDataProvider";
 import CapacityField from "@/features/meetup/components/CapacityField";
 import DateTimeField from "@/features/meetup/components/DateTimeField";
-import { validateCapacity, validateDateTime } from "../../../utils";
+import { validateCapacity, validateDateTime, validateDateTimeOrder } from "../../../utils";
 import { validateMaxCapacity } from "@/features/meetupDetail/edit/utils";
 import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/PersonnelContainer";
 
@@ -39,9 +39,18 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 	useEffect(() => {
 		const isDateTimeValid = validateDateTime(data._dateTime.date, data._dateTime.time);
 		const isRegEndValid = validateDateTime(data._registrationEnd.date, data._registrationEnd.time);
+		const isDateTimeOrderValid = validateDateTimeOrder({
+			dateTime: data._dateTime,
+			registrationEnd: data._registrationEnd,
+		});
 		const isCapacityValid = validateCapacity(data.capacity);
 		const isMaxCapacityValid = validateMaxCapacity(data.capacity, MIN_CONFIRMED_COUNT);
-		const isValid = isDateTimeValid && isRegEndValid && isCapacityValid && isMaxCapacityValid;
+		const isValid =
+			isDateTimeValid &&
+			isRegEndValid &&
+			isDateTimeOrderValid &&
+			isCapacityValid &&
+			isMaxCapacityValid;
 		setStepValid(step, isValid);
 	}, [data, setStepValid, step]);
 

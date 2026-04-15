@@ -1,7 +1,6 @@
 "use client";
 
 import { useQueryParams } from "@/hooks/useQueryParams";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { createContext, useCallback, useContext } from "react";
 
 interface FormStepContextValue {
@@ -43,22 +42,17 @@ export default function FormStepProvider({
 	/** 폼 컴포넌트 */
 	children: React.ReactNode;
 }) {
-	const { set } = useQueryParams();
-	const router = useRouter();
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
+	const { get, set } = useQueryParams();
 
-	const currentStep = Number(searchParams.get(QUERY_KEY)) || step;
+	const currentStep = Number(get(QUERY_KEY)) || step;
 
 	const next = useCallback(() => {
-		const step = Number(searchParams.get(QUERY_KEY)) || 1;
-		set({ [QUERY_KEY]: String(step + 1) });
-	}, [router, pathname, searchParams]);
+		set({ [QUERY_KEY]: String(Math.min(currentStep + 1, totalSteps)) });
+	}, [set, currentStep, totalSteps]);
 
 	const prev = useCallback(() => {
-		const step = Number(searchParams.get(QUERY_KEY)) || 1;
-		set({ [QUERY_KEY]: String(step - 1) });
-	}, [router, pathname, searchParams]);
+		set({ [QUERY_KEY]: String(Math.max(currentStep - 1, 1)) });
+	}, [set, currentStep]);
 
 	return (
 		<FormStepContext.Provider value={{ currentStep, totalSteps, next, prev }}>
