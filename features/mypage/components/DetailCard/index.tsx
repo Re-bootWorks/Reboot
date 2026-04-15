@@ -14,7 +14,7 @@ const STYLE = {
 	itemBgBox: "relative overflow-hidden rounded-3xl bg-white md:flex md:gap-6 md:rounded-4xl md:p-6",
 	itemImageLink: "relative block h-39 shrink-0 overflow-hidden md:size-46 md:rounded-3xl md:pt-6",
 	itemImage: "w-full object-cover transition-transform duration-450 ease-out",
-	wishBtn: "absolute top-4 right-4 md:top-6 md:right-6",
+	wishBtn: "absolute top-4 right-4 md:top-6 md:right-6 z-1",
 	itemWrapper:
 		"relative flex min-w-0 grow flex-col justify-between gap-3 py-6 px-4 md:px-0 md:py-2.5",
 	itemContent:
@@ -66,7 +66,7 @@ export default function DetailCard({
 			</div>
 
 			<div className={STYLE.itemWrapper}>
-				<div className="min-w-0">
+				<div className="max-w[90%] min-w-0">
 					{badges && (
 						<div className="mb-3 flex gap-2">
 							{badges.map((badge) => (
@@ -83,7 +83,7 @@ export default function DetailCard({
 							))}
 						</div>
 					)}
-					<h2 className="w-[90%] truncate text-xl font-semibold">
+					<h2 className="truncate text-xl font-semibold">
 						<Link href={`/meetup/${item.id}`}>{item.name}</Link>
 					</h2>
 				</div>
@@ -122,6 +122,7 @@ export default function DetailCard({
 										actionsIconClassName="md:size-10"
 										items={dropdownItems}
 										onOpenChange={onDropdownOpenChange}
+										menuClassName="z-2"
 									/>
 								)
 							: actions &&
