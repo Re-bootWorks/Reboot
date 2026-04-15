@@ -5,7 +5,11 @@ import {
 	postMeetingsFavorite,
 	postMeetingsJoin,
 } from "@/apis/meetings";
+import { headerQueryKeys } from "@/features/header/queries";
+import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
+import { mypageQueryKeys } from "@/features/mypage/queries";
 import { MeetupListRequest } from "../meetup/types";
+import { queryKeys } from "./queries/queryKeys";
 
 type MutationCallbacks<TData, TVariables = void> = Omit<
 	UseMutationOptions<TData, Error, TVariables>,
@@ -26,15 +30,58 @@ export const meetupMutationKeys = {
 	deleteJoin: ["meetings", "join", "delete"] as const,
 };
 
-const FAVORITES_QUERY_BASE_KEY = ["favorites"] as const;
-
 async function invalidateMeetupAndFavoritesQueries(queryClient: ReturnType<typeof useQueryClient>) {
 	await Promise.all([
 		queryClient.invalidateQueries({
-			queryKey: FAVORITES_QUERY_BASE_KEY,
+			queryKey: queryKeys.favorites.all,
 		}),
 		queryClient.invalidateQueries({
 			queryKey: meetupQueryKeys.list,
+		}),
+	]);
+}
+
+async function invalidateFavoriteRelatedQueries(
+	queryClient: ReturnType<typeof useQueryClient>,
+	meetingId: number,
+) {
+	await Promise.all([
+		invalidateMeetupAndFavoritesQueries(queryClient),
+		queryClient.invalidateQueries({
+			queryKey: headerQueryKeys.favorites,
+		}),
+		queryClient.invalidateQueries({
+			queryKey: meetupDetailQueryKeys.meeting(meetingId),
+		}),
+		queryClient.invalidateQueries({
+			queryKey: meetupDetailQueryKeys.related.all(),
+		}),
+	]);
+}
+
+async function invalidateJoinRelatedQueries(
+	queryClient: ReturnType<typeof useQueryClient>,
+	meetingId: number,
+) {
+	await Promise.all([
+		invalidateMeetupAndFavoritesQueries(queryClient),
+		queryClient.invalidateQueries({
+			queryKey: meetupDetailQueryKeys.meeting(meetingId),
+		}),
+		queryClient.invalidateQueries({
+			queryKey: meetupDetailQueryKeys.participants(meetingId),
+		}),
+		queryClient.invalidateQueries({
+			queryKey: mypageQueryKeys.meetups,
+		}),
+		queryClient.invalidateQueries({
+			queryKey: mypageQueryKeys.created,
+		}),
+		queryClient.invalidateQueries({
+			queryKey: headerQueryKeys.notifications,
+		}),
+		queryClient.invalidateQueries({
+			queryKey: headerQueryKeys.notificationsCount,
 		}),
 	]);
 }
@@ -49,7 +96,7 @@ export function usePostMeetupFavorite(id: number, options?: MutationCallbacks<vo
 		mutationFn: () => postMeetingsFavorite({ meetingId: id }),
 		...restOptions,
 		onSuccess: async (data, variables, onMutateResult, context) => {
-			await invalidateMeetupAndFavoritesQueries(queryClient);
+			await invalidateFavoriteRelatedQueries(queryClient, id);
 			await onSuccess?.(data, variables, onMutateResult, context);
 		},
 	});
@@ -65,7 +112,7 @@ export function useDeleteMeetupFavorite(id: number, options?: MutationCallbacks<
 		mutationFn: () => deleteMeetingsFavorite({ meetingId: id }),
 		...restOptions,
 		onSuccess: async (data, variables, onMutateResult, context) => {
-			await invalidateMeetupAndFavoritesQueries(queryClient);
+			await invalidateFavoriteRelatedQueries(queryClient, id);
 			await onSuccess?.(data, variables, onMutateResult, context);
 		},
 	});
@@ -81,7 +128,7 @@ export function usePostMeetupJoin(id: number, options?: MutationCallbacks<void>)
 		mutationFn: () => postMeetingsJoin({ meetingId: id }),
 		...restOptions,
 		onSuccess: async (data, variables, onMutateResult, context) => {
-			await invalidateMeetupAndFavoritesQueries(queryClient);
+			await invalidateJoinRelatedQueries(queryClient, id);
 			await onSuccess?.(data, variables, onMutateResult, context);
 		},
 	});
@@ -97,7 +144,7 @@ export function useDeleteMeetupJoin(id: number, options?: MutationCallbacks<void
 		mutationFn: () => deleteMeetingsJoin({ meetingId: id }),
 		...restOptions,
 		onSuccess: async (data, variables, onMutateResult, context) => {
-			await invalidateMeetupAndFavoritesQueries(queryClient);
+			await invalidateJoinRelatedQueries(queryClient, id);
 			await onSuccess?.(data, variables, onMutateResult, context);
 		},
 	});
