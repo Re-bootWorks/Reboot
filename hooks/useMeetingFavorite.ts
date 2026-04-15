@@ -66,6 +66,7 @@ export default function useMeetingFavorite() {
 			queryClient.invalidateQueries({
 				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
 			});
+			queryClient.invalidateQueries({ queryKey: ["favorites"] });
 		},
 		// 실패시 롤백
 		onError: (_error, _variables, context) => {
