@@ -73,13 +73,6 @@ export default function ListFilters({ className }: ListFiltersProps) {
 				</KeywordFilterWrapper>
 			</div>
 			<DropdownFilters />
-			<style>
-				{`
-        #headlessui-portal-root *[role="menu"] {
-          z-index: 50;
-        }
-        `}
-			</style>
 		</div>
 	);
 }

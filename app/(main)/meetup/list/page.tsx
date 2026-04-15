@@ -28,7 +28,7 @@ export default function MeetupListPage() {
 				<Suspense fallback={null}>
 					<CreateOpenButton
 						className={cn(
-							"fixed right-4 bottom-6",
+							"fixed right-4 bottom-6 z-1",
 							"md:right-5.5 md:bottom-5.5 lg:right-[85px] lg:bottom-14",
 						)}
 					/>
