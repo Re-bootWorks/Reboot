@@ -43,6 +43,7 @@ export type ConnectPost = Post & {
 		email?: string;
 	};
 	comments: PostComment[];
+	commentCount: number;
 };
 
 // UI 타입 (PostCard용)

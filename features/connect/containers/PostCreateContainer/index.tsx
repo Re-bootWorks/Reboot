@@ -35,7 +35,7 @@ export default function PostCreateContainer() {
 
 	return (
 		<Container narrow>
-			<div className="mt-12 space-y-4">
+			<div className="mt-2 space-y-4 md:mt-12">
 				{/* 제목 */}
 				<div className="flex min-w-[343px] items-center gap-2">
 					<div className="relative min-w-0 flex-1">

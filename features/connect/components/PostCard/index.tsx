@@ -38,7 +38,7 @@ export default function ConnectCard({
 	return (
 		<div
 			onClick={onClick}
-			className="relative flex h-[19.375rem] w-full cursor-pointer flex-col overflow-hidden rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
+			className="relative flex h-[21rem] w-full cursor-pointer flex-col overflow-hidden rounded-xl bg-white transition hover:bg-gray-50 sm:h-[12.5rem] sm:max-w-[40.25rem] sm:flex-row md:max-w-[76rem]">
 			{/* 로딩 오버레이 */}
 			{isLoading && (
 				<div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/60">
@@ -52,7 +52,7 @@ export default function ConnectCard({
 			</h3>
 
 			{/* 썸네일 이미지 */}
-			<div className="relative order-2 h-[9rem] w-full shrink-0 overflow-hidden rounded-xl sm:order-1 sm:h-full sm:w-[12.5rem]">
+			<div className="relative order-2 h-[11rem] w-full shrink-0 overflow-hidden rounded-xl sm:order-1 sm:h-full sm:w-[12.5rem]">
 				{imageUrl ? (
 					<Image src={imageUrl} alt={title} fill className="object-cover" />
 				) : (
