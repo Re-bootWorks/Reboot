@@ -23,8 +23,9 @@ export default function HotPostSection() {
 
 	return (
 		<section className="mt-6 min-w-0 overflow-hidden md:mt-[81px]">
-			<h2 className="text-2xl leading-8 font-semibold tracking-[-0.03rem] whitespace-nowrap">
-				이번주 HOT 게시물!
+			<h2 className="flex items-center gap-3 text-2xl font-semibold tracking-[-0.03rem]">
+				<span className="h-6 w-1 rounded-full bg-purple-500" />
+				이번주 베스트 게시글
 			</h2>
 			<div className="relative mt-6">
 				<div ref={ref} style={style} className={`${containerStyle} flex gap-2`} {...events}>
