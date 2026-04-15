@@ -75,6 +75,15 @@ export default function TabWrapper() {
 
 	// activeTab 변경시 스크롤 초기화
 	useEffect(() => {
+		// @TODO preview 확인 후 삭제
+		console.log("마이페이지 스크롤 이벤트 시작", {
+			activeTab,
+			isLg,
+			isMd,
+			scrollY: window.scrollY,
+			tabTop: tabRef.current?.getBoundingClientRect().top,
+			threshold,
+		});
 		setIsDropdownOpen(false);
 
 		if (isLg) {
@@ -91,6 +100,13 @@ export default function TabWrapper() {
 		}
 	}, [activeTab]);
 
+	// @TODO preview 확인 후 삭제
+	useEffect(() => {
+		console.log("마이페이지 탭 변경", {
+			tabQuery,
+			activeTab,
+		});
+	}, [tabQuery, activeTab]);
 	return (
 		<div className="min-w-0 grow">
 			<div className={STYLE.tabWrapper} ref={tabRef}>
@@ -99,6 +115,14 @@ export default function TabWrapper() {
 					<PageTabs
 						defaultId={activeTab}
 						onChange={({ id }) => {
+							// @TODO preview 확인 후 삭제
+							console.log("마이페이지 탭 변경", {
+								id,
+								beforeTabQuery: tabQuery,
+								isLg,
+								isMd,
+								scrollY: window.scrollY,
+							});
 							set({ tab: id });
 						}}>
 						{TAB_ITEMS.map((tabItem) => (
