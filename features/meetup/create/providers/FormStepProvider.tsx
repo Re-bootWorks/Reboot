@@ -47,11 +47,11 @@ export default function FormStepProvider({
 	const currentStep = Number(get(QUERY_KEY)) || step;
 
 	const next = useCallback(() => {
-		set({ [QUERY_KEY]: String(currentStep + 1) });
-	}, [set, currentStep]);
+		set({ [QUERY_KEY]: String(Math.min(currentStep + 1, totalSteps)) });
+	}, [set, currentStep, totalSteps]);
 
 	const prev = useCallback(() => {
-		set({ [QUERY_KEY]: String(currentStep - 1) });
+		set({ [QUERY_KEY]: String(Math.max(currentStep - 1, 1)) });
 	}, [set, currentStep]);
 
 	return (
