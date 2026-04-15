@@ -59,13 +59,13 @@ describe("모임 생성 데이터 유효성 검사 테스트", () => {
 	});
 
 	describe("모임 정원 유효성 검사 테스트", () => {
-		test("모임 정원이 5명 이상이면 true를 반환", () => {
-			const result = validateCapacity(10);
+		test("모임 정원이 3명 이상이면 true를 반환", () => {
+			const result = validateCapacity(3);
 			expect(result).toBe(true);
 		});
 
-		test("모임 정원이 5명 미만이면 false를 반환", () => {
-			const result = validateCapacity(4);
+		test("모임 정원이 3명 미만이면 false를 반환", () => {
+			const result = validateCapacity(2);
 			expect(result).toBe(false);
 		});
 	});
