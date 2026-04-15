@@ -4,6 +4,10 @@ import captureIfServerError from "@/libs/captureIfServerError";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+if (!API_URL) {
+	throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
+}
+
 async function fetchWithToken(endpoint: string, options: RequestInit, accessToken?: string) {
 	const { headers, ...rest } = options;
 

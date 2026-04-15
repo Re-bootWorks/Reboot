@@ -46,14 +46,16 @@ export default function ListControls() {
 			<div ref={scrollAnchorRef} aria-hidden="true" className="scroll-mt-12 md:scroll-mt-22" />
 			<div
 				ref={triggerRef}
-				className="w-full scroll-mt-12 md:sticky md:top-22 md:z-[9] md:scroll-mt-22 md:bg-gray-50 md:py-3">
-				<ListControlsContent headingId="review-filter-heading" onWillChange={markWillChange} />
+				className="scroll-mt-12 md:sticky md:top-22 md:z-9 md:scroll-mt-22 md:bg-gray-50 md:py-3">
+				<div className="mx-auto w-full max-w-7xl px-2">
+					<ListControlsContent headingId="review-filter-heading" onWillChange={markWillChange} />
+				</div>
 			</div>
 
 			<div
 				aria-hidden={!showMobileFloating}
 				className={cn(
-					"pointer-events-none fixed inset-x-0 top-12 z-[9] transition-all duration-300 ease-out md:hidden",
+					"pointer-events-none fixed inset-x-0 top-12 z-9 transition-all duration-300 ease-out md:hidden",
 					showMobileFloating
 						? "visible translate-y-0 opacity-100"
 						: "invisible -translate-y-full opacity-0",

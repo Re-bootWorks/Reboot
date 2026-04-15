@@ -9,6 +9,8 @@ import { useToast } from "@/providers/toast-provider";
 import { headerQueryKeys } from "./queries";
 import { CursorPageResponse, NotificationCardList } from "./types";
 
+const notificationQueryKey = headerQueryKeys.notification.all;
+
 export function usePutNotificationsReadAll() {
 	const queryClient = useQueryClient();
 	const { handleShowToast } = useToast();
@@ -21,7 +23,7 @@ export function usePutNotificationsReadAll() {
 				message: "모든 알림을 읽었습니다.",
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
+			queryClient.invalidateQueries({ queryKey: notificationQueryKey });
 		},
 
 		onError: () => {
@@ -41,7 +43,7 @@ export function usePutNotificationsRead() {
 		mutationFn: putNotificationsRead,
 
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
+			queryClient.invalidateQueries({ queryKey: notificationQueryKey });
 		},
 
 		onError: () => {
@@ -65,7 +67,7 @@ export function useDeleteNotificationsAll() {
 				message: "전체 알림이 삭제되었습니다.",
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
+			queryClient.invalidateQueries({ queryKey: notificationQueryKey });
 		},
 
 		onError: () => {
@@ -87,16 +89,17 @@ export function useDeleteNotifications() {
 
 		onMutate: async ({ notificationId }) => {
 			// 진행중인 refetch 취소
-			await queryClient.cancelQueries({ queryKey: headerQueryKeys.notifications });
+			await queryClient.cancelQueries({ queryKey: notificationQueryKey });
 			// 실패시 롤백용으로 현재 캐시 저장
-			const prevData = queryClient.getQueryData<
-				InfiniteData<CursorPageResponse<NotificationCardList>>
-			>(headerQueryKeys.notifications);
+			const prevData =
+				queryClient.getQueryData<InfiniteData<CursorPageResponse<NotificationCardList>>>(
+					notificationQueryKey,
+				);
 
 			// 캐시에서 해당 알림 제거
 			if (prevData) {
 				queryClient.setQueryData<InfiniteData<CursorPageResponse<NotificationCardList>>>(
-					headerQueryKeys.notifications,
+					notificationQueryKey,
 					{
 						...prevData,
 						pages: prevData.pages.map((page) => ({
@@ -114,12 +117,12 @@ export function useDeleteNotifications() {
 				message: "알림이 삭제되었습니다.",
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
+			queryClient.invalidateQueries({ queryKey: notificationQueryKey });
 		},
 
 		onError: (_error, _variables, context) => {
 			if (context?.prevData) {
-				queryClient.setQueryData(headerQueryKeys.notifications, context.prevData);
+				queryClient.setQueryData(notificationQueryKey, context.prevData);
 			}
 			handleShowToast({
 				message: "알림 삭제에 실패했습니다.\n잠시 후 다시 시도해주세요.",

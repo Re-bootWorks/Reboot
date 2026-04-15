@@ -1,19 +1,25 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getFavoritesCount, getNotifications, getNotificationUnreadCount } from "./apis";
-import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
 
+const HEADER_QUERY_BASE_KEY = ["header"] as const;
 export const headerQueryKeys = {
 	// 찜 개수
-	all: ["header"] as const,
-	favorites: ["header", "favorites"] as const,
+	all: HEADER_QUERY_BASE_KEY,
+	favorites: [...HEADER_QUERY_BASE_KEY, "favorites"] as const,
+	notification: {
+		all: [...HEADER_QUERY_BASE_KEY, "notifications"] as const,
+		count: [...HEADER_QUERY_BASE_KEY, "notifications", "count"] as const,
+	},
+
+	// @TODO 삭제예정 legacy
 	notifications: ["header", "notifications"] as const,
 	notificationsCount: ["header", "notifications", "count"] as const,
 } as const;
 
 // 찜한 갯수
 export function useGetFavoritesCount() {
-	const user = useUserStore((state) => state.user);
-
+	const { user } = useUser();
 	return useQuery({
 		queryKey: headerQueryKeys.favorites,
 		queryFn: getFavoritesCount,
@@ -24,7 +30,7 @@ export function useGetFavoritesCount() {
 
 // 알림 목록
 export function useGetNotifications() {
-	const user = useUserStore((state) => state.user);
+	const { user } = useUser();
 
 	return useInfiniteQuery({
 		queryKey: headerQueryKeys.notifications,
@@ -39,7 +45,7 @@ export function useGetNotifications() {
 
 // 읽지 않은 알림 갯수
 export function useGetNotificationsCount() {
-	const user = useUserStore((state) => state.user);
+	const { user } = useUser();
 
 	return useQuery({
 		queryKey: headerQueryKeys.notificationsCount,

@@ -87,6 +87,8 @@ function createComment(postId: number, body: { content: string }) {
 			name: "홍길동",
 			image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=200&h=200&fit=crop",
 		},
+		likeCount: 0,
+		isLiked: false,
 	};
 	COMMENTS.push(newComment);
 	const post = POSTS.find((p) => p.id === postId);

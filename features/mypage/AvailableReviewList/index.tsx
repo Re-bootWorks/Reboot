@@ -47,7 +47,7 @@ function AvailableReviewList() {
 			{ onSuccess: closeReviewModal, onError: closeReviewModal },
 		);
 	}
-	if (items.length === 0) return <Empty>아직 참여한 모임이 없어요</Empty>;
+	if (items.length === 0) return <Empty>작성 가능한 리뷰가 없어요</Empty>;
 
 	return (
 		<>

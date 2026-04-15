@@ -1,4 +1,4 @@
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import {
 	getMeetingDetailServer,
 	getParticipantsServer,
@@ -9,6 +9,7 @@ import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 import MeetupDetailClient from "@/features/meetupDetail/containers/meetupContainer";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getQueryClient } from "@/libs/getQueryClient";
 
 interface PageProps {
 	params: Promise<{ meetupId: string }>;
@@ -42,7 +43,7 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 
 	if (!meeting) notFound();
 
-	const queryClient = new QueryClient();
+	const queryClient = getQueryClient();
 
 	await Promise.all([
 		queryClient.prefetchQuery({
