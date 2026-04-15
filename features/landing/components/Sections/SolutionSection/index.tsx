@@ -3,10 +3,10 @@
 import Image from "next/image";
 import MotionFadeUp from "../../Motions/MotionFadeUp";
 import SectionContainer from "../../SectionLayout/SectionContainer";
-import { MotionItem } from "../../Motions/MotionItem";
 import { SOLUTION_ITEMS } from "../data";
 import MotionFadeLeftToRight from "../../Motions/MotionFadeLeftToRight";
-import MotionFadeRightToLeft from "../../Motions/MotionFadeRightToLeft";
+import MotionStagger from "../../Motions/MotionStagger";
+import MotionItemRightToLeft from "../../Motions/MotionItemRightToLeft";
 
 export default function SolutionSection() {
 	return (
@@ -41,9 +41,9 @@ export default function SolutionSection() {
 							</p>
 						</MotionFadeUp>
 
-						<MotionFadeRightToLeft className="mt-12 flex flex-col gap-6 md:mt-10">
+						<MotionStagger className="mt-12 flex flex-col gap-6 md:mt-10">
 							{SOLUTION_ITEMS.map((item) => (
-								<MotionItem key={item.title}>
+								<MotionItemRightToLeft key={item.title}>
 									<div className="flex items-center gap-6 rounded-3xl bg-white/70 p-4 shadow-[0_4px_16px_0_rgba(0,0,0,0.2)] md:px-6 md:py-8">
 										<div className="h-fit w-fit shrink-0 rounded-2xl bg-purple-100 p-5">
 											<item.icon />
@@ -53,9 +53,9 @@ export default function SolutionSection() {
 											<p className="text-sm text-gray-700 md:text-base">{item.description}</p>
 										</div>
 									</div>
-								</MotionItem>
+								</MotionItemRightToLeft>
 							))}
-						</MotionFadeRightToLeft>
+						</MotionStagger>
 					</div>
 				</div>
 			</SectionContainer>
