@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import CreateButton from "@/components/ui/Buttons/CreateButton";
-import { useUserStore } from "@/store/user.store";
+import { useUser } from "@/hooks/useUser";
 import { useModalStore } from "@/store/modal.store";
 import { useToast } from "@/providers/toast-provider";
 
@@ -15,7 +15,7 @@ const Banner = dynamic(() => import("@/features/connect/components/Banner"), { s
 
 export default function IntroSection() {
 	const router = useRouter();
-	const { user } = useUserStore();
+	const { user } = useUser();
 	const { openLogin } = useModalStore();
 	const { handleShowToast } = useToast();
 
@@ -33,7 +33,7 @@ export default function IntroSection() {
 
 			{/* 게시물 등록 버튼 */}
 			<CreateButton
-				className="fixed right-6 bottom-6 z-50 shadow-lg transition-transform duration-300 hover:-translate-y-1"
+				className="fixed right-6 bottom-6 z-10 shadow-lg transition-transform duration-300 hover:-translate-y-1"
 				onClick={() => {
 					if (user) {
 						router.push("/connect/create");
