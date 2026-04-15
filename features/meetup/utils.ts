@@ -14,9 +14,9 @@ export function validateText(value: string) {
  * time: HH:mm
  */
 export function validateDateTime(date: string, time: string) {
-	const isDateTimeValid = dayjs(`${date} ${time}`).isValid();
-	const isAfterNow = dayjs(`${date} ${time}`).isAfter(dayjs());
-	return isDateTimeValid && isAfterNow;
+	if (!date || !time) return false;
+	const dt = dayjs(date + " " + time);
+	return dt.isValid() && dt.isAfter(dayjs());
 }
 
 /** 모집 마감 일시 이후 모임 일시인지 유효성 검사
@@ -39,7 +39,7 @@ export function validateCapacity(capacity: number) {
 
 /** 장소 검색 시 입력 값 유효성 검사 */
 export function validatePlaceSearch(value: string) {
-	const isCompletedText = /^[\uAC00-\uD7A3A-Za-z\s]*$/.test(value);
+	const isCompletedText = /^[\uAC00-\uD7A3A-Za-z0-9\s]*$/.test(value);
 	if (!isCompletedText) return false;
 	return true;
 }
