@@ -60,12 +60,14 @@ export function useLogout() {
 	return useMutation({
 		mutationFn: postLogout,
 		onSuccess: () => {
-			queryClient.clear();
 			handleShowToast({ message: "로그아웃 됐습니다.", status: "success" });
-			router.refresh();
 		},
 		onError: () => {
-			handleShowToast({ message: "로그아웃에 실패했습니다.", status: "error" });
+			handleShowToast({ message: "오류가 발생했습니다.", status: "error" });
+		},
+		onSettled: () => {
+			queryClient.clear();
+			router.refresh();
 		},
 	});
 }
