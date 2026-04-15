@@ -1,10 +1,12 @@
 "use client";
 
-import { CreatedList, CursorPageResponse, MeetupList } from "@/features/mypage/types";
+import { CursorPageResponse, MeetupList } from "@/features/mypage/types";
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import { headerQueryKeys } from "@/features/header/queries";
 import { deleteMeetingsFavorites, postMeetingsFavorites } from "@/features/mypage/apis";
 import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
+import { meetupQueryKeys } from "@/features/meetup/queries";
+import { mypageQueryKeys } from "@/features/mypage/queries";
 
 /**
  * 찜 추가 시 낙관적 업데이트 및 롤백 하는 훅
@@ -14,10 +16,7 @@ import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
  * handleWishToggle(item.id, item.isFavorited)
  */
 
-const favoriteQueryPrefixes = [
-	["mypage", "meetups"], // 나의 모임, 작성 가능한 리뷰
-	["mypage", "created"], // 만든 모임
-];
+const favoriteQueryPrefixes = [mypageQueryKeys.meetup.all];
 
 export default function useMeetingFavorite() {
 	const queryClient = useQueryClient();
@@ -41,7 +40,7 @@ export default function useMeetingFavorite() {
 
 			// 캐시 낙관적 업데이트 (api 응답 전 캐시수정)
 			favoriteQueryPrefixes.forEach((queryKey) => {
-				queryClient.setQueriesData<InfiniteData<CursorPageResponse<MeetupList | CreatedList>>>(
+				queryClient.setQueriesData<InfiniteData<CursorPageResponse<MeetupList>>>(
 					{ queryKey },
 					(oldData) => {
 						if (!oldData) return oldData;
@@ -63,10 +62,11 @@ export default function useMeetingFavorite() {
 
 		onSuccess: (_data, variables) => {
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites });
-			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
+			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 			queryClient.invalidateQueries({
 				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
 			});
+			queryClient.invalidateQueries({ queryKey: ["favorites"] });
 		},
 		// 실패시 롤백
 		onError: (_error, _variables, context) => {

@@ -25,6 +25,8 @@ export type PostComment = {
 		name: string;
 		image?: string;
 	};
+	likeCount: number;
+	isLiked: boolean;
 };
 
 // Connect 상세용 (Post 확장)
@@ -83,4 +85,33 @@ export type GetPostsResponse = {
 	totalCount?: number;
 	currentOffset?: number;
 	limit?: number;
+	totalViewCount?: number;
+};
+
+// 게시물 상세 Props 타입
+export type PostDetailCardProps = {
+	id: number;
+	title: string;
+	authorImage?: string;
+	content: string;
+	imageUrl: string;
+	author: string;
+	createdAt: string;
+	likeCount: number;
+	commentCount: number;
+	viewCount: number;
+	date: number;
+	isAuthor: boolean;
+	isLiked: boolean;
+};
+
+// CompactCard UI 타입
+export type CompactCardItem = {
+	id: number;
+	title: string;
+	image: string;
+	createdAt: string;
+	likeCount: number;
+	commentCount: number;
+	onClick?: () => void;
 };

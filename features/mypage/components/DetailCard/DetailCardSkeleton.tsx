@@ -1,7 +1,7 @@
 import Skeleton from "react-loading-skeleton";
 
 const STYLE = {
-	itemBgBox: "rounded-3xl bg-white md:flex md:gap-6 md:rounded-4xl md:p-6",
+	itemBgBox: "rounded-3xl bg-white leading-0 md:flex md:gap-6 md:rounded-4xl md:p-6",
 	itemImage: "h-39 md:size-47! rounded-t-3xl! md:rounded-3xl!",
 	itemWrapper: "flex min-w-0 grow flex-col justify-between gap-3 p-4 md:px-0 md:py-2.5",
 	itemContent:
@@ -12,7 +12,7 @@ const STYLE = {
 
 export default function DetailCardSkeleton({ showBadge = true }: { showBadge?: boolean }) {
 	return (
-		<ul className="mt-6 flex flex-col gap-4 lg:mt-8 lg:gap-6">
+		<ul className="flex flex-col gap-4 lg:gap-6">
 			{Array.from({ length: 5 }).map((_, index) => (
 				<li key={index} className={STYLE.itemBgBox}>
 					<Skeleton className={STYLE.itemImage} />

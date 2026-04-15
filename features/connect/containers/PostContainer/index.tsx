@@ -35,6 +35,7 @@ export default function PostContainer() {
 	const [searchKeyword, setSearchKeyword] = useState("");
 	const router = useRouter();
 	const containerRef = useRef<HTMLDivElement | null>(null);
+	const [shouldScroll, setShouldScroll] = useState(false);
 
 	useEffect(() => {
 		if (searchParams.get("deleted") === "true" && !deletedHandled.current) {
@@ -46,7 +47,16 @@ export default function PostContainer() {
 
 	const { data, isFetching } = useGetPosts({ page, sortBy, keyword: searchKeyword, limit: LIMIT });
 
+	useEffect(() => {
+		if (!isFetching && shouldScroll) {
+			const top = containerRef.current?.getBoundingClientRect().top ?? 0;
+			window.scrollTo({ top: window.scrollY + top - 80, behavior: "smooth" });
+			setShouldScroll(false);
+		}
+	}, [isFetching, shouldScroll]);
+
 	const handleSearch = () => {
+		setPage(1);
 		setSearchKeyword(keyword);
 		router.push("?page=1", { scroll: false });
 	};
@@ -59,7 +69,7 @@ export default function PostContainer() {
 	return (
 		<div>
 			{/* 검색 + 정렬 */}
-			<div className="flex items-center justify-between pb-4">
+			<div ref={containerRef} className="flex items-center justify-between pb-4">
 				<SearchInput
 					value={keyword}
 					onChange={(e) => setKeyword(e.target.value)}
@@ -67,6 +77,7 @@ export default function PostContainer() {
 						if (e.key === "Enter") handleSearch();
 					}}
 					onSearchClick={handleSearch}
+					onClear={() => setKeyword("")}
 					placeholder="궁금한 내용을 검색해보세요."
 				/>
 				<FilterDropdown
@@ -77,9 +88,7 @@ export default function PostContainer() {
 			</div>
 
 			{/* 게시글 목록 */}
-			<div
-				ref={containerRef}
-				className="relative flex flex-col gap-12 rounded-3xl bg-white px-8 py-8">
+			<div className="relative flex flex-col gap-12 rounded-3xl bg-white px-8 py-8">
 				{isFetching && (
 					<div className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-white/60">
 						<LoaderDots size="lg" />
@@ -117,8 +126,8 @@ export default function PostContainer() {
 					currentPage={page}
 					totalPages={totalPages}
 					handlePageChange={(newPage) => {
-						setPage(newPage); // router.push 제거
-						containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+						setPage(newPage);
+						setShouldScroll(true);
 					}}
 				/>
 			</div>

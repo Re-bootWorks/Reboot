@@ -39,3 +39,5 @@ export { default as IcThumbOutline } from "./IcThumbOutline";
 export { default as IcUnderline } from "./IcUnderline";
 export { default as IcVisibilityOffOutline } from "./IcVisibilityOffOutline";
 export { default as IcVisibilityOnOutline } from "./IcVisibilityOnOutline";
+export { default as IcChevronUp } from "./IcChevronUp";
+export { default as IcLightning } from "./IcLightning";

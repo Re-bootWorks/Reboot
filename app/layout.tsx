@@ -3,10 +3,14 @@ import "../styles/globals.css";
 import localFont from "next/font/local";
 import Header from "@/components/layout/Header";
 import QueryProvider from "@/providers/query-provider";
-import { MemberProvider } from "@/providers/member-provider";
 import CategoryInitializer from "@/providers/category-provider";
 import { initMeetingTypes } from "@/apis/meetingTypes";
 import { Metadata } from "next";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { getMeServer } from "@/features/auth/queries.server";
+import { cookies } from "next/headers";
+import { getQueryClient } from "@/libs/getQueryClient";
+import Script from "next/script";
 
 const pretendard = localFont({
 	src: "../public/assets/fonts/PretendardVariable.woff2",
@@ -90,18 +94,31 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const categories = await initMeetingTypes();
+	const queryClient = getQueryClient();
+	const cookieStore = await cookies();
+	const accessToken = cookieStore.get("accessToken")?.value;
+
+	if (accessToken) {
+		await queryClient
+			.prefetchQuery({
+				queryKey: ["me"],
+				queryFn: getMeServer,
+			})
+			.catch(() => {});
+	}
 
 	return (
 		<html lang="ko">
 			<body className={pretendard.className}>
+				<Script src="https://accounts.google.com/gsi/client" />
 				<CategoryInitializer data={categories} />
 				<QueryProvider>
-					<ToastProvider>
-						<MemberProvider>
+					<HydrationBoundary state={dehydrate(queryClient)}>
+						<ToastProvider>
 							<Header />
 							{children}
-						</MemberProvider>
-					</ToastProvider>
+						</ToastProvider>
+					</HydrationBoundary>
 				</QueryProvider>
 			</body>
 		</html>

@@ -2,17 +2,17 @@ import { Suspense } from "react";
 import PageIntro from "@/components/ui/PageIntro";
 import ListControls from "@/features/reviews/components/ListControls";
 import RatingSummary from "@/features/reviews/components/RatingSummary";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { ReviewsListRequest } from "@/features/reviews/types";
 import {
 	prefetchReviewsStatistics,
 	prefetchReviews,
 	prefetchReviewsCategoriesStatistics,
 } from "@/features/reviews/queries/prefetchQueries";
-import { ErrorBoundary } from "react-error-boundary";
 import RatingSummarySkeleton from "@/features/reviews/components/RatingSummary/RatingSummarySkeleton";
 import ReviewsSection from "@/features/reviews/components/ReviewsCard/ReviewsSectionWrapper/ReviewsSection";
-import ErrorFallback from "@/features/reviews/components/ErrorBoundary";
+import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
+import { getQueryClient } from "@/libs/getQueryClient";
 
 type Props = {
 	searchParams: Promise<ReviewsListRequest>;
@@ -21,7 +21,7 @@ type Props = {
 export default async function ReviewsPage({ searchParams }: Props) {
 	const params = await searchParams;
 
-	const queryClient = new QueryClient();
+	const queryClient = getQueryClient();
 
 	const normalizedParams: ReviewsListRequest = {
 		type: params.type,
@@ -47,19 +47,19 @@ export default async function ReviewsPage({ searchParams }: Props) {
 
 			<ListControls />
 
-			<ErrorBoundary FallbackComponent={ErrorFallback}>
+			<QueryErrorBoundary prefix="평점 요약을 ">
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<Suspense fallback={<RatingSummarySkeleton />}>
 						<RatingSummary />
 					</Suspense>
 				</HydrationBoundary>
-			</ErrorBoundary>
+			</QueryErrorBoundary>
 
-			<ErrorBoundary FallbackComponent={ErrorFallback}>
+			<QueryErrorBoundary prefix="리뷰를 ">
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<ReviewsSection />
 				</HydrationBoundary>
-			</ErrorBoundary>
+			</QueryErrorBoundary>
 		</>
 	);
 }

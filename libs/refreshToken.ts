@@ -27,7 +27,7 @@ export async function refreshToken(): Promise<string | null> {
 		return null;
 	}
 
-	let data: { accessToken: string; refreshToken: string };
+	let data: { accessToken: string; refreshToken: string | null };
 	try {
 		data = await response.json();
 	} catch {
@@ -36,16 +36,20 @@ export async function refreshToken(): Promise<string | null> {
 
 	const { accessToken: newAccessToken, refreshToken: newRefreshToken } = data;
 
-	if (!newAccessToken || !newRefreshToken) return null;
+	if (!newAccessToken) return null;
 
 	cookieStore.set("accessToken", newAccessToken, {
 		...COOKIE_OPTIONS,
 		maxAge: ACCESS_TOKEN_MAX_AGE,
 	});
-	cookieStore.set("refreshToken", newRefreshToken, {
-		...COOKIE_OPTIONS,
-		maxAge: REFRESH_TOKEN_MAX_AGE,
-	});
+
+	// refreshToken이 null로 오면 → 기존 토큰 유지 else{}
+	if (newRefreshToken) {
+		cookieStore.set("refreshToken", newRefreshToken, {
+			...COOKIE_OPTIONS,
+			maxAge: REFRESH_TOKEN_MAX_AGE,
+		});
+	}
 
 	return newAccessToken;
 }

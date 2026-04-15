@@ -10,10 +10,11 @@ import {
 	uploadProfileImage,
 } from "./apis";
 import { useToast } from "@/providers/toast-provider";
-import { useUserStore } from "@/store/user.store";
 import { mypageQueryKeys } from "./queries";
 import { meetupDetailQueryKeys } from "../meetupDetail/queries";
 import { headerQueryKeys } from "../header/queries";
+import { meetupQueryKeys } from "../meetup/queries";
+import { reviewsQueryKeys } from "../reviews/queries/queryKeys";
 
 interface UsePatchUsersMeOptions {
 	onSuccessBeforeSync?: () => void;
@@ -42,15 +43,13 @@ export function useUploadProfileImage() {
 
 export function usePatchUsersMe(options?: UsePatchUsersMeOptions) {
 	const queryClient = useQueryClient();
-	const setUser = useUserStore((state) => state.setUser);
 	const { handleShowToast } = useToast();
 
 	return useMutation({
 		mutationFn: patchUsersMe,
 
-		onSuccess: (updatedUser) => {
+		onSuccess: () => {
 			options?.onSuccessBeforeSync?.();
-			setUser(updatedUser);
 			handleShowToast({
 				message: "프로필이 수정되었습니다.",
 				status: "success",
@@ -83,12 +82,11 @@ export function usePatchMeetingsStatus() {
 				status: "success",
 			});
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
 			queryClient.invalidateQueries({
 				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
 			});
-			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
+			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 		},
 
 		onError: (_error, variables) => {
@@ -115,12 +113,11 @@ export function useDeleteMeetings() {
 				status: "success",
 			});
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
 			queryClient.invalidateQueries({
 				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
 			});
-			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
+			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 		},
 
 		onError: () => {
@@ -146,15 +143,14 @@ export function useDeleteMeetingsJoin() {
 				status: "success",
 			});
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
 			queryClient.invalidateQueries({
 				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
 			});
 			queryClient.invalidateQueries({
 				queryKey: meetupDetailQueryKeys.participants(variables.meetingId),
 			});
-			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
+			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 		},
 
 		onError: () => {
@@ -179,9 +175,9 @@ export function usePostMeetingsReviews() {
 				message: `리뷰가 작성 되었습니다.`,
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.reviews });
-			queryClient.invalidateQueries({ queryKey: ["reviews"] });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.review.all });
+			queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.reviews.all });
 		},
 
 		onError: () => {
@@ -206,9 +202,9 @@ export function usePatchReviews() {
 				message: `리뷰가 수정 되었습니다.`,
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.reviews });
-			queryClient.invalidateQueries({ queryKey: ["reviews"] });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.review.all });
+			queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.reviews.all });
 		},
 
 		onError: () => {
@@ -233,9 +229,9 @@ export function useDeleteReviews() {
 				message: `리뷰가 삭제 되었습니다.`,
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.reviews });
-			queryClient.invalidateQueries({ queryKey: ["reviews"] });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.review.all });
+			queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.reviews.all });
 		},
 
 		onError: () => {

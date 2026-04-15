@@ -5,6 +5,7 @@ import { meetupQueryKeys } from "../queries";
 import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 import { mypageQueryKeys } from "@/features/mypage/queries";
 import { headerQueryKeys } from "@/features/header/queries";
+import { queryKeys } from "@/features/favorites/queries/queryKeys";
 
 interface ToggleItem {
 	id: number;
@@ -49,13 +50,14 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 	function onSuccess(message: string) {
 		handleShowToast({ message, status: "success" });
 		// 목록 쿼리를 포함한 연관 쿼리 무효화
-		queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list }); // 모임 목록
+		queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list, refetchType: "none" }); // 모임 목록 stale 처리(refetch X)
 		queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) }); // 해당 모임 상세
 		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups }); // 참여한 모임 목록
 		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created }); // 만든 모임 목록(주최자)
 
 		if (field === "isFavorited") {
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites }); // 찜 개수
+			queryClient.invalidateQueries({ queryKey: queryKeys.favorites.all }); // 찜한 목록
 		}
 		if (field === "isJoined") {
 			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) }); // 해당 모임 참여자

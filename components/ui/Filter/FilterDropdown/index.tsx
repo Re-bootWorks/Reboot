@@ -21,11 +21,9 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 
 	return (
 		<Menu as="div" className="relative inline-block">
-			<MenuButton as="div">
-				<FilterTrigger isActive={!!value}>
-					<IcFilter className="h-4 w-4" />
-					<span>{selectedItem?.label ?? value}</span>
-				</FilterTrigger>
+			<MenuButton as={FilterTrigger} isActive={!!value}>
+				<IcFilter className="h-4 w-4" />
+				<span>{selectedItem?.label ?? value}</span>
 			</MenuButton>
 
 			<MenuItems
@@ -37,6 +35,7 @@ export function FilterDropdown({ value, items, onChange }: FilterDropdownProps) 
 					"p-1",
 					"flex flex-col gap-1",
 					"outline-none",
+					"z-10",
 				)}>
 				{items.map((item) => {
 					const selected = value === item.value;

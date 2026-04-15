@@ -1,34 +1,45 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Button from "@/components/ui/Buttons/Button";
-import InputTextarea from "@/components/ui/Inputs/InputTextarea";
+import Loading from "@/components/ui/Loading";
+import { useCreateComment } from "@/features/connect/mutations";
+import { useGetPostDetail } from "@/features/connect/queries";
 import CommentCard from "@/features/connect/components/CommentCard";
 import { mapCommentToCard } from "@/features/connect/comment/mappers";
-import { useState, useEffect, useRef } from "react";
-import { useUserStore } from "@/store/user.store";
-import { useToast } from "@/providers/toast-provider";
-import { useCreateComment } from "@/features/connect/mutations";
-import Loading from "@/components/ui/Loading";
-import { useGetPostDetail } from "@/features/connect/queries";
 import type { ConnectPost } from "@/features/connect/post/types";
+import { useUser } from "@/hooks/useUser";
+import { useToast } from "@/providers/toast-provider";
+import CommentInput from "@/features/connect/components/CommentCard/CommentInput";
+import IcMessageOutline from "@/components/ui/icons/IcMessageOutline";
+import { AnimatePresence, motion } from "motion/react";
+import { commentVariants } from "@/features/connect/animations";
 
 interface CommentSectionProps {
 	postId: number;
 }
 
 export default function CommentSection({ postId }: CommentSectionProps) {
-	const [comment, setComment] = useState("");
+	// 상태
 	const [visibleCount, setVisibleCount] = useState(3);
 	const [isFetchingMore, setIsFetchingMore] = useState(false);
-
 	const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-	const { user } = useUserStore();
-	const currentUserId = user?.id;
+	// 스토어 / 공통
+	const { user } = useUser();
 	const { handleShowToast } = useToast();
 
+	// 쿼리 / 뮤테이션
 	const { data, isLoading } = useGetPostDetail(postId);
+	const mutation = useCreateComment(postId);
+
+	// 파생 변수
+	const currentUserId = user?.id;
+	const comments = data?.comments ?? [];
+	const sortedComments = [...comments].sort(
+		(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+	);
+	const visibleComments = sortedComments.slice(0, visibleCount);
 
 	// 무한스크롤
 	useEffect(() => {
@@ -45,7 +56,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 					}, 300);
 				}
 			},
-			{ threshold: 1 },
+			{ threshold: 0 },
 		);
 
 		observer.observe(loadMoreRef.current);
@@ -53,39 +64,29 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 		return () => observer.disconnect();
 	}, [visibleCount, data]);
 
-	// 댓글 생성 mutation
-	const mutation = useCreateComment(postId, () => setComment(""));
-
-	if (isLoading) return <Loading />;
-	if (!data) return null;
-
-	const comments = data?.comments ?? [];
-
-	const sortedComments = [...comments].sort(
-		(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-	);
-
-	const visibleComments = sortedComments.slice(0, visibleCount);
-
-	const handleSubmit = () => {
-		if (!comment.trim()) return;
+	// 핸들러
+	const handleSubmit = (content: string) => {
 		if (!currentUserId) {
 			handleShowToast({ message: "로그인이 필요합니다.", status: "error" });
 			return;
 		}
-		mutation.mutate({ postId, content: comment });
+		mutation.mutate({ postId, content });
 	};
+
+	if (isLoading) return <Loading />;
+	if (!data) return null;
 
 	return (
 		<section>
 			{/* 댓글 개수 */}
-			<header className="flex h-6 w-full items-center text-base font-medium tracking-[-0.02rem] md:h-8">
+			<header className="flex h-6 w-full items-center gap-1 text-base font-medium tracking-[-0.02rem] md:h-8">
+				<IcMessageOutline color="gray-700" size={18} />
 				<span>댓글</span>
 				<span className="font-semibold text-purple-600">{comments.length}</span>
 			</header>
 
 			{/* 댓글 입력 영역 */}
-			<div className="mt-3 flex items-center md:mt-4 lg:mt-8">
+			<div className="mt-3 flex items-center border-b border-gray-200 pb-4 md:mt-4 lg:mt-8">
 				<div className="relative mr-4 h-14 w-14 shrink-0 overflow-hidden rounded-full">
 					{user?.image ? (
 						<Image src={user.image} alt="profile" fill className="object-cover" />
@@ -94,43 +95,36 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 					)}
 				</div>
 
-				<div className="flex flex-1 items-center gap-2.5 rounded-2xl bg-gray-100 px-2 py-2">
-					<InputTextarea
-						name="comment"
-						placeholder="여기에 댓글을 남겨보세요"
-						value={comment}
-						onChange={(e) => setComment(e.target.value)}
-						className="max-h-[3.25rem] min-h-12 min-w-0 flex-1 bg-gray-100"
-					/>
-					<Button
-						onClick={handleSubmit}
-						className="r-[10px] h-12 w-8 rounded-[0.75rem] px-6 py-2 text-base font-semibold">
-						등록
-					</Button>
-				</div>
+				<CommentInput onSubmit={handleSubmit} isPending={mutation.isPending} />
 			</div>
 
 			{/* 댓글 리스트 */}
-			<ul className="mt-6 flex flex-col gap-2 md:mt-8">
-				{visibleComments.map((comment) => {
-					const mapped = mapCommentToCard(comment);
-
-					return (
-						<li key={mapped.id}>
-							<CommentCard
-								{...mapped}
-								postId={postId}
-								authorId={comment.author.id}
-								currentUserId={user?.id ?? null}
-								isPending={
-									(comment as ConnectPost["comments"][number] & { isPending?: boolean }).isPending
-								}
-							/>
-						</li>
-					);
-				})}
+			<ul className="flex flex-col gap-2">
+				<AnimatePresence mode="popLayout">
+					{visibleComments.map((comment, i) => {
+						const mapped = mapCommentToCard(comment);
+						return (
+							<motion.li
+								key={mapped.id}
+								variants={commentVariants}
+								initial="hidden"
+								animate="visible"
+								exit="exit"
+								custom={i}>
+								<CommentCard
+									{...mapped}
+									postId={postId}
+									authorId={comment.author.id}
+									currentUserId={user?.id ?? null}
+									isPending={
+										(comment as ConnectPost["comments"][number] & { isPending?: boolean }).isPending
+									}
+								/>
+							</motion.li>
+						);
+					})}
+				</AnimatePresence>
 			</ul>
-
 			{/* 무한스크롤 트리거 */}
 			<div ref={loadMoreRef} className="h-10" />
 

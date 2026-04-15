@@ -3,11 +3,11 @@
 import { IcEditOutline } from "@/components/ui/icons";
 import { UserProfile } from "@/features/mypage/types";
 import useToggle from "@/hooks/useToggle";
-import { useUserStore } from "@/store/user.store";
 import Skeleton from "react-loading-skeleton";
 import { cn } from "@/utils/cn";
 import ProfileModal from "../components/ProfileModal";
 import Avatar from "@/components/ui/Avatar";
+import { useUser } from "@/hooks/useUser";
 
 interface MyProfileProps {
 	user: UserProfile;
@@ -58,10 +58,9 @@ function MyProfile({ user, handleEditClick }: MyProfileProps) {
 
 export default function MyProfileContainer() {
 	const { isOpen, open, close } = useToggle();
-	const user = useUserStore((state) => state.user);
-	const isLoading = useUserStore((state) => state.isPending);
+	const { user, isPending } = useUser();
 
-	if (isLoading) return <MyProfileSkeleton />;
+	if (isPending) return <MyProfileSkeleton />;
 	if (!user) return null;
 
 	return (

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverFetch } from "@/libs/serverFetch";
-import { nextJsonResponse } from "@/utils/api";
+import { nextJsonResponse } from "@/utils/api.server";
 
 interface RouteParams {
 	params: Promise<{ meetingId: string }>;

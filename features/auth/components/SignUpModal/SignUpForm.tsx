@@ -8,8 +8,7 @@ import Button from "@/components/ui/Buttons/Button";
 import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
-import { useSignUp } from "@/features/auth/mutations";
-import { KAKAO_LOGIN_URL, GOOGLE_LOGIN_URL } from "@/constants/auth";
+import { useSignUp, useOAuthLogin } from "@/features/auth/mutations";
 
 const signUpSchema = z
 	.object({
@@ -37,7 +36,7 @@ export function SignUpForm({ onSuccess, onAutoLoginFail }: SignUpFormProps) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] = useState(false);
 	const { mutate: signUp, isPending } = useSignUp(onSuccess, onAutoLoginFail);
-	const [isSocialPending, setIsSocialPending] = useState(false);
+	const { mutate: oAuthLogin, isPending: isOAuthPending } = useOAuthLogin(onSuccess);
 
 	const {
 		register,
@@ -52,9 +51,19 @@ export function SignUpForm({ onSuccess, onAutoLoginFail }: SignUpFormProps) {
 		signUp({ email: data.email, password: data.password, name: data.name });
 	};
 
-	function handleSocialLogin(url: string) {
-		setIsSocialPending(true);
-		window.location.href = url;
+	function handleGoogleLogin() {
+		const client = google.accounts.oauth2.initTokenClient({
+			client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+			scope: "email profile",
+			callback: async (response) => {
+				await oAuthLogin({ provider: "google", token: response.access_token });
+			},
+		});
+		client.requestAccessToken();
+	}
+
+	function handleKakaoLogin() {
+		window.location.href = "/api/auth/oauth/kakao/redirect";
 	}
 
 	return (
@@ -101,7 +110,7 @@ export function SignUpForm({ onSuccess, onAutoLoginFail }: SignUpFormProps) {
 					isDestructive={!!errors.passwordConfirm}
 				/>
 				<div className="pb-2 md:pb-4">
-					<Button type="submit" disabled={!isValid || isSocialPending} isPending={isPending}>
+					<Button type="submit" disabled={!isValid || isOAuthPending} isPending={isPending}>
 						회원가입
 					</Button>
 				</div>
@@ -113,14 +122,14 @@ export function SignUpForm({ onSuccess, onAutoLoginFail }: SignUpFormProps) {
 				<div className="flex flex-col gap-3 md:flex-row">
 					<SocialButton
 						social="Google"
-						onClick={() => handleSocialLogin(GOOGLE_LOGIN_URL)}
-						disabled={isSocialPending || isPending}>
+						onClick={handleGoogleLogin}
+						disabled={isOAuthPending || isPending}>
 						구글로 계속하기
 					</SocialButton>
 					<SocialButton
 						social="Kakao"
-						onClick={() => handleSocialLogin(KAKAO_LOGIN_URL)}
-						disabled={isSocialPending || isPending}>
+						onClick={handleKakaoLogin}
+						disabled={isOAuthPending || isPending}>
 						카카오로 계속하기
 					</SocialButton>
 				</div>

@@ -19,7 +19,7 @@ export default function Notification() {
 
 	return (
 		<Popover className="relative leading-0">
-			<PopoverButton className={POPOVER_STYLE.popoverButton}>
+			<PopoverButton className={POPOVER_STYLE.popoverButton} aria-label="알람">
 				{unreadCount > 0 ? <IcBellUnreadOutline /> : <IcBellOutline />}
 			</PopoverButton>
 

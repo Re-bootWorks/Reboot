@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverFetch } from "@/libs/serverFetch";
-import { nextJsonResponse } from "@/utils/api";
+import { nextJsonResponse } from "@/utils/api.server";
 
 // 모임 상태 변경 하기
 export async function PATCH(
