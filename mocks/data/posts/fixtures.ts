@@ -211,6 +211,8 @@ export const COMMENTS: Comment[] = [
 		createdAt: "2026-03-01T12:00:00.000Z",
 		updatedAt: "2026-03-01T12:00:00.000Z",
 		author: { id: 2, name: "김철수", image: undefined },
+		likeCount: 0,
+		isLiked: false,
 	},
 	{
 		id: 2,
@@ -225,6 +227,8 @@ export const COMMENTS: Comment[] = [
 			name: "이영희",
 			image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop",
 		},
+		likeCount: 0,
+		isLiked: false,
 	},
 	{
 		id: 3,
@@ -239,5 +243,7 @@ export const COMMENTS: Comment[] = [
 			name: "홍길동",
 			image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=200&h=200&fit=crop",
 		},
+		likeCount: 0,
+		isLiked: false,
 	},
 ];

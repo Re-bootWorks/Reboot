@@ -17,6 +17,8 @@ export interface Comment {
 	updatedAt: string;
 
 	author: Author;
+	likeCount: number;
+	isLiked: boolean;
 }
 // UI 타입
 export interface CommentCardItem {
@@ -25,6 +27,8 @@ export interface CommentCardItem {
 	authorName: string;
 	authorImage?: string;
 	date: number;
+	likeCount: number;
+	isLiked: boolean;
 }
 
 // 컴포넌트 Props

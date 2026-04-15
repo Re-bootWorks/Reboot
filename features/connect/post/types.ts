@@ -25,6 +25,8 @@ export type PostComment = {
 		name: string;
 		image?: string;
 	};
+	likeCount: number;
+	isLiked: boolean;
 };
 
 // Connect 상세용 (Post 확장)
