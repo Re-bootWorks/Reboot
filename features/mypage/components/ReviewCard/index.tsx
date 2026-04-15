@@ -63,8 +63,8 @@ export default function ReviewCard({
 							actionsIconClassName="md:size-10"
 							onOpenChange={onDropdownOpenChange}
 							items={[
-								{ label: "수정하기", onClick: handleEdit },
-								{ label: "삭제하기", onClick: handleDelete },
+								{ label: "수정하기", onClick: handleEdit, className: "h-9" },
+								{ label: "삭제하기", onClick: handleDelete, className: "h-9" },
 							]}
 						/>
 					</div>

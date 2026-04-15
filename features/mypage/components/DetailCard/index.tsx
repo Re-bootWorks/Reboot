@@ -42,6 +42,7 @@ export default function DetailCard({
 		label: action.label,
 		onClick: action.handleCardButtonClick,
 		danger: action.isDestructive,
+		className: "h-9",
 	}));
 
 	return (
