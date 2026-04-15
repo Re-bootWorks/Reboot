@@ -8,6 +8,12 @@ import { serverFetch } from "@/libs/serverFetch";
 import IntroSection from "@/features/connect/components/IntroSection";
 import { connectQueryKeys } from "@/features/connect/queries";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "커넥트",
+};
+
 export default async function ConnectPage({
 	searchParams,
 }: {
