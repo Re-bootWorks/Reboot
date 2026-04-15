@@ -42,3 +42,10 @@ Object.defineProperty(globalThis, "IntersectionObserver", {
 	configurable: true,
 	value: MockIntersectionObserver,
 });
+
+// jsdom이 ResizeObserver를 지원하지 않아, headless ui 라이브러리에서 에러 발생으로, 해당 코드 추가
+global.ResizeObserver = class ResizeObserver {
+	observe() {}
+	unobserve() {}
+	disconnect() {}
+};

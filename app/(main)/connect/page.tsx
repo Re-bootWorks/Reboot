@@ -1,14 +1,13 @@
 import Container from "@/components/layout/Container";
 import PostContainer from "@/features/connect/containers/PostContainer";
 import HotPostSection from "@/features/connect/components/HotPostSection";
-import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { getQueryClient } from "@/libs/getQueryClient";
 import { Suspense } from "react";
 import { serverFetch } from "@/libs/serverFetch";
 import IntroSection from "@/features/connect/components/IntroSection";
 import { connectQueryKeys } from "@/features/connect/queries";
-import { ErrorBoundary } from "react-error-boundary";
-import ConnectErrorFallback from "@/features/connect/components/ErrorBoundary";
-
+import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 export default async function ConnectPage({
 	searchParams,
 }: {
@@ -17,7 +16,7 @@ export default async function ConnectPage({
 	const { page: pageParam } = await searchParams;
 	const page = Number(pageParam ?? 1);
 
-	const queryClient = new QueryClient();
+	const queryClient = getQueryClient();
 	const sortBy = "createdAt";
 	const LIMIT = 5;
 
@@ -61,17 +60,17 @@ export default async function ConnectPage({
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<Container className="min-w-[380px]">
 				<IntroSection />
-				<ErrorBoundary FallbackComponent={ConnectErrorFallback}>
+				<QueryErrorBoundary prefix="HOT 게시글을">
 					<Suspense fallback={null}>
 						<HotPostSection />
 					</Suspense>
-				</ErrorBoundary>
+				</QueryErrorBoundary>
 				<div className="mt-[6.125rem] pb-[8.75rem]">
-					<ErrorBoundary FallbackComponent={ConnectErrorFallback}>
+					<QueryErrorBoundary prefix="게시글을">
 						<Suspense fallback={null}>
 							<PostContainer />
 						</Suspense>
-					</ErrorBoundary>
+					</QueryErrorBoundary>
 				</div>
 			</Container>
 		</HydrationBoundary>

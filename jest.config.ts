@@ -9,6 +9,9 @@ const config: Config = {
 	coverageProvider: "v8",
 	testEnvironment: "jest-fixed-jsdom",
 	setupFilesAfterEnv: ["./jest.setup.ts"],
+	moduleNameMapper: {
+		"^@/(.*)$": "<rootDir>/$1",
+	},
 };
 const jestConfig = createJestConfig(config);
 

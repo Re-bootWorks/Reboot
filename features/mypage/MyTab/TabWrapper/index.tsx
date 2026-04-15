@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import PageTabs from "@/components/ui/PageTabs";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import JoinedMeetingListWrapper from "../../JoinedMeetingList";
@@ -49,6 +49,7 @@ export default function TabWrapper() {
 	const activeTab = isTabId(tabQuery) ? tabQuery : TAB_ITEMS[0].id;
 	const isLg = useMediaQuery(MEDIA_QUERY_LG);
 	const isMd = useMediaQuery(MEDIA_QUERY_MD);
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const tabRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
 	const threshold = isLg ? THRESHOLD.lg : isMd ? THRESHOLD.md : THRESHOLD.sm;
@@ -66,14 +67,16 @@ export default function TabWrapper() {
 	}, [tabQuery, set]);
 
 	const tabContents: Record<TabId, React.ReactNode> = {
-		JoinedMeetingList: <JoinedMeetingListWrapper />,
-		CreatedMeetingList: <CreatedMeetingListWrapper />,
+		JoinedMeetingList: <JoinedMeetingListWrapper onDropdownOpenChange={setIsDropdownOpen} />,
+		CreatedMeetingList: <CreatedMeetingListWrapper onDropdownOpenChange={setIsDropdownOpen} />,
 		AvailableReviewList: <AvailableReviewListWrapper />,
-		WrittenReviewList: <WrittenReviewListWrapper />,
+		WrittenReviewList: <WrittenReviewListWrapper onDropdownOpenChange={setIsDropdownOpen} />,
 	};
 
 	// activeTab 변경시 스크롤 초기화
 	useEffect(() => {
+		setIsDropdownOpen(false);
+
 		if (isLg) {
 			contentRef.current?.scrollTo({ top: 0, behavior: "auto" });
 			return;
@@ -111,7 +114,12 @@ export default function TabWrapper() {
 				</div>
 			</div>
 
-			<div ref={contentRef} className="scrollbar pt-6 lg:max-h-[calc(100vh-214px)]">
+			<div
+				ref={contentRef}
+				className={cn(
+					"scrollbar pt-6 lg:max-h-[calc(100vh-214px)] lg:overflow-y-auto",
+					isLg && isDropdownOpen && "lg:overflow-hidden!",
+				)}>
 				{tabContents[activeTab]}
 			</div>
 			<ScrollTopButton

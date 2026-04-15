@@ -30,9 +30,9 @@ export function useReviewsInfiniteQuery(params: ReviewsListRequest) {
 
 		const seen = new Set<ReviewCardProps["id"]>();
 
-		return mappedData.filter((item) => {
-			if (seen.has(item.id)) return false;
-			seen.add(item.id);
+		return mappedData.filter((review) => {
+			if (seen.has(review.id)) return false;
+			seen.add(review.id);
 			return true;
 		});
 	}, [response.data]);

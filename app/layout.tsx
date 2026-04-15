@@ -11,6 +11,7 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { getMeServer } from "@/features/auth/queries.server";
 import { cookies } from "next/headers";
 import { getQueryClient } from "@/libs/getQueryClient";
+import Script from "next/script";
 
 const pretendard = localFont({
 	src: "../public/assets/fonts/PretendardVariable.woff2",
@@ -110,6 +111,7 @@ export default async function RootLayout({
 	return (
 		<html lang="ko">
 			<body className={pretendard.className}>
+				<Script src="https://accounts.google.com/gsi/client" />
 				<CategoryInitializer data={categories} />
 				<QueryProvider>
 					<HydrationBoundary state={dehydrate(queryClient)}>
