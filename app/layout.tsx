@@ -3,7 +3,6 @@ import "../styles/globals.css";
 import localFont from "next/font/local";
 import Header from "@/components/layout/Header";
 import QueryProvider from "@/providers/query-provider";
-import { MemberProvider } from "@/providers/member-provider";
 import CategoryInitializer from "@/providers/category-provider";
 import { initMeetingTypes } from "@/apis/meetingTypes";
 import { Metadata } from "next";
@@ -116,10 +115,8 @@ export default async function RootLayout({
 				<QueryProvider>
 					<HydrationBoundary state={dehydrate(queryClient)}>
 						<ToastProvider>
-							<MemberProvider>
-								<Header />
-								{children}
-							</MemberProvider>
+							<Header />
+							{children}
 						</ToastProvider>
 					</HydrationBoundary>
 				</QueryProvider>
