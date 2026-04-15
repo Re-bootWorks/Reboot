@@ -97,7 +97,7 @@ function EditForm({ onClose, isOpen, onSubmit, isPending, participantCount }: Ed
 
 	return (
 		<Modal
-			className="w-full p-14 md:min-h-4/5 md:w-136 md:p-12"
+			className="max-h-4/5 w-full p-6 md:min-h-4/5 md:w-136 md:p-8"
 			isOpen={isOpen}
 			onClose={onClose}
 			title="모임 수정하기"
@@ -112,7 +112,7 @@ function EditForm({ onClose, isOpen, onSubmit, isPending, participantCount }: Ed
 				</div>
 			}>
 			{/* 탭 */}
-			<div className="mb-8 [&_li]:sm:grow">
+			<div className="mb-4 [&_li]:sm:grow">
 				<PageTabs defaultId={TAB_IDS.BASIC} onChange={({ id }) => setActiveTab(id as TabId)}>
 					<PageTabs.Item id={TAB_IDS.BASIC}>기본 정보</PageTabs.Item>
 					<PageTabs.Item id={TAB_IDS.SCHEDULE}>일정 및 인원</PageTabs.Item>
