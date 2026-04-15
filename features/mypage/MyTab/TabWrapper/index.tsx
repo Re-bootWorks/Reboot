@@ -82,6 +82,21 @@ export default function TabWrapper() {
 		WrittenReviewList: <WrittenReviewListWrapper onDropdownOpenChange={setIsDropdownOpen} />,
 	};
 
+	function scrollToTabContentTop() {
+		if (isLg) {
+			contentRef.current?.scrollTo({ top: 0, behavior: "auto" });
+			return;
+		}
+
+		const stickyOffset = isMd ? TAB_STICKY_OFFSET.md : TAB_STICKY_OFFSET.sm;
+		const anchorTop =
+			(tabAnchorRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY - stickyOffset;
+
+		window.scrollTo({
+			top: Math.max(anchorTop, 0),
+			behavior: "smooth",
+		});
+	}
 	return (
 		<div className="min-w-0 grow">
 			<div ref={tabAnchorRef} />
@@ -93,25 +108,8 @@ export default function TabWrapper() {
 						defaultId={activeTab}
 						onChange={({ id }) => {
 							const nextTab = id as TabId;
-
 							setIsDropdownOpen(false);
-
-							if (isLg) {
-								contentRef.current?.scrollTo({ top: 0, behavior: "auto" });
-							} else {
-								const stickyOffset = isMd ? TAB_STICKY_OFFSET.md : TAB_STICKY_OFFSET.sm;
-
-								// 모바일/태블릿에서는 클릭 시점의 sticky 상태를 기준으로 이동 여부를 먼저 판단한다.
-								const anchorTop =
-									(tabAnchorRef.current?.getBoundingClientRect().top ?? 0) +
-									window.scrollY -
-									stickyOffset;
-								window.scrollTo({
-									top: Math.max(anchorTop, 0),
-									behavior: "smooth",
-								});
-							}
-
+							scrollToTabContentTop();
 							setActiveTab(nextTab);
 							set({ tab: id });
 						}}>
