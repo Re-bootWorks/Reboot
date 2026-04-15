@@ -30,7 +30,7 @@ export default function Banner({ className }: { className?: string }) {
 			</div>
 			<div
 				className={cn(
-					"absolute top-[10px] right-[-50px] h-[263px] w-[435px]",
+					"absolute top-[10px] right-[-90px] h-[263px] w-[435px]",
 					"md:top-[-25px] md:right-[-50px] md:h-[376px] md:w-[536px]",
 					"lg:top-[-25px] lg:right-[80px] lg:h-[376px] lg:w-[536px]",
 				)}>
