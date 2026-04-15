@@ -21,7 +21,7 @@ export default function MeetupIntroSection({ meetupId }: { meetupId: number }) {
 				initial="hidden"
 				whileInView="visible"
 				viewport={{ once: true, amount: 0.1 }}
-				className="relative aspect-343/241 w-full overflow-hidden rounded-2xl md:aspect-auto md:w-1/2 md:self-stretch lg:rounded-4xl">
+				className="relative aspect-343/241 w-full overflow-hidden rounded-[20px] md:aspect-auto md:w-1/2 md:self-stretch lg:rounded-4xl">
 				<Image alt={meeting.name} src={meeting.image} fill className="object-cover" priority />
 			</motion.div>
 			<motion.div

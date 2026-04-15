@@ -19,12 +19,12 @@ export default function MeetupRelatedSection({ meetupId }: { meetupId: number })
 			initial="hidden"
 			whileInView="visible"
 			viewport={{ once: true, amount: 0.1 }}
-			className="mt-17 flex h-fit w-full flex-col gap-3 md:mt-18 md:gap-4 lg:mt-22">
+			className="flex h-fit w-full flex-col gap-3 md:gap-4">
 			<div className="pl-1.5 lg:pl-2.5">
 				<h3 className="text-base font-semibold md:text-xl lg:text-2xl">이런 모임은 어떠세요?</h3>
 			</div>
 			{relatedMeetings.length === 0 ? (
-				<Empty section className="w-full">
+				<Empty section className="w-full rounded-[20px] lg:rounded-4xl">
 					추천 모임이 없어요.
 				</Empty>
 			) : (
