@@ -1,6 +1,6 @@
 import { serverFetch } from "@/libs/serverFetch";
-import { nextJsonResponse } from "@/utils/api";
 import { NextRequest, NextResponse } from "next/server";
+import { nextJsonResponse } from "@/utils/api.server";
 
 // 알림 삭제
 export async function DELETE(

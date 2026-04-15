@@ -7,8 +7,14 @@ const createJestConfig = nextJest({
 
 const config: Config = {
 	coverageProvider: "v8",
-	testEnvironment: "jsdom",
+	testEnvironment: "jest-fixed-jsdom",
 	setupFilesAfterEnv: ["./jest.setup.ts"],
 };
+const jestConfig = createJestConfig(config);
 
-export default createJestConfig(config);
+export default async () => {
+	const resolvedConfig = await jestConfig();
+	// https://github.com/mswjs/msw/issues/2599
+	resolvedConfig.transformIgnorePatterns = ["/node_modules/.pnpm/(?!(msw|until-async)@)"];
+	return resolvedConfig;
+};

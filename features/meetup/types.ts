@@ -188,8 +188,11 @@ export interface Host {
 
 /** 모임 목록 조회 응답 */
 export interface MeetupListResponse {
-	data: MeetupItem[] | [];
-	nextCursor: string;
+	data: MeetupItem[];
+	nextCursor: string | null;
+	totalCount: number;
+	currentOffset: number;
+	limit: number;
 	hasMore: boolean;
 }
 
