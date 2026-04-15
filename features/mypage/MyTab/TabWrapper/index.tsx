@@ -46,10 +46,11 @@ function isTabId(value: string | null): value is TabId {
 export default function TabWrapper() {
 	const { get, set } = useQueryParams();
 	const tabQuery = get("tab");
-	const activeTab = isTabId(tabQuery) ? tabQuery : TAB_ITEMS[0].id;
 	const isLg = useMediaQuery(MEDIA_QUERY_LG);
 	const isMd = useMediaQuery(MEDIA_QUERY_MD);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const [activeTab, setActiveTab] = useState<TabId>(isTabId(tabQuery) ? tabQuery : TAB_ITEMS[0].id);
+	const tabAnchorRef = useRef<HTMLDivElement>(null);
 	const tabRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
 	const threshold = isLg ? THRESHOLD.lg : isMd ? THRESHOLD.md : THRESHOLD.sm;
@@ -66,6 +67,14 @@ export default function TabWrapper() {
 		}
 	}, [tabQuery, set]);
 
+	// URL query 변경 시 local activeTab 동기화
+	useEffect(() => {
+		const nextTab = isTabId(tabQuery) ? tabQuery : TAB_ITEMS[0].id;
+		if (nextTab !== activeTab) {
+			setActiveTab(nextTab);
+		}
+	}, [tabQuery, activeTab]);
+
 	const tabContents: Record<TabId, React.ReactNode> = {
 		JoinedMeetingList: <JoinedMeetingListWrapper onDropdownOpenChange={setIsDropdownOpen} />,
 		CreatedMeetingList: <CreatedMeetingListWrapper onDropdownOpenChange={setIsDropdownOpen} />,
@@ -73,56 +82,37 @@ export default function TabWrapper() {
 		WrittenReviewList: <WrittenReviewListWrapper onDropdownOpenChange={setIsDropdownOpen} />,
 	};
 
-	// activeTab 변경시 스크롤 초기화
-	useEffect(() => {
-		// @TODO preview 확인 후 삭제
-		console.log("마이페이지 스크롤 이벤트 시작", {
-			activeTab,
-			isLg,
-			isMd,
-			scrollY: window.scrollY,
-			tabTop: tabRef.current?.getBoundingClientRect().top,
-			threshold,
-		});
-		setIsDropdownOpen(false);
-
-		if (isLg) {
-			contentRef.current?.scrollTo({ top: 0, behavior: "auto" });
-			return;
-		}
-		const stickyOffset = isMd ? TAB_STICKY_OFFSET.md : TAB_STICKY_OFFSET.sm;
-		const tabTop = tabRef.current?.getBoundingClientRect().top;
-
-		// 탭 영역이 sticky 기준보다 위로 올라가 있거나 정확히 붙은 상태일때만 이동
-		if (tabTop !== undefined && tabTop <= stickyOffset) {
-			const nextTop = threshold - 20;
-			window.scrollTo({ top: Math.max(nextTop, 0), behavior: "smooth" });
-		}
-	}, [activeTab]);
-
-	// @TODO preview 확인 후 삭제
-	useEffect(() => {
-		console.log("마이페이지 탭 변경", {
-			tabQuery,
-			activeTab,
-		});
-	}, [tabQuery, activeTab]);
 	return (
 		<div className="min-w-0 grow">
+			<div ref={tabAnchorRef} />
 			<div className={STYLE.tabWrapper} ref={tabRef}>
 				<div className={cn("relative z-1")}>
 					<div className={isVisible ? STYLE.scroll : ""} />
 					<PageTabs
+						key={activeTab}
 						defaultId={activeTab}
 						onChange={({ id }) => {
-							// @TODO preview 확인 후 삭제
-							console.log("마이페이지 탭 변경", {
-								id,
-								beforeTabQuery: tabQuery,
-								isLg,
-								isMd,
-								scrollY: window.scrollY,
-							});
+							const nextTab = id as TabId;
+
+							setIsDropdownOpen(false);
+
+							if (isLg) {
+								contentRef.current?.scrollTo({ top: 0, behavior: "auto" });
+							} else {
+								const stickyOffset = isMd ? TAB_STICKY_OFFSET.md : TAB_STICKY_OFFSET.sm;
+
+								// 모바일/태블릿에서는 클릭 시점의 sticky 상태를 기준으로 이동 여부를 먼저 판단한다.
+								const anchorTop =
+									(tabAnchorRef.current?.getBoundingClientRect().top ?? 0) +
+									window.scrollY -
+									stickyOffset;
+								window.scrollTo({
+									top: Math.max(anchorTop, 0),
+									behavior: "smooth",
+								});
+							}
+
+							setActiveTab(nextTab);
 							set({ tab: id });
 						}}>
 						{TAB_ITEMS.map((tabItem) => (
