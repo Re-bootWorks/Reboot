@@ -111,7 +111,7 @@ export default function DetailCard({
 					<div
 						className={cn(
 							STYLE.btnWrapper,
-							actionDisplay === "dropdown" ? "absolute top-6 right-4" : "",
+							actionDisplay === "dropdown" ? "absolute top-6 right-4 md:static" : "",
 						)}>
 						{actionDisplay === "dropdown"
 							? dropdownItems &&
