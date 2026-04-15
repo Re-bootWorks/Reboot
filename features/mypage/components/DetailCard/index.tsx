@@ -8,35 +8,53 @@ import { cn } from "@/utils/cn";
 import { uiFormatDate, uiFormatTime } from "@/utils/date";
 import { DetailCardProps } from "@/features/mypage/types";
 import Link from "next/link";
+import ActionDropdown from "@/components/ui/Dropdowns/ActionDropdown";
 
 const STYLE = {
 	itemBgBox: "relative overflow-hidden rounded-3xl bg-white md:flex md:gap-6 md:rounded-4xl md:p-6",
-	itemImage: "h-39 w-full object-cover md:size-47 md:rounded-3xl",
+	itemImageLink: "relative block h-39 shrink-0 overflow-hidden md:size-46 md:rounded-3xl md:pt-6",
+	itemImage: "w-full object-cover transition-transform duration-450 ease-out",
 	wishBtn: "absolute top-4 right-4 md:top-6 md:right-6",
-	itemWrapper: "flex min-w-0 grow flex-col justify-between gap-3 p-4 md:px-0 md:py-2.5",
+	itemWrapper:
+		"relative flex min-w-0 grow flex-col justify-between gap-3 py-6 px-4 md:px-0 md:py-2.5",
 	itemContent:
-		"flex flex-col gap-5.5  md:justify-between min-[870px]:flex-row min-[870px]:items-center",
+		"flex flex-col gap-5.5 min-[480px]:justify-between min-[480px]:flex-row min-[480px]:items-center",
 	personInfo: "flex items-center gap-2 text-sm",
 	itemInfoList: "mt-1.5 flex flex-wrap gap-2.5 md:mt-2.5",
 	itemInfoLabel: "pr-1.5 text-gray-500",
 	itemInfo:
 		"text-xs text-gray-600 after:pl-2.5 after:text-gray-300 after:content-['|'] last:after:hidden sm:text-sm",
 	btnWrapper: "flex justify-end gap-4 ",
-	actionBtn: `h-12 w-fit min-w-[calc(50%-0.5rem)] rounded-xl min-[870px]:min-w-auto lg:min-w-39`,
+	actionBtn: `h-12 w-fit rounded-xl md:min-w-auto lg:min-w-39`,
 };
 
 const EMPTY_THUMBNAIL_IMAGE = "/assets/img/img_empty_purple.svg";
 
-export default function DetailCard({ item, badges, actions, wishAction }: DetailCardProps) {
+export default function DetailCard({
+	item,
+	badges,
+	actions,
+	actionDisplay = "buttons",
+	onDropdownOpenChange,
+	wishAction,
+}: DetailCardProps) {
+	const dropdownItems = actions?.map((action) => ({
+		label: action.label,
+		onClick: action.handleCardButtonClick,
+		danger: action.isDestructive,
+	}));
+
 	return (
 		<li className={STYLE.itemBgBox}>
-			<Link href={`/meetup/${item.id}`} className="shrink-0">
+			<Link href={`/meetup/${item.id}`} className={STYLE.itemImageLink}>
 				<Image
 					src={item.image ?? EMPTY_THUMBNAIL_IMAGE}
-					alt="모임 대표 이미지"
-					width={343}
-					height={343}
-					className={cn(STYLE.itemImage, !!item.image ? "" : "bg-purple-50 object-scale-down")}
+					alt={`${item.name}모임 대표 이미지`}
+					fill
+					className={cn(
+						STYLE.itemImage,
+						!!item.image ? "hover:scale-107" : "bg-purple-50 object-scale-down",
+					)}
 				/>
 			</Link>
 			<div className={STYLE.wishBtn}>
@@ -90,18 +108,33 @@ export default function DetailCard({ item, badges, actions, wishAction }: Detail
 							</li>
 						</ul>
 					</div>
-					<div className={STYLE.btnWrapper}>
-						{actions &&
-							actions.map((action) => (
-								<Button
-									key={action.label}
-									onClick={action.handleCardButtonClick}
-									colors={action.variant}
-									sizes="smallMedium"
-									className={cn(STYLE.actionBtn, action.isDestructive ? "text-error" : "")}>
-									{action.label}
-								</Button>
-							))}
+					<div
+						className={cn(
+							STYLE.btnWrapper,
+							actionDisplay === "dropdown" ? "absolute top-6 right-4" : "",
+						)}>
+						{actionDisplay === "dropdown"
+							? dropdownItems &&
+								dropdownItems.length > 0 && (
+									<ActionDropdown
+										className="leading-0"
+										aria-label="모임 관리 옵션 열기"
+										actionsIconClassName="md:size-10"
+										items={dropdownItems}
+										onOpenChange={onDropdownOpenChange}
+									/>
+								)
+							: actions &&
+								actions.map((action) => (
+									<Button
+										key={action.label}
+										onClick={action.handleCardButtonClick}
+										colors={action.variant}
+										sizes="smallMedium"
+										className={cn(STYLE.actionBtn, action.isDestructive ? "text-error" : "")}>
+										{action.label}
+									</Button>
+								))}
 					</div>
 				</div>
 			</div>

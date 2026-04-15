@@ -14,7 +14,9 @@ interface ErrorFallbackProps extends FallbackProps {
 
 interface QueryErrorBoundaryProps {
 	prefix: string;
+	title?: string;
 	children: ReactNode;
+	description?: string;
 }
 
 function ErrorFallback({
@@ -39,13 +41,20 @@ function ErrorFallback({
 	);
 }
 
-export default function QueryErrorBoundary({ prefix, children }: QueryErrorBoundaryProps) {
+export default function QueryErrorBoundary({
+	prefix,
+	title,
+	description,
+	children,
+}: QueryErrorBoundaryProps) {
 	return (
 		<QueryErrorResetBoundary>
 			{({ reset }) => (
 				<ErrorBoundary
 					onReset={reset}
-					FallbackComponent={(props) => <ErrorFallback {...props} prefix={prefix} />}>
+					FallbackComponent={(props) => (
+						<ErrorFallback {...props} prefix={prefix} title={title} description={description} />
+					)}>
 					{children}
 				</ErrorBoundary>
 			)}

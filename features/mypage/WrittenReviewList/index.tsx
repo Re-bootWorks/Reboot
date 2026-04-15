@@ -13,7 +13,11 @@ import { useDeleteReviews, usePatchReviews } from "../mutations";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 import { useUser } from "@/hooks/useUser";
 
-function WrittenReviewList() {
+interface WrittenReviewListProps {
+	onDropdownOpenChange?: (open: boolean) => void;
+}
+
+function WrittenReviewList({ onDropdownOpenChange }: WrittenReviewListProps) {
 	const { user } = useUser();
 
 	// 어떤 모임에 대해 alert을 띄웠는지
@@ -92,6 +96,7 @@ function WrittenReviewList() {
 						item={reviewItem}
 						handleEdit={() => handleReviewEdit(reviewItem)}
 						handleDelete={() => setAlertTarget(reviewItem)}
+						onDropdownOpenChange={onDropdownOpenChange}
 					/>
 				))}
 			</ul>
@@ -121,11 +126,11 @@ function WrittenReviewList() {
 		</>
 	);
 }
-export default function WrittenReviewListWrapper() {
+export default function WrittenReviewListWrapper({ onDropdownOpenChange }: WrittenReviewListProps) {
 	return (
 		<QueryErrorBoundary prefix="작성한 리뷰를 ">
 			<Suspense fallback={<ReviewCardSkeleton />}>
-				<WrittenReviewList />
+				<WrittenReviewList onDropdownOpenChange={onDropdownOpenChange} />
 			</Suspense>
 		</QueryErrorBoundary>
 	);
