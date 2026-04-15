@@ -16,7 +16,7 @@ export default function MeetupListPage() {
 				</Suspense>
 			</div>
 			<Suspense fallback={null}>
-				<CreateOpenButton className="fixed right-4 bottom-6 z-2 md:right-5.5 md:bottom-5.5 lg:right-[85px] lg:bottom-14" />
+				<CreateOpenButton className="fixed right-4 bottom-6 md:right-5.5 md:bottom-5.5 lg:right-[85px] lg:bottom-14" />
 			</Suspense>
 		</Container>
 	);
