@@ -8,8 +8,7 @@ import Button from "@/components/ui/Buttons/Button";
 import SocialButton from "@/components/ui/Buttons/SocialButton";
 import { IcVisibilityOffOutline, IcVisibilityOnOutline } from "@/components/ui/icons";
 import InputField from "@/components/ui/Inputs/InputField";
-import { useLogin } from "@/features/auth/mutations";
-import { KAKAO_LOGIN_URL, GOOGLE_LOGIN_URL } from "@/constants/auth";
+import { useLogin, useOAuthLogin } from "@/features/auth/mutations";
 
 const loginSchema = z.object({
 	email: z.email("이메일 형식이 아닙니다"),
@@ -25,7 +24,7 @@ interface LoginFormProps {
 export function LoginForm({ onSuccess }: LoginFormProps) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const { mutate: login, isPending } = useLogin(onSuccess);
-	const [isSocialPending, setIsSocialPending] = useState(false);
+	const { mutate: oAuthLogin, isPending: isOAuthPending } = useOAuthLogin(onSuccess);
 
 	const {
 		register,
@@ -39,9 +38,20 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 	const onSubmit = (data: LoginFormData) => {
 		login({ email: data.email, password: data.password });
 	};
-	function handleSocialLogin(url: string) {
-		setIsSocialPending(true);
-		window.location.href = url;
+
+	function handleGoogleLogin() {
+		const client = google.accounts.oauth2.initTokenClient({
+			client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+			scope: "email profile",
+			callback: async (response) => {
+				await oAuthLogin({ provider: "google", token: response.access_token });
+			},
+		});
+		client.requestAccessToken();
+	}
+
+	function handleKakaoLogin() {
+		window.location.href = "/api/auth/oauth/kakao/redirect";
 	}
 
 	return (
@@ -67,7 +77,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 					isDestructive={!!errors.password}
 				/>
 				<div className="pb-2 md:pb-4">
-					<Button type="submit" disabled={!isValid || isSocialPending} isPending={isPending}>
+					<Button type="submit" disabled={!isValid || isOAuthPending} isPending={isPending}>
 						로그인
 					</Button>
 				</div>
@@ -81,14 +91,14 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 				<div className="flex flex-col gap-3 md:flex-row">
 					<SocialButton
 						social="Google"
-						onClick={() => handleSocialLogin(GOOGLE_LOGIN_URL)}
-						disabled={isSocialPending || isPending}>
+						onClick={handleGoogleLogin}
+						disabled={isOAuthPending || isPending}>
 						구글로 계속하기
 					</SocialButton>
 					<SocialButton
 						social="Kakao"
-						onClick={() => handleSocialLogin(KAKAO_LOGIN_URL)}
-						disabled={isSocialPending || isPending}>
+						onClick={handleKakaoLogin}
+						disabled={isOAuthPending || isPending}>
 						카카오로 계속하기
 					</SocialButton>
 				</div>
