@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-import useScrollOnNextQueryChange from "@/hooks/useScrollOnNextQueryChange";
 import useScrollFloatingVisibility from "@/hooks/useScrollFloatingVisibility";
 import { cn } from "@/utils/cn";
 import CategoryTabs from "./CategoryTabs";
