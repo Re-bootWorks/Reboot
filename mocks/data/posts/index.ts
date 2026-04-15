@@ -28,6 +28,7 @@ function createPost(body: { title: string; content: string; image?: string }) {
 		id: POSTS.length + 1,
 		teamId: TEAM_ID,
 		title: body.title,
+		commentCount: 0,
 		content: body.content,
 		image: body.image ?? "",
 		authorId: 1,

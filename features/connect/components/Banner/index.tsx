@@ -140,142 +140,139 @@ export default function ConnectBanner({ className }: { className?: string }) {
 	const doubled = [...MARQUEE_TAGS, ...MARQUEE_TAGS];
 
 	return (
-		// 가로 스크롤 방지를 위해 overflow-x-hidden wrapper 추가
-		<div className="w-full overflow-x-hidden">
-			<div
-				ref={bannerRef}
-				onMouseMove={handleMouseMove}
-				onMouseLeave={handleMouseLeave}
-				className={cn(
-					"relative h-48 w-full shrink-0 overflow-hidden",
-					"bg-gradient-to-br from-purple-100 to-purple-200",
-					"md:h-[244px] md:rounded-3xl lg:rounded-4xl",
-					className,
-				)}>
-				{/* 배경 장식 원 — 마우스 트래킹으로 각각 다른 방향/속도로 움직임 */}
-				<motion.div
-					style={{ x: x1, y: y1 }}
-					className="absolute -top-8 -left-8 hidden h-36 w-36 rounded-full bg-purple-300/30 md:block"
-				/>
-				<motion.div
-					style={{ x: x2, y: y2 }}
-					className="absolute -bottom-8 left-1/4 hidden h-28 w-28 rounded-full bg-purple-300/20 md:block"
-				/>
-				<motion.div
-					style={{ x: x3, y: y3 }}
-					className="absolute -top-6 left-1/2 hidden h-20 w-20 rounded-full bg-purple-200/40 md:block"
-				/>
-				<motion.div
-					style={{ x: x4, y: y4 }}
-					className="absolute -right-4 -bottom-4 hidden h-32 w-32 rounded-full bg-purple-300/25 md:block md:h-48 md:w-48"
-				/>
+		<div
+			ref={bannerRef}
+			onMouseMove={handleMouseMove}
+			onMouseLeave={handleMouseLeave}
+			className={cn(
+				"relative h-48 w-full shrink-0 overflow-hidden",
+				"bg-gradient-to-br from-purple-100 to-purple-200",
+				"md:h-[244px] md:rounded-3xl lg:rounded-4xl",
+				className,
+			)}>
+			{/* 배경 장식 원 — 마우스 트래킹으로 각각 다른 방향/속도로 움직임 */}
+			<motion.div
+				style={{ x: x1, y: y1 }}
+				className="absolute -top-8 -left-8 hidden h-36 w-36 rounded-full bg-purple-300/30 md:block"
+			/>
+			<motion.div
+				style={{ x: x2, y: y2 }}
+				className="absolute -bottom-8 left-1/4 hidden h-28 w-28 rounded-full bg-purple-300/20 md:block"
+			/>
+			<motion.div
+				style={{ x: x3, y: y3 }}
+				className="absolute -top-6 left-1/2 hidden h-20 w-20 rounded-full bg-purple-200/40 md:block"
+			/>
+			<motion.div
+				style={{ x: x4, y: y4 }}
+				className="absolute -right-4 -bottom-4 hidden h-32 w-32 rounded-full bg-purple-300/25 md:block md:h-48 md:w-48"
+			/>
 
-				{/* 왼쪽 — 타이핑 텍스트 / 서브 문구 / marquee 태그 */}
-				<div className="absolute top-1/2 right-4 left-4 z-[1] flex -translate-y-1/2 flex-col gap-3 md:right-[320px] md:left-10 lg:right-[420px] lg:left-14">
-					{/* 타이핑 애니메이션 텍스트 + 커서 */}
-					<h1 className="min-h-[56px] text-lg leading-7 font-semibold tracking-[-0.36px] text-gray-900 md:min-h-[72px] md:text-[28px] md:leading-9 lg:min-h-[88px] lg:text-[34px] lg:leading-[1.2]">
-						{displayed.split("\n").map((line, i) => (
-							<span key={i}>
-								{line}
-								{i < displayed.split("\n").length - 1 && <br />}
+			{/* 왼쪽 — 타이핑 텍스트 / 서브 문구 / marquee 태그 */}
+			<div className="absolute top-1/2 right-4 left-4 z-[1] flex -translate-y-1/2 flex-col gap-3 md:right-[320px] md:left-10 lg:right-[420px] lg:left-14">
+				{/* 타이핑 애니메이션 텍스트 + 커서 */}
+				<h1 className="min-h-[56px] text-lg leading-7 font-semibold tracking-[-0.36px] text-gray-900 md:min-h-[72px] md:text-[28px] md:leading-9 lg:min-h-[88px] lg:text-[34px] lg:leading-[1.2]">
+					{displayed.split("\n").map((line, i) => (
+						<span key={i}>
+							{line}
+							{i < displayed.split("\n").length - 1 && <br />}
+						</span>
+					))}
+					{/* 깜빡이는 커서 */}
+					<span className="ml-0.5 inline-block h-[1em] w-0.5 animate-pulse bg-purple-600 align-middle" />
+				</h1>
+
+				{/* 서브 문구 */}
+				<p className="text-[12px] font-medium text-purple-600 md:text-[14px] lg:text-[15px]">
+					같은 관심사를 가진 사람들과 자유롭게 소통해보세요
+				</p>
+
+				{/* marquee — 태그를 2배 복제해서 끊김 없이 무한 흐름 */}
+				<div className="w-full overflow-hidden md:w-[380px] lg:w-[460px]">
+					<div className={styles.marquee}>
+						{doubled.map((tag, i) => (
+							<span
+								key={i}
+								className="rounded-full bg-purple-200 px-3 py-1 text-[11px] font-medium whitespace-nowrap text-purple-600 lg:px-4 lg:py-1.5 lg:text-[13px]">
+								{tag}
 							</span>
 						))}
-						{/* 깜빡이는 커서 */}
-						<span className="ml-0.5 inline-block h-[1em] w-0.5 animate-pulse bg-purple-600 align-middle" />
-					</h1>
-
-					{/* 서브 문구 */}
-					<p className="text-[12px] font-medium text-purple-600 md:text-[14px] lg:text-[15px]">
-						같은 관심사를 가진 사람들과 자유롭게 소통해보세요
-					</p>
-
-					{/* marquee — 태그를 2배 복제해서 끊김 없이 무한 흐름 */}
-					<div className="w-full overflow-hidden md:w-[380px] lg:w-[460px]">
-						<div className={styles.marquee}>
-							{doubled.map((tag, i) => (
-								<span
-									key={i}
-									className="rounded-full bg-purple-200 px-3 py-1 text-[11px] font-medium whitespace-nowrap text-purple-600 lg:px-4 lg:py-1.5 lg:text-[13px]">
-									{tag}
-								</span>
-							))}
-						</div>
 					</div>
 				</div>
-
-				{/* 가운데 — 누적 조회수 */}
-				<div className="absolute top-1/2 left-[60%] z-[1] hidden -translate-y-1/2 flex-col items-center gap-2 md:flex">
-					<div className="flex flex-col items-center gap-2">
-						<p className="text-[12px] font-medium tracking-widest text-purple-600 uppercase lg:text-[13px]">
-							누적 조회수
-						</p>
-						<div className="text-[36px] font-semibold text-gray-900 lg:text-[44px]">
-							<SlotCounter
-								value={totalViewCount.toLocaleString()}
-								duration={4}
-								dummyCharacters={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
-							/>
-						</div>
-						<p className="text-[11px] text-purple-600 lg:text-[12px]">게시글이 읽힌 횟수예요</p>
-					</div>
-				</div>
-
-				{/* 오른쪽 — HOT 게시글 슬라이드 카드 */}
-				{currentPost && (
-					<div className="absolute top-1/2 right-4 z-[1] hidden w-[180px] -translate-y-1/2 lg:right-14 lg:block lg:w-[280px]">
-						<div className="h-[130px] rounded-2xl border border-purple-200 bg-white/75 p-4 backdrop-blur-sm lg:h-[150px] lg:rounded-3xl lg:p-5">
-							<div className="mb-2 flex items-center gap-1.5">
-								<div className="h-1.5 w-1.5 rounded-full bg-purple-500" />
-								<p className="text-[11px] font-medium text-purple-600 lg:text-[13px]">
-									요즘 핫한 게시글
-								</p>
-							</div>
-
-							{/* 게시글 제목 — 전환 시 fade + slide 애니메이션 */}
-							<div className="mb-3 h-[40px] overflow-hidden lg:h-[48px]">
-								<AnimatePresence mode="popLayout">
-									<motion.p
-										key={postIdx}
-										initial={{ opacity: 0, y: 10 }}
-										animate={{ opacity: 1, y: 0 }}
-										exit={{ opacity: 0, y: -10 }}
-										transition={{ duration: 0.35, ease: "easeOut" }}
-										className="line-clamp-2 overflow-hidden text-[13px] leading-5 font-medium text-gray-900 lg:text-[15px] lg:leading-6">
-										{currentPost.title}
-									</motion.p>
-								</AnimatePresence>
-							</div>
-
-							<div className="flex items-center justify-between">
-								{/* 좋아요 / 댓글 수 */}
-								<div className="flex gap-3 text-[11px] text-purple-600 lg:text-[13px]">
-									<div className="flex items-center gap-1">
-										<IcThumbOutline size={13} color="purple-600" />
-										<span>{currentPost.likeCount}</span>
-									</div>
-									<div className="flex items-center gap-1">
-										<IcMessageOutline size={13} color="purple-600" />
-										<span>{currentPost._count.comments}</span>
-									</div>
-								</div>
-
-								{/* dot indicator — 현재 슬라이드 위치 표시 */}
-								<div className="flex gap-1">
-									{Array.from({ length: Math.min(posts.length, 5) }).map((_, i) => (
-										<div
-											key={i}
-											className={cn(
-												"h-1.5 rounded-full transition-all duration-300",
-												i === postIdx ? "w-3.5 bg-purple-500" : "w-1.5 bg-purple-200",
-											)}
-										/>
-									))}
-								</div>
-							</div>
-						</div>
-					</div>
-				)}
 			</div>
+
+			{/* 가운데 — 누적 조회수 */}
+			<div className="absolute top-1/2 left-[60%] z-[1] hidden -translate-y-1/2 flex-col items-center gap-2 md:flex">
+				<div className="flex flex-col items-center gap-2">
+					<p className="text-[12px] font-medium tracking-widest text-purple-600 uppercase lg:text-[13px]">
+						누적 조회수
+					</p>
+					<div className="text-[36px] font-semibold text-gray-900 lg:text-[44px]">
+						<SlotCounter
+							value={totalViewCount.toLocaleString()}
+							duration={4}
+							dummyCharacters={["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
+						/>
+					</div>
+					<p className="text-[11px] text-purple-600 lg:text-[12px]">게시글이 읽힌 횟수예요</p>
+				</div>
+			</div>
+
+			{/* 오른쪽 — HOT 게시글 슬라이드 카드 */}
+			{currentPost && (
+				<div className="absolute top-1/2 right-4 z-[1] hidden w-[180px] -translate-y-1/2 lg:right-14 lg:block lg:w-[280px]">
+					<div className="h-[130px] rounded-2xl border border-purple-200 bg-white/75 p-4 backdrop-blur-sm lg:h-[150px] lg:rounded-3xl lg:p-5">
+						<div className="mb-2 flex items-center gap-1.5">
+							<div className="h-1.5 w-1.5 rounded-full bg-purple-500" />
+							<p className="text-[11px] font-medium text-purple-600 lg:text-[13px]">
+								요즘 핫한 게시글
+							</p>
+						</div>
+
+						{/* 게시글 제목 — 전환 시 fade + slide 애니메이션 */}
+						<div className="mb-3 h-[40px] overflow-hidden lg:h-[48px]">
+							<AnimatePresence mode="popLayout">
+								<motion.p
+									key={postIdx}
+									initial={{ opacity: 0, y: 10 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: -10 }}
+									transition={{ duration: 0.35, ease: "easeOut" }}
+									className="line-clamp-2 overflow-hidden text-[13px] leading-5 font-medium text-gray-900 lg:text-[15px] lg:leading-6">
+									{currentPost.title}
+								</motion.p>
+							</AnimatePresence>
+						</div>
+
+						<div className="flex items-center justify-between">
+							{/* 좋아요 / 댓글 수 */}
+							<div className="flex gap-3 text-[11px] text-purple-600 lg:text-[13px]">
+								<div className="flex items-center gap-1">
+									<IcThumbOutline size={13} color="purple-600" />
+									<span>{currentPost.likeCount}</span>
+								</div>
+								<div className="flex items-center gap-1">
+									<IcMessageOutline size={13} color="purple-600" />
+									<span>{currentPost._count.comments}</span>
+								</div>
+							</div>
+
+							{/* dot indicator — 현재 슬라이드 위치 표시 */}
+							<div className="flex gap-1">
+								{Array.from({ length: Math.min(posts.length, 5) }).map((_, i) => (
+									<div
+										key={i}
+										className={cn(
+											"h-1.5 rounded-full transition-all duration-300",
+											i === postIdx ? "w-3.5 bg-purple-500" : "w-1.5 bg-purple-200",
+										)}
+									/>
+								))}
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }
