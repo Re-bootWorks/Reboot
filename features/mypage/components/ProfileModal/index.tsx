@@ -177,9 +177,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 					<InputField
 						label="아이디"
 						readOnly
-						placeholder="이메일을 입력해주세요"
-						{...register("email")}
-						isDestructive={!!errors.email}
+						value={user.email}
 						className="pointer-events-none cursor-default"
 						inputClassName="[&_input]:text-gray-500"
 					/>
