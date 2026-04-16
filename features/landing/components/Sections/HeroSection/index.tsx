@@ -26,7 +26,7 @@ export default function HeroSection() {
 			className="flex w-full flex-col items-center justify-center"
 			ref={sectionRef}
 			style={{ backgroundImage }}>
-			<SectionContainer className="px-[47.5px] pt-12.5 md:pt-20 lg:pt-53">
+			<SectionContainer className="overflow-hidden px-[47.5px] pt-12.5 md:pt-20 lg:pt-53">
 				<div className="flex flex-col items-center justify-center gap-6 text-center lg:gap-8">
 					<MotionFadeUp className="flex flex-col justify-center gap-6 lg:gap-8">
 						<div className="flex shrink-0 items-center gap-2.5 rounded-full bg-orange-200 px-3 py-1.5">
@@ -63,11 +63,21 @@ export default function HeroSection() {
 						</span>
 					</MotionFadeUp>
 
-					<MotionFadeUp delay={0.24} className="w-full">
+					<MotionFadeUp delay={0.24}>
 						<Link href="/meetup/list" className="flex w-full justify-center">
-							<Button className="mt-1.5 h-10 w-full cursor-pointer rounded-lg text-sm font-normal transition-transform duration-400 hover:text-white active:scale-95 md:mt-4 md:h-15 md:w-60 md:rounded-2xl md:text-xl">
-								모임 찾아보기
-							</Button>
+							<motion.div
+								animate={{ rotate: [0, 0, 0, -2, 2, -2, 2, 0] }}
+								transition={{
+									duration: 0.8,
+									repeat: Infinity,
+									repeatDelay: 2.3,
+									ease: "easeInOut",
+								}}
+								whileTap={{ scale: 0.97 }}>
+								<Button className="mt-10 h-12 w-35 rounded-2xl border border-white/20 bg-gradient-to-b from-purple-700 via-purple-500 to-purple-400 text-base font-normal text-white shadow-[inset_0_1.5px_0_rgba(255,255,255,0.35),inset_0_-2px_0_rgba(42,25,125,0.35),0_10px_20px_rgba(69,44,192,0.28)] transition-all duration-200 [text-shadow:0_1px_1px_rgba(15,7,58,0.28)] hover:text-white hover:shadow-[inset_0_1.5px_0_rgba(255,255,255,0.38),inset_0_-2px_0_rgba(42,25,125,0.4),0_0_0_1px_rgba(255,255,255,0.06),0_0_18px_rgba(117,102,229,0.22),0_14px_28px_rgba(69,44,192,0.36)] active:translate-y-[1px] md:mt-16 md:h-15 md:w-42.5 md:text-xl">
+									모임 찾아보기
+								</Button>
+							</motion.div>
 						</Link>
 					</MotionFadeUp>
 				</div>
@@ -78,7 +88,7 @@ export default function HeroSection() {
 				alt="충전 플러그 꽂는 이미지"
 				width={524}
 				height={660}
-				className="mt-15 h-auto w-93 md:w-[32.75rem]"
+				className="mt-15 h-auto w-93 max-w-full md:w-[32.75rem]"
 			/>
 
 			<motion.div
