@@ -130,7 +130,7 @@ export default function TabWrapper() {
 				ref={contentRef}
 				className={cn(
 					"scrollbar pt-6 lg:max-h-[calc(100vh-214px)] lg:overflow-y-auto",
-					isLg && isDropdownOpen && "lg:overflow-hidden!",
+					isLg && isDropdownOpen && "lg:overflow-hidden! lg:pr-3.75",
 				)}>
 				{tabContents[activeTab]}
 			</div>
