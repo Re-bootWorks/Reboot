@@ -34,12 +34,17 @@ export default function PostContainer() {
 	const [shouldScroll, setShouldScroll] = useState(false);
 
 	// URL searchParams에서 초기값 읽기
-	const [page, setPage] = useState(Number(searchParams.get("page") ?? 1));
-	const [sortBy, setSortBy] = useState<SortBy>(
-		(searchParams.get("sortBy") as SortBy) ?? "createdAt",
-	);
-	const [keyword, setKeyword] = useState(searchParams.get("keyword") ?? "");
-	const [searchKeyword, setSearchKeyword] = useState(searchParams.get("keyword") ?? "");
+	const page = Number(searchParams.get("page") ?? 1);
+	const sortByParam = searchParams.get("sortBy");
+	const sortBy: SortBy = SORT_OPTIONS.some((opt) => opt.value === sortByParam)
+		? (sortByParam as SortBy)
+		: "createdAt";
+	const searchKeyword = searchParams.get("keyword") ?? "";
+	const [keyword, setKeyword] = useState(searchKeyword);
+
+	useEffect(() => {
+		setKeyword(searchKeyword);
+	}, [searchKeyword]);
 
 	useEffect(() => {
 		if (searchParams.get("deleted") === "true" && !deletedHandled.current) {
@@ -75,22 +80,16 @@ export default function PostContainer() {
 	};
 
 	const handleSearch = () => {
-		setPage(1);
-		setSearchKeyword(keyword);
-		updateURL({ page: 1, sortBy, keyword });
+		updateURL({ page: 1, sortBy, keyword }); // setPage, setSearchKeyword 제거
 	};
 
 	const handleSortChange = (value: string) => {
-		const newSortBy = value as SortBy;
-		setSortBy(newSortBy);
-		setPage(1);
-		updateURL({ page: 1, sortBy: newSortBy, keyword: searchKeyword });
+		updateURL({ page: 1, sortBy: value, keyword: searchKeyword }); // setSortBy 제거
 	};
 
 	const handlePageChange = (newPage: number) => {
-		setPage(newPage);
 		setShouldScroll(true);
-		updateURL({ page: newPage, sortBy, keyword: searchKeyword });
+		updateURL({ page: newPage, sortBy, keyword: searchKeyword }); // setPage 제거
 	};
 
 	const posts = data?.data ?? [];
@@ -111,7 +110,6 @@ export default function PostContainer() {
 					onSearchClick={handleSearch}
 					onClear={() => {
 						setKeyword("");
-						setSearchKeyword("");
 						updateURL({ page: 1, sortBy, keyword: "" });
 					}}
 					placeholder="궁금한 내용을 검색해보세요."
