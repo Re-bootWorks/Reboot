@@ -11,10 +11,10 @@ import {
 } from "./apis";
 import { useToast } from "@/providers/toast-provider";
 import { mypageQueryKeys } from "./queries";
-import { meetupDetailQueryKeys } from "../meetupDetail/queries";
 import { headerQueryKeys } from "../header/queries";
 import { meetupQueryKeys } from "../meetup/queries";
 import { reviewsQueryKeys } from "../reviews/queries/queryKeys";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 
 interface UsePatchUsersMeOptions {
 	onSuccessBeforeSync?: () => void;
@@ -84,7 +84,7 @@ export function usePatchMeetingsStatus() {
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
 			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
+				queryKey: meetupDetailQueryKeys.meeting.detail(variables.meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 		},
@@ -115,7 +115,7 @@ export function useDeleteMeetings() {
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
 			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
+				queryKey: meetupDetailQueryKeys.meeting.detail(variables.meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 		},
@@ -145,10 +145,10 @@ export function useDeleteMeetingsJoin() {
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
 			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
+				queryKey: meetupDetailQueryKeys.meeting.detail(variables.meetingId),
 			});
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.participants(variables.meetingId),
+				queryKey: meetupDetailQueryKeys.participants.detail(variables.meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 		},

@@ -2,11 +2,11 @@ import { useRef } from "react";
 import { InfiniteData, QueryKey, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/providers/toast-provider";
 import { meetupQueryKeys } from "../queries";
-import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 import { mypageQueryKeys } from "@/features/mypage/queries";
 import { headerQueryKeys } from "@/features/header/queries";
 import { queryKeys } from "@/features/favorites/queries/queryKeys";
 import type { MeetupListResponse } from "../types";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 
 export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavorited") {
 	const queryClient = useQueryClient();
@@ -56,7 +56,7 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 		handleShowToast({ message, status: "success" });
 		// 목록 쿼리를 포함한 연관 쿼리 무효화
 		queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list, refetchType: "none" }); // 모임 목록 stale 처리(refetch X)
-		queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) }); // 해당 모임 상세
+		queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting.detail(meetingId) }); // 해당 모임 상세
 		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups }); // 참여한 모임 목록
 		queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created }); // 만든 모임 목록(주최자)
 
@@ -65,7 +65,9 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 			queryClient.invalidateQueries({ queryKey: queryKeys.favorites.all }); // 찜한 목록
 		}
 		if (field === "isJoined") {
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.participants(meetingId) }); // 해당 모임 참여자
+			queryClient.invalidateQueries({
+				queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
+			}); // 해당 모임 참여자
 			// 참여 가능 인원이 초과되어 해당 모임이 확정되는 경우
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications }); // 알림 목록
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notificationsCount }); // 알림 개수

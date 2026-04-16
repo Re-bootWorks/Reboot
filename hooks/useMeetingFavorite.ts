@@ -4,9 +4,9 @@ import { CursorPageResponse, MeetupList } from "@/features/mypage/types";
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import { headerQueryKeys } from "@/features/header/queries";
 import { deleteMeetingsFavorites, postMeetingsFavorites } from "@/features/mypage/apis";
-import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 import { meetupQueryKeys } from "@/features/meetup/queries";
 import { mypageQueryKeys } from "@/features/mypage/queries";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 
 /**
  * 찜 추가 시 낙관적 업데이트 및 롤백 하는 훅
@@ -67,7 +67,7 @@ export default function useMeetingFavorite() {
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites });
 			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
+				queryKey: meetupDetailQueryKeys.meeting.detail(variables.meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: ["favorites"] });
 		},

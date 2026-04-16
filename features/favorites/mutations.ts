@@ -6,10 +6,10 @@ import {
 	postMeetingsJoin,
 } from "@/apis/meetings";
 import { headerQueryKeys } from "@/features/header/queries";
-import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 import { mypageQueryKeys } from "@/features/mypage/queries";
 import { MeetupListRequest } from "../meetup/types";
 import { queryKeys } from "./queries/queryKeys";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 
 type MutationCallbacks<TData, TVariables = void> = Omit<
 	UseMutationOptions<TData, Error, TVariables>,
@@ -51,10 +51,10 @@ async function invalidateFavoriteRelatedQueries(
 			queryKey: headerQueryKeys.favorites,
 		}),
 		queryClient.invalidateQueries({
-			queryKey: meetupDetailQueryKeys.meeting(meetingId),
+			queryKey: meetupDetailQueryKeys.meeting.detail(meetingId),
 		}),
 		queryClient.invalidateQueries({
-			queryKey: meetupDetailQueryKeys.related.all(),
+			queryKey: meetupDetailQueryKeys.related.all,
 		}),
 	]);
 }
@@ -66,10 +66,10 @@ async function invalidateJoinRelatedQueries(
 	await Promise.all([
 		invalidateMeetupAndFavoritesQueries(queryClient),
 		queryClient.invalidateQueries({
-			queryKey: meetupDetailQueryKeys.meeting(meetingId),
+			queryKey: meetupDetailQueryKeys.meeting.detail(meetingId),
 		}),
 		queryClient.invalidateQueries({
-			queryKey: meetupDetailQueryKeys.participants(meetingId),
+			queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
 		}),
 		queryClient.invalidateQueries({
 			queryKey: mypageQueryKeys.meetups,

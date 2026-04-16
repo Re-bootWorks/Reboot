@@ -5,11 +5,11 @@ import {
 	getRelatedMeetingsServer,
 	getReviewsServer,
 } from "@/features/meetupDetail/apis/apis.server";
-import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 import MeetupDetailClient from "@/features/meetupDetail/containers/meetupContainer";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getQueryClient } from "@/libs/getQueryClient";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 
 interface PageProps {
 	params: Promise<{ meetupId: string }>;
@@ -47,18 +47,18 @@ export default async function MeetupDetailPage({ params }: PageProps) {
 
 	await Promise.all([
 		queryClient.prefetchQuery({
-			queryKey: meetupDetailQueryKeys.meeting(meetingId),
+			queryKey: meetupDetailQueryKeys.meeting.detail(meetingId),
 			queryFn: () => meeting,
 			staleTime: 1000 * 60 * 5,
 		}),
 		queryClient.prefetchInfiniteQuery({
-			queryKey: meetupDetailQueryKeys.participants(meetingId),
+			queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
 			queryFn: () => getParticipantsServer(meetingId),
 			initialPageParam: undefined,
 			staleTime: 1000 * 60 * 3,
 		}),
 		queryClient.prefetchQuery({
-			queryKey: meetupDetailQueryKeys.reviews(meetingId, undefined),
+			queryKey: meetupDetailQueryKeys.reviews.detail(meetingId, undefined),
 			queryFn: () => getReviewsServer(meetingId),
 			staleTime: 1000 * 60 * 10,
 		}),
