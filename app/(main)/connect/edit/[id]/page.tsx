@@ -4,6 +4,11 @@ import EditPostContainer from "@/features/connect/containers/EditPostContainer";
 import { getPostDetailServer } from "@/features/connect/apis/getPostDetailServer";
 import { connectQueryKeys } from "@/features/connect/queries";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "커넥트",
+};
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
 	const { id: strId } = await params;

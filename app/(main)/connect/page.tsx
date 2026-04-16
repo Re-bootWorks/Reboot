@@ -8,6 +8,12 @@ import { serverFetch } from "@/libs/serverFetch";
 import IntroSection from "@/features/connect/components/IntroSection";
 import { connectQueryKeys } from "@/features/connect/queries";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "커넥트",
+};
+
 export default async function ConnectPage({
 	searchParams,
 }: {
@@ -58,14 +64,14 @@ export default async function ConnectPage({
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<Container className="min-w-[380px]">
+			<Container className="min-w-[380px] px-0 md:px-6 lg:px-7">
 				<IntroSection />
 				<QueryErrorBoundary prefix="HOT 게시글을">
 					<Suspense fallback={null}>
 						<HotPostSection />
 					</Suspense>
 				</QueryErrorBoundary>
-				<div className="mt-[6.125rem] pb-[8.75rem]">
+				<div className="mt-8 pb-10 md:pb-[8.75rem]">
 					<QueryErrorBoundary prefix="게시글을">
 						<Suspense fallback={null}>
 							<PostContainer />
