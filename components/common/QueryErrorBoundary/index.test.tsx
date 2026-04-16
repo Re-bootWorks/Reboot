@@ -6,12 +6,15 @@ function ThrowError(): never {
 	throw new Error("테스트 에러");
 }
 describe("QueryErrorBoundary", () => {
+	// 테스트 로그 쌓임 방지
 	const consoleError = jest.spyOn(console, "error").mockImplementation(() => {});
 
+	// 테스트 끝날때마다 호출기록 초기화ㅏ
 	afterEach(() => {
 		consoleError.mockClear();
 	});
 
+	// 테스트 종료시 원래 콘솔로 돌리기
 	afterAll(() => {
 		consoleError.mockRestore();
 	});
