@@ -43,6 +43,7 @@ export default function PostDetailCard({
 	const { mutate: deletePost } = useDeletePost(id);
 	const { mutate: toggleLike } = useToggleConnectLike(id);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [frozenViewCount] = useState(viewCount);
 
 	return (
 		<>
@@ -151,7 +152,7 @@ export default function PostDetailCard({
 						{/* 조회수 */}
 						<div className="flex items-center gap-0.5 text-gray-500">
 							<IcVisibilityOnOutline color="gray-400" size={20} />
-							<span className="text-base">{viewCount}</span>
+							<span className="text-base">{frozenViewCount}</span>
 						</div>
 					</div>
 				</div>

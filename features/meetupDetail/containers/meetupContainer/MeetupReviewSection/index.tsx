@@ -28,7 +28,7 @@ export default function MeetupReviewSection({ meetupId }: { meetupId: number }) 
 			initial="hidden"
 			whileInView="visible"
 			viewport={{ once: true, amount: 0.1 }}
-			className="mt-10 w-full md:mt-16 lg:mt-20">
+			className="w-full">
 			<CommentCards
 				meetingId={meetupId}
 				comments={comments}

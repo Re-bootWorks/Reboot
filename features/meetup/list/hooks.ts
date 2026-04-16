@@ -6,16 +6,7 @@ import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
 import { mypageQueryKeys } from "@/features/mypage/queries";
 import { headerQueryKeys } from "@/features/header/queries";
 import { queryKeys } from "@/features/favorites/queries/queryKeys";
-
-interface ToggleItem {
-	id: number;
-	isJoined: boolean;
-	isFavorited: boolean;
-}
-
-interface TogglePage {
-	data: ToggleItem[];
-}
+import type { MeetupListResponse } from "../types";
 
 export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavorited") {
 	const queryClient = useQueryClient();
@@ -30,7 +21,7 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 		snapshotRef.current = queryClient.getQueriesData({ queryKey: meetupQueryKeys.list });
 
 		// 목록 쿼리 Optimistic Update
-		queryClient.setQueriesData<InfiniteData<TogglePage>>(
+		queryClient.setQueriesData<InfiniteData<MeetupListResponse>>(
 			{ queryKey: meetupQueryKeys.list },
 			(oldData) => {
 				if (!oldData?.pages) return oldData;
@@ -38,9 +29,23 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 					...oldData,
 					pages: oldData.pages.map((page) => ({
 						...page,
-						data: page.data.map((item) =>
-							item.id === meetingId ? { ...item, [field]: !item[field] } : item,
-						),
+						data: page.data.map((item) => {
+							if (item.id !== meetingId) return item;
+							if (field === "isFavorited") {
+								return { ...item, isFavorited: !item.isFavorited };
+							} else {
+								const nextJoined = !item.isJoined;
+								const delta = nextJoined ? 1 : -1;
+								return {
+									...item,
+									isJoined: nextJoined,
+									participantCount: Math.min(
+										item.capacity,
+										Math.max(0, item.participantCount + delta),
+									),
+								};
+							}
+						}),
 					})),
 				};
 			},

@@ -1,7 +1,16 @@
+import { Metadata } from "next";
 import Container from "@/components/layout/Container";
 import { CreateFormView } from "@/features/meetup/create";
 import BackgroundMeetups from "@/features/meetup/create/components/BackgroundMeetups";
 import { cn } from "@/utils/cn";
+
+export const metadata: Metadata = {
+	title: "모임 만들기",
+	robots: {
+		index: false,
+		follow: false,
+	},
+};
 
 // 직접 접근 방식으로 /meetup/create 진입 시
 export default function MeetUpCreatePage() {

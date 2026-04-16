@@ -61,7 +61,7 @@ function JoinedMeetingList({ onDropdownOpenChange }: JoinedMeetingListProps) {
 	// 모임 삭제하기
 	const { mutate: deleteMeetings, isPending: isDeletePending } = useDeleteMeetings();
 
-	// 모임 예약 취소하기
+	// 모임 참여 취소하기
 	const { mutate: deleteMeetingsJoin, isPending: isJoinCancelPending } = useDeleteMeetingsJoin();
 
 	// 어떤 액션이든 하나라도 pending이면 true
@@ -99,7 +99,7 @@ function JoinedMeetingList({ onDropdownOpenChange }: JoinedMeetingListProps) {
 				setAlertTarget(item);
 				setAlertAction("cancelMeetup");
 			},
-			// 예약 취소하기
+			// 참여 취소하기
 			onCancelReservation() {
 				setAlertTarget(item);
 				setAlertAction("cancelReservation");
@@ -134,7 +134,7 @@ function JoinedMeetingList({ onDropdownOpenChange }: JoinedMeetingListProps) {
 					{ meetingId: alertTarget.id },
 					{ onSuccess: closeAlert, onError: closeAlert },
 				),
-			// 모임 예약 취소
+			// 모임 참여 취소
 			cancelReservation: () =>
 				deleteMeetingsJoin(
 					{ meetingId: alertTarget.id },

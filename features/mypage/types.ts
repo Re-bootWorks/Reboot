@@ -88,7 +88,6 @@ export interface PatchReviewPayload {
 
 export interface PatchUserProfilePayload {
 	name?: string;
-	email?: string;
 	image?: string;
 }
 

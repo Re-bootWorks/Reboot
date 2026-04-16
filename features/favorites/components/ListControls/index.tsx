@@ -1,11 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import useScrollOnNextQueryChange from "@/hooks/useScrollOnNextQueryChange";
 import useScrollFloatingVisibility from "@/hooks/useScrollFloatingVisibility";
 import { cn } from "@/utils/cn";
 import CategoryTabs from "./CategoryTabs";
 import ListFilters from "./ListFilters";
+import { useFavoritesListScroll } from "../providers/FavoritesListScrollProvider";
 
 const MOBILE_STICKY_OFFSET = 48;
 
@@ -33,7 +33,7 @@ function ListControlsContent({ headingId, className, onWillChange }: ListControl
 }
 
 export default function ListControls() {
-	const { scrollAnchorRef, markWillChange } = useScrollOnNextQueryChange<HTMLDivElement>();
+	const { markWillChange } = useFavoritesListScroll();
 	const triggerRef = useRef<HTMLDivElement>(null);
 	const { isVisible, hasPassedThreshold } = useScrollFloatingVisibility({
 		offset: MOBILE_STICKY_OFFSET,
@@ -43,8 +43,6 @@ export default function ListControls() {
 
 	return (
 		<>
-			<div ref={scrollAnchorRef} aria-hidden="true" className="scroll-mt-12 md:scroll-mt-22" />
-
 			<div ref={triggerRef} className="scroll-mt-12 md:sticky md:top-22 md:z-9 md:scroll-mt-22">
 				<div className="md:relative md:left-1/2 md:w-screen md:max-w-[1300px] md:-translate-x-1/2 md:bg-gray-50 md:py-3 md:pl-6 lg:pl-0">
 					<ListControlsContent headingId="favorites-filter-heading" onWillChange={markWillChange} />

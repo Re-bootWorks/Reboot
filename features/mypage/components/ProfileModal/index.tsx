@@ -14,7 +14,7 @@ import { usePatchUsersMe } from "../../mutations";
 import { PatchUserProfilePayload, UserProfile } from "../../types";
 
 const STYLE = {
-	modal: "min-h-100 w-[calc(100%-32px)] max-w-136 p-6 pt-8 md:w-full md:p-12",
+	modal: "min-h-100 max-h-[80dvh] w-[calc(100%-32px)] max-w-136 p-6 pt-8 md:w-full md:p-12",
 	modalButton: "shrink md:h-15 md:rounded-2xl md:text-xl",
 };
 
@@ -54,10 +54,6 @@ function buildProfilePayload(data: ProfileFormValues, user: UserProfile): PatchU
 
 	if (data.name !== undefined && data.name !== user.name) {
 		payload.name = data.name;
-	}
-
-	if (data.email !== undefined && data.email !== user.email) {
-		payload.email = data.email;
 	}
 
 	if (data.image !== null && data.image !== undefined && data.image !== user.image) {
@@ -180,11 +176,12 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 					/>
 					<InputField
 						label="아이디"
-						isRequired={true}
+						readOnly
 						placeholder="이메일을 입력해주세요"
 						{...register("email")}
-						hintText={errors.email?.message}
 						isDestructive={!!errors.email}
+						className="pointer-events-none cursor-default"
+						inputClassName="[&_input]:text-gray-500"
 					/>
 				</form>
 			</Modal>

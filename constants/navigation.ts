@@ -18,3 +18,7 @@ export const GNB_MENU_ITEMS = [
 ];
 
 export const ACCOUNT_MENU_ITEM = { href: "/mypage", label: "마이페이지", key: "mypage" };
+
+export const MEETUP_LIST_PATH = "/meetup/list";
+export const MEETUP_CREATE_PATH = "/meetup/create";
+export const MEETUP_DETAIL_PATH = (meetupId: number) => `/meetup/${meetupId}`;

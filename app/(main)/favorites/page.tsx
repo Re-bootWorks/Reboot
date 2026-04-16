@@ -6,6 +6,7 @@ import { prefetchFavorites } from "@/features/favorites/queries/prefetchQueries"
 import { FavoritesListRequest } from "@/features/favorites/types";
 import FavoritesSection from "@/features/favorites/components/FavoritesSection";
 import ListControls from "@/features/favorites/components/ListControls";
+import { FavoritesListScrollProvider } from "@/features/favorites/components/providers/FavoritesListScrollProvider";
 
 type Props = {
 	searchParams: Promise<FavoritesListRequest>;
@@ -29,8 +30,8 @@ export default async function FavoritesPage({ searchParams }: Props) {
 	await prefetchFavorites(queryClient, normalizedParams);
 
 	return (
-		<>
-			<header className="mt-8.5 mb-8 md:mt-10 md:mb-14 lg:mt-[3.188rem]">
+		<FavoritesListScrollProvider>
+			<header className="mb-8 pt-8.5 md:mb-14 md:pt-10 lg:pt-[3.188rem]">
 				<PageIntro />
 			</header>
 
@@ -41,6 +42,6 @@ export default async function FavoritesPage({ searchParams }: Props) {
 					<FavoritesSection />
 				</HydrationBoundary>
 			</QueryErrorBoundary>
-		</>
+		</FavoritesListScrollProvider>
 	);
 }

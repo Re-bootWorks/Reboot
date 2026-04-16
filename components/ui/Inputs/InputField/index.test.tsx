@@ -1,6 +1,5 @@
 import InputField from ".";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 
 describe("InputField 테스트", () => {
 	describe("렌더링 검사", () => {

@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { Metadata } from "next";
 import Container from "@/components/layout/Container";
 import Banner from "@/features/meetup/list/components/Banner";
 import ListFilters from "@/features/meetup/list/components/ListFilters";
@@ -8,13 +9,21 @@ import { MeetupListScrollProvider } from "@/features/meetup/list/providers/Meetu
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 import { cn } from "@/utils/cn";
 
+export const metadata: Metadata = {
+	title: "모임 찾기",
+	robots: {
+		index: true,
+		follow: true,
+	},
+};
+
 export default function MeetupListPage() {
 	return (
 		<MeetupListScrollProvider>
 			<Container
 				className={cn(
 					"flex min-h-[calc(100vh-48px)] flex-col gap-y-5 px-0",
-					"md:min-h-[calc(100vh-88px)] md:gap-y-4 md:p-6 lg:gap-y-6 lg:pt-[27px]",
+					"md:min-h-[calc(100vh-88px)] md:gap-y-4 md:p-6 lg:gap-y-6 lg:pt-7",
 				)}>
 				<Banner />
 				<Suspense fallback={null}>
@@ -26,12 +35,7 @@ export default function MeetupListPage() {
 					</QueryErrorBoundary>
 				</Suspense>
 				<Suspense fallback={null}>
-					<CreateOpenButton
-						className={cn(
-							"fixed right-4 bottom-6 z-1",
-							"md:right-5.5 md:bottom-5.5 lg:right-[85px] lg:bottom-14",
-						)}
-					/>
+					<CreateOpenButton className="fixed right-6 bottom-6 z-10" />
 				</Suspense>
 			</Container>
 		</MeetupListScrollProvider>
