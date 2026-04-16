@@ -238,7 +238,7 @@ export default function Header() {
 								<div className="hidden md:block">
 									<ActionDropdown
 										triggerType="profile"
-										menuClassName="z-50"
+										menuClassName="z-51"
 										profileImage={user?.image}
 										items={[
 											{ label: "마이페이지", onClick: () => router.push("/mypage") },
