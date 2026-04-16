@@ -21,7 +21,7 @@ jest.mock("@smastrom/react-rating", () => ({
 	),
 }));
 // HeadlessUI 테스트 경고로 인해 단순 모달 UI로 대체
-jest.mock("../../../../components/ui/Modals", () => ({
+jest.mock("@/components/ui/Modals", () => ({
 	Modal: ({
 		isOpen,
 		title,
