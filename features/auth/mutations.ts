@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postLogin, postSignUp, postLogout, postOAuthLogin } from "@/features/auth/apis";
 import { useToast } from "@/providers/toast-provider";
 import { useRouter } from "next/navigation";
-import { authQueryKeys } from "../shared/queryKeys/auth";
+import { authQueryKeys } from "@/features/shared/queryKeys/auth";
 
 export function useLogin(onSuccess: () => void) {
 	const queryClient = useQueryClient();
