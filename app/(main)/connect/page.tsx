@@ -14,27 +14,34 @@ export const metadata: Metadata = {
 	title: "커넥트",
 };
 
+type SortBy = "createdAt" | "likeCount" | "viewCount" | "commentCount";
+const VALID_SORT_BY: SortBy[] = ["createdAt", "likeCount", "viewCount", "commentCount"];
+
 export default async function ConnectPage({
 	searchParams,
 }: {
-	searchParams: Promise<{ page?: string }>;
+	searchParams: Promise<{ page?: string; sortBy?: string; keyword?: string }>;
 }) {
-	const { page: pageParam } = await searchParams;
+	const { page: pageParam, sortBy: sortByParam, keyword: keywordParam } = await searchParams;
 	const page = Number(pageParam ?? 1);
+	const sortBy: SortBy = VALID_SORT_BY.includes(sortByParam as SortBy)
+		? (sortByParam as SortBy)
+		: "createdAt";
+	const keyword = keywordParam ?? "";
+	const LIMIT = 5;
 
 	const queryClient = getQueryClient();
-	const sortBy = "createdAt";
-	const LIMIT = 5;
 
 	await Promise.all([
 		queryClient.prefetchQuery({
-			queryKey: connectQueryKeys.list(page, sortBy, LIMIT, ""),
+			queryKey: connectQueryKeys.list(page, sortBy, LIMIT, keyword),
 			queryFn: async () => {
 				const queryParams = new URLSearchParams({
 					type: "all",
 					sortBy,
 					offset: String((page - 1) * LIMIT),
 					limit: String(LIMIT),
+					...(keyword ? { keyword } : {}),
 				});
 				const res = await serverFetch(`/posts?${queryParams.toString()}`);
 				if (!res.ok) throw new Error("게시글 조회 실패");
