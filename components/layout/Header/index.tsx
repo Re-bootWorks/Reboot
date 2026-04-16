@@ -38,7 +38,7 @@ const STYLE = {
 	header: "sticky top-0 left-0 z-40 py-2 md:py-4 ",
 	gnb: "flex items-center gap-4",
 	sidebar:
-		"fixed inset-0 h-dvh ml-auto max-w-xl w-11/12 flex flex-col justify-between rounded-l-3xl bg-white py-6",
+		"fixed top-0 right-0 h-dvh max-w-xl w-11/12 flex flex-col justify-between rounded-l-3xl bg-white py-6",
 	sidebarItem: "px-4 py-2 flex items-center justify-between",
 	link: "flex items-center gap-1 p-4 text-base text-gray-600 cursor-pointer",
 	etc: "flex items-center gap-4 md:gap-6",
