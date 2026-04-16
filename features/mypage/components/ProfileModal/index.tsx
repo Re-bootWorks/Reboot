@@ -56,10 +56,6 @@ function buildProfilePayload(data: ProfileFormValues, user: UserProfile): PatchU
 		payload.name = data.name;
 	}
 
-	if (data.email !== undefined && data.email !== user.email) {
-		payload.email = data.email;
-	}
-
 	if (data.image !== null && data.image !== undefined && data.image !== user.image) {
 		payload.image = data.image;
 	}
@@ -180,11 +176,12 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 					/>
 					<InputField
 						label="아이디"
-						isRequired={true}
+						readOnly
 						placeholder="이메일을 입력해주세요"
 						{...register("email")}
-						hintText={errors.email?.message}
 						isDestructive={!!errors.email}
+						className="pointer-events-none cursor-default"
+						inputClassName="[&_input]:text-gray-500"
 					/>
 				</form>
 			</Modal>
