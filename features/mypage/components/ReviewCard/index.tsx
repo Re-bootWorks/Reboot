@@ -62,9 +62,10 @@ export default function ReviewCard({
 							aria-label="리뷰 옵션 열기"
 							actionsIconClassName="md:size-10"
 							onOpenChange={onDropdownOpenChange}
+							menuClassName="z-2"
 							items={[
-								{ label: "수정하기", onClick: handleEdit },
-								{ label: "삭제하기", onClick: handleDelete },
+								{ label: "수정하기", onClick: handleEdit, className: "h-9" },
+								{ label: "삭제하기", onClick: handleDelete, className: "h-9" },
 							]}
 						/>
 					</div>
