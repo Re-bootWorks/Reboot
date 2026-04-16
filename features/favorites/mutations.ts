@@ -5,11 +5,11 @@ import {
 	postMeetingsFavorite,
 	postMeetingsJoin,
 } from "@/apis/meetings";
-import { headerQueryKeys } from "@/features/header/queries";
-import { mypageQueryKeys } from "@/features/mypage/queries";
 import { MeetupListRequest } from "../meetup/types";
 import { queryKeys } from "./queries/queryKeys";
 import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
+import { headerQueryKeys } from "@/features/shared/queryKeys/header";
+import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 
 type MutationCallbacks<TData, TVariables = void> = Omit<
 	UseMutationOptions<TData, Error, TVariables>,
@@ -72,16 +72,10 @@ async function invalidateJoinRelatedQueries(
 			queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
 		}),
 		queryClient.invalidateQueries({
-			queryKey: mypageQueryKeys.meetups,
+			queryKey: mypageQueryKeys.meetups.all,
 		}),
 		queryClient.invalidateQueries({
-			queryKey: mypageQueryKeys.created,
-		}),
-		queryClient.invalidateQueries({
-			queryKey: headerQueryKeys.notifications,
-		}),
-		queryClient.invalidateQueries({
-			queryKey: headerQueryKeys.notificationsCount,
+			queryKey: headerQueryKeys.notifications.all,
 		}),
 	]);
 }

@@ -15,8 +15,9 @@ import { useRouter } from "next/navigation";
 import { Meeting } from "@/features/meetupDetail/types";
 import { MeetupListResponse } from "@/features/meetup/types";
 import { ReviewScore } from "@/types/common";
-import { headerQueryKeys } from "@/features/header/queries";
-import { meetupDetailQueryKeys } from "../shared/queryKeys/meetupDetail";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
+import { headerQueryKeys } from "@/features/shared/queryKeys/header";
+import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 
 /** 모임 참여 뮤테이션 */
 export function useJoinMutation(meetingId: number) {
@@ -66,10 +67,8 @@ export function useJoinMutation(meetingId: number) {
 				queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notificationsCount });
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications.all });
 		},
 	});
 }
@@ -144,8 +143,7 @@ export function useFavoriteMutation(meetingId: number) {
 
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites });
 			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
 		},
 	});
 }
@@ -202,10 +200,8 @@ export function useCancelJoinMutation(meetingId: number) {
 				queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notificationsCount });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications.all });
 		},
 	});
 }
@@ -233,8 +229,7 @@ export function useDeleteMeetingMutation(meetingId: number) {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting.detail(meetingId) });
 			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
 			handleShowToast({ message: "모임이 삭제되었습니다.", status: "success" });
 			router.replace("/meetup/list");

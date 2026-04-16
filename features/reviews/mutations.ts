@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/providers/toast-provider";
 import { reviewsQueryKeys } from "../reviews/queries/queryKeys";
-import { mypageQueryKeys } from "../mypage/queries";
 import { deleteReviews, patchReviews } from "./apis/client";
+import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 
 export function usePatchReviews() {
 	const queryClient = useQueryClient();
@@ -16,8 +16,7 @@ export function usePatchReviews() {
 				message: `리뷰가 수정 되었습니다.`,
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.reviews });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.reviews.all });
 			queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.reviews.all });
 		},
 
@@ -42,8 +41,7 @@ export function useDeleteReviews() {
 				message: `리뷰가 삭제 되었습니다.`,
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.reviews });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.all });
 			queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.reviews.all });
 		},
 

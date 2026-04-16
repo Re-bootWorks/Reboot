@@ -15,13 +15,12 @@ import { updateComment } from "@/features/connect/apis/updateComment";
 import { useToast } from "@/providers/toast-provider";
 import { deleteComment } from "@/features/connect/apis/deleteComment";
 import { connectQueryKeys } from "@/features/connect/queries";
-import { headerQueryKeys } from "@/features/header/queries";
 import { useUser } from "@/hooks/useUser";
+import { headerQueryKeys } from "@/features/shared/queryKeys/header";
 
 // 댓글/좋아요 뮤테이션 후 공통으로 무효화할 헤더 관련 쿼리
 function invalidateHeaderQueries(queryClient: ReturnType<typeof useQueryClient>) {
-	queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications }); // 알림 목록
-	queryClient.invalidateQueries({ queryKey: headerQueryKeys.notificationsCount }); // 읽지 않은 알림 수
+	queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications.all }); // 알림 목록
 }
 
 // 게시글 좋아요 토글 (Optimistic Update)

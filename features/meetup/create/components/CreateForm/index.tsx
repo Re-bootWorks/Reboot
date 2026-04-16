@@ -5,7 +5,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import useToggle from "@/hooks/useToggle";
 import { useToast } from "@/providers/toast-provider";
 import { cn } from "@/utils/cn";
-import { mypageQueryKeys } from "@/features/mypage/queries";
 import { Modal } from "@/components/ui/Modals";
 import { meetupQueryKeys, usePostMeetup, useUploadMeetupImage } from "../../../queries";
 import { MeetupCreateRequest } from "../../../types";
@@ -21,6 +20,7 @@ import StepTypeSelect from "../StepTypeSelect";
 import StepInfo from "../StepInfo";
 import StepSchedule from "../StepSchedule";
 import StepDesc from "../StepDesc";
+import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 
 export type OnSubmit = (data: MeetupCreateRequest) => Promise<void>;
 export type OnSuccess = (id: number) => void;
@@ -79,8 +79,7 @@ function CreateForm({ onClose, onSuccess, footerClassName }: CreateFormProps) {
 	const postMeetupMutation = usePostMeetup({
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list }); // 모임 목록
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups }); // 참여한 모임 목록
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.created }); // 만든 모임 목록
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all }); // 참여한 / 만든 모임 목록
 			onSuccess(data.id);
 		},
 		onError: (error) => {

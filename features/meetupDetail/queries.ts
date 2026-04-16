@@ -7,7 +7,7 @@ import {
 } from "@/features/meetupDetail/apis/apis";
 import { ParticipantsResponse } from "@/features/meetupDetail/types";
 import { useMemo } from "react";
-import { meetupDetailQueryKeys } from "../shared/queryKeys/meetupDetail";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 
 export function useMeetingDetail(meetingId: number) {
 	return useSuspenseQuery({
