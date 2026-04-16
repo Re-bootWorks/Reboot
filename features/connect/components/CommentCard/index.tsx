@@ -33,7 +33,6 @@ export default function CommentCard({
 	authorId,
 	currentUserId,
 	postId,
-	isPending = false,
 	likeCount,
 	isLiked,
 }: CommentCardProps) {
@@ -198,7 +197,7 @@ export default function CommentCard({
 										<span className="text-md font-semibold text-gray-800">{authorName}</span>
 										<RelativeTime date={date} fallback="date" />
 									</div>
-									{isMine && !isPending && (
+									{isMine && (
 										<ActionDropdown
 											items={[
 												{ label: "수정하기", onClick: handleEdit },
@@ -229,7 +228,7 @@ export default function CommentCard({
 										<button
 											type="button"
 											onClick={handleLike}
-											disabled={likeMutation.isPending || isPending}
+											disabled={likeMutation.isPending}
 											aria-label={isLiked ? "좋아요 취소" : "좋아요"}
 											className="flex flex-col items-center gap-0.5 text-sm transition-colors disabled:opacity-50">
 											{isLiked ? (

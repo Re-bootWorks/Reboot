@@ -4,6 +4,11 @@ import { getQueryClient } from "@/libs/getQueryClient";
 import PostDetailContainer from "@/features/connect/containers/PostDetailContainer";
 import { connectQueryKeys } from "@/features/connect/queries";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "커넥트",
+};
 
 export default async function DetailPage({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;

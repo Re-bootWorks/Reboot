@@ -99,17 +99,18 @@ export default function ConnectBanner({ className }: { className?: string }) {
 	const springY = useSpring(mouseY, { stiffness: 40, damping: 20 });
 
 	// 각 원마다 방향과 강도를 다르게 줘서 입체감 연출
-	const x1 = useTransform(springX, [0, 1], [-24, 24]);
-	const y1 = useTransform(springY, [0, 1], [-16, 16]);
+	// 모바일 가로스크롤 방지를 위해 이동 범위를 줄임
+	const x1 = useTransform(springX, [0, 1], [-12, 12]);
+	const y1 = useTransform(springY, [0, 1], [-10, 10]);
 
-	const x2 = useTransform(springX, [0, 1], [16, -16]); // 반대 방향
-	const y2 = useTransform(springY, [0, 1], [10, -10]);
+	const x2 = useTransform(springX, [0, 1], [10, -10]);
+	const y2 = useTransform(springY, [0, 1], [8, -8]);
 
-	const x3 = useTransform(springX, [0, 1], [-12, 12]);
-	const y3 = useTransform(springY, [0, 1], [-20, 20]);
+	const x3 = useTransform(springX, [0, 1], [-8, 8]);
+	const y3 = useTransform(springY, [0, 1], [-12, 12]);
 
-	const x4 = useTransform(springX, [0, 1], [20, -20]); // 반대 방향
-	const y4 = useTransform(springY, [0, 1], [-12, 12]);
+	const x4 = useTransform(springX, [0, 1], [10, -10]);
+	const y4 = useTransform(springY, [0, 1], [-8, 8]);
 
 	// 마우스 이동 시 배너 내 상대 좌표를 0~1로 변환해서 저장
 	const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -146,25 +147,25 @@ export default function ConnectBanner({ className }: { className?: string }) {
 			className={cn(
 				"relative h-48 w-full shrink-0 overflow-hidden",
 				"bg-gradient-to-br from-purple-100 to-purple-200",
-				"rounded-2xl md:h-[244px] md:rounded-3xl lg:rounded-4xl",
+				"md:h-[244px] md:rounded-3xl lg:rounded-4xl",
 				className,
 			)}>
 			{/* 배경 장식 원 — 마우스 트래킹으로 각각 다른 방향/속도로 움직임 */}
 			<motion.div
 				style={{ x: x1, y: y1 }}
-				className="absolute -top-8 -left-8 h-36 w-36 rounded-full bg-purple-300/30"
+				className="absolute -top-8 -left-8 hidden h-36 w-36 rounded-full bg-purple-300/30 md:block"
 			/>
 			<motion.div
 				style={{ x: x2, y: y2 }}
-				className="absolute -bottom-8 left-1/4 h-28 w-28 rounded-full bg-purple-300/20"
+				className="absolute -bottom-8 left-1/4 hidden h-28 w-28 rounded-full bg-purple-300/20 md:block"
 			/>
 			<motion.div
 				style={{ x: x3, y: y3 }}
-				className="absolute -top-6 left-1/2 h-20 w-20 rounded-full bg-purple-200/40"
+				className="absolute -top-6 left-1/2 hidden h-20 w-20 rounded-full bg-purple-200/40 md:block"
 			/>
 			<motion.div
 				style={{ x: x4, y: y4 }}
-				className="absolute -right-4 -bottom-4 h-32 w-32 rounded-full bg-purple-300/25 md:h-48 md:w-48"
+				className="absolute -right-4 -bottom-4 hidden h-32 w-32 rounded-full bg-purple-300/25 md:block md:h-48 md:w-48"
 			/>
 
 			{/* 왼쪽 — 타이핑 텍스트 / 서브 문구 / marquee 태그 */}
@@ -187,7 +188,7 @@ export default function ConnectBanner({ className }: { className?: string }) {
 				</p>
 
 				{/* marquee — 태그를 2배 복제해서 끊김 없이 무한 흐름 */}
-				<div className="w-[260px] overflow-hidden md:w-[380px] lg:w-[460px]">
+				<div className="w-full overflow-hidden md:w-[380px] lg:w-[460px]">
 					<div className={styles.marquee}>
 						{doubled.map((tag, i) => (
 							<span

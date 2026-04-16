@@ -22,10 +22,10 @@ export default function IntroSection() {
 	return (
 		<>
 			{/* 배너 */}
-			<div className="mt-12">
+			<div className="mt-0 md:-mx-1 md:mt-6.5">
 				<Suspense
 					fallback={
-						<div className="h-48 w-full animate-pulse rounded-none bg-purple-100 md:h-[244px] md:rounded-3xl lg:rounded-4xl" />
+						<div className="h-48 w-full animate-pulse bg-purple-100 md:h-[244px] md:rounded-3xl lg:rounded-4xl" />
 					}>
 					<Banner />
 				</Suspense>
