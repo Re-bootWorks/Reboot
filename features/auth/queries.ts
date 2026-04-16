@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { clientFetch } from "@/libs/clientFetch";
 import { User } from "@/features/auth/types";
+import { authQueryKeys } from "../shared/queryKeys/auth";
+
 async function getMe(): Promise<User> {
 	const response = await clientFetch("/users/me");
 
@@ -11,7 +13,7 @@ async function getMe(): Promise<User> {
 
 export function useGetMe() {
 	return useQuery({
-		queryKey: ["me"],
+		queryKey: authQueryKeys.me,
 		queryFn: getMe,
 		retry: false,
 		staleTime: 1000 * 60 * 5,
