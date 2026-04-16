@@ -113,7 +113,10 @@ function EditForm({ onClose, isOpen, onSubmit, isPending, participantCount }: Ed
 			}>
 			{/* 탭 */}
 			<div className="mb-4 [&_li]:sm:grow">
-				<PageTabs defaultId={TAB_IDS.BASIC} onChange={({ id }) => setActiveTab(id as TabId)}>
+				<PageTabs
+					key={activeTab}
+					defaultId={activeTab}
+					onChange={({ id }) => setActiveTab(id as TabId)}>
 					<PageTabs.Item id={TAB_IDS.BASIC}>기본 정보</PageTabs.Item>
 					<PageTabs.Item id={TAB_IDS.SCHEDULE}>일정 및 인원</PageTabs.Item>
 				</PageTabs>
