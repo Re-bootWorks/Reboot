@@ -9,6 +9,7 @@ import { modalSizeStyle } from "@/features/meetup/styles";
 import Button from "@/components/ui/Buttons/Button";
 import { Modal } from "@/components/ui/Modals";
 import { IcCalendarOutline, IcChevronRight, IcDotPoints, IcLocation } from "@/components/ui/icons";
+import { MEETUP_DETAIL_PATH } from "@/constants/navigation";
 
 interface JoinModalProps {
 	selectedData: MeetupItemSelected | null;
@@ -84,7 +85,7 @@ function JoinModalContent({ selectedData, isOpen, onClose }: JoinModalContentPro
 			<div className="mt-2 text-right">
 				<Link
 					className="inline-flex items-center text-sm text-purple-500 md:text-base"
-					href={`/meetup/${selectedData.id}`}>
+					href={MEETUP_DETAIL_PATH(selectedData.id)}>
 					상세 보기
 					<IcChevronRight {...iconProps} />
 				</Link>
