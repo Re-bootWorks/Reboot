@@ -7,9 +7,9 @@ import NotificationPanel from "../NotificationPanel";
 
 const POPOVER_STYLE = {
 	popoverButton: "cursor-pointer focus:outline-transparent focus-visible:outline-none",
-	popoverBackdrop: "bg-black-50 fixed inset-0 md:bg-transparent",
+	popoverBackdrop: "bg-black-50 fixed inset-0 md:bg-transparent h-dvh",
 	popoverPanel:
-		"fixed inset-0 ml-auto flex h-full w-11/12 max-w-xl flex-col gap-4 rounded-l-3xl bg-white py-6 shadow-lg md:absolute md:top-[calc(100%+1rem)] md:-right-5 md:h-fit md:w-80 md:rounded-r-3xl",
+		"fixed inset-0 h-dvh ml-auto flex w-11/12 max-w-xl flex-col gap-4 rounded-l-3xl bg-white py-6 shadow-lg md:absolute md:top-[calc(100%+1rem)] md:-right-5 md:h-fit md:w-80 md:rounded-r-3xl",
 };
 
 export default function Notification() {
