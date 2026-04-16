@@ -53,8 +53,8 @@ export function CreateFormView() {
 						"flex h-full min-h-0 w-full max-w-lg flex-col items-stretch rounded-2xl bg-white p-6 shadow-lg",
 						"md:max-w-none md:rounded-none md:bg-transparent md:p-0 md:shadow-none",
 					)}>
-					<FormHeader className="shrink-0 pb-8 md:pb-12" />
-					<CreateForm onClose={onClose} onSuccess={onSuccess} footerClassName="mt-auto" />
+					<FormHeader className="shrink-0 pb-4 md:pb-12" />
+					<CreateForm onClose={onClose} onSuccess={onSuccess} footerClassName="pt-4 md:pt-12" />
 				</div>
 			</FormDataProvider>
 		</FormStepProvider>

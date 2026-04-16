@@ -1,6 +1,7 @@
 import { useToast } from "@/providers/toast-provider";
 import { useRouter } from "next/navigation";
 import { createSessionStore } from "./utils";
+import { MEETUP_DETAIL_PATH } from "@/constants/navigation";
 
 interface UseCreateMeetupProps {
 	/** 모달 닫기 함수 */
@@ -19,7 +20,7 @@ export function useCreateMeetup({ close }: UseCreateMeetupProps = {}) {
 		createSessionStore.remove();
 		handleShowToast({ message: "모임 생성이 완료되었습니다!", status: "success" });
 		if (close) close();
-		setTimeout(() => router.replace(`/meetup/${id}`), 2000);
+		setTimeout(() => router.replace(MEETUP_DETAIL_PATH(id)), 2000);
 	}
 
 	return { onClose, onSuccess };

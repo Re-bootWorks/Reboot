@@ -44,7 +44,7 @@ export default function ScrollTopButton({
 					exit={{ opacity: 0, y: 12 }}
 					transition={{ duration: 0.18, ease: "linear" }}
 					className={cn(
-						"fixed right-6 bottom-6 z-10 flex size-12 cursor-pointer items-center justify-center rounded-full bg-purple-500 shadow-[0_8px_16px_rgba(0,0,0,0.4)]",
+						"fixed right-6 bottom-6 z-10 flex size-12 cursor-pointer items-center justify-center rounded-full bg-purple-500 shadow-lg",
 						className,
 					)}
 					onClick={scrollToTop}

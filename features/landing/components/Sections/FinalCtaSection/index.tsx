@@ -44,14 +44,15 @@ export default function FinalCtaSection() {
 					<MotionFadeUp delay={0.16}>
 						<Link href="/meetup/list" className="flex w-full justify-center">
 							<motion.div
-								animate={{ scale: [1, 1.03, 1] }}
+								animate={{ rotate: [0, 0, 0, -2, 2, -2, 2, 0] }}
 								transition={{
-									duration: 1.5,
+									duration: 0.8,
 									repeat: Infinity,
+									repeatDelay: 2.3,
 									ease: "easeInOut",
 								}}
-								whileTap={{ scale: 0.96 }}>
-								<Button className="mt-10 h-12 w-35 text-base font-normal hover:text-white md:mt-16 md:h-15 md:w-42.5 md:text-xl">
+								whileTap={{ scale: 0.97 }}>
+								<Button className="mt-10 h-12 w-35 rounded-2xl border border-white/20 bg-gradient-to-b from-purple-700 via-purple-500 to-purple-400 text-base font-normal text-white shadow-[inset_0_1.5px_0_rgba(255,255,255,0.35),inset_0_-2px_0_rgba(42,25,125,0.35),0_10px_20px_rgba(69,44,192,0.28)] transition-all duration-200 hover:text-white hover:shadow-[inset_0_1.5px_0_rgba(255,255,255,0.38),inset_0_-2px_0_rgba(42,25,125,0.4),0_0_0_1px_rgba(255,255,255,0.06),0_0_18px_rgba(117,102,229,0.22),0_14px_28px_rgba(69,44,192,0.36)] active:translate-y-[1px] md:mt-16 md:h-15 md:w-42.5 md:text-xl">
 									모임 찾아보기
 								</Button>
 							</motion.div>

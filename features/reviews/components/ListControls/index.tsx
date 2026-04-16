@@ -1,11 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import useScrollOnNextQueryChange from "@/hooks/useScrollOnNextQueryChange";
 import useScrollFloatingVisibility from "@/hooks/useScrollFloatingVisibility";
 import { cn } from "@/utils/cn";
 import CategoryTabs from "./CategoryTabs";
 import ListFilters from "./ListFilters";
+import { useReviewsListScroll } from "../providers/ReviewsListScrollProvider";
 
 const MOBILE_STICKY_OFFSET = 48;
 
@@ -33,7 +33,7 @@ function ListControlsContent({ headingId, className, onWillChange }: ListControl
 }
 
 export default function ListControls() {
-	const { scrollAnchorRef, markWillChange } = useScrollOnNextQueryChange<HTMLDivElement>();
+	const { markWillChange } = useReviewsListScroll();
 	const triggerRef = useRef<HTMLDivElement>(null);
 	const { isVisible, hasPassedThreshold } = useScrollFloatingVisibility({
 		offset: MOBILE_STICKY_OFFSET,
@@ -43,7 +43,6 @@ export default function ListControls() {
 
 	return (
 		<>
-			<div ref={scrollAnchorRef} aria-hidden="true" className="scroll-mt-12 md:scroll-mt-22" />
 			<div
 				ref={triggerRef}
 				className="scroll-mt-12 md:sticky md:top-22 md:z-9 md:scroll-mt-22 md:bg-gray-50 md:py-3">

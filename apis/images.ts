@@ -43,9 +43,14 @@ async function getPresignedUrl(fileName: string, contentType: string, folder: st
 		body: JSON.stringify({ fileName, contentType, folder }),
 	});
 
-	const data = await res.json();
-	if (!res.ok) throw new Error(data.message);
-	return data;
+	if (!res.ok) {
+		const error: ErrorResponse = await res.json().catch(() => ({
+			code: "UNKNOWN_ERROR",
+			message: "업로드 주소 생성 중 알 수 없는 에러가 발생했습니다.",
+		}));
+		throw new Error(error.message);
+	}
+	return res.json();
 }
 
 /** 이미지 업로드 Step2: S3에 이미지 업로드 */
@@ -57,7 +62,13 @@ async function uploadToS3(presignedUrl: string, file: File) {
 		body: file,
 	});
 
-	const data = await res.json();
-	if (!res.ok) throw new Error(data.message);
-	return data;
+	if (!res.ok) {
+		const error: ErrorResponse = await res.json().catch(() => ({
+			code: "UNKNOWN_ERROR",
+			message: "업로드 중 알 수 없는 에러가 발생했습니다.",
+		}));
+		throw new Error(error.message);
+	}
+
+	return res.json();
 }

@@ -58,7 +58,6 @@ export default function PostContainer() {
 	const handleSearch = () => {
 		setPage(1);
 		setSearchKeyword(keyword);
-		router.push("?page=1", { scroll: false });
 	};
 
 	const posts = data?.data ?? [];

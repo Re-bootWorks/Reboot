@@ -16,7 +16,10 @@ import { mypageQueryKeys } from "@/features/mypage/queries";
  * handleWishToggle(item.id, item.isFavorited)
  */
 
-const favoriteQueryPrefixes = [mypageQueryKeys.meetup.all];
+const favoriteQueryPrefixes = [
+	mypageQueryKeys.meetup.all,
+	mypageQueryKeys.review.available,
+] as const;
 
 export default function useMeetingFavorite() {
 	const queryClient = useQueryClient();

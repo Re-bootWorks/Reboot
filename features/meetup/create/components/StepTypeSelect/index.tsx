@@ -28,15 +28,16 @@ export default function StepTypeSelect({ step }: StepTypeSelectProps) {
 	}, [data.type, setStepValid, step]);
 
 	return (
-		<fieldset>
-			<legend className="mb-5 block w-full text-gray-800">
+		<fieldset className="flex min-h-0 min-w-0 flex-1 flex-col">
+			<legend className="mb-5 block w-full shrink-0 text-gray-800">
 				{DESC}
 				<span className="ml-0.5 text-purple-500">*</span>
 			</legend>
-			<div className="grid grid-cols-2 justify-items-center gap-5 md:grid-cols-3">
+			<div className="grid min-h-0 min-w-0 flex-1 auto-rows-fr grid-cols-2 gap-2 md:grid-cols-3 md:gap-5">
 				{categories.map((type, index) => (
 					<motion.div
 						key={type.id}
+						className="h-full min-h-0 w-full min-w-0"
 						initial={{ opacity: 0, y: 10 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{

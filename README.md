@@ -1,36 +1,335 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 📝 RE:BOOT(리부트)
 
-## Getting Started
+<p><em>“나의 에너지를 재충전할 최적의 모임을 만나다”</em></p>
 
-First, run the development server:
+<p>
+	사용자가 관심사 기반으로 모임을 탐색하고, 참여 · 개설 · 관리하며,<br />
+	리뷰와 게시판 기능을 통해 소통까지 이어질 수 있도록 구현한 커뮤니티형 모임 플랫폼
+</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+<br />
+
+## 📎 링크
+
+| 구분                 | 링크          |
+| -------------------- | ------------- |
+| 🌐 서비스 URL        | [배포 링크]   |
+| 💻 GitHub Repository | [GitHub 링크] |
+| 📄 API 문서          | [링크]        |
+| 🎨 Figma             | [링크]        |
+| 📋 기획 노션         | [링크]        |
+
+<br />
+
+## 📌 프로젝트 개요
+
+기존 모임 서비스는 정보가 흩어져 있거나 탐색 흐름이 복잡해,  
+사용자가 자신에게 맞는 모임을 빠르게 찾기 어렵다는 문제가 있다고 판단했습니다.
+
+RE:BOOT는 이런 불편을 줄이기 위해,  
+관심사 기반 탐색부터 참여, 개설, 관리, 리뷰, 커뮤니티 기능까지 하나의 흐름으로 자연스럽게 이어질 수 있도록 설계한 서비스입니다.
+
+사용자는 지역, 날짜, 카테고리 조건을 바탕으로 원하는 모임을 탐색할 수 있고,  
+찜하기와 참여 신청, 참여 후 리뷰 작성, 게시판 소통, 알림과 마이페이지를 통한 활동 관리까지 이어서 경험할 수 있습니다.
+
+### 핵심 목표
+
+- 관심사 기반으로 모임을 쉽게 탐색할 수 있는 구조 만들기
+- 지역, 일정, 카테고리 등 조건 중심으로 빠르게 비교할 수 있도록 하기
+- 찜, 참여, 리뷰, 커뮤니티 흐름을 연결해 사용자 행동이 끊기지 않도록 하기
+- 모바일, 태블릿, 데스크탑 환경에서 일관된 탐색 경험 제공하기
+
+### 주요 기능
+
+- **모임 탐색**: 지역 · 날짜 · 카테고리 기반으로 원하는 모임 탐색
+- **모임 참여/관리**: 모임 참여, 찜하기, 모임 개설 및 관리 기능 제공
+- **리뷰 기능**: 참여 후 리뷰 작성 및 조회 지원
+- **커뮤니티 기능**: 커넥트(자유게시판)에서 게시글 · 댓글 기반 소통 지원
+- **개인화 기능**: 알림과 마이페이지를 통한 개인 활동 관리
+
+<br />
+
+## 👥 팀원 소개
+
+하츄핑 이미지 넣을 예정
+| <img src="https://via.placeholder.com/80" width="80" height="80" style="border-radius:50%" /> | <img src="https://via.placeholder.com/80" width="80" height="80" style="border-radius:50%" /> | <img src="https://via.placeholder.com/80" width="80" height="80" style="border-radius:50%" /> | <img src="https://via.placeholder.com/80" width="80" height="80" style="border-radius:50%" /> | <img src="https://via.placeholder.com/80" width="80" height="80" style="border-radius:50%" /> | <img src="https://via.placeholder.com/80" width="80" height="80" style="border-radius:50%" /> |
+| :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: |
+| **위소현** | **김재희** | **박근원** | **송태하** | **전유영** | **최상호** |
+| 팀장 / FE | FE | FE | FE | FE | FE |
+| 노션 문서화 및 정리 | README.md 작성 | 프로젝트 초기 설정 | 인증관리 | 시연영상 제작 | 최종 발표 |
+| font, GNB & Sidebar, Notification, Empty, GNB Badge, Toast, Page Container, Avatar, Alert | Button, Utility button, Tab button, Dropdown, Picker, PageIntro | Tags, Status Label, Badges | Create button, Social button, Icon button, Input field, Modals | Textarea, File, Mypage Tabs, Icon, Progress bar, Category tab, GroupCard, LoaderDots | Filter, Pagination, Search Input |
+| 마이페이지, GNB & 알림내역 | 랜딩페이지, 찜한모임, 모든리뷰, 404페이지 | 모임 상세페이지 | 로그인, 회원가입, 유저페이지 | 모임찾기, 모임 만들기(모달) | 커넥트(자유게시판) CRUD 전 부분, 프로필 모달 |
+
+<br />
+
+## 🛠️ 기술 스택
+
+### Frontend
+
+| 기술         | 버전 | 선택 이유                                                                                                |
+| ------------ | ---- | -------------------------------------------------------------------------------------------------------- |
+| React        | v19  | 컴포넌트 기반 UI 구성 및 생태계 활용                                                                     |
+| Next.js      | v15  | App Router 기반 라우팅과 레이아웃 구조 분리, `(auth)` / `(main)` route group으로 페이지 흐름 명확히 분리 |
+| TypeScript   | v5   | API 요청/응답 타입 관리, 컴포넌트 props·서버 데이터·상태 구조를 안정적으로 다루기 위해 사용              |
+| Tailwind CSS | v4   | 반복 UI를 빠르게 구현하고, 반응형 스타일을 한 파일 안에서 일관되게 관리                                  |
+
+### 상태 관리 / 데이터 패칭
+
+| 기술            | 버전 | 선택 이유                                                               |
+| --------------- | ---- | ----------------------------------------------------------------------- |
+| TanStack Query  | v5   | 서버 상태, 캐시, 무한 스크롤, mutation 이후 동기화까지 한 흐름으로 관리 |
+| Zustand         | v5   | 가볍고 직관적인 전역 클라이언트 상태 관리                               |
+| React Hook Form | v7   | 폼 상태와 유효성 검사를 효율적으로 처리                                 |
+| Zod             | v4   | 스키마 기반 유효성 검사로 타입 안전성 확보                              |
+
+### 개발 환경 / 품질
+
+| 기술      | 버전 | 용도                                                                      |
+| --------- | ---- | ------------------------------------------------------------------------- |
+| MSW       | v2   | 백엔드 미완성 상황에서도 API 응답을 가정한 개발 가능하도록 Mock 환경 구성 |
+| Storybook | v10  | 컴포넌트 단위 문서화 및 독립 개발                                         |
+| ESLint    | v9   | 코드 품질 및 스타일 일관성 유지                                           |
+| Prettier  | v3   | 코드 포맷 자동화                                                          |
+| pnpm      | -    | 빠른 패키지 설치 및 디스크 효율                                           |
+
+### 협업 및 프로젝트 관리
+
+`Git` `GitHub` `Notion` `Figma` `Discord`
+
+<br />
+
+## ✨ 주요 기능 (더 자세하게 수정할 예정)
+
+### 1. 랜딩 페이지
+
+- 서비스 핵심 가치 전달 및 카테고리 기반 모임 탐색 유도
+- 후기 카드와 CTA를 통한 서비스 신뢰 형성
+- 스크롤 기반 인터랙션 섹션
+
+### 2. 모임 목록
+
+- 카테고리, 지역, 일정, 정렬 조건 기반 필터링
+- 무한 스크롤 기반 목록 조회
+- 필터 변경 시 결과 시작 지점으로 자동 스크롤 보정
+- 화면 크기별 반응형 필터 UI (데스크탑: sticky 필터바 / 모바일: 플로팅 필터바)
+
+### 3. 모임 상세
+
+- 모임 상세 정보, 참여 인원, 관련 모임, 리뷰 조회
+- 찜하기 / 참여 신청 기능
+
+### 4. 찜한 모임
+
+- 저장한 모임을 모아보는 개인화 페이지
+- 조건별 필터링 및 상태별 UI 분리
+- 액션 이후 관련 데이터 자동 동기화
+
+### 5. 모든 리뷰
+
+- 전체 리뷰 목록 탐색 및 평점 요약 통계
+- 리뷰 더보기 / 접기 기능
+- 내 리뷰 수정 / 삭제
+- 무한 스크롤 기반 탐색
+
+### 6. 자유 게시판
+
+- 게시글 목록 / 상세 / 작성 / 수정 / 삭제
+- 페이지네이션 기반 목록 탐색
+
+<br />
+
+## 📁 폴더 구조
+
+```
+├── 📁 app/
+│   ├── 📁 (auth)/                     # 로그인, 회원가입 경로
+│   │   ├── login/
+│   │   ├── signup/
+│   │   └── oauth/
+│   ├── 📁 (main)/
+│   │   └── 📁 <kebab-case>/           # 모임찾기, 찜한모임, 모든리뷰, 게시판 등
+│   │       ├── page.tsx
+│   │       └── layout.tsx
+│   ├── layout.tsx
+│   └── page.tsx
+│
+├── 📁 components/
+│   ├── 📁 ui/                         # 기본 UI 컴포넌트 (Button, Input 등)
+│   │   └── Button/
+│   │       ├── index.tsx
+│   │       └── index.stories.tsx
+│   └── 📁 layout/                     # 레이아웃 컴포넌트 (Header, Footer)
+│
+├── 📁 features/                       # 도메인 단위 기능 모듈
+│   └── 📁 <camelCase>/
+│       ├── 📁 components/             # 해당 페이지 전용 컴포넌트
+│       ├── apis.ts                    # API 호출
+│       ├── mutations.ts               # useMutation
+│       ├── queries.ts                 # useQuery
+│       ├── types.ts                   # 페이지 전용 타입
+│       ├── hooks.ts                   # 페이지 전용 커스텀 훅
+│       └── utils.ts                   # 페이지 전용 유틸 함수
+│
+├── 📁 libs/                           # 공통 라이브러리 설정 및 인프라 모듈
+├── 📁 utils/                          # 범용 유틸 함수
+└── 📁 hooks/                          # 전역 커스텀 훅
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**구조 설계 원칙**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 인증 관련 페이지 `(auth)` / 일반 페이지 `(main)` 로 route group 분리
+- `app/` 하위 폴더명: **케밥 케이스** / `features/` 하위 폴더명: **카멜 케이스**
+- 큰 단위의 컴포넌트 내에 작은 단위 컴포넌트 파일을 중첩 생성 (파일명: **파스칼 케이스**)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📅 개발 기간 및 진행 과정
 
-## Learn More
+**2026.03.08 – 2026.04.17** (약 6주)
 
-To learn more about Next.js, take a look at the following resources:
+| 기간       | 내용                                     |
+| ---------- | ---------------------------------------- |
+| 2026.03.08 | 프로젝트 주제 선정 및 초기 세팅 진행     |
+| 2026.03.15 | R&R 분배 후 공통 UI 컴포넌트 개발 시작   |
+| 2026.03.22 | 기능 및 페이지 제작 1차                  |
+| 2026.03.29 | 기능 및 페이지 제작 2차                  |
+| 2026.04.01 | 배포 및 기본적인 QA 진행                 |
+| 2026.04.15 | 추가 기능 구현 및 개선, 테스트 코드 작성 |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 진행 단계
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**기획 단계**
 
-## Deploy on Vercel
+- 프로젝트 주제 선정 및 리브랜딩 (대표 색상 선정)
+- 초기 프로젝트 셋팅
+  **개발 단계**
+- R&R 분배
+- 공통 및 로컬 컴포넌트 구현 (Storybook 테스트 병행)
+- 담당 페이지 및 기능 개발
+  **검토 단계**
+- 배포 후 QA 피드백 반영하여 수정
+- 최종 검토 및 배포
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<br />
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔁 협업 방식
+
+### Git Flow 전략
+
+```
+main ──────────────────────────────────────────▶ (프로덕션 배포)
+  └── develop ────────────────────────────────▶ (통합 개발 브랜치)
+        ├── feature/브랜치 ──▶ merge ──▶ develop
+        └── hotfix/브랜치  ──▶ merge ──▶ develop & main
+```
+
+| 브랜치    | 용도                                                                    |
+| --------- | ----------------------------------------------------------------------- |
+| `main`    | 실제 서비스에 배포되는 프로덕션 코드                                    |
+| `develop` | 개발 중인 최신 기능이 통합되는 브랜치                                   |
+| `feature` | 새로운 기능 개발 (develop에서 파생, 완료 후 develop으로 PR)             |
+| `hotfix`  | 운영 중인 긴급 버그 수정 (main에서 파생, 수정 후 main & develop에 병합) |
+
+> `release` 브랜치는 현 단계에서는 미사용
+
+### 브랜치 네이밍 규칙
+
+```bash
+# format
+#{이슈번호}-{기능종류}-{작업설명}
+
+# example
+#1-feat-login
+#23-feat-ui
+#25-chore-dependency
+```
+
+| 접두사         | 의미                                  |
+| -------------- | ------------------------------------- |
+| `feat/`        | 새로운 기능 추가                      |
+| `fix/`         | 버그 수정                             |
+| `refactor/`    | 코드 리팩토링                         |
+| `chore/`       | 빌드 관련 수정, 패키지 매니저 설정 등 |
+| `test/`        | 테스트 코드 추가/수정                 |
+| `docs/`        | 문서 수정                             |
+| `improvement/` | 기존 기능 개선                        |
+| `config/`      | 환경 설정                             |
+
+### 커밋 컨벤션
+
+```
+<타입>(<범위>): <제목>  ← 40자 이내
+
+<본문>  ← 선택 사항, 72자 이내 줄 바꿈
+
+Resolves: #<이슈번호>
+See also: None
+```
+
+| 타입       | 의미                             |
+| ---------- | -------------------------------- |
+| `feat`     | 새로운 기능 추가                 |
+| `fix`      | 버그 수정                        |
+| `docs`     | 문서 수정                        |
+| `style`    | 코드 포맷팅, 코드 변경 없는 경우 |
+| `refactor` | 코드 리팩토링                    |
+| `test`     | 테스트 코드 추가/수정            |
+| `chore`    | 빌드 관련, 패키지 매니저 설정 등 |
+
+<br />
+
+## 🚨 트러블슈팅
+
+### 1. 트러블 슈팅 1
+
+**문제**  
+문제 내용
+
+**해결**  
+해결 내용
+
+**결과**  
+결과
+
+---
+
+### 2. 트러블 슈팅 2
+
+**문제**  
+문제 내용
+
+**해결**  
+해결 내용
+
+**결과**  
+결과
+
+<br />
+
+## 💡 개선 및 고도화 예정
+
+- 실제 사용자 테스트를 통한 탐색 UX 검증이 아직 충분하지 않아 추후 진행 예정
+- 주요 사용자 흐름을 안정적으로 검증할 수 있도록 테스트 코드 범위 확대 예정
+- 키보드 탐색, 스크린리더 대응 등 접근성 보완 예정
+
+<br />
+
+## ⚙️ 실행 방법
+
+```bash
+# 1. 저장소 클론
+git clone [repository-url]
+
+# 2. 패키지 설치
+pnpm install
+
+# 3. 개발 서버 실행
+pnpm dev
+
+# 4. 브라우저 접속
+http://localhost:3000
+```
+
+### 환경 변수
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=
+```
