@@ -133,7 +133,7 @@ export default function CommentCards({
 			</div>
 
 			<div className="flex h-fit w-full flex-col items-center gap-8 md:gap-10">
-				<div className="flex h-fit w-full flex-col items-center gap-2.5 overflow-hidden rounded-3xl bg-white px-5 pb-2 md:rounded-4xl md:px-12 md:py-6">
+				<div className="flex h-fit w-full flex-col items-center gap-2.5 overflow-hidden rounded-[20px] bg-white px-5 pb-2 md:px-12 md:py-6 lg:rounded-4xl">
 					{hasComments ? (
 						<div className="flex h-fit w-full flex-col">
 							{comments.map((comment) => (
