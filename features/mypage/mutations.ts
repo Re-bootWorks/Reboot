@@ -129,7 +129,7 @@ export function useDeleteMeetings() {
 	});
 }
 
-// 참가자 예약 취소
+// 참가자 참여 취소
 export function useDeleteMeetingsJoin() {
 	const queryClient = useQueryClient();
 	const { handleShowToast } = useToast();
@@ -155,7 +155,7 @@ export function useDeleteMeetingsJoin() {
 
 		onError: () => {
 			handleShowToast({
-				message: "모임 예약 취소에 실패했습니다.\n잠시 후 다시 시도해주세요.",
+				message: "모임 참여 취소에 실패했습니다.\n잠시 후 다시 시도해주세요.",
 				status: "error",
 			});
 		},

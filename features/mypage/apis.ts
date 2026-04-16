@@ -141,7 +141,7 @@ export async function deleteMeetingsJoin({ meetingId }: { meetingId: number }): 
 		method: "DELETE",
 	});
 
-	await throwApiError(res, "모임 예약 취소에 실패했습니다.");
+	await throwApiError(res, "모임 참여 취소에 실패했습니다.");
 }
 
 // 리뷰 작성 하기
