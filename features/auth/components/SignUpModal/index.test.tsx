@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { SignUpModal } from ".";
-import { useModalStore } from "../../../../store/modal.store";
+import { SignUpModal } from "@/features/auth/components/SignUpModal";
+import { useModalStore } from "@/store/modal.store";
 
 jest.mock("next/navigation", () => ({
 	useRouter: jest.fn().mockReturnValue({ push: jest.fn() }),

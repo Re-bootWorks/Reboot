@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { server } from "@/mocks/server";
-import { postLogin, postLogout, postSignUp, postOAuthLogin } from "./apis";
+import { postLogin, postLogout, postSignUp, postOAuthLogin } from "@/features/auth/apis";
 
 describe("auth apis 테스트", () => {
 	describe("postLogin", () => {

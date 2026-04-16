@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { LoginModal } from ".";
+import { LoginModal } from "@/features/auth/components/LoginModal";
 import { useModalStore } from "@/store/modal.store";
 
 jest.mock("next/navigation", () => ({
