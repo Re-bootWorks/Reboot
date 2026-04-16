@@ -4,6 +4,7 @@ import { Modal } from "@/components/ui/Modals";
 import { useModalStore } from "@/store/modal.store";
 import { usePathname, useRouter } from "next/navigation";
 import { LoginForm } from "./LoginForm";
+import { useEffect } from "react";
 interface LoginModalProps {
 	hideCloseButton?: boolean;
 }
@@ -12,6 +13,10 @@ export function LoginModal({ hideCloseButton }: LoginModalProps) {
 	const { loginOpen, closeLogin, openSignup } = useModalStore();
 	const pathname = usePathname();
 	const router = useRouter();
+
+	useEffect(() => {
+		if (pathname === "/login") closeLogin();
+	}, [pathname]);
 
 	function handleSuccess() {
 		closeLogin();

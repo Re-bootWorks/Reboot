@@ -7,7 +7,7 @@ interface UseScrollOnNextQueryChangeProps {
 	behavior?: "auto" | "smooth";
 }
 export default function useScrollOnNextQueryChange<T extends HTMLElement = HTMLDivElement>({
-	behavior = "smooth",
+	behavior = "auto",
 }: UseScrollOnNextQueryChangeProps = {}) {
 	const searchParams = useSearchParams();
 	const searchParamsKey = searchParams.toString();

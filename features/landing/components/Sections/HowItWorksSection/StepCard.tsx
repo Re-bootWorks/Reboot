@@ -48,7 +48,7 @@ export default function StepCard({ steps, activeIndex }: StepCardProps) {
 									{activeStep.title}
 								</h3>
 
-								<p className="text-sm text-gray-600 md:text-base lg:h-15 lg:text-xl">
+								<p className="h-10 text-sm text-gray-600 md:h-auto md:text-base lg:h-15 lg:text-xl">
 									{activeStep.description}
 								</p>
 							</motion.div>

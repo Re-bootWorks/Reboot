@@ -11,11 +11,11 @@ export default function MeetupDescSection({ meetupId }: { meetupId: number }) {
 			initial="hidden"
 			whileInView="visible"
 			viewport={{ once: true, amount: 0.1 }}
-			className="mt-10 flex h-fit w-full flex-col gap-3 md:gap-4 lg:gap-5">
+			className="flex h-fit w-full flex-col gap-3 md:gap-4 lg:gap-5">
 			<span className="pl-1.5 text-base font-semibold md:text-xl lg:pl-2.5 lg:text-2xl">
 				모임 설명
 			</span>
-			<div className="w-full overflow-hidden rounded-3xl bg-white px-5 py-4 md:rounded-4xl md:px-12 md:py-6">
+			<div className="w-full overflow-hidden rounded-[20px] bg-white px-5 py-4 md:px-12 md:py-6 lg:rounded-4xl">
 				<span className="text-sm font-normal whitespace-pre-line text-gray-700 md:text-lg">
 					{meeting.description}
 				</span>

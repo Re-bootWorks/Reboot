@@ -21,6 +21,7 @@ export default function CommentInput({ onSubmit, isPending }: CommentInputProps)
 	const [imageUrl, setImageUrl] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState(false);
 	const fileRef = useRef<HTMLInputElement>(null);
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const { handleShowToast } = useToast();
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,10 +65,13 @@ export default function CommentInput({ onSubmit, isPending }: CommentInputProps)
 		setText("");
 		setPreviewUrl(null);
 		setImageUrl(null);
+		if (textareaRef.current) {
+			textareaRef.current.style.height = "auto";
+		}
 	};
 
 	return (
-		<div className="flex flex-1 flex-col gap-2 rounded-2xl bg-gray-100 px-2 py-2">
+		<div className="flex flex-1 flex-col gap-1.5 rounded-xl bg-gray-100 px-1.5 py-1.5 md:gap-2 md:rounded-2xl md:px-2 md:py-2">
 			{/* 텍스트 + 이미지첨부 + 등록버튼 */}
 			<div className="flex items-center gap-2.5">
 				{/* 이미지 첨부 버튼 */}
@@ -87,6 +91,7 @@ export default function CommentInput({ onSubmit, isPending }: CommentInputProps)
 				/>
 
 				<textarea
+					ref={textareaRef}
 					value={text}
 					onChange={(e) => {
 						setText(e.target.value);
@@ -95,14 +100,15 @@ export default function CommentInput({ onSubmit, isPending }: CommentInputProps)
 					}}
 					placeholder="여기에 댓글을 남겨보세요"
 					rows={1}
-					className="min-w-0 flex-1 resize-none bg-gray-100 outline-none placeholder:text-gray-500"
+					className="min-w-0 flex-1 resize-none bg-gray-100 text-sm outline-none placeholder:text-gray-500 md:text-base"
 					style={{ height: "auto", overflowY: "hidden" }}
 				/>
 
 				<Button
 					onClick={handleSubmit}
 					disabled={isPending || isUploading}
-					className="h-12 w-8 shrink-0 rounded-[0.75rem] px-6 py-2 text-base font-semibold">
+					sizes="small"
+					className="h-9 w-auto shrink-0 rounded-[0.75rem] text-sm font-semibold md:h-12 md:px-6 md:py-2 md:text-base">
 					{isUploading ? "..." : "등록"}
 				</Button>
 			</div>

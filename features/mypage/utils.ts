@@ -13,7 +13,7 @@ export interface HostMeetupActionHandlers {
 }
 
 export interface ParticipantMeetupActionHandlers {
-	/** 모임 예약 취소 */
+	/** 모임 참여 취소 */
 	onCancelReservation: () => void;
 	onWriteReview: () => void;
 }
@@ -58,7 +58,7 @@ export function cancelReservationAction(
 	handlers: ParticipantMeetupActionHandlers,
 ): DetailCardAction {
 	return {
-		label: "예약 취소하기",
+		label: "참여 취소하기",
 		variant: "purpleBorder",
 		handleCardButtonClick: handlers.onCancelReservation,
 	};

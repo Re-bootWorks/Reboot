@@ -55,18 +55,20 @@ export function useToggleConnectLike(postId: number) {
 			return { previous };
 		},
 
-		// 실패 시 롤백 + 사용자/개발자 에러 처리
+		onSuccess: () => {
+			// lists만 stale 표시 → 목록으로 돌아갈 때 자동 갱신
+			queryClient.invalidateQueries({
+				queryKey: connectQueryKeys.lists(),
+				refetchType: "none", // 즉시 refetch 안 함
+			});
+		},
+
 		onError: (err, _vars, context) => {
 			if (context?.previous) {
 				queryClient.setQueryData(connectQueryKeys.detail(postId), context.previous);
 			}
-			console.error("[useToggleConnectLike]", err); // 개발자용
-			handleShowToast({ message: "좋아요 처리에 실패했습니다.", status: "error" }); // 사용자용
-		},
-
-		// 성공/실패 무관하게 최종 동기화
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: connectQueryKeys.detail(postId) });
+			console.error("[useToggleConnectLike]", err);
+			handleShowToast({ message: "좋아요 처리에 실패했습니다.", status: "error" });
 		},
 	});
 }
@@ -84,8 +86,8 @@ export function useCreatePost() {
 		},
 
 		onError: (err) => {
-			console.error("[useCreatePost]", err); // 개발자용
-			handleShowToast({ message: "게시글 등록에 실패했습니다.", status: "error" }); // 사용자용
+			console.error("[useCreatePost]", err);
+			handleShowToast({ message: "게시글 등록에 실패했습니다.", status: "error" });
 		},
 	});
 }
@@ -105,8 +107,8 @@ export function useDeletePost(postId: number) {
 		},
 
 		onError: (err) => {
-			console.error("[useDeletePost]", err); // 개발자용
-			handleShowToast({ message: "게시글 삭제에 실패했습니다.", status: "error" }); // 사용자용
+			console.error("[useDeletePost]", err);
+			handleShowToast({ message: "게시글 삭제에 실패했습니다.", status: "error" });
 		},
 	});
 }
@@ -120,13 +122,12 @@ export function useUpdatePost(postId: number) {
 		mutationFn: (data: { title: string; content: string }) => updatePost(postId, data),
 
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: connectQueryKeys.detail(postId) }); // 해당 게시글 상세
 			queryClient.invalidateQueries({ queryKey: connectQueryKeys.lists() }); // 목록 전체
 		},
 
 		onError: (err) => {
-			console.error("[useUpdatePost]", err); // 개발자용
-			handleShowToast({ message: "게시글 수정에 실패했습니다.", status: "error" }); // 사용자용
+			console.error("[useUpdatePost]", err);
+			handleShowToast({ message: "게시글 수정에 실패했습니다.", status: "error" });
 		},
 	});
 }
@@ -139,7 +140,6 @@ export function useCreateComment(postId: number, onSuccess?: () => void) {
 
 	return useMutation({
 		mutationFn: createComment,
-
 		// Optimistic Update: 댓글 목록 최상단에 임시 댓글 선반영
 		onMutate: async (newComment: { postId: number; content: string }) => {
 			await queryClient.cancelQueries({ queryKey: connectQueryKeys.detail(postId) });
@@ -149,16 +149,19 @@ export function useCreateComment(postId: number, onSuccess?: () => void) {
 				if (!old) return old;
 				return {
 					...old,
+					commentCount: old.commentCount + 1,
 					comments: [
 						{
 							id: Date.now(),
 							content: newComment.content,
-							isPending: true,
 							author: {
 								id: user?.id ?? 0,
 								name: user?.name ?? "사용자",
+								image: user?.image ?? undefined,
 							},
 							createdAt: new Date().toISOString(),
+							likeCount: 0,
+							isLiked: false,
 						},
 						...old.comments,
 					],
@@ -168,19 +171,18 @@ export function useCreateComment(postId: number, onSuccess?: () => void) {
 			return { previousData };
 		},
 
-		// 실패 시 롤백 + 사용자/개발자 에러 처리
+		onSuccess: () => {
+			onSuccess?.();
+			queryClient.invalidateQueries({ queryKey: connectQueryKeys.detail(postId) });
+			invalidateHeaderQueries(queryClient);
+		},
+
 		onError: (err, _newComment, context) => {
 			if (context?.previousData) {
 				queryClient.setQueryData(connectQueryKeys.detail(postId), context.previousData);
 			}
-			console.error("[useCreateComment]", err); // 개발자용
-			handleShowToast({ message: "댓글 등록에 실패했습니다.", status: "error" }); // 사용자용
-		},
-
-		onSuccess: () => {
-			onSuccess?.();
-			queryClient.invalidateQueries({ queryKey: connectQueryKeys.detail(postId) }); // 게시글 상세(댓글 수 동기화)
-			invalidateHeaderQueries(queryClient);
+			console.error("[useCreateComment]", err);
+			handleShowToast({ message: "댓글 등록에 실패했습니다.", status: "error" });
 		},
 	});
 }
@@ -199,7 +201,6 @@ export function useUpdateComment({
 	return useMutation({
 		mutationFn: updateComment,
 
-		// Optimistic Update: 수정된 내용 즉시 반영
 		onMutate: async ({ commentId, content }) => {
 			await queryClient.cancelQueries({ queryKey: connectQueryKeys.detail(postId) });
 			const previousData = queryClient.getQueryData(connectQueryKeys.detail(postId));
@@ -212,23 +213,23 @@ export function useUpdateComment({
 				};
 			});
 
-			onSuccess?.();
-			handleShowToast({ message: "댓글이 수정되었습니다.", status: "success" }); // 낙관적으로 먼저 표시
 			return { previousData };
 		},
 
-		// 실패 시 롤백 + 사용자/개발자 에러 처리
+		onSuccess: () => {
+			onSuccess?.();
+			handleShowToast({ message: "댓글이 수정되었습니다.", status: "success" });
+			queryClient.invalidateQueries({ queryKey: connectQueryKeys.detail(postId) });
+			invalidateHeaderQueries(queryClient);
+		},
+
+		// 실패 시 롤백
 		onError: (err, _vars, context) => {
 			if (context?.previousData) {
 				queryClient.setQueryData(connectQueryKeys.detail(postId), context.previousData);
 			}
-			console.error("[useUpdateComment]", err); // 개발자용
-			handleShowToast({ message: "댓글 수정에 실패했습니다.", status: "error" }); // 사용자용
-		},
-
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: connectQueryKeys.detail(postId) }); // 게시글 상세(댓글 수 동기화)
-			invalidateHeaderQueries(queryClient);
+			console.error("[useUpdateComment]", err);
+			handleShowToast({ message: "댓글 수정에 실패했습니다.", status: "error" });
 		},
 	});
 }
@@ -240,7 +241,6 @@ export function useDeleteComment(postId: number) {
 
 	return useMutation({
 		mutationFn: (commentId: number) => deleteComment({ postId, commentId }),
-
 		// Optimistic Update: 댓글 목록에서 즉시 제거
 		onMutate: async (commentId) => {
 			await queryClient.cancelQueries({ queryKey: connectQueryKeys.detail(postId) });
@@ -250,6 +250,7 @@ export function useDeleteComment(postId: number) {
 				if (!old) return old;
 				return {
 					...old,
+					commentCount: old.commentCount - 1,
 					comments: old.comments.filter((c) => c.id !== commentId),
 				};
 			});
@@ -258,23 +259,21 @@ export function useDeleteComment(postId: number) {
 			return { previousData };
 		},
 
-		// 실패 시 롤백 + 사용자/개발자 에러 처리
+		// 실패 시 롤백
 		onError: (err, _vars, context) => {
 			if (context?.previousData) {
 				queryClient.setQueryData(connectQueryKeys.detail(postId), context.previousData);
 			}
-			console.error("[useDeleteComment]", err); // 개발자용
-			handleShowToast({ message: "댓글 삭제에 실패했습니다.", status: "error" }); // 사용자용
+			console.error("[useDeleteComment]", err);
+			handleShowToast({ message: "댓글 삭제에 실패했습니다.", status: "error" });
 		},
-
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: connectQueryKeys.detail(postId) }); // 게시글 상세(댓글 수 동기화)
-			invalidateHeaderQueries(queryClient);
+			invalidateHeaderQueries(queryClient); // 헤더 알림만 동기화
 		},
 	});
 }
 
-// 댓글 좋아요 토글
+// 댓글 좋아요 토글 (Optimistic Update)
 export function useToggleCommentLike(postId: number, commentId: number) {
 	const queryClient = useQueryClient();
 	const { handleShowToast } = useToast();
@@ -316,10 +315,6 @@ export function useToggleCommentLike(postId: number, commentId: number) {
 				queryClient.setQueryData(connectQueryKeys.detail(postId), context.previous);
 			}
 			handleShowToast({ message: "좋아요 처리에 실패했습니다.", status: "error" });
-		},
-
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: connectQueryKeys.detail(postId) });
 		},
 	});
 }

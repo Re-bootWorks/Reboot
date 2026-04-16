@@ -60,8 +60,8 @@ export default function PostEditor({ content, onChange }: Props) {
 				onError={(message) => handleShowToast({ message, status: "error" })}
 			/>
 
-			<div className="mt-6">
-				<EditorContent editor={editor} className="min-h-[518px]" />
+			<div className="mt-2 md:mt-6">
+				<EditorContent editor={editor} className="min-h-[calc(100vh-300px)] md:min-h-[518px]" />
 			</div>
 		</div>
 	);

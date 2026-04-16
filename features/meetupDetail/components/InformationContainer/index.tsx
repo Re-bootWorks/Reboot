@@ -19,7 +19,6 @@ import {
 } from "@/features/meetupDetail/mutations";
 import { useToast } from "@/providers/toast-provider";
 import { useModalStore } from "@/store/modal.store";
-import SendButton from "@/components/ui/Buttons/SendButton";
 import { cn } from "@/utils/cn";
 import CancelJoinModal from "@/features/meetupDetail/components/InformationContainer/CancelJoinModal";
 import { useUser } from "@/hooks/useUser";
@@ -171,20 +170,16 @@ export default function InformationContainer({
 				</div>
 
 				<div className="flex w-full items-center gap-4">
-					{isRegClosed ? (
-						<SendButton sizes="small" className="pointer-events-none lg:size-15" />
-					) : (
-						<UtilityButton
-							sizes="small"
-							className={cn(
-								"transition-colors lg:size-15",
-								isFavorited ? "border-purple-500" : "hover:border-purple-500",
-							)}
-							pressed={isFavorited}
-							isPending={isFavoritePending}
-							onClick={handleFavoriteConfirm}
-						/>
-					)}
+					<UtilityButton
+						sizes="small"
+						className={cn(
+							"transition-colors lg:size-15",
+							isFavorited ? "border-purple-500" : "hover:border-purple-500",
+						)}
+						pressed={isFavorited}
+						isPending={isFavoritePending}
+						onClick={handleFavoriteConfirm}
+					/>
 					<Button
 						sizes="small"
 						colors={isJoined ? "purpleBorder" : "purple"}

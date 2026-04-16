@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { useEffect, Suspense } from "react";
 import dynamic from "next/dynamic";
 import CreateButton from "@/components/ui/Buttons/CreateButton";
 import { useUser } from "@/hooks/useUser";
@@ -19,13 +19,17 @@ export default function IntroSection() {
 	const { openLogin } = useModalStore();
 	const { handleShowToast } = useToast();
 
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "instant" });
+	}, []);
+
 	return (
 		<>
 			{/* 배너 */}
-			<div className="mt-12">
+			<div className="mt-0 md:-mx-1 md:mt-6.5">
 				<Suspense
 					fallback={
-						<div className="h-48 w-full animate-pulse rounded-none bg-purple-100 md:h-[244px] md:rounded-3xl lg:rounded-4xl" />
+						<div className="h-48 w-full animate-pulse bg-purple-100 md:h-[244px] md:rounded-3xl lg:rounded-4xl" />
 					}>
 					<Banner />
 				</Suspense>

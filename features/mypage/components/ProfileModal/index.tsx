@@ -14,7 +14,7 @@ import { usePatchUsersMe } from "../../mutations";
 import { PatchUserProfilePayload, UserProfile } from "../../types";
 
 const STYLE = {
-	modal: "min-h-100 w-[calc(100%-32px)] max-w-136 p-6 pt-8 md:w-full md:p-12",
+	modal: "min-h-100 max-h-[80dvh] w-[calc(100%-32px)] max-w-136 p-6 pt-8 md:w-full md:p-12",
 	modalButton: "shrink md:h-15 md:rounded-2xl md:text-xl",
 };
 
