@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { useEffect, Suspense } from "react";
 import dynamic from "next/dynamic";
 import CreateButton from "@/components/ui/Buttons/CreateButton";
 import { useUser } from "@/hooks/useUser";
@@ -18,6 +18,10 @@ export default function IntroSection() {
 	const { user } = useUser();
 	const { openLogin } = useModalStore();
 	const { handleShowToast } = useToast();
+
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "instant" });
+	}, []);
 
 	return (
 		<>
