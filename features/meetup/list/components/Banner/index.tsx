@@ -7,8 +7,9 @@ export default function Banner({ className }: { className?: string }) {
 	return (
 		<div
 			className={cn(
-				"relative h-48 w-full shrink-0 overflow-hidden bg-purple-100",
+				"relative h-48 w-full shrink-0 overflow-hidden",
 				"md:h-[244px] md:rounded-3xl lg:rounded-4xl",
+				"bg-linear-to-br from-purple-100 to-purple-200",
 				className,
 			)}>
 			<div className="absolute top-1/2 left-4 z-1 -translate-y-1/2 md:left-10 lg:left-14">
@@ -29,7 +30,7 @@ export default function Banner({ className }: { className?: string }) {
 			</div>
 			<div
 				className={cn(
-					"absolute top-[10px] right-[-50px] h-[263px] w-[435px]",
+					"absolute top-[10px] right-[-90px] h-[263px] w-[435px]",
 					"md:top-[-25px] md:right-[-50px] md:h-[376px] md:w-[536px]",
 					"lg:top-[-25px] lg:right-[80px] lg:h-[376px] lg:w-[536px]",
 				)}>

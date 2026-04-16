@@ -30,8 +30,8 @@ export default function CategoryTab({ imageSrc, name, value, title, ...props }: 
 		<label
 			className={cn(
 				"group relative select-none",
-				"flex flex-col items-center justify-center gap-y-2.5",
-				"h-[173px] min-h-0 w-[136px] min-w-0 cursor-pointer rounded-2xl py-1.5",
+				"flex flex-col items-center justify-center gap-y-1 md:gap-y-2.5",
+				"h-full min-h-0 w-full min-w-0 cursor-pointer rounded-2xl py-2.5",
 				"bg-gray-50",
 			)}
 			style={tabVars}>
@@ -52,7 +52,7 @@ export default function CategoryTab({ imageSrc, name, value, title, ...props }: 
 				alt={title}
 				width={80}
 				height={80}
-				className="relative"
+				className="relative size-[50px] md:size-20"
 				draggable={false}
 			/>
 			<span className="relative text-sm text-gray-800">{title}</span>
