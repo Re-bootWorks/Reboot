@@ -35,12 +35,7 @@ export default function MeetupListPage() {
 					</QueryErrorBoundary>
 				</Suspense>
 				<Suspense fallback={null}>
-					<CreateOpenButton
-						className={cn(
-							"fixed right-4 bottom-6 z-1",
-							"md:right-5.5 md:bottom-5.5 lg:right-[85px] lg:bottom-14",
-						)}
-					/>
+					<CreateOpenButton className="fixed right-6 bottom-6 z-10" />
 				</Suspense>
 			</Container>
 		</MeetupListScrollProvider>
