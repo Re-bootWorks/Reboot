@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postLogin, postSignUp, postLogout, postOAuthLogin } from "@/features/auth/apis";
 import { useToast } from "@/providers/toast-provider";
 import { useRouter } from "next/navigation";
-import { createSessionStore } from "@/features/meetup/create/utils";
 
 export function useLogin(onSuccess: () => void) {
 	const queryClient = useQueryClient();
@@ -68,7 +67,7 @@ export function useLogout() {
 		},
 		onSettled: () => {
 			queryClient.clear();
-			createSessionStore.remove();
+			sessionStorage.clear();
 			router.refresh();
 		},
 	});
