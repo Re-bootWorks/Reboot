@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useFormData, type MeetupCreateFormData } from "../../providers/FormDataProvider";
+import { useFormData } from "../../providers/FormDataProvider";
 import CapacityField from "@/features/meetup/components/CapacityField";
 import DateTimeField from "@/features/meetup/components/DateTimeField";
 import { validateCapacity, validateDateTime, validateDateTimeOrder } from "../../../utils";
