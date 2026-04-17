@@ -63,7 +63,7 @@ function KeywordAreaSkeleton() {
 			)}
 			aria-hidden>
 			<div className="min-h-0 overflow-hidden">
-				<div className="m-0.5 mt-2.5">
+				<div className="m-0.5 mt-3">
 					<div className="relative w-94">
 						<div className="h-11 w-full animate-pulse rounded-full bg-gray-200" />
 					</div>
