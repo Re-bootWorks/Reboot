@@ -9,6 +9,16 @@ export function validateText(value: string) {
 	return !!value.trim();
 }
 
+/** 모임 이름 유효성 검사 */
+export function validateName(value: string) {
+	return validateText(value) && value.length <= MAX_NAME_LENGTH;
+}
+
+/** 주소 상세 유효성 검사 */
+export function validateAddressDetail(value: string) {
+	return validateText(value) && value.length <= MAX_ADDRESS_LENGTH;
+}
+
 /** 모임 일시, 모집 마감 일시 유효성 검사
  * date: YYYY-MM-DD
  * time: HH:mm

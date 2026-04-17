@@ -7,27 +7,63 @@ import DateTimeField from "@/features/meetup/components/DateTimeField";
 import { validateCapacity, validateDateTime, validateDateTimeOrder } from "../../../utils";
 import { validateMaxCapacity } from "@/features/meetupDetail/edit/utils";
 import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/PersonnelContainer";
+import { useToast } from "@/providers/toast-provider";
 
 interface StepScheduleProps {
 	/** 단계 숫자 */
 	step: number;
 }
+
 export default function StepSchedule({ step }: StepScheduleProps) {
 	const { setStepValid, setData, data } = useFormData();
+	const { handleShowToast } = useToast();
 
 	function handleChangeSchedule(
 		key: typeof DATE_TIME_KEY | typeof REG_END_KEY,
 		type: typeof DATE_KEY | typeof TIME_KEY,
 		value: string,
 	) {
-		if (key === DATE_TIME_KEY) {
-			setData((prev) => ({ ...prev, _dateTime: { ...prev._dateTime, [type]: value } }));
-		}
-		if (key === REG_END_KEY) {
-			setData((prev) => ({
-				...prev,
-				_registrationEnd: { ...prev._registrationEnd, [type]: value },
-			}));
+		const isDateTimeKey = key === DATE_TIME_KEY;
+		const keyName = isDateTimeKey ? "_dateTime" : "_registrationEnd";
+		const next = {
+			...data,
+			[keyName]: { ...data[key], [type]: value },
+		};
+		setData(next);
+
+		const { date: meetDate, time: meetTime } = next._dateTime;
+		const { date: regDate, time: regTime } = next._registrationEnd;
+
+		const badOrder =
+			!!meetDate &&
+			!!meetTime &&
+			!!regDate &&
+			!!regTime &&
+			!validateDateTimeOrder({
+				dateTime: next._dateTime,
+				registrationEnd: next._registrationEnd,
+			});
+
+		if (isDateTimeKey) {
+			if (!meetDate || !meetTime) return;
+			if (!validateDateTime(meetDate, meetTime)) {
+				handleShowToast({ message: MESSAGE_SCHEDULE_AFTER_NOW, status: "error" });
+				return;
+			}
+			if (badOrder) {
+				handleShowToast({ message: MESSAGE_SCHEDULE_ORDER, status: "error" });
+				return;
+			}
+		} else {
+			if (!regDate || !regTime) return;
+			if (!validateDateTime(regDate, regTime)) {
+				handleShowToast({ message: MESSAGE_REGISTRATION_END_AFTER_NOW, status: "error" });
+				return;
+			}
+			if (badOrder) {
+				handleShowToast({ message: MESSAGE_SCHEDULE_ORDER, status: "error" });
+				return;
+			}
 		}
 	}
 
@@ -45,13 +81,14 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 		});
 		const isCapacityValid = validateCapacity(data.capacity);
 		const isMaxCapacityValid = validateMaxCapacity(data.capacity, MIN_CONFIRMED_COUNT);
-		const isValid =
+		setStepValid(
+			step,
 			isDateTimeValid &&
-			isRegEndValid &&
-			isDateTimeOrderValid &&
-			isCapacityValid &&
-			isMaxCapacityValid;
-		setStepValid(step, isValid);
+				isRegEndValid &&
+				isDateTimeOrderValid &&
+				isCapacityValid &&
+				isMaxCapacityValid,
+		);
 	}, [data, setStepValid, step]);
 
 	return (
@@ -78,3 +115,7 @@ const DATE_TIME_KEY = "_dateTime";
 const REG_END_KEY = "_registrationEnd";
 const DATE_KEY = "date";
 const TIME_KEY = "time";
+
+const MESSAGE_SCHEDULE_AFTER_NOW = "모임 일정은 현재 시각 이후여야 합니다.";
+const MESSAGE_REGISTRATION_END_AFTER_NOW = "모집 마감 날짜는 현재 시각 이후여야 합니다.";
+const MESSAGE_SCHEDULE_ORDER = "모임 일정이 모집 마감 날짜보다 이전입니다.";
