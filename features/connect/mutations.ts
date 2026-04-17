@@ -14,14 +14,13 @@ import { createComment } from "@/features/connect/apis/createComment";
 import { updateComment } from "@/features/connect/apis/updateComment";
 import { useToast } from "@/providers/toast-provider";
 import { deleteComment } from "@/features/connect/apis/deleteComment";
-import { connectQueryKeys } from "@/features/connect/queries";
-import { headerQueryKeys } from "@/features/header/queries";
+import { connectQueryKeys } from "@/features/shared/queryKeys/connect";
 import { useUser } from "@/hooks/useUser";
+import { headerQueryKeys } from "@/features/shared/queryKeys/header";
 
 // 댓글/좋아요 뮤테이션 후 공통으로 무효화할 헤더 관련 쿼리
 function invalidateHeaderQueries(queryClient: ReturnType<typeof useQueryClient>) {
-	queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications }); // 알림 목록
-	queryClient.invalidateQueries({ queryKey: headerQueryKeys.notificationsCount }); // 읽지 않은 알림 수
+	queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications.all }); // 알림 목록
 }
 
 // 게시글 좋아요 토글 (Optimistic Update)
@@ -58,7 +57,7 @@ export function useToggleConnectLike(postId: number) {
 		onSuccess: () => {
 			// lists만 stale 표시 → 목록으로 돌아갈 때 자동 갱신
 			queryClient.invalidateQueries({
-				queryKey: connectQueryKeys.lists(),
+				queryKey: connectQueryKeys.lists,
 				refetchType: "none", // 즉시 refetch 안 함
 			});
 		},
@@ -82,7 +81,7 @@ export function useCreatePost() {
 		mutationFn: createPost,
 
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: connectQueryKeys.lists() }); // 목록 전체 무효화
+			queryClient.invalidateQueries({ queryKey: connectQueryKeys.lists }); // 목록 전체 무효화
 		},
 
 		onError: (err) => {
@@ -102,7 +101,7 @@ export function useDeletePost(postId: number) {
 		mutationFn: () => deletePost(postId),
 
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: connectQueryKeys.lists() }); // 목록 전체 무효화
+			queryClient.invalidateQueries({ queryKey: connectQueryKeys.lists }); // 목록 전체 무효화
 			router.replace("/connect?deleted=true");
 		},
 
@@ -122,7 +121,7 @@ export function useUpdatePost(postId: number) {
 		mutationFn: (data: { title: string; content: string }) => updatePost(postId, data),
 
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: connectQueryKeys.lists() }); // 목록 전체
+			queryClient.invalidateQueries({ queryKey: connectQueryKeys.lists }); // 목록 전체
 		},
 
 		onError: (err) => {

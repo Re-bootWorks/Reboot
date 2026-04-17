@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
 import ConnectBanner from ".";
-import { connectQueryKeys } from "@/features/connect/queries";
+import { connectQueryKeys } from "@/features/shared/queryKeys/connect";
 
 const MOCK_HOT_POSTS = {
 	data: [
@@ -49,7 +49,7 @@ export const Default: Story = {
 	decorators: [
 		(Story) => {
 			const queryClient = createQueryClient();
-			queryClient.setQueryData(connectQueryKeys.hotPosts(), MOCK_HOT_POSTS);
+			queryClient.setQueryData(connectQueryKeys.hotPosts, MOCK_HOT_POSTS);
 
 			return (
 				<QueryClientProvider client={queryClient}>
@@ -69,7 +69,7 @@ export const Empty: Story = {
 	decorators: [
 		(Story) => {
 			const queryClient = createQueryClient();
-			queryClient.setQueryData(connectQueryKeys.hotPosts(), { data: [] });
+			queryClient.setQueryData(connectQueryKeys.hotPosts, { data: [] });
 
 			return (
 				<QueryClientProvider client={queryClient}>

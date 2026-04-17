@@ -2,7 +2,7 @@ import { getPostDetailServer } from "@/features/connect/apis/getPostDetailServer
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryClient } from "@/libs/getQueryClient";
 import PostDetailContainer from "@/features/connect/containers/PostDetailContainer";
-import { connectQueryKeys } from "@/features/connect/queries";
+import { connectQueryKeys } from "@/features/shared/queryKeys/connect";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 import { Metadata } from "next";
 

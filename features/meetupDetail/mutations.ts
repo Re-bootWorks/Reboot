@@ -10,13 +10,14 @@ import {
 	postFavorite,
 	postJoin,
 } from "@/features/meetupDetail/apis/apis";
-import { meetupDetailQueryKeys } from "./queries";
 import { MeetupEditData } from "@/features/meetupDetail/edit/types";
 import { useRouter } from "next/navigation";
 import { Meeting } from "@/features/meetupDetail/types";
 import { MeetupListResponse } from "@/features/meetup/types";
 import { ReviewScore } from "@/types/common";
-import { headerQueryKeys } from "@/features/header/queries";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
+import { headerQueryKeys } from "@/features/shared/queryKeys/header";
+import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 
 /** 모임 참여 뮤테이션 */
 export function useJoinMutation(meetingId: number) {
@@ -26,21 +27,28 @@ export function useJoinMutation(meetingId: number) {
 	return useMutation({
 		mutationFn: () => postJoin(meetingId),
 		onMutate: async () => {
-			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
 			await queryClient.cancelQueries({
-				queryKey: meetupDetailQueryKeys.participants(meetingId),
+				queryKey: meetupDetailQueryKeys.meeting.detail(meetingId),
+			});
+			await queryClient.cancelQueries({
+				queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
 			});
 
-			const prevData = queryClient.getQueryData<Meeting>(meetupDetailQueryKeys.meeting(meetingId));
+			const prevData = queryClient.getQueryData<Meeting>(
+				meetupDetailQueryKeys.meeting.detail(meetingId),
+			);
 
-			queryClient.setQueryData<Meeting>(meetupDetailQueryKeys.meeting(meetingId), (oldData) => {
-				if (!oldData) return oldData;
-				return {
-					...oldData,
-					isJoined: true,
-					participantCount: oldData.participantCount + 1,
-				};
-			});
+			queryClient.setQueryData<Meeting>(
+				meetupDetailQueryKeys.meeting.detail(meetingId),
+				(oldData) => {
+					if (!oldData) return oldData;
+					return {
+						...oldData,
+						isJoined: true,
+						participantCount: oldData.participantCount + 1,
+					};
+				},
+			);
 
 			return { prevData };
 		},
@@ -49,20 +57,18 @@ export function useJoinMutation(meetingId: number) {
 		},
 		onError: (error: Error, _variables, context) => {
 			if (context?.prevData) {
-				queryClient.setQueryData(meetupDetailQueryKeys.meeting(meetingId), context.prevData);
+				queryClient.setQueryData(meetupDetailQueryKeys.meeting.detail(meetingId), context.prevData);
 			}
 			handleShowToast({ message: error.message, status: "error" });
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
+			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting.detail(meetingId) });
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.participants(meetingId),
+				queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notificationsCount });
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications.all });
 		},
 	});
 }
@@ -78,23 +84,30 @@ export function useFavoriteMutation(meetingId: number) {
 
 		// API 호출 전 낙관적 업데이트
 		onMutate: async () => {
-			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
-			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.related.all() });
+			await queryClient.cancelQueries({
+				queryKey: meetupDetailQueryKeys.meeting.detail(meetingId),
+			});
+			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.related.all });
 
 			// 이전 데이터 백업
-			const prevData = queryClient.getQueryData<Meeting>(meetupDetailQueryKeys.meeting(meetingId));
+			const prevData = queryClient.getQueryData<Meeting>(
+				meetupDetailQueryKeys.meeting.detail(meetingId),
+			);
 			const prevRelatedQueries = queryClient.getQueriesData<MeetupListResponse>({
-				queryKey: meetupDetailQueryKeys.related.all(),
+				queryKey: meetupDetailQueryKeys.related.all,
 			});
 
 			// meetupDetail 캐시 낙관적 업데이트
-			queryClient.setQueryData<Meeting>(meetupDetailQueryKeys.meeting(meetingId), (oldData) => {
-				if (!oldData) return oldData;
-				return { ...oldData, isFavorited: !oldData.isFavorited };
-			});
+			queryClient.setQueryData<Meeting>(
+				meetupDetailQueryKeys.meeting.detail(meetingId),
+				(oldData) => {
+					if (!oldData) return oldData;
+					return { ...oldData, isFavorited: !oldData.isFavorited };
+				},
+			);
 
 			queryClient.setQueriesData<MeetupListResponse>(
-				{ queryKey: meetupDetailQueryKeys.related.all() },
+				{ queryKey: meetupDetailQueryKeys.related.all },
 				(oldData) => {
 					if (!oldData || !oldData.data) return oldData;
 					return {
@@ -116,7 +129,7 @@ export function useFavoriteMutation(meetingId: number) {
 		},
 		onError: (error: Error, _variables, context) => {
 			if (context?.prevData) {
-				queryClient.setQueryData(meetupDetailQueryKeys.meeting(meetingId), context.prevData);
+				queryClient.setQueryData(meetupDetailQueryKeys.meeting.detail(meetingId), context.prevData);
 			}
 			if (context?.prevRelatedQueries) {
 				context.prevRelatedQueries.forEach(([queryKey, oldData]) => {
@@ -126,12 +139,11 @@ export function useFavoriteMutation(meetingId: number) {
 			handleShowToast({ message: error.message, status: "error" });
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
+			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting.detail(meetingId) });
 
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites });
 			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
 		},
 	});
 }
@@ -144,22 +156,29 @@ export function useCancelJoinMutation(meetingId: number) {
 	return useMutation({
 		mutationFn: () => deleteJoin(meetingId),
 		onMutate: async () => {
-			await queryClient.cancelQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
 			await queryClient.cancelQueries({
-				queryKey: meetupDetailQueryKeys.participants(meetingId),
+				queryKey: meetupDetailQueryKeys.meeting.detail(meetingId),
+			});
+			await queryClient.cancelQueries({
+				queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
 			});
 
-			const prevData = queryClient.getQueryData<Meeting>(meetupDetailQueryKeys.meeting(meetingId));
+			const prevData = queryClient.getQueryData<Meeting>(
+				meetupDetailQueryKeys.meeting.detail(meetingId),
+			);
 
 			// 낙관적 업데이트 — isJoined, participantCount 미리 변경
-			queryClient.setQueryData<Meeting>(meetupDetailQueryKeys.meeting(meetingId), (oldData) => {
-				if (!oldData) return oldData;
-				return {
-					...oldData,
-					isJoined: false,
-					participantCount: oldData.participantCount - 1,
-				};
-			});
+			queryClient.setQueryData<Meeting>(
+				meetupDetailQueryKeys.meeting.detail(meetingId),
+				(oldData) => {
+					if (!oldData) return oldData;
+					return {
+						...oldData,
+						isJoined: false,
+						participantCount: oldData.participantCount - 1,
+					};
+				},
+			);
 
 			return { prevData };
 		},
@@ -170,21 +189,19 @@ export function useCancelJoinMutation(meetingId: number) {
 
 		onError: (error: Error, _variables, context) => {
 			if (context?.prevData) {
-				queryClient.setQueryData(meetupDetailQueryKeys.meeting(meetingId), context.prevData);
+				queryClient.setQueryData(meetupDetailQueryKeys.meeting.detail(meetingId), context.prevData);
 			}
 			handleShowToast({ message: error.message, status: "error" });
 		},
 
 		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
+			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting.detail(meetingId) });
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.participants(meetingId),
+				queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications });
-			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notificationsCount });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
+			queryClient.invalidateQueries({ queryKey: headerQueryKeys.notifications.all });
 		},
 	});
 }
@@ -196,7 +213,7 @@ export function useEditMeetingMutation(meetingId: number) {
 	return useMutation({
 		mutationFn: (data: MeetupEditData) => patchMeeting(meetingId, data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
+			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting.detail(meetingId) });
 		},
 	});
 }
@@ -210,10 +227,9 @@ export function useDeleteMeetingMutation(meetingId: number) {
 	return useMutation({
 		mutationFn: () => deleteMeeting(meetingId),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting(meetingId) });
+			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.meeting.detail(meetingId) });
 			queryClient.invalidateQueries({ queryKey: ["meetup", "list"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "meetups"] });
-			queryClient.invalidateQueries({ queryKey: ["mypage", "created"] });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
 			handleShowToast({ message: "모임이 삭제되었습니다.", status: "success" });
 			router.replace("/meetup/list");
@@ -238,7 +254,7 @@ export function useEditReviewMutation(meetingId: number) {
 			data: { score: ReviewScore; comment: string };
 		}) => patchReview(reviewId, data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.reviews(meetingId) });
+			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.reviews.detail(meetingId) });
 			queryClient.invalidateQueries({ queryKey: ["reviews"] });
 			handleShowToast({ message: "리뷰가 수정되었습니다.", status: "success" });
 		},
@@ -256,7 +272,7 @@ export function useDeleteReviewMutation(meetingId: number) {
 	return useMutation({
 		mutationFn: (reviewId: number) => deleteReview(reviewId),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.reviews(meetingId) });
+			queryClient.invalidateQueries({ queryKey: meetupDetailQueryKeys.reviews.detail(meetingId) });
 			queryClient.invalidateQueries({ queryKey: ["reviews"] });
 			handleShowToast({ message: "리뷰가 삭제되었습니다.", status: "success" });
 		},

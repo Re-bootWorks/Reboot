@@ -5,21 +5,16 @@ import {
 	postMeetingsFavorite,
 	postMeetingsJoin,
 } from "@/apis/meetings";
-import { headerQueryKeys } from "@/features/header/queries";
-import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
-import { mypageQueryKeys } from "@/features/mypage/queries";
-import { MeetupListRequest } from "../meetup/types";
-import { queryKeys } from "./queries/queryKeys";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
+import { headerQueryKeys } from "@/features/shared/queryKeys/header";
+import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
+import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
+import { favoritesQueryKeys } from "../shared/queryKeys/favorites";
 
 type MutationCallbacks<TData, TVariables = void> = Omit<
 	UseMutationOptions<TData, Error, TVariables>,
 	"mutationKey" | "mutationFn"
 >;
-
-export const meetupQueryKeys = {
-	list: ["meetup", "list"] as const,
-	listWithParams: (params: MeetupListRequest) => [...meetupQueryKeys.list, params] as const,
-};
 
 export const meetupMutationKeys = {
 	postMeetup: ["meetup", "post"] as const,
@@ -33,7 +28,7 @@ export const meetupMutationKeys = {
 async function invalidateMeetupAndFavoritesQueries(queryClient: ReturnType<typeof useQueryClient>) {
 	await Promise.all([
 		queryClient.invalidateQueries({
-			queryKey: queryKeys.favorites.all,
+			queryKey: favoritesQueryKeys.favorites.all,
 		}),
 		queryClient.invalidateQueries({
 			queryKey: meetupQueryKeys.list,
@@ -51,10 +46,10 @@ async function invalidateFavoriteRelatedQueries(
 			queryKey: headerQueryKeys.favorites,
 		}),
 		queryClient.invalidateQueries({
-			queryKey: meetupDetailQueryKeys.meeting(meetingId),
+			queryKey: meetupDetailQueryKeys.meeting.detail(meetingId),
 		}),
 		queryClient.invalidateQueries({
-			queryKey: meetupDetailQueryKeys.related.all(),
+			queryKey: meetupDetailQueryKeys.related.all,
 		}),
 	]);
 }
@@ -66,22 +61,16 @@ async function invalidateJoinRelatedQueries(
 	await Promise.all([
 		invalidateMeetupAndFavoritesQueries(queryClient),
 		queryClient.invalidateQueries({
-			queryKey: meetupDetailQueryKeys.meeting(meetingId),
+			queryKey: meetupDetailQueryKeys.meeting.detail(meetingId),
 		}),
 		queryClient.invalidateQueries({
-			queryKey: meetupDetailQueryKeys.participants(meetingId),
+			queryKey: meetupDetailQueryKeys.participants.detail(meetingId),
 		}),
 		queryClient.invalidateQueries({
-			queryKey: mypageQueryKeys.meetups,
+			queryKey: mypageQueryKeys.meetups.all,
 		}),
 		queryClient.invalidateQueries({
-			queryKey: mypageQueryKeys.created,
-		}),
-		queryClient.invalidateQueries({
-			queryKey: headerQueryKeys.notifications,
-		}),
-		queryClient.invalidateQueries({
-			queryKey: headerQueryKeys.notificationsCount,
+			queryKey: headerQueryKeys.notifications.all,
 		}),
 	]);
 }

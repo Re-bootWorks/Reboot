@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postLogin, postSignUp, postLogout, postOAuthLogin } from "@/features/auth/apis";
 import { useToast } from "@/providers/toast-provider";
 import { useRouter } from "next/navigation";
+import { authQueryKeys } from "@/features/shared/queryKeys/auth";
 
 export function useLogin(onSuccess: () => void) {
 	const queryClient = useQueryClient();
@@ -11,7 +12,7 @@ export function useLogin(onSuccess: () => void) {
 	return useMutation({
 		mutationFn: postLogin,
 		onSuccess: (data) => {
-			queryClient.setQueryData(["me"], data.user);
+			queryClient.setQueryData(authQueryKeys.me, data.user);
 			handleShowToast({ message: "로그인이 완료됐습니다.", status: "success" });
 			onSuccess();
 			router.refresh();
@@ -34,7 +35,7 @@ export function useSignUp(onSuccess: () => void, onAutoLoginFail?: () => void) {
 					email: variables.email,
 					password: variables.password,
 				});
-				queryClient.setQueryData(["me"], loginResult.user);
+				queryClient.setQueryData(authQueryKeys.me, loginResult.user);
 
 				handleShowToast({ message: "회원가입이 완료됐습니다.", status: "success" });
 				onSuccess();
@@ -82,7 +83,7 @@ export function useOAuthLogin(onSuccess: () => void) {
 		mutationFn: ({ provider, token }: { provider: "google" | "kakao"; token: string }) =>
 			postOAuthLogin(provider, token),
 		onSuccess: (data) => {
-			queryClient.setQueryData(["me"], data.user);
+			queryClient.setQueryData(authQueryKeys.me, data.user);
 			handleShowToast({ message: "로그인이 완료됐습니다.", status: "success" });
 			onSuccess();
 			router.refresh();
