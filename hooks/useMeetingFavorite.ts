@@ -3,10 +3,10 @@
 import { CursorPageResponse, MeetupList } from "@/features/mypage/types";
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteMeetingsFavorites, postMeetingsFavorites } from "@/features/mypage/apis";
-import { meetupQueryKeys } from "@/features/meetup/queries";
 import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 import { headerQueryKeys } from "@/features/shared/queryKeys/header";
+import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
 
 /**
  * 찜 추가 시 낙관적 업데이트 및 롤백 하는 훅

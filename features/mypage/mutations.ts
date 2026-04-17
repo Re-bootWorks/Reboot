@@ -10,12 +10,12 @@ import {
 	uploadProfileImage,
 } from "./apis";
 import { useToast } from "@/providers/toast-provider";
-import { meetupQueryKeys } from "../meetup/queries";
 import { reviewsQueryKeys } from "../reviews/queries/queryKeys";
 import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 import { authQueryKeys } from "@/features/shared/queryKeys/auth";
 import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 import { headerQueryKeys } from "@/features/shared/queryKeys/header";
+import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
 
 interface UsePatchUsersMeOptions {
 	onSuccessBeforeSync?: () => void;

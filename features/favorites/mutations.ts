@@ -5,21 +5,16 @@ import {
 	postMeetingsFavorite,
 	postMeetingsJoin,
 } from "@/apis/meetings";
-import { MeetupListRequest } from "../meetup/types";
 import { queryKeys } from "./queries/queryKeys";
 import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 import { headerQueryKeys } from "@/features/shared/queryKeys/header";
 import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
+import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
 
 type MutationCallbacks<TData, TVariables = void> = Omit<
 	UseMutationOptions<TData, Error, TVariables>,
 	"mutationKey" | "mutationFn"
 >;
-
-export const meetupQueryKeys = {
-	list: ["meetup", "list"] as const,
-	listWithParams: (params: MeetupListRequest) => [...meetupQueryKeys.list, params] as const,
-};
 
 export const meetupMutationKeys = {
 	postMeetup: ["meetup", "post"] as const,

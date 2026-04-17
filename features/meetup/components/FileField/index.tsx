@@ -1,11 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import InputFile, { type InputFileHandle } from "@/components/ui/Inputs/InputFile";
-import { useToast } from "@/providers/toast-provider";
-import type { UploadImageFn } from "@/apis/images";
 import { useMutation } from "@tanstack/react-query";
-import { meetupMutationKeys } from "../../queries";
+import type { UploadImageFn } from "@/apis/images";
+import { useToast } from "@/providers/toast-provider";
+import InputFile, { type InputFileHandle } from "@/components/ui/Inputs/InputFile";
+import { meetupMutationKeys } from "@/features/shared/queryKeys/meetup";
 
 interface FileFieldProps {
 	/** 기본 이미지 */

@@ -5,7 +5,7 @@ import {
 	UseMutationOptions,
 	useQueryClient,
 } from "@tanstack/react-query";
-import type { MeetupCreateRequest, MeetupItemResponse, MeetupListRequest } from "./types";
+import type { MeetupCreateRequest, MeetupItemResponse } from "./types";
 import { getMeetups, postMeetup } from "./apis";
 import {
 	deleteMeetingsFavorite,
@@ -27,25 +27,12 @@ import {
 import { QUERY_KEYS } from "./list/constants";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { useEffect } from "react";
+import { meetupMutationKeys, meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
 
 type MutationCallbacks<TData, TVariables = void> = Omit<
 	UseMutationOptions<TData, Error, TVariables>,
 	"mutationKey" | "mutationFn"
 >;
-
-export const meetupQueryKeys = {
-	list: ["meetup", "list"] as const,
-	listWithParams: (params: MeetupListRequest) => [...meetupQueryKeys.list, params] as const,
-};
-
-export const meetupMutationKeys = {
-	postMeetup: ["meetup", "post"] as const,
-	uploadImage: ["meetup", "image", "upload"] as const,
-	postFavorite: ["meetings", "favorite", "post"] as const,
-	deleteFavorite: ["meetings", "favorite", "delete"] as const,
-	postJoin: ["meetings", "join", "post"] as const,
-	deleteJoin: ["meetings", "join", "delete"] as const,
-};
 
 /** 모임 목록 조회 */
 export function useGetMeetups(size: number) {

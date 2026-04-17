@@ -1,12 +1,12 @@
 import { useRef } from "react";
 import { InfiniteData, QueryKey, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/providers/toast-provider";
-import { meetupQueryKeys } from "../queries";
 import { queryKeys } from "@/features/favorites/queries/queryKeys";
 import type { MeetupListResponse } from "../types";
 import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 import { headerQueryKeys } from "@/features/shared/queryKeys/header";
 import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
+import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
 
 export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavorited") {
 	const queryClient = useQueryClient();
