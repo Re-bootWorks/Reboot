@@ -23,15 +23,13 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 		type: typeof DATE_KEY | typeof TIME_KEY,
 		value: string,
 	) {
-		let next: MeetupCreateFormData | undefined;
-		setData((prev) => {
-			next =
-				key === DATE_TIME_KEY
-					? { ...prev, _dateTime: { ...prev._dateTime, [type]: value } }
-					: { ...prev, _registrationEnd: { ...prev._registrationEnd, [type]: value } };
-			return next;
-		});
-		if (!next) return;
+		const isDateTimeKey = key === DATE_TIME_KEY;
+		const keyName = isDateTimeKey ? "_dateTime" : "_registrationEnd";
+		const next = {
+			...data,
+			[keyName]: { ...data[key], [type]: value },
+		};
+		setData(next);
 
 		const { date: meetDate, time: meetTime } = next._dateTime;
 		const { date: regDate, time: regTime } = next._registrationEnd;
@@ -46,7 +44,7 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 				registrationEnd: next._registrationEnd,
 			});
 
-		if (key === DATE_TIME_KEY) {
+		if (isDateTimeKey) {
 			if (!meetDate || !meetTime) return;
 			if (!validateDateTime(meetDate, meetTime)) {
 				handleShowToast({ message: MESSAGE_SCHEDULE_AFTER_NOW, status: "error" });
@@ -56,8 +54,7 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 				handleShowToast({ message: MESSAGE_SCHEDULE_ORDER, status: "error" });
 				return;
 			}
-		}
-		if (key === REG_END_KEY) {
+		} else {
 			if (!regDate || !regTime) return;
 			if (!validateDateTime(regDate, regTime)) {
 				handleShowToast({ message: MESSAGE_REGISTRATION_END_AFTER_NOW, status: "error" });
