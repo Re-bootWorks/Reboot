@@ -6,7 +6,7 @@ import { getQueryClient } from "@/libs/getQueryClient";
 import { Suspense } from "react";
 import { serverFetch } from "@/libs/serverFetch";
 import IntroSection from "@/features/connect/components/IntroSection";
-import { connectQueryKeys } from "@/features/connect/queries";
+import { connectQueryKeys } from "@/features/shared/queryKeys/connect";
 import QueryErrorBoundary from "@/components/common/QueryErrorBoundary";
 import { Metadata } from "next";
 
@@ -43,7 +43,7 @@ export default async function ConnectPage({
 			staleTime: 1000 * 60,
 		}),
 		queryClient.prefetchQuery({
-			queryKey: connectQueryKeys.hotPosts(),
+			queryKey: connectQueryKeys.hotPosts,
 			queryFn: async () => {
 				const res = await serverFetch(`/posts?type=best&limit=20`);
 				if (!res.ok) throw new Error("HOT 게시글 조회 실패");
