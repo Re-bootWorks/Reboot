@@ -67,6 +67,7 @@ export function useLogout() {
 		},
 		onSettled: () => {
 			queryClient.clear();
+			sessionStorage.clear();
 			router.refresh();
 		},
 	});
