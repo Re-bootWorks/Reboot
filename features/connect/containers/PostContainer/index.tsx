@@ -23,19 +23,28 @@ const SORT_OPTIONS = [
 
 const LIMIT = 5;
 
+type SortBy = "createdAt" | "likeCount" | "viewCount" | "commentCount";
+
 export default function PostContainer() {
-	const [page, setPage] = useState(1);
-	const [sortBy, setSortBy] = useState<"createdAt" | "likeCount" | "viewCount" | "commentCount">(
-		"createdAt",
-	);
 	const searchParams = useSearchParams();
+	const router = useRouter();
 	const { handleShowToast } = useToast();
 	const deletedHandled = useRef(false);
-	const [keyword, setKeyword] = useState("");
-	const [searchKeyword, setSearchKeyword] = useState("");
-	const router = useRouter();
 	const containerRef = useRef<HTMLDivElement | null>(null);
 	const [shouldScroll, setShouldScroll] = useState(false);
+
+	// URL searchParams에서 초기값 읽기
+	const page = Number(searchParams.get("page") ?? 1);
+	const sortByParam = searchParams.get("sortBy");
+	const sortBy: SortBy = SORT_OPTIONS.some((opt) => opt.value === sortByParam)
+		? (sortByParam as SortBy)
+		: "createdAt";
+	const searchKeyword = searchParams.get("keyword") ?? "";
+	const [keyword, setKeyword] = useState(searchKeyword);
+
+	useEffect(() => {
+		setKeyword(searchKeyword);
+	}, [searchKeyword]);
 
 	useEffect(() => {
 		if (searchParams.get("deleted") === "true" && !deletedHandled.current) {
@@ -55,9 +64,32 @@ export default function PostContainer() {
 		}
 	}, [isFetching, shouldScroll]);
 
+	// URL 업데이트 헬퍼
+	const updateURL = (params: { page?: number; sortBy?: string; keyword?: string }) => {
+		const current = new URLSearchParams(searchParams.toString());
+		if (params.page !== undefined) current.set("page", String(params.page));
+		if (params.sortBy !== undefined) current.set("sortBy", params.sortBy);
+		if (params.keyword !== undefined) {
+			if (params.keyword) {
+				current.set("keyword", params.keyword);
+			} else {
+				current.delete("keyword");
+			}
+		}
+		router.push(`?${current.toString()}`, { scroll: false });
+	};
+
 	const handleSearch = () => {
-		setPage(1);
-		setSearchKeyword(keyword);
+		updateURL({ page: 1, sortBy, keyword }); // setPage, setSearchKeyword 제거
+	};
+
+	const handleSortChange = (value: string) => {
+		updateURL({ page: 1, sortBy: value, keyword: searchKeyword }); // setSortBy 제거
+	};
+
+	const handlePageChange = (newPage: number) => {
+		setShouldScroll(true);
+		updateURL({ page: newPage, sortBy, keyword: searchKeyword }); // setPage 제거
 	};
 
 	const posts = data?.data ?? [];
@@ -76,14 +108,13 @@ export default function PostContainer() {
 						if (e.key === "Enter") handleSearch();
 					}}
 					onSearchClick={handleSearch}
-					onClear={() => setKeyword("")}
+					onClear={() => {
+						setKeyword("");
+						updateURL({ page: 1, sortBy, keyword: "" });
+					}}
 					placeholder="궁금한 내용을 검색해보세요."
 				/>
-				<FilterDropdown
-					value={sortBy}
-					items={SORT_OPTIONS}
-					onChange={(value) => setSortBy(value as typeof sortBy)}
-				/>
+				<FilterDropdown value={sortBy} items={SORT_OPTIONS} onChange={handleSortChange} />
 			</div>
 
 			{/* 게시글 목록 */}
@@ -124,10 +155,7 @@ export default function PostContainer() {
 				<Pagination
 					currentPage={page}
 					totalPages={totalPages}
-					handlePageChange={(newPage) => {
-						setPage(newPage);
-						setShouldScroll(true);
-					}}
+					handlePageChange={handlePageChange}
 				/>
 			</div>
 		</div>

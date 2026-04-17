@@ -38,7 +38,7 @@ const STYLE = {
 	header: "sticky top-0 left-0 z-40 py-2 md:py-4 ",
 	gnb: "flex items-center gap-4",
 	sidebar:
-		"fixed inset-0 flex h-full max-w-xl w-11/12 flex-col justify-between rounded-r-3xl bg-white py-6",
+		"fixed top-0 right-0 h-dvh max-w-xl w-11/12 flex flex-col justify-between rounded-l-3xl bg-white py-6",
 	sidebarItem: "px-4 py-2 flex items-center justify-between",
 	link: "flex items-center gap-1 p-4 text-base text-gray-600 cursor-pointer",
 	etc: "flex items-center gap-4 md:gap-6",
@@ -93,13 +93,15 @@ function Sidebar({ isOpen, isLogin, handleSidebarClose, favoritesCount, pathname
 			<DialogBackdrop className="bg-black-50 fixed inset-0" />
 			<DialogPanel className={STYLE.sidebar}>
 				<div>
-					<button
-						type="button"
-						onClick={handleSidebarClose}
-						className="mb-6 ml-6 cursor-pointer"
-						aria-label="모바일 내비게이션 닫기">
-						<IcDelete />
-					</button>
+					<div className="mr-6 text-right">
+						<button
+							type="button"
+							onClick={handleSidebarClose}
+							className="cursor-pointer"
+							aria-label="모바일 내비게이션 닫기">
+							<IcDelete />
+						</button>
+					</div>
 					<nav aria-label="모바일 내비게이션">
 						<GNB
 							showChevron
