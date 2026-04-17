@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/providers/toast-provider";
-import { reviewsQueryKeys } from "../reviews/queries/queryKeys";
 import { deleteReviews, patchReviews } from "./apis/client";
 import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
+import { reviewsQueryKeys } from "@/features/shared/queryKeys/reviews";
 
 export function usePatchReviews() {
 	const queryClient = useQueryClient();

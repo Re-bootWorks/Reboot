@@ -1,12 +1,12 @@
 import { useRef } from "react";
 import { InfiniteData, QueryKey, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/providers/toast-provider";
-import { queryKeys } from "@/features/favorites/queries/queryKeys";
 import type { MeetupListResponse } from "../types";
 import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 import { headerQueryKeys } from "@/features/shared/queryKeys/header";
 import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
+import { favoritesQueryKeys } from "@/features/shared/queryKeys/favorites";
 
 export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavorited") {
 	const queryClient = useQueryClient();
@@ -61,7 +61,7 @@ export function useMeetupToggle(meetingId: number, field: "isJoined" | "isFavori
 
 		if (field === "isFavorited") {
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites }); // 찜 개수
-			queryClient.invalidateQueries({ queryKey: queryKeys.favorites.all }); // 찜한 목록
+			queryClient.invalidateQueries({ queryKey: favoritesQueryKeys.favorites.all }); // 찜한 목록
 		}
 		if (field === "isJoined") {
 			queryClient.invalidateQueries({

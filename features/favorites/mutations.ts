@@ -5,11 +5,11 @@ import {
 	postMeetingsFavorite,
 	postMeetingsJoin,
 } from "@/apis/meetings";
-import { queryKeys } from "./queries/queryKeys";
 import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
 import { headerQueryKeys } from "@/features/shared/queryKeys/header";
 import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
+import { favoritesQueryKeys } from "../shared/queryKeys/favorites";
 
 type MutationCallbacks<TData, TVariables = void> = Omit<
 	UseMutationOptions<TData, Error, TVariables>,
@@ -28,7 +28,7 @@ export const meetupMutationKeys = {
 async function invalidateMeetupAndFavoritesQueries(queryClient: ReturnType<typeof useQueryClient>) {
 	await Promise.all([
 		queryClient.invalidateQueries({
-			queryKey: queryKeys.favorites.all,
+			queryKey: favoritesQueryKeys.favorites.all,
 		}),
 		queryClient.invalidateQueries({
 			queryKey: meetupQueryKeys.list,

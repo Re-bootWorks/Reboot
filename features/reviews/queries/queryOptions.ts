@@ -5,7 +5,7 @@ import {
 	ReviewsListRequest,
 	ReviewsListResponse,
 } from "../types";
-import { reviewsQueryKeys } from "./queryKeys";
+import { reviewsQueryKeys } from "@/features/shared/queryKeys/reviews";
 
 export function reviewsInfiniteOptions(
 	params: ReviewsListRequest,
