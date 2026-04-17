@@ -1,16 +1,14 @@
 "use client";
 
-import GroupCard from "@/components/ui/GroupCard";
 import { useGetMeetups } from "@/features/meetup/queries";
-import MeetupCardItems from "../MeetupCardItems";
 import { cn } from "@/utils/cn";
-
-const size = 10;
+import MeetupCardItems from "../MeetupCardItems";
+import MeetupCardListSkeleton from "./MeetupCardListSkeleton";
 
 interface MeetupCardListProps {
-	className?: string;
+	size: number;
 }
-export default function MeetupCardList({ className }: MeetupCardListProps) {
+export default function MeetupCardList({ size }: MeetupCardListProps) {
 	const query = useGetMeetups(size);
 	const isRefetching = query.isFetching && !query.isFetchingNextPage && !query.isPending;
 
@@ -18,22 +16,11 @@ export default function MeetupCardList({ className }: MeetupCardListProps) {
 		<ul
 			className={cn(
 				"grid w-full content-start justify-items-stretch gap-4 transition-opacity duration-200 ease-in-out md:gap-6 lg:grid-cols-2",
+				"mb-10 flex-1 px-4",
+				"md:mb-12 md:px-0 lg:mb-26",
 				isRefetching && "pointer-events-none opacity-50",
-				className,
 			)}>
-			{query.isPending ? (
-				<MeetupCardSkeletonItems size={size} />
-			) : (
-				<MeetupCardItems query={query} />
-			)}
+			{query.isPending ? <MeetupCardListSkeleton size={size} /> : <MeetupCardItems query={query} />}
 		</ul>
 	);
-}
-
-function MeetupCardSkeletonItems({ size }: { size: number }) {
-	return Array.from({ length: size }).map((_, i) => (
-		<li key={i} className="w-full">
-			<GroupCard.Skeleton />
-		</li>
-	));
 }
