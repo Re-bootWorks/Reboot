@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { InfiniteData, UseInfiniteQueryResult } from "@tanstack/react-query";
-import { cn } from "@/utils/cn";
 import type { MeetupItem, MeetupItemSelected, MeetupListResponse } from "../../../types";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import useToggle from "@/hooks/useToggle";
@@ -16,11 +15,9 @@ import JoinModal from "../JoinModal";
 interface MeetupCardItemsProps {
 	/** 모임 목록 쿼리 */
 	query: UseInfiniteQueryResult<InfiniteData<MeetupListResponse>>;
-	/** 컴포넌트 추가 클래스 */
-	className?: string;
 }
 
-export default function MeetupCardItems({ query, className }: MeetupCardItemsProps) {
+export default function MeetupCardItems({ query }: MeetupCardItemsProps) {
 	const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = query;
 	const [selectedData, setSelectedData] = useState<MeetupItemSelected>(null);
 	const { isOpen, open, close } = useToggle();
@@ -35,7 +32,6 @@ export default function MeetupCardItems({ query, className }: MeetupCardItemsPro
 	return (
 		<ErrorBoundary fallbackRender={() => <LastItem>에러가 발생했습니다.</LastItem>}>
 			<MeetupCardLoadedItems
-				className={className}
 				data={data?.pages?.flatMap((page) => page?.data) ?? []}
 				setSelectedData={setSelectedData}
 				openModalFn={open}
@@ -66,12 +62,7 @@ interface MeetupCardLoadedItemsProps {
 	openModalFn: () => void;
 	className?: string;
 }
-function MeetupCardLoadedItems({
-	data,
-	setSelectedData,
-	openModalFn,
-	className,
-}: MeetupCardLoadedItemsProps) {
+function MeetupCardLoadedItems({ data, setSelectedData, openModalFn }: MeetupCardLoadedItemsProps) {
 	if (data?.length === 0) {
 		return (
 			<li className="col-span-full">
@@ -88,7 +79,7 @@ function MeetupCardLoadedItems({
 			{data?.map((item, i) => (
 				<motion.li
 					key={item.id}
-					className={cn("w-full", className)}
+					className="w-full"
 					variants={cardVariants}
 					initial="hidden"
 					animate="visible"

@@ -8,7 +8,6 @@ import { MeetupListScrollProvider } from "@/features/meetup/list/providers/Meetu
 import ListFilters from "@/features/meetup/list/components/ListFilters";
 import ListFiltersSkeleton from "@/features/meetup/list/components/ListFilters/ListFiltersSkeleton";
 import MeetupCardList from "@/features/meetup/list/components/MeetupCardList";
-import MeetupCardListSkeleton from "@/features/meetup/list/components/MeetupCardList/MeetupCardListSkeleton";
 import CreateOpenButton from "@/features/meetup/create/components/CreateOpenButton";
 
 export const metadata: Metadata = {
@@ -33,18 +32,9 @@ export default function MeetupListPage() {
 				<Suspense fallback={<ListFiltersSkeleton className={ListFiltersStyle} />}>
 					<ListFilters className={ListFiltersStyle} />
 				</Suspense>
-				<ul
-					className={cn(
-						"grid w-full content-start justify-items-stretch gap-4 transition-opacity duration-200 ease-in-out md:gap-6 lg:grid-cols-2",
-						"mb-10 flex-1 px-4",
-						"md:mb-12 md:px-0 lg:mb-26",
-					)}>
-					<Suspense fallback={<MeetupCardListSkeleton size={size} />}>
-						<QueryErrorBoundary prefix="모임 목록을 ">
-							<MeetupCardList size={size} />
-						</QueryErrorBoundary>
-					</Suspense>
-				</ul>
+				<QueryErrorBoundary prefix="모임 목록을 ">
+					<MeetupCardList size={size} />
+				</QueryErrorBoundary>
 				<Suspense fallback={null}>
 					<CreateOpenButton className="fixed right-6 bottom-6 z-10" />
 				</Suspense>
