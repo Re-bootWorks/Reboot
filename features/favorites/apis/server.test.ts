@@ -5,9 +5,9 @@ jest.mock("next/headers", () => ({
 import { cookies } from "next/headers";
 import { http, HttpResponse } from "msw";
 import { getFavorites } from "@/features/favorites/apis/server";
+import favorites from "@/mocks/data/favorites";
 import { server } from "@/mocks/server";
 import { ApiError } from "@/utils/api";
-import type { FavoriteMeeting, FavoritesListResponse } from "../types";
 
 const TEST_API_BASE = "http://localhost/api";
 
@@ -33,47 +33,6 @@ function createCookieStore(tokens: { accessToken?: string; refreshToken?: string
 	} as unknown as CookieStore;
 }
 
-const favoriteItem: FavoriteMeeting = {
-	id: 1,
-	meetingId: 101,
-	userId: 7,
-	createdAt: "2026-04-05T09:00:00.000Z",
-	meeting: {
-		id: 101,
-		teamId: "dev-lucky7",
-		name: "주말 독서 모임",
-		type: "자기계발",
-		region: "서울특별시 광진구",
-		address: "서울특별시 광진구 아차산로 123",
-		latitude: 37.544,
-		longitude: 127.082,
-		dateTime: "2026-04-20T10:00:00.000Z",
-		registrationEnd: "2026-04-18T18:00:00.000Z",
-		capacity: 12,
-		participantCount: 8,
-		image: "https://example.com/favorite.jpg",
-		description: "책 한 권씩 읽고 대화하는 모임",
-		canceledAt: null,
-		confirmedAt: "2026-04-18T19:00:00.000Z",
-		hostId: 3,
-		createdAt: "2026-03-20T10:00:00.000Z",
-		updatedAt: "2026-03-21T10:00:00.000Z",
-		host: {
-			id: 3,
-			name: "모임장",
-			image: null,
-		},
-		isCompleted: false,
-		isJoined: true,
-	},
-};
-
-const favoritesListResponse: FavoritesListResponse = {
-	data: [favoriteItem],
-	nextCursor: null,
-	hasMore: false,
-};
-
 beforeEach(() => {
 	mockedCookies.mockResolvedValue(createCookieStore());
 });
@@ -85,27 +44,27 @@ afterEach(() => {
 describe("favorites server apis 테스트", () => {
 	describe("getFavorites", () => {
 		it("성공 시 찜 목록 데이터를 반환한다", async () => {
-			server.use(
-				http.get(`${TEST_API_BASE}/favorites`, () => HttpResponse.json(favoritesListResponse)),
-			);
+			const expectedResponse = favorites.list();
+
+			server.use(http.get(`${TEST_API_BASE}/favorites`, () => HttpResponse.json(expectedResponse)));
 
 			const result = await getFavorites();
 
 			expect(Array.isArray(result.data)).toBe(true);
 			expect(result.data[0]).toMatchObject({
-				id: favoriteItem.id,
-				meetingId: favoriteItem.meetingId,
-				userId: favoriteItem.userId,
-				createdAt: favoriteItem.createdAt,
+				id: expectedResponse.data[0].id,
+				meetingId: expectedResponse.data[0].meetingId,
+				userId: expectedResponse.data[0].userId,
+				createdAt: expectedResponse.data[0].createdAt,
 			});
 			expect(result.data[0].meeting).toMatchObject({
-				id: favoriteItem.meeting.id,
-				name: favoriteItem.meeting.name,
-				type: favoriteItem.meeting.type,
-				region: favoriteItem.meeting.region,
+				id: expectedResponse.data[0].meeting.id,
+				name: expectedResponse.data[0].meeting.name,
+				type: expectedResponse.data[0].meeting.type,
+				region: expectedResponse.data[0].meeting.region,
 			});
-			expect(result.nextCursor).toBeNull();
-			expect(result.hasMore).toBe(false);
+			expect(result.nextCursor).toBe(expectedResponse.nextCursor);
+			expect(result.hasMore).toBe(expectedResponse.hasMore);
 		});
 
 		it("필터와 날짜 조건을 쿼리스트링으로 변환해 요청한다", async () => {
@@ -118,7 +77,7 @@ describe("favorites server apis 테스트", () => {
 				http.get(`${TEST_API_BASE}/favorites`, ({ request }) => {
 					capturedUrl = request.url;
 					authorizationHeader = request.headers.get("authorization") ?? "";
-					return HttpResponse.json(favoritesListResponse);
+					return HttpResponse.json(favorites.list());
 				}),
 			);
 
@@ -152,7 +111,7 @@ describe("favorites server apis 테스트", () => {
 			server.use(
 				http.get(`${TEST_API_BASE}/favorites`, ({ request }) => {
 					capturedUrl = request.url;
-					return HttpResponse.json(favoritesListResponse);
+					return HttpResponse.json(favorites.list());
 				}),
 			);
 
@@ -181,7 +140,7 @@ describe("favorites server apis 테스트", () => {
 			server.use(
 				http.get(`${TEST_API_BASE}/favorites`, ({ request }) => {
 					capturedUrl = request.url;
-					return HttpResponse.json(favoritesListResponse);
+					return HttpResponse.json(favorites.list());
 				}),
 			);
 
