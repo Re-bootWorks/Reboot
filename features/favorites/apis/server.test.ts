@@ -1,8 +1,4 @@
-jest.mock("next/headers", () => ({
-	cookies: jest.fn(),
-}));
-
-import { cookies } from "next/headers";
+import { createCookieStore, mockedCookies } from "@/mocks/utils/mockHeader";
 import { http, HttpResponse } from "msw";
 import { getFavorites } from "@/features/favorites/apis/server";
 import favorites from "@/mocks/data/favorites";
@@ -10,28 +6,6 @@ import { server } from "@/mocks/server";
 import { ApiError } from "@/utils/api";
 
 const TEST_API_BASE = "http://localhost/api";
-
-const mockedCookies = cookies as jest.MockedFunction<typeof cookies>;
-
-type CookieStore = Awaited<ReturnType<typeof cookies>>;
-
-function createCookieStore(tokens: { accessToken?: string; refreshToken?: string } = {}) {
-	return {
-		get: jest.fn((name: string) => {
-			if (name === "accessToken" && tokens.accessToken) {
-				return { name, value: tokens.accessToken };
-			}
-
-			if (name === "refreshToken" && tokens.refreshToken) {
-				return { name, value: tokens.refreshToken };
-			}
-
-			return undefined;
-		}),
-		set: jest.fn(),
-		delete: jest.fn(),
-	} as unknown as CookieStore;
-}
 
 beforeEach(() => {
 	mockedCookies.mockResolvedValue(createCookieStore());
