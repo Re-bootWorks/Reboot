@@ -22,6 +22,15 @@ interface ApiErrorParams {
  *
  * await throwApiError(res, "프로필 수정에 실패했습니다.");
  * return res.json();
+ *
+ * 1. 서버가 message 내려주면 그 문구 노출
+ * 2. 서버 message 없으면 throwApiError에 넣은 폴백 문구 노출
+ * onError: (error: Error) => {
+ *  handleShowToast({
+ *   message: error.message,
+ *   status: "error",
+ *  });
+ * }
  */
 
 // 기본 Error를 확장한 커스텀 에러 클래스
@@ -53,6 +62,35 @@ export async function throwApiError(response: Response, fallbackMessage: string)
 	});
 }
 
+/**
+ * 사용자에게 보여줄 에러 메시지를 안전하게 추출합니다.
+ *
+ * throwApiError를 사용한 API 에러 처리 외에도
+ * throwApiError를 사용하지 않았거나 에러 형태가 일정하지 않을 때 사용할 수 있습니다.
+ *
+ * @param error onError 등에서 전달받은 알 수 없는 에러 객체
+ * @param fallback error에서 메시지를 꺼낼 수 없을 때 사용할 기본 문구
+ *
+ *
+ * @example
+ * 일반 Error를 직접 throw한 경우
+ * try {
+ *   throw new Error("이미지 업로드에 실패했습니다.");
+ * } catch (error) {
+ *   const message = getUserErrorMessage(error, "알 수 없는 오류가 발생했습니다.");
+ * }
+ *
+ * @example
+ * 문자열이나 예상치 못한 값이 넘어온 경우 fallback 사용
+ * const message = getUserErrorMessage("network error", "잠시 후 다시 시도해주세요.");
+ */
+export function getUserErrorMessage(error: unknown, fallback: string) {
+	if (error instanceof Error) {
+		return error.message || fallback;
+	}
+	return fallback;
+}
+
 // 백엔드 응답이 비어 있거나 JSON이 아닐 수 있어 안전하게 파싱
 export async function parseJsonSafely(response: Response) {
 	try {
@@ -60,11 +98,4 @@ export async function parseJsonSafely(response: Response) {
 	} catch {
 		return null;
 	}
-}
-
-export function getUserErrorMessage(error: unknown, fallback: string) {
-	if (error instanceof Error) {
-		return error.message || fallback;
-	}
-	return fallback;
 }
