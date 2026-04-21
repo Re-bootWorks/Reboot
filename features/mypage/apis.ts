@@ -176,53 +176,6 @@ export async function deleteReviews({ reviewId }: { reviewId: number }): Promise
 	await throwApiError(res, "리뷰 삭제에 실패했습니다.");
 }
 
-// 찜 추가
-export async function postMeetingsFavorites(meetingId: number): Promise<void> {
-	const res = await clientFetch(`/meetings/${meetingId}/favorites`, {
-		method: "POST",
-	});
-	await throwApiError(res, "찜 추가에 실패했습니다.");
-}
-
-// 찜 해제
-export async function deleteMeetingsFavorites(meetingId: number): Promise<void> {
-	const res = await clientFetch(`/meetings/${meetingId}/favorites`, {
-		method: "DELETE",
-	});
-	await throwApiError(res, "찜 해제에 실패했습니다.");
-}
-
-// image 업로드
-export async function uploadProfileImage(file: File): Promise<string> {
-	// presigned URL
-	const presignedResponse = await clientFetch("/images/presigned", {
-		method: "POST",
-		body: JSON.stringify({
-			fileName: file.name,
-			contentType: file.type,
-		}),
-	});
-
-	await throwApiError(presignedResponse, "이미지 업로드 URL 발급에 실패했습니다.");
-
-	// public URL
-	const { presignedUrl, publicUrl } = await presignedResponse.json();
-
-	const uploadResponse = await fetch(presignedUrl, {
-		method: "PUT",
-		headers: {
-			"Content-Type": file.type,
-		},
-		body: file,
-	});
-
-	if (!uploadResponse.ok) {
-		throw new Error("이미지 업로드에 실패했습니다.");
-	}
-
-	return publicUrl;
-}
-
 // 유저 프로필
 export async function patchUsersMe(user: PatchUserProfilePayload): Promise<User> {
 	const res = await clientFetch("/users/me", {

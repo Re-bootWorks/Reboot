@@ -7,7 +7,6 @@ import {
 	patchReviews,
 	patchUsersMe,
 	postMeetingsReviews,
-	uploadProfileImage,
 } from "./apis";
 import { useToast } from "@/providers/toast-provider";
 import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
@@ -16,6 +15,7 @@ import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 import { headerQueryKeys } from "@/features/shared/queryKeys/header";
 import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
 import { reviewsQueryKeys } from "@/features/shared/queryKeys/reviews";
+import { uploadImage } from "@/apis/images";
 
 interface UsePatchUsersMeOptions {
 	onSuccessBeforeSync?: () => void;
@@ -24,7 +24,7 @@ interface UsePatchUsersMeOptions {
 export function useUploadProfileImage() {
 	const { handleShowToast } = useToast();
 	return useMutation({
-		mutationFn: uploadProfileImage,
+		mutationFn: uploadImage,
 
 		onSuccess: () => {
 			handleShowToast({
