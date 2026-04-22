@@ -5,6 +5,21 @@ interface ApiErrorParams {
 	fallbackMessage?: string;
 }
 
+// 기본 Error를 확장한 커스텀 에러 클래스
+export class ApiError extends Error {
+	status: number; // HTTP 상태코드
+	code?: string; // 백엔드가 내려주는 에러 코드
+	fallbackMessage?: string; // 폴백용 기본메세지
+
+	constructor({ message, status, code, fallbackMessage }: ApiErrorParams) {
+		super(message); // Error 호출
+		this.name = "ApiError"; // 디버깅 용이하도록 이름 명시
+		this.status = status;
+		this.code = code;
+		this.fallbackMessage = fallbackMessage;
+	}
+}
+
 /**
  * API 응답이 실패한 경우 에러 바디의 message를 우선 읽어 throw합니다
  *
@@ -32,22 +47,6 @@ interface ApiErrorParams {
  *  });
  * }
  */
-
-// 기본 Error를 확장한 커스텀 에러 클래스
-export class ApiError extends Error {
-	status: number; // HTTP 상태코드
-	code?: string; // 백엔드가 내려주는 에러 코드
-	fallbackMessage?: string; // 폴백용 기본메세지
-
-	constructor({ message, status, code, fallbackMessage }: ApiErrorParams) {
-		super(message); // Error 호출
-		this.name = "ApiError"; // 디버깅 용이하도록 이름 명시
-		this.status = status;
-		this.code = code;
-		this.fallbackMessage = fallbackMessage;
-	}
-}
-
 export async function throwApiError(response: Response, fallbackMessage: string): Promise<void> {
 	if (response.ok) return;
 

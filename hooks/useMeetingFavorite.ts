@@ -8,6 +8,11 @@ import { headerQueryKeys } from "@/features/shared/queryKeys/header";
 import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
 import { deleteMeetingsFavorite, postMeetingsFavorite } from "@/apis/meetings";
 
+const favoriteQueryPrefixes = [
+	mypageQueryKeys.meetups.all,
+	mypageQueryKeys.reviews.available,
+] as const;
+
 /**
  * 찜 추가 시 낙관적 업데이트 및 롤백 하는 훅
  *
@@ -15,11 +20,6 @@ import { deleteMeetingsFavorite, postMeetingsFavorite } from "@/apis/meetings";
  * const { handleWishToggle } = useMeetingFavorite();
  * handleWishToggle(item.id, item.isFavorited)
  */
-
-const favoriteQueryPrefixes = [
-	mypageQueryKeys.meetups.all,
-	mypageQueryKeys.reviews.available,
-] as const;
 
 export default function useMeetingFavorite() {
 	const queryClient = useQueryClient();
