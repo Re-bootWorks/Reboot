@@ -7,6 +7,7 @@ import { useFormData } from "../../providers/FormDataProvider";
 import AddressField from "@/features/meetup/components/AddressField";
 import NameField from "@/features/meetup/components/NameField";
 import FileField from "@/features/meetup/components/FileField";
+import { validateAddressDetail, validateName } from "@/features/meetup/utils";
 
 interface StepInfoProps {
 	/** 단계 숫자 */
@@ -21,9 +22,10 @@ export default function StepInfo({ step, uploadImageFn, getKakaoPlaceFn }: StepI
 	// 유효성 검사 및 데이터 업데이트
 	useEffect(() => {
 		const { latitude, longitude, _addressName, _addressDetail, region } = data;
+		const isNameValid = validateName(data.name);
 		const isCoorValid = latitude && longitude;
-		const isLocationValid = !!(_addressName && _addressDetail && region);
-		const isValid = !!(data.name && data.image && isCoorValid && isLocationValid);
+		const isLocationValid = !!(_addressName && validateAddressDetail(_addressDetail) && region);
+		const isValid = !!(isNameValid && data.image && isCoorValid && isLocationValid);
 		setStepValid(step, isValid);
 	}, [data, setStepValid, step]);
 

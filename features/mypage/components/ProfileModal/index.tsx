@@ -24,7 +24,6 @@ const profileSchema = z.object({
 		.trim()
 		.min(1, "닉네임은 필수 입력 항목입니다.")
 		.max(8, "닉네임은 8자 이하로 입력해주세요."),
-	email: z.email("이메일 형식이 아닙니다."),
 	image: z.string().nullable().optional(),
 });
 
@@ -43,7 +42,6 @@ interface ProfileModalProps {
 function getProfileDefaultValues(user: UserProfile): ProfileFormValues {
 	return {
 		name: user.name,
-		email: user.email,
 		image: user.image ?? null,
 	};
 }
@@ -177,9 +175,7 @@ export default function ProfileModal({ user, isOpen, onClose }: ProfileModalProp
 					<InputField
 						label="아이디"
 						readOnly
-						placeholder="이메일을 입력해주세요"
-						{...register("email")}
-						isDestructive={!!errors.email}
+						value={user.email}
 						className="pointer-events-none cursor-default"
 						inputClassName="[&_input]:text-gray-500"
 					/>

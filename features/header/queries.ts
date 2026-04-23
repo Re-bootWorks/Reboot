@@ -1,21 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getFavoritesCount, getNotifications, getNotificationUnreadCount } from "./apis";
 import { useUser } from "@/hooks/useUser";
-
-const HEADER_QUERY_BASE_KEY = ["header"] as const;
-export const headerQueryKeys = {
-	// 찜 개수
-	all: HEADER_QUERY_BASE_KEY,
-	favorites: [...HEADER_QUERY_BASE_KEY, "favorites"] as const,
-	notification: {
-		all: [...HEADER_QUERY_BASE_KEY, "notifications"] as const,
-		count: [...HEADER_QUERY_BASE_KEY, "notifications", "count"] as const,
-	},
-
-	// @TODO 삭제예정 legacy
-	notifications: ["header", "notifications"] as const,
-	notificationsCount: ["header", "notifications", "count"] as const,
-} as const;
+import { headerQueryKeys } from "@/features/shared/queryKeys/header";
 
 // 찜한 갯수
 export function useGetFavoritesCount() {
@@ -33,7 +19,7 @@ export function useGetNotifications() {
 	const { user } = useUser();
 
 	return useInfiniteQuery({
-		queryKey: headerQueryKeys.notifications,
+		queryKey: headerQueryKeys.notifications.all,
 		queryFn: ({ pageParam }) => getNotifications(pageParam),
 		getNextPageParam: (lastPage) =>
 			lastPage.hasMore ? (lastPage.nextCursor ?? undefined) : undefined,
@@ -48,7 +34,7 @@ export function useGetNotificationsCount() {
 	const { user } = useUser();
 
 	return useQuery({
-		queryKey: headerQueryKeys.notificationsCount,
+		queryKey: headerQueryKeys.notifications.count,
 		queryFn: getNotificationUnreadCount,
 		staleTime: 1000 * 60 * 5,
 		enabled: !!user,

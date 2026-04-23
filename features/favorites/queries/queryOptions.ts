@@ -1,5 +1,5 @@
 import { FavoritesListRequest, FavoritesListResponse } from "../types";
-import { queryKeys } from "./queryKeys";
+import { favoritesQueryKeys } from "@/features/shared/queryKeys/favorites";
 
 export function favoritesInfiniteOptions(
 	params: FavoritesListRequest,
@@ -9,7 +9,7 @@ export function favoritesInfiniteOptions(
 	const querykeyParams = { ...rest };
 
 	return {
-		queryKey: queryKeys.favorites.list(querykeyParams),
+		queryKey: favoritesQueryKeys.favorites.list(querykeyParams),
 		queryFn: ({ pageParam }: { pageParam: string | undefined }) =>
 			getFavorites({
 				...params,

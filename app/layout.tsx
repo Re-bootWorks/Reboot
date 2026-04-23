@@ -11,6 +11,7 @@ import { getMeServer } from "@/features/auth/queries.server";
 import { cookies } from "next/headers";
 import { getQueryClient } from "@/libs/getQueryClient";
 import Script from "next/script";
+import { authQueryKeys } from "@/features/shared/queryKeys/auth";
 
 const pretendard = localFont({
 	src: "../public/assets/fonts/PretendardVariable.woff2",
@@ -101,7 +102,7 @@ export default async function RootLayout({
 	if (accessToken) {
 		await queryClient
 			.prefetchQuery({
-				queryKey: ["me"],
+				queryKey: authQueryKeys.me,
 				queryFn: getMeServer,
 			})
 			.catch(() => {});

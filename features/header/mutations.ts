@@ -6,10 +6,10 @@ import {
 	putNotificationsReadAll,
 } from "./apis";
 import { useToast } from "@/providers/toast-provider";
-import { headerQueryKeys } from "./queries";
 import { CursorPageResponse, NotificationCardList } from "./types";
+import { headerQueryKeys } from "@/features/shared/queryKeys/header";
 
-const notificationQueryKey = headerQueryKeys.notification.all;
+const notificationQueryKey = headerQueryKeys.notifications.all;
 
 export function usePutNotificationsReadAll() {
 	const queryClient = useQueryClient();
