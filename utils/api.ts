@@ -5,6 +5,10 @@ interface ApiErrorParams {
 	fallbackMessage?: string;
 }
 
+interface ThrowApiErrorOptions {
+	statusMessages?: Partial<Record<number, string>>;
+}
+
 // 기본 Error를 확장한 커스텀 에러 클래스
 export class ApiError extends Error {
 	status: number; // HTTP 상태코드
@@ -27,19 +31,22 @@ export class ApiError extends Error {
  *
  * @param response fetch response 객체
  * @param fallbackMessage 응답 바디를 읽을 수 없을 때 사용할 기본 에러 메시지
+ * @param options 특정 HTTP status에 대해 서버 message보다 우선 사용할 메시지 옵션
  * @throws {ApiError} API 실패 응답의 메시지, 상태코드, 에러코드를 담은 에러
  *
  * @example
- * const res = await clientFetch("/users/me", {
- *   method: "PATCH",
- *   body: JSON.stringify(payload),
- * });
+ * const res = await clientFetch(...);
  *
- * await throwApiError(res, "프로필 수정에 실패했습니다.");
+ * await throwApiError(res, "모임 삭제에 실패했습니다.", {
+ *   statusMessages: {
+ *     404: "이미 삭제된 모임입니다.",
+ *   },
+ * });
  * return res.json();
  *
- * 1. 서버가 message 내려주면 그 문구 노출
- * 2. 서버 message 없으면 throwApiError에 넣은 폴백 문구 노출
+ * 1. statusMessages에 해당 status가 있으면 그 문구 노출
+ * 2. 서버가 message 내려주면 그 문구 노출
+ * 3. 서버 message 없으면 throwApiError에 넣은 폴백 문구 노출
  * onError: (error: Error) => {
  *  handleShowToast({
  *   message: error.message,
@@ -47,14 +54,19 @@ export class ApiError extends Error {
  *  });
  * }
  */
-export async function throwApiError(response: Response, fallbackMessage: string): Promise<void> {
+export async function throwApiError(
+	response: Response,
+	fallbackMessage: string,
+	options: ThrowApiErrorOptions = {},
+): Promise<void> {
 	if (response.ok) return;
 
 	// 응답 실패시 null
 	const data = await response.json().catch(() => null);
+	const statusMessage = options.statusMessages?.[response.status];
 
 	throw new ApiError({
-		message: data?.message ?? fallbackMessage,
+		message: statusMessage ?? data?.message ?? fallbackMessage,
 		status: response.status,
 		code: data?.code,
 		fallbackMessage,

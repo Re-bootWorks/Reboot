@@ -92,6 +92,33 @@ describe("utils/api", () => {
 				}
 			});
 
+			test("statusMessages에 해당 status가 있으면 응답 바디 message보다 우선한다", async () => {
+				const res = createMockResponse({
+					ok: false,
+					status: 404,
+					json: jest.fn().mockResolvedValue({
+						code: "NOT_FOUND",
+						message: "모임 없음",
+					}),
+				});
+
+				try {
+					await throwApiError(res, "모임 삭제에 실패했습니다.", {
+						statusMessages: {
+							404: "이미 삭제된 모임입니다.",
+						},
+					});
+				} catch (error) {
+					expect(error).toBeInstanceOf(ApiError);
+					expect(error).toMatchObject({
+						message: "이미 삭제된 모임입니다.",
+						status: 404,
+						code: "NOT_FOUND",
+						fallbackMessage: "모임 삭제에 실패했습니다.",
+					});
+				}
+			});
+
 			test("JSON 파싱에 실패하면 fallbackMessage로 ApiError를 던진다", async () => {
 				const res = createMockResponse({
 					ok: false,
