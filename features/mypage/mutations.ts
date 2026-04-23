@@ -62,7 +62,7 @@ export function usePatchUsersMe(options?: UsePatchUsersMeOptions) {
 
 		onError: (error) => {
 			handleShowToast({
-				message: error.message,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.updateProfileError),
 				status: "error",
 			});
 		},
@@ -92,7 +92,7 @@ export function usePatchMeetingsStatus() {
 
 		onError: (error) => {
 			handleShowToast({
-				message: error.message,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.patchMeetingStatusError),
 				status: "error",
 			});
 		},
@@ -121,7 +121,7 @@ export function useDeleteMeetings() {
 
 		onError: (error) => {
 			handleShowToast({
-				message: error.message,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.deleteMeetingError),
 				status: "error",
 			});
 		},
@@ -154,7 +154,7 @@ export function useDeleteMeetingsJoin() {
 
 		onError: (error) => {
 			handleShowToast({
-				message: error.message,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.deleteMeetingJoinError),
 				status: "error",
 			});
 		},
@@ -180,7 +180,7 @@ export function usePostMeetingsReviews() {
 
 		onError: (error) => {
 			handleShowToast({
-				message: error.message,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.createReviewError),
 				status: "error",
 			});
 		},
@@ -206,7 +206,7 @@ export function usePatchReviews() {
 
 		onError: (error) => {
 			handleShowToast({
-				message: error.message,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.updateReviewError),
 				status: "error",
 			});
 		},
@@ -232,7 +232,7 @@ export function useDeleteReviews() {
 
 		onError: (error) => {
 			handleShowToast({
-				message: error.message,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.deleteReviewError),
 				status: "error",
 			});
 		},
