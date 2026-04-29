@@ -1,6 +1,10 @@
 "use client";
 
 import { RefObject, useEffect, useState } from "react";
+interface UseScrollVisibilityProps {
+	threshold?: number;
+	targetRef?: RefObject<HTMLElement | null>;
+}
 
 /**
  * 스크롤 위치에 따라 요소 노출 여부를 제어
@@ -17,11 +21,6 @@ import { RefObject, useEffect, useState } from "react";
  *   targetRef: contentRef,
  * });
  */
-
-interface UseScrollVisibilityProps {
-	threshold?: number;
-	targetRef?: RefObject<HTMLElement | null>;
-}
 
 export default function useScrollVisibility({
 	threshold = 100,

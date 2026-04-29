@@ -16,6 +16,7 @@ import {
 import { clientFetch } from "@/libs/clientFetch";
 import { mapJoinedMeeting, mapMeReviews, mapUsersMeMeetings } from "./mapper";
 import { throwApiError } from "@/utils/api";
+import { MYPAGE_MESSAGES } from "./message";
 
 export interface BaseListParams {
 	sortBy?: string;
@@ -68,9 +69,7 @@ async function mypageFetch<ApiItem, MappedItem, TParams extends object>(
 
 	const res = await clientFetch(url);
 
-	if (!res.ok) {
-		throw new Error(`목록 조회 실패: ${res.status}`);
-	}
+	await throwApiError(res, MYPAGE_MESSAGES.fetchListError);
 
 	const json = await res.json();
 
@@ -123,7 +122,11 @@ export async function patchMeetingsStatus({
 		body: JSON.stringify({ status }),
 	});
 
-	await throwApiError(res, "모임 상태 변경에 실패했습니다.");
+	await throwApiError(res, MYPAGE_MESSAGES.patchMeetingStatusError, {
+		statusMessages: {
+			404: MYPAGE_MESSAGES.deleteMeetingNotFoundError,
+		},
+	});
 }
 
 // 모임 삭제 하기
@@ -132,7 +135,11 @@ export async function deleteMeetings({ meetingId }: { meetingId: number }): Prom
 		method: "DELETE",
 	});
 
-	await throwApiError(res, "모임 삭제에 실패했습니다.");
+	await throwApiError(res, MYPAGE_MESSAGES.deleteMeetingError, {
+		statusMessages: {
+			404: MYPAGE_MESSAGES.deleteMeetingNotFoundError,
+		},
+	});
 }
 
 // 모임 참여 취소 하기
@@ -141,7 +148,7 @@ export async function deleteMeetingsJoin({ meetingId }: { meetingId: number }): 
 		method: "DELETE",
 	});
 
-	await throwApiError(res, "모임 참여 취소에 실패했습니다.");
+	await throwApiError(res, MYPAGE_MESSAGES.deleteMeetingJoinError);
 }
 
 // 리뷰 작성 하기
@@ -153,7 +160,7 @@ export async function postMeetingsReviews({
 		method: "POST",
 		body: JSON.stringify(reviewFormValues),
 	});
-	await throwApiError(res, "리뷰 작성에 실패했습니다.");
+	await throwApiError(res, MYPAGE_MESSAGES.createReviewError);
 }
 
 // 리뷰 수정 하기
@@ -165,7 +172,7 @@ export async function patchReviews({
 		method: "PATCH",
 		body: JSON.stringify(reviewFormValues),
 	});
-	await throwApiError(res, "리뷰 수정에 실패했습니다.");
+	await throwApiError(res, MYPAGE_MESSAGES.updateReviewError);
 }
 
 // 리뷰 삭제 하기
@@ -173,54 +180,7 @@ export async function deleteReviews({ reviewId }: { reviewId: number }): Promise
 	const res = await clientFetch(`/reviews/${reviewId}`, {
 		method: "DELETE",
 	});
-	await throwApiError(res, "리뷰 삭제에 실패했습니다.");
-}
-
-// 찜 추가
-export async function postMeetingsFavorites(meetingId: number): Promise<void> {
-	const res = await clientFetch(`/meetings/${meetingId}/favorites`, {
-		method: "POST",
-	});
-	await throwApiError(res, "찜 추가에 실패했습니다.");
-}
-
-// 찜 해제
-export async function deleteMeetingsFavorites(meetingId: number): Promise<void> {
-	const res = await clientFetch(`/meetings/${meetingId}/favorites`, {
-		method: "DELETE",
-	});
-	await throwApiError(res, "찜 해제에 실패했습니다.");
-}
-
-// image 업로드
-export async function uploadProfileImage(file: File): Promise<string> {
-	// presigned URL
-	const presignedResponse = await clientFetch("/images/presigned", {
-		method: "POST",
-		body: JSON.stringify({
-			fileName: file.name,
-			contentType: file.type,
-		}),
-	});
-
-	await throwApiError(presignedResponse, "이미지 업로드 URL 발급에 실패했습니다.");
-
-	// public URL
-	const { presignedUrl, publicUrl } = await presignedResponse.json();
-
-	const uploadResponse = await fetch(presignedUrl, {
-		method: "PUT",
-		headers: {
-			"Content-Type": file.type,
-		},
-		body: file,
-	});
-
-	if (!uploadResponse.ok) {
-		throw new Error("이미지 업로드에 실패했습니다.");
-	}
-
-	return publicUrl;
+	await throwApiError(res, MYPAGE_MESSAGES.deleteReviewError);
 }
 
 // 유저 프로필
@@ -229,7 +189,7 @@ export async function patchUsersMe(user: PatchUserProfilePayload): Promise<User>
 		method: "PATCH",
 		body: JSON.stringify(user),
 	});
-	await throwApiError(res, "프로필 수정에 실패했습니다.");
+	await throwApiError(res, MYPAGE_MESSAGES.updateProfileError);
 
 	return res.json();
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import PageTabs from "@/components/ui/PageTabs";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import JoinedMeetingListWrapper from "../../JoinedMeetingList";
@@ -17,17 +17,14 @@ const TAB_STICKY_OFFSET = {
 	sm: 48,
 	md: 88,
 } as const;
+
 // STICKY 이후 스크롤 시 스타일 적용 임계값
-const THRESHOLD = {
-	lg: 20,
-	md: 320,
-	sm: 220,
-} as const;
+const SCROLL_CORRECTION = 20;
 
 const STYLE = {
 	tabWrapper: "sticky top-12 z-10 bg-gray-50 md:top-22 lg:static",
 	scroll:
-		"h-4 shadow-[0_13px_16px_rgba(0,0,0,0.08)] overflow-hidden absolute bottom-px left-0 z-0 block w-full",
+		"h-4 shadow-[0_13px_16px_rgba(0,0,0,0.15)] overflow-hidden absolute bottom-px left-0 z-0 block w-full",
 };
 
 const TAB_ITEMS = [
@@ -49,16 +46,54 @@ export default function TabWrapper() {
 	const isLg = useMediaQuery(MEDIA_QUERY_LG);
 	const isMd = useMediaQuery(MEDIA_QUERY_MD);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const [scrollThreshold, setScrollThreshold] = useState(0);
 	const [activeTab, setActiveTab] = useState<TabId>(isTabId(tabQuery) ? tabQuery : TAB_ITEMS[0].id);
 	const tabAnchorRef = useRef<HTMLDivElement>(null);
 	const tabRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
-	const threshold = isLg ? THRESHOLD.lg : isMd ? THRESHOLD.md : THRESHOLD.sm;
 
 	const isVisible = useScrollVisibility({
-		threshold,
+		threshold: scrollThreshold,
 		targetRef: isLg ? contentRef : undefined,
 	});
+
+	const stickyOffset = isMd ? TAB_STICKY_OFFSET.md : TAB_STICKY_OFFSET.sm;
+
+	function getTabStickyScrollTop() {
+		const anchorTop =
+			(tabAnchorRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY - stickyOffset;
+
+		return Math.max(anchorTop, 0);
+	}
+
+	function scrollToTabContentTop() {
+		if (isLg) {
+			contentRef.current?.scrollTo({ top: 0, behavior: "auto" });
+			return;
+		}
+		const tabTop = tabRef.current?.getBoundingClientRect().top ?? 0;
+		if (tabTop <= stickyOffset + 1) {
+			window.scrollTo({ top: getTabStickyScrollTop(), behavior: "smooth" });
+		}
+	}
+
+	function handleTabChange({ id }: { id: string }) {
+		if (!isTabId(id)) return;
+
+		setIsDropdownOpen(false);
+		scrollToTabContentTop();
+		setActiveTab(id);
+		set({ tab: id });
+	}
+
+	// 반응형에 따른 스크롤 이벤트
+	useLayoutEffect(() => {
+		if (isLg) {
+			setScrollThreshold(SCROLL_CORRECTION);
+			return;
+		}
+		setScrollThreshold(getTabStickyScrollTop() + SCROLL_CORRECTION);
+	}, [isLg, isMd]);
 
 	// 잘못된 URL 수정
 	useEffect(() => {
@@ -82,37 +117,13 @@ export default function TabWrapper() {
 		WrittenReviewList: <WrittenReviewListWrapper onDropdownOpenChange={setIsDropdownOpen} />,
 	};
 
-	function scrollToTabContentTop() {
-		if (isLg) {
-			contentRef.current?.scrollTo({ top: 0, behavior: "auto" });
-			return;
-		}
-
-		const stickyOffset = isMd ? TAB_STICKY_OFFSET.md : TAB_STICKY_OFFSET.sm;
-		const anchorTop =
-			(tabAnchorRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY - stickyOffset;
-
-		window.scrollTo({
-			top: Math.max(anchorTop, 0),
-			behavior: "smooth",
-		});
-	}
 	return (
 		<div className="min-w-0 grow">
 			<div ref={tabAnchorRef} />
 			<div className={STYLE.tabWrapper} ref={tabRef}>
 				<div className={cn("relative z-1")}>
 					<div className={isVisible ? STYLE.scroll : ""} />
-					<PageTabs
-						key={activeTab}
-						defaultId={activeTab}
-						onChange={({ id }) => {
-							const nextTab = id as TabId;
-							setIsDropdownOpen(false);
-							scrollToTabContentTop();
-							setActiveTab(nextTab);
-							set({ tab: id });
-						}}>
+					<PageTabs key={activeTab} defaultId={activeTab} onChange={handleTabChange}>
 						{TAB_ITEMS.map((tabItem) => (
 							<PageTabs.Item
 								key={tabItem.id}
