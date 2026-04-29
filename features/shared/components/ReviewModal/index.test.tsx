@@ -46,7 +46,7 @@ function renderReviewModal(props = {}) {
 	const onClose = jest.fn();
 	const handleFormSubmit = jest.fn();
 
-	const utils = render(
+	render(
 		<ReviewModal
 			mode="create"
 			isOpen={true}
@@ -56,7 +56,6 @@ function renderReviewModal(props = {}) {
 		/>,
 	);
 	return {
-		...utils,
 		onClose,
 		handleFormSubmit,
 	};
