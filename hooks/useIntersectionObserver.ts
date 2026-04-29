@@ -1,20 +1,5 @@
 import { useEffect } from "react";
 
-/**
- * 무한 스크롤 시 뷰포트 감지하여 콜백을 실행하는 hook
- *
- * @example
- * const content = useRef<HTMLDivElement>(null);
- *
- * useIntersectionObserver({
- *   targetRef: content,
- *   onIntersect: fetchNextPage,
- *   isEnabled: hasNextPage && !isFetchingNextPage,
- * });
- *
- * return <div ref={content} />;
- */
-
 interface UseIntersectionObserverProps {
 	/** 감시할 DOM 요소의 ref */
 	targetRef: React.RefObject<Element | null>;
@@ -30,6 +15,21 @@ interface UseIntersectionObserverProps {
 	 *  양수면 감지 영역 확장(미리 트리거), 음수면 축소 */
 	rootMargin?: string;
 }
+
+/**
+ * 무한 스크롤 시 뷰포트 감지하여 콜백을 실행하는 hook
+ *
+ * @example
+ * const content = useRef<HTMLDivElement>(null);
+ *
+ * useIntersectionObserver({
+ *   targetRef: content,
+ *   onIntersect: fetchNextPage,
+ *   isEnabled: hasNextPage && !isFetchingNextPage,
+ * });
+ *
+ * return <div ref={content} />;
+ */
 
 export function useIntersectionObserver({
 	targetRef,
