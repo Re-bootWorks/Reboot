@@ -27,8 +27,8 @@ describe("mypage mapper", () => {
 				id: 1000,
 				name: "코딩 스터디",
 				region: "경기 수원시 영통구",
-				dateTime: "2026-03-31T16:05:00.000Z",
-				registrationEnd: "2026-03-31T16:00:00.000Z",
+				dateTime: "2026-04-05T16:05:00.000Z",
+				registrationEnd: "2026-04-05T16:00:00.000Z",
 				capacity: 2,
 				participantCount: 2,
 				image: "https://example.com/host.jpg",
@@ -62,13 +62,13 @@ describe("mypage mapper", () => {
 		test("canceledAt과 confirmedAt에 값이 있으면 그대로 반환한다", () => {
 			const input = {
 				...mockMeMeetingApiRes,
-				canceledAt: "2026-03-31T09:41:49.482Z",
-				confirmedAt: "2026-03-31T09:40:02.178Z",
+				canceledAt: "2026-04-05T09:41:49.482Z",
+				confirmedAt: "2026-04-05T09:40:02.178Z",
 			};
 			const result = mapUsersMeMeetings(input);
 
-			expect(result.canceledAt).toBe("2026-03-31T09:41:49.482Z");
-			expect(result.confirmedAt).toBe("2026-03-31T09:40:02.178Z");
+			expect(result.canceledAt).toBe("2026-04-05T09:41:49.482Z");
+			expect(result.confirmedAt).toBe("2026-04-05T09:40:02.178Z");
 		});
 		test("mapJoinedMeeting와 달리 role를 반환한다 ", () => {
 			const result = mapUsersMeMeetings(mockMeMeetingApiRes);
@@ -85,8 +85,8 @@ describe("mypage mapper", () => {
 				id: 1000,
 				name: "코딩 스터디",
 				region: "경기 수원시 영통구",
-				dateTime: "2026-03-31T16:05:00.000Z",
-				registrationEnd: "2026-03-31T16:00:00.000Z",
+				dateTime: "2026-04-05T16:05:00.000Z",
+				registrationEnd: "2026-04-05T16:00:00.000Z",
 				capacity: 2,
 				participantCount: 2,
 				image: "https://example.com/host.jpg",
@@ -119,13 +119,13 @@ describe("mypage mapper", () => {
 		test("canceledAt과 confirmedAt에 값이 있으면 그대로 반환한다", () => {
 			const input = {
 				...mockMeetingJoinedApiRes,
-				canceledAt: "2026-03-31T09:41:49.482Z",
-				confirmedAt: "2026-03-31T09:40:02.178Z",
+				canceledAt: "2026-04-05T09:41:49.482Z",
+				confirmedAt: "2026-04-05T09:40:02.178Z",
 			};
 			const result = mapJoinedMeeting(input);
 
-			expect(result.canceledAt).toBe("2026-03-31T09:41:49.482Z");
-			expect(result.confirmedAt).toBe("2026-03-31T09:40:02.178Z");
+			expect(result.canceledAt).toBe("2026-04-05T09:41:49.482Z");
+			expect(result.confirmedAt).toBe("2026-04-05T09:40:02.178Z");
 		});
 	});
 
