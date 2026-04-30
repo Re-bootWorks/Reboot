@@ -15,7 +15,7 @@ export const mockMeMeetingApiRes: MeMeetingApiRes = {
 	registrationEnd: "2026-04-05T16:00:00.000Z",
 	capacity: 2,
 	participantCount: 2,
-	image: "https://example.com/host.jpg",
+	image: "https://example.com/profile.jpg",
 	description: "함께 공부해요",
 	canceledAt: null,
 	confirmedAt: null,
@@ -25,7 +25,7 @@ export const mockMeMeetingApiRes: MeMeetingApiRes = {
 	host: {
 		id: 1234,
 		name: "홍길동",
-		image: "https://example.com/host.jpg",
+		image: "https://example.com/profile.jpg",
 	},
 	createdBy: 1234,
 	isFavorited: false,
@@ -48,7 +48,7 @@ export const mockMeetingJoinedApiRes: MeetingJoinedApiRes = {
 	registrationEnd: "2026-04-05T16:00:00.000Z",
 	capacity: 2,
 	participantCount: 2,
-	image: "https://example.com/host.jpg",
+	image: "https://example.com/profile.jpg",
 	description: "함께 공부해요",
 	canceledAt: null,
 	confirmedAt: null,
@@ -58,7 +58,7 @@ export const mockMeetingJoinedApiRes: MeetingJoinedApiRes = {
 	host: {
 		id: 1234,
 		name: "홍길동",
-		image: "https://example.com/host.jpg",
+		image: "https://example.com/profile.jpg",
 	},
 	createdBy: 1234,
 	isFavorited: false,
@@ -86,5 +86,5 @@ export const mockUserProfile: UserProfile = {
 	id: 1234,
 	name: "홍길동",
 	email: "test@example.com",
-	image: "https://example.com/host.jpg",
+	image: "https://example.com/profile.jpg",
 };

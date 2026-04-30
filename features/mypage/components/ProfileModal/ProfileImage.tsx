@@ -154,6 +154,7 @@ export default function ProfileImage({
 						iconSize="md"
 						onClick={() => handleImageReset()}
 						className={STYLE.profileButton}
+						aria-label="업로드 이미지 삭제"
 					/>
 				)}
 			</div>
