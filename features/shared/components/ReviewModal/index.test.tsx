@@ -21,7 +21,7 @@ jest.mock("@smastrom/react-rating", () => ({
 	),
 }));
 // HeadlessUI 테스트 경고로 인해 단순 모달 UI로 대체
-jest.mock("../../../../components/ui/Modals", () => ({
+jest.mock("@/components/ui/Modals", () => ({
 	Modal: ({
 		isOpen,
 		title,
@@ -46,7 +46,7 @@ function renderReviewModal(props = {}) {
 	const onClose = jest.fn();
 	const handleFormSubmit = jest.fn();
 
-	const utils = render(
+	render(
 		<ReviewModal
 			mode="create"
 			isOpen={true}
@@ -56,14 +56,13 @@ function renderReviewModal(props = {}) {
 		/>,
 	);
 	return {
-		...utils,
 		onClose,
 		handleFormSubmit,
 	};
 }
 
 describe("ReviewModal", () => {
-	describe("isOpen 상태에 따라 모달이 열리고 닫히는지 확인", () => {
+	describe("모달이 열리고 닫히는지 확인한다", () => {
 		test("isOpen이 true면 모달이 열리고 메시지가 보인다", () => {
 			renderReviewModal();
 
@@ -76,7 +75,7 @@ describe("ReviewModal", () => {
 		});
 	});
 
-	describe("onClose 확인", () => {
+	describe("취소 버튼으로 모달을 닫을 수 있는지 확인한다", () => {
 		test("취소 버튼 클릭 시 onClose가 호출되는지 확인", async () => {
 			const { onClose } = renderReviewModal();
 
@@ -89,7 +88,7 @@ describe("ReviewModal", () => {
 		});
 	});
 
-	describe("mode 분기 확인", () => {
+	describe("작성모드와 수정모드를 확인한다", () => {
 		test("create 모드면 '리뷰 작성' 타이틀과 '작성 완료' 버튼이 보인다", () => {
 			renderReviewModal({ mode: "create" });
 
@@ -111,7 +110,7 @@ describe("ReviewModal", () => {
 		});
 	});
 
-	describe("초기값 반영 확인", () => {
+	describe("리뷰 초기값이 반영 되는지 확인한다", () => {
 		test("edit 모드에서 초기 score와 comment가 반영된다", () => {
 			renderReviewModal({ mode: "edit", initialValue: { score: 4, comment: "리뷰 내용" } });
 
@@ -124,7 +123,7 @@ describe("ReviewModal", () => {
 		});
 	});
 
-	describe("form 제출 확인", () => {
+	describe("별점과 리뷰 제출 되는지 확인한다", () => {
 		test("별점과 리뷰를 제출하면 handleFormSubmit이 호출된다", async () => {
 			const { handleFormSubmit } = renderReviewModal();
 			const user = userEvent.setup();
@@ -145,7 +144,7 @@ describe("ReviewModal", () => {
 		});
 	});
 
-	describe("validation 확인", () => {
+	describe("별점과 리뷰를 입력하지 않고 제출했을때 유효성메시지가 뜨는지 확인한다", () => {
 		test("별점과 리뷰를 입력하지 않고 제출하면 validation 메시지가 표시된다", async () => {
 			const { handleFormSubmit } = renderReviewModal();
 			const user = userEvent.setup();
@@ -162,7 +161,7 @@ describe("ReviewModal", () => {
 		});
 	});
 
-	describe("dirty 상태 확인", () => {
+	describe("작성 중 취소할 때 경고창이 보이는지 확인한다", () => {
 		test("변경된 내용이 없으면 취소 클릭 시 바로 onClose가 호출된다", async () => {
 			const { onClose } = renderReviewModal({
 				mode: "edit",
@@ -175,8 +174,8 @@ describe("ReviewModal", () => {
 			expect(onClose).toHaveBeenCalledTimes(1);
 		});
 
-		describe("Alert 동작 확인", () => {
-			test("작성 중 취소시 dirty 상태면 Alert이 열리는지 확인", async () => {
+		describe("작성 중 취소시 Alert이 열리는지 확인", () => {
+			test("create 모드일 때 취소시 Alert이 열리는지 확인", async () => {
 				renderReviewModal();
 				const user = userEvent.setup();
 
@@ -187,7 +186,7 @@ describe("ReviewModal", () => {
 				expect(alert).toBeInTheDocument();
 			});
 
-			test("수정 중 취소시 dirty 상태면 Alert이 열리는지 확인", async () => {
+			test("edit 모드일 때 취소시 Alert이 열리는지 확인", async () => {
 				renderReviewModal({ mode: "edit", initialValue: { score: 4, comment: "기존 리뷰" } });
 				const user = userEvent.setup();
 
