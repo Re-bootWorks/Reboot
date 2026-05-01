@@ -4,6 +4,9 @@ import useScrollFloatingVisibility from "./useScrollFloatingVisibility";
 
 type ScrollTarget = Window | HTMLElement;
 
+const originalScrollYDescriptor = Object.getOwnPropertyDescriptor(window, "scrollY");
+const originalPageYOffsetDescriptor = Object.getOwnPropertyDescriptor(window, "pageYOffset");
+
 function setWindowScroll(value: number) {
 	Object.defineProperty(window, "scrollY", {
 		value,
@@ -15,6 +18,20 @@ function setWindowScroll(value: number) {
 		configurable: true,
 		writable: true,
 	});
+}
+
+function restoreWindowScrollProperties() {
+	if (originalScrollYDescriptor) {
+		Object.defineProperty(window, "scrollY", originalScrollYDescriptor);
+	} else {
+		Reflect.deleteProperty(window, "scrollY");
+	}
+
+	if (originalPageYOffsetDescriptor) {
+		Object.defineProperty(window, "pageYOffset", originalPageYOffsetDescriptor);
+	} else {
+		Reflect.deleteProperty(window, "pageYOffset");
+	}
 }
 
 function setElementScroll(target: HTMLElement, value: number) {
@@ -72,6 +89,7 @@ describe("useScrollFloatingVisibility", () => {
 
 	afterEach(() => {
 		jest.restoreAllMocks();
+		restoreWindowScrollProperties();
 	});
 
 	test("threshold 기준 초기 상태를 계산한다", () => {
