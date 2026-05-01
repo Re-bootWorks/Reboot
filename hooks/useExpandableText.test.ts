@@ -1,6 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
-import type { MutableRefObject } from "react";
 import { useExpandableText } from "./useExpandableText";
+
+type WritableRef<T> = {
+	current: T;
+};
 
 function setElementHeights(
 	element: HTMLDivElement,
@@ -17,7 +20,7 @@ function setElementHeights(
 }
 
 function attachMeasuredElement(
-	ref: MutableRefObject<HTMLDivElement | null>,
+	ref: WritableRef<HTMLDivElement | null>,
 	heights: { scrollHeight: number; clientHeight: number },
 ) {
 	const element = document.createElement("div");
@@ -55,7 +58,7 @@ describe("useExpandableText", () => {
 			{ initialProps: { content: "first" } },
 		);
 
-		const contentRef = result.current.contentRef as MutableRefObject<HTMLDivElement | null>;
+		const contentRef = result.current.contentRef as WritableRef<HTMLDivElement | null>;
 		const element = attachMeasuredElement(contentRef, {
 			scrollHeight: 101,
 			clientHeight: 100,
@@ -95,7 +98,7 @@ describe("useExpandableText", () => {
 			{ initialProps: { content: "first" } },
 		);
 
-		const contentRef = result.current.contentRef as MutableRefObject<HTMLDivElement | null>;
+		const contentRef = result.current.contentRef as WritableRef<HTMLDivElement | null>;
 		const element = attachMeasuredElement(contentRef, {
 			scrollHeight: 100,
 			clientHeight: 100,
@@ -119,7 +122,7 @@ describe("useExpandableText", () => {
 			{ initialProps: { content: "first" } },
 		);
 
-		const contentRef = result.current.contentRef as MutableRefObject<HTMLDivElement | null>;
+		const contentRef = result.current.contentRef as WritableRef<HTMLDivElement | null>;
 		const element = attachMeasuredElement(contentRef, {
 			scrollHeight: 100,
 			clientHeight: 100,
@@ -148,7 +151,7 @@ describe("useExpandableText", () => {
 			{ initialProps: { content: "first" } },
 		);
 
-		const contentRef = result.current.contentRef as MutableRefObject<HTMLDivElement | null>;
+		const contentRef = result.current.contentRef as WritableRef<HTMLDivElement | null>;
 		attachMeasuredElement(contentRef, {
 			scrollHeight: 100,
 			clientHeight: 100,

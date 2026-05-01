@@ -1,13 +1,16 @@
 import { act, renderHook } from "@testing-library/react";
 import { useSearchParams } from "next/navigation";
-import type { MutableRefObject } from "react";
 import useScrollOnNextQueryChange from "./useScrollOnNextQueryChange";
 
 jest.mock("next/navigation", () => ({
 	useSearchParams: jest.fn(),
 }));
 
-function attachScrollAnchor(ref: MutableRefObject<HTMLDivElement | null>) {
+type WritableRef<T> = {
+	current: T;
+};
+
+function attachScrollAnchor(ref: WritableRef<HTMLDivElement | null>) {
 	const anchor = document.createElement("div");
 	const scrollIntoView = jest.fn();
 
@@ -40,7 +43,7 @@ describe("useScrollOnNextQueryChange", () => {
 	test("최초 마운트 시에는 스크롤하지 않는다", () => {
 		const { result } = renderHook(() => useScrollOnNextQueryChange<HTMLDivElement>());
 		const scrollIntoView = attachScrollAnchor(
-			result.current.scrollAnchorRef as MutableRefObject<HTMLDivElement | null>,
+			result.current.scrollAnchorRef as WritableRef<HTMLDivElement | null>,
 		);
 
 		expect(scrollIntoView).not.toHaveBeenCalled();
@@ -49,7 +52,7 @@ describe("useScrollOnNextQueryChange", () => {
 	test("markWillChange 없이 query가 바뀌면 스크롤하지 않는다", () => {
 		const { result, rerender } = renderHook(() => useScrollOnNextQueryChange<HTMLDivElement>());
 		const scrollIntoView = attachScrollAnchor(
-			result.current.scrollAnchorRef as MutableRefObject<HTMLDivElement | null>,
+			result.current.scrollAnchorRef as WritableRef<HTMLDivElement | null>,
 		);
 
 		currentQuery = "page=2";
@@ -65,7 +68,7 @@ describe("useScrollOnNextQueryChange", () => {
 			}),
 		);
 		const scrollIntoView = attachScrollAnchor(
-			result.current.scrollAnchorRef as MutableRefObject<HTMLDivElement | null>,
+			result.current.scrollAnchorRef as WritableRef<HTMLDivElement | null>,
 		);
 
 		act(() => {
