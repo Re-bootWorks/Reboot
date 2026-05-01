@@ -35,7 +35,7 @@ export async function uploadImage(file: File): Promise<string> {
 }
 
 /** 이미지 업로드 Step1: presigned URL 발급 */
-const ROUTE_IMAGES = "/images/presigned";
+export const ROUTE_IMAGES = "/images/presigned";
 async function getPresignedUrl(fileName: string, contentType: string, folder: string = "meetings") {
 	const res = await clientFetch(ROUTE_IMAGES, {
 		method: "POST",
@@ -54,7 +54,7 @@ async function getPresignedUrl(fileName: string, contentType: string, folder: st
 }
 
 /** 이미지 업로드 Step2: S3에 이미지 업로드 */
-const ROUTE_IMAGES_UPLOAD = "/images/upload";
+export const ROUTE_IMAGES_UPLOAD = "/images/upload";
 async function uploadToS3(presignedUrl: string, file: File) {
 	const res = await clientFetch(ROUTE_IMAGES_UPLOAD, {
 		method: "PUT",
