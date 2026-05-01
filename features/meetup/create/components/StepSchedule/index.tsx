@@ -4,9 +4,13 @@ import { useEffect } from "react";
 import { useFormData } from "../../providers/FormDataProvider";
 import CapacityField from "@/features/meetup/components/CapacityField";
 import DateTimeField from "@/features/meetup/components/DateTimeField";
-import { validateCapacity, validateDateTime, validateDateTimeOrder } from "../../../utils";
-import { validateMaxCapacity } from "@/features/meetupDetail/edit/utils";
-import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/PersonnelContainer";
+import {
+	validateDateTimeIsFuture,
+	validateDateTimeOrder,
+	validateMaxCapacity,
+} from "@/features/meetupDetail/edit/utils";
+import { validateCapacity } from "@/features/meetup/utils";
+import { MIN_CONFIRMED_COUNT } from "@/features/meetup/constants";
 import { useToast } from "@/providers/toast-provider";
 
 interface StepScheduleProps {
@@ -39,14 +43,14 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 			!!meetTime &&
 			!!regDate &&
 			!!regTime &&
-			!validateDateTimeOrder({
-				dateTime: next._dateTime,
-				registrationEnd: next._registrationEnd,
-			});
+			!validateDateTimeOrder(
+				`${next._dateTime.date} ${next._dateTime.time}`,
+				`${next._registrationEnd.date} ${next._registrationEnd.time}`,
+			);
 
 		if (isDateTimeKey) {
 			if (!meetDate || !meetTime) return;
-			if (!validateDateTime(meetDate, meetTime)) {
+			if (!validateDateTimeIsFuture(`${meetDate} ${meetTime}`)) {
 				handleShowToast({ message: MESSAGE_SCHEDULE_AFTER_NOW, status: "error" });
 				return;
 			}
@@ -56,7 +60,7 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 			}
 		} else {
 			if (!regDate || !regTime) return;
-			if (!validateDateTime(regDate, regTime)) {
+			if (!validateDateTimeIsFuture(`${regDate} ${regTime}`)) {
 				handleShowToast({ message: MESSAGE_REGISTRATION_END_AFTER_NOW, status: "error" });
 				return;
 			}
@@ -73,21 +77,27 @@ export default function StepSchedule({ step }: StepScheduleProps) {
 
 	// 데이터 유효성 검사
 	useEffect(() => {
-		const isDateTimeValid = validateDateTime(data._dateTime.date, data._dateTime.time);
-		const isRegEndValid = validateDateTime(data._registrationEnd.date, data._registrationEnd.time);
-		const isDateTimeOrderValid = validateDateTimeOrder({
-			dateTime: data._dateTime,
-			registrationEnd: data._registrationEnd,
-		});
-		const isCapacityValid = validateCapacity(data.capacity);
-		const isMaxCapacityValid = validateMaxCapacity(data.capacity, MIN_CONFIRMED_COUNT);
+		const isDateTimeValid =
+			!!data._dateTime.date &&
+			!!data._dateTime.time &&
+			validateDateTimeIsFuture(`${data._dateTime.date} ${data._dateTime.time}`);
+		const isRegEndValid =
+			!!data._registrationEnd.date &&
+			!!data._registrationEnd.time &&
+			validateDateTimeIsFuture(`${data._registrationEnd.date} ${data._registrationEnd.time}`);
+		const isDateTimeOrderValid = validateDateTimeOrder(
+			`${data._dateTime.date} ${data._dateTime.time}`,
+			`${data._registrationEnd.date} ${data._registrationEnd.time}`,
+		);
+		const isCapacityEntered = validateCapacity(data.capacity);
+		const isCapacityMinOk = validateMaxCapacity(data.capacity, MIN_CONFIRMED_COUNT);
 		setStepValid(
 			step,
 			isDateTimeValid &&
 				isRegEndValid &&
 				isDateTimeOrderValid &&
-				isCapacityValid &&
-				isMaxCapacityValid,
+				isCapacityEntered &&
+				isCapacityMinOk,
 		);
 	}, [data, setStepValid, step]);
 

@@ -1,7 +1,7 @@
 "use client";
 
 import InputField from "@/components/ui/Inputs/InputField";
-import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/PersonnelContainer";
+import { MIN_CONFIRMED_COUNT } from "@/features/meetup/constants";
 
 interface CapacityFieldProps {
 	/** 필드 이름 @default "capacity" */
