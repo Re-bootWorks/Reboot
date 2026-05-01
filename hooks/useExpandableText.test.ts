@@ -13,6 +13,7 @@ function setElementHeights(
 		value: scrollHeight,
 		configurable: true,
 	});
+
 	Object.defineProperty(element, "clientHeight", {
 		value: clientHeight,
 		configurable: true,
@@ -24,22 +25,28 @@ function attachMeasuredElement(
 	heights: { scrollHeight: number; clientHeight: number },
 ) {
 	const element = document.createElement("div");
+
 	setElementHeights(element, heights);
 	ref.current = element;
+
 	return element;
 }
 
 describe("useExpandableText", () => {
+	const originalResizeObserver = global.ResizeObserver;
+
 	let resizeObserverCallback: ResizeObserverCallback = () => undefined;
 	let observe: jest.Mock;
 	let disconnect: jest.Mock;
 
 	beforeEach(() => {
+		resizeObserverCallback = () => undefined;
 		observe = jest.fn();
 		disconnect = jest.fn();
 
 		global.ResizeObserver = jest.fn().mockImplementation((callback: ResizeObserverCallback) => {
 			resizeObserverCallback = callback;
+
 			return {
 				observe,
 				unobserve: jest.fn(),
@@ -50,6 +57,12 @@ describe("useExpandableText", () => {
 
 	afterEach(() => {
 		jest.restoreAllMocks();
+
+		if (originalResizeObserver) {
+			global.ResizeObserver = originalResizeObserver;
+		} else {
+			delete (global as Partial<typeof globalThis>).ResizeObserver;
+		}
 	});
 
 	test("scrollHeight가 clientHeight + 1을 초과할 때만 overflow를 true로 판단한다", () => {
@@ -59,15 +72,21 @@ describe("useExpandableText", () => {
 		);
 
 		const contentRef = result.current.contentRef as WritableRef<HTMLDivElement | null>;
+
 		const element = attachMeasuredElement(contentRef, {
 			scrollHeight: 101,
 			clientHeight: 100,
 		});
 
 		rerender({ content: "second" });
+
 		expect(result.current.isOverflow).toBe(false);
 
-		setElementHeights(element, { scrollHeight: 102, clientHeight: 100 });
+		setElementHeights(element, {
+			scrollHeight: 102,
+			clientHeight: 100,
+		});
+
 		rerender({ content: "third" });
 
 		expect(result.current.isOverflow).toBe(true);
@@ -99,15 +118,20 @@ describe("useExpandableText", () => {
 		);
 
 		const contentRef = result.current.contentRef as WritableRef<HTMLDivElement | null>;
+
 		const element = attachMeasuredElement(contentRef, {
 			scrollHeight: 100,
 			clientHeight: 100,
 		});
 
 		rerender({ content: "second" });
+
 		expect(result.current.isOverflow).toBe(false);
 
-		setElementHeights(element, { scrollHeight: 140, clientHeight: 100 });
+		setElementHeights(element, {
+			scrollHeight: 140,
+			clientHeight: 100,
+		});
 
 		act(() => {
 			resizeObserverCallback([] as ResizeObserverEntry[], {} as ResizeObserver);
@@ -123,19 +147,24 @@ describe("useExpandableText", () => {
 		);
 
 		const contentRef = result.current.contentRef as WritableRef<HTMLDivElement | null>;
+
 		const element = attachMeasuredElement(contentRef, {
 			scrollHeight: 100,
 			clientHeight: 100,
 		});
 
 		rerender({ content: "second" });
+
 		expect(result.current.isOverflow).toBe(false);
 
 		act(() => {
 			result.current.toggleExpanded();
 		});
 
-		setElementHeights(element, { scrollHeight: 140, clientHeight: 100 });
+		setElementHeights(element, {
+			scrollHeight: 140,
+			clientHeight: 100,
+		});
 
 		act(() => {
 			resizeObserverCallback([] as ResizeObserverEntry[], {} as ResizeObserver);
@@ -152,12 +181,14 @@ describe("useExpandableText", () => {
 		);
 
 		const contentRef = result.current.contentRef as WritableRef<HTMLDivElement | null>;
+
 		attachMeasuredElement(contentRef, {
 			scrollHeight: 100,
 			clientHeight: 100,
 		});
 
 		rerender({ content: "second" });
+
 		unmount();
 
 		expect(disconnect).toHaveBeenCalled();
