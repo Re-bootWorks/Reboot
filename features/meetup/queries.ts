@@ -5,7 +5,7 @@ import {
 	UseMutationOptions,
 	useQueryClient,
 } from "@tanstack/react-query";
-import type { MeetupCreateRequest, MeetupItemResponse } from "./types";
+import type { MeetupCreateRequest, MeetupItemResponse, MeetupListResponse } from "./types";
 import { getMeetups, postMeetup } from "./apis";
 import {
 	deleteMeetingsFavorite,
@@ -15,15 +15,7 @@ import {
 } from "@/apis/meetings";
 import { uploadImage } from "@/apis/images";
 import { useUser } from "@/hooks/useUser";
-import {
-	transformDateEndQuery,
-	transformDateStartQuery,
-	transformKeywordQuery,
-	transformQueryValue,
-	transformSortByQuery,
-	transformSortOrderQuery,
-	transformTypeValue,
-} from "./list/utils";
+import { buildMeetupListRequest } from "./list/utils";
 import { QUERY_KEYS } from "./list/constants";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { useEffect } from "react";
@@ -39,16 +31,18 @@ export function useGetMeetups(size: number) {
 	const queryClient = useQueryClient();
 	const { user } = useUser();
 	const { get } = useQueryParams();
-	const params = {
-		type: transformTypeValue(get(QUERY_KEYS.TYPE)),
-		keyword: transformKeywordQuery(get(QUERY_KEYS.KEYWORD)),
-		region: transformQueryValue(get(QUERY_KEYS.REGION)),
-		dateStart: transformDateStartQuery(get(QUERY_KEYS.DATE_START)),
-		dateEnd: transformDateEndQuery(get(QUERY_KEYS.DATE_END)),
-		sortBy: transformSortByQuery(get(QUERY_KEYS.SORT_BY)),
-		sortOrder: transformSortOrderQuery(get(QUERY_KEYS.SORT_ORDER)),
+	const params = buildMeetupListRequest(
+		{
+			type: get(QUERY_KEYS.TYPE),
+			keyword: get(QUERY_KEYS.KEYWORD),
+			region: get(QUERY_KEYS.REGION),
+			dateStart: get(QUERY_KEYS.DATE_START),
+			dateEnd: get(QUERY_KEYS.DATE_END),
+			sortBy: get(QUERY_KEYS.SORT_BY),
+			sortOrder: get(QUERY_KEYS.SORT_ORDER),
+		},
 		size,
-	};
+	);
 
 	useEffect(() => {
 		queryClient.invalidateQueries({
@@ -60,7 +54,7 @@ export function useGetMeetups(size: number) {
 	return useInfiniteQuery({
 		queryKey: meetupQueryKeys.listWithParams(params),
 		queryFn: ({ pageParam }) => getMeetups({ ...params, cursor: pageParam }),
-		getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+		getNextPageParam: (lastPage: MeetupListResponse) => lastPage.nextCursor ?? undefined,
 		initialPageParam: undefined as string | undefined,
 		placeholderData: keepPreviousData,
 		refetchOnWindowFocus: false,

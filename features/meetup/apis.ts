@@ -5,6 +5,7 @@ import {
 	MeetupListRequest,
 	MeetupListResponse,
 } from "./types";
+import { buildMeetupListQuery } from "./list/utils";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -33,15 +34,8 @@ const ROUTE_MEETINGS = "/meetings";
 
 /** 모임 찾기 */
 export async function getMeetups(params: MeetupListRequest): Promise<MeetupListResponse> {
-	// encodeURIComponent 자동 적용
-	const queryParams = new URLSearchParams();
-	for (const [key, value] of Object.entries(params)) {
-		if (value != null) {
-			queryParams.append(key, String(value));
-		}
-	}
-
-	const res = await clientFetch(`${ROUTE_MEETINGS}?${queryParams}`, {
+	const qs = buildMeetupListQuery(params);
+	const res = await clientFetch(qs ? `${ROUTE_MEETINGS}?${qs}` : ROUTE_MEETINGS, {
 		method: "GET",
 		headers: { "Content-Type": "application/json" },
 	});

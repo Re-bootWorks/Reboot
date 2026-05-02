@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useCategoryStore } from "@/store/category.store";
+import type { RegionFilterValue } from "@/features/meetup/types";
 import {
 	CATEGORY_TYPE_ALL,
 	QUERY_KEYS,
@@ -20,7 +21,6 @@ import useScrollVisibilityDynamic from "@/hooks/useScrollVisibilityDynamic";
 import TabButton from "@/components/ui/Buttons/TabButton";
 import DateFilter from "@/components/ui/Filter/DateFilter";
 import RegionFilter from "@/components/ui/Filter/RegionFilter";
-import type { Option } from "@/components/ui/Filter/RegionFilter/option";
 import { FilterDropdown } from "@/components/ui/Filter/FilterDropdown";
 import SearchInput from "@/components/ui/SearchInput";
 import IcSearch from "@/components/ui/icons/IcSearch";
@@ -231,10 +231,7 @@ function KeywordFilter() {
 }
 
 // 우측 드롭다운 필터 목록
-export type RegionFilterValue = {
-	region: Option | null;
-	district: Option | null;
-};
+
 export type RegionFilterParams = {
 	fullLabel: string;
 } & RegionFilterValue;

@@ -1,8 +1,13 @@
 import dayjs from "@/libs/dayjs";
+import type {
+	MeetupListRequest,
+	MeetupListSearchInput,
+	RegionFilterValue,
+	SortBy,
+	SortOrder,
+} from "../types";
 import { isDeadlinePassed } from "@/utils/date";
-import { SortBy, SortOrder } from "../types";
 import { CATEGORY_TYPE_ALL, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "./constants";
-import { RegionFilterValue } from "../list/components/ListFilters";
 
 /** 정렬 기준 항목 조회 */
 export function getSortByItem(param: string | null) {
@@ -107,4 +112,32 @@ export function transformRegionData(data: string | null | undefined): RegionFilt
 			district: { value: district, label: district },
 		};
 	}
+}
+
+/** search, URL 파라미터로부터 모임 목록 API 요청 객체 생성 */
+export function buildMeetupListRequest(
+	search: MeetupListSearchInput,
+	pageSize: number,
+): MeetupListRequest {
+	return {
+		type: transformTypeValue(search.type),
+		keyword: transformKeywordQuery(search.keyword),
+		region: transformQueryValue(search.region),
+		dateStart: transformDateStartQuery(search.dateStart),
+		dateEnd: transformDateEndQuery(search.dateEnd),
+		sortBy: transformSortByQuery(search.sortBy),
+		sortOrder: transformSortOrderQuery(search.sortOrder),
+		size: pageSize,
+	};
+}
+
+/** 모임 목록 조회 요청 객체를 쿼리스트링 문자열로 변환 */
+export function buildMeetupListQuery(params: MeetupListRequest): string {
+	const queryParams = new URLSearchParams();
+	for (const [key, value] of Object.entries(params)) {
+		if (value != null) {
+			queryParams.append(key, String(value));
+		}
+	}
+	return queryParams.toString();
 }
