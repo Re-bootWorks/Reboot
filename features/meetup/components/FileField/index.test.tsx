@@ -1,9 +1,10 @@
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FileField from ".";
 
-const hiddenInputSelector = 'input[type="file"]';
+const fieldLabelText = "이미지";
+const hiddenFileInputSelector = 'input[type="file"]';
 
 const mockImgUrl = "https://example.com/image.jpg";
 const createFile = () => new File(["dummy"], "image.jpg", { type: "image/jpg" });
@@ -39,12 +40,13 @@ function createWrapper() {
 }
 
 describe("FileField 컴포넌트 테스트", () => {
-	let onChange = jest.fn();
-	let uploadImageFn = jest.fn();
+	let onChange: jest.Mock;
+	let uploadImageFn: jest.Mock;
 
 	beforeEach(() => {
 		jest.clearAllMocks();
-		uploadImageFn;
+		onChange = jest.fn();
+		uploadImageFn = jest.fn();
 	});
 
 	test("이미지 업로드 성공 시 onChange와 성공 토스트가 호출되어야 함", async () => {
@@ -54,15 +56,19 @@ describe("FileField 컴포넌트 테스트", () => {
 			wrapper: createWrapper(),
 		});
 
-		const input = document.querySelector(hiddenInputSelector) as HTMLInputElement;
+		const input = screen.getByLabelText(fieldLabelText, {
+			selector: hiddenFileInputSelector,
+			exact: false,
+		});
 
+		const file = createFile();
 		const user = userEvent.setup();
-		await user.upload(input, createFile());
+		await user.upload(input, file);
 
 		await waitFor(() => {
 			expect(uploadImageFn).toHaveBeenCalled();
 		});
-		expect(uploadImageFn.mock.calls[0][0]).toEqual(createFile());
+		expect(uploadImageFn.mock.calls[0][0]).toEqual(file);
 
 		await waitFor(() => {
 			expect(onChange).toHaveBeenCalledWith(mockImgUrl, expect.any(Object));
@@ -80,10 +86,14 @@ describe("FileField 컴포넌트 테스트", () => {
 			wrapper: createWrapper(),
 		});
 
-		const input = document.querySelector(hiddenInputSelector) as HTMLInputElement;
+		const input = screen.getByLabelText(fieldLabelText, {
+			selector: hiddenFileInputSelector,
+			exact: false,
+		});
 
+		const file = createFile();
 		const user = userEvent.setup();
-		await user.upload(input, createFile());
+		await user.upload(input, file);
 
 		await waitFor(() => {
 			expect(mockHandleShowToast).toHaveBeenCalledWith({
@@ -99,7 +109,10 @@ describe("FileField 컴포넌트 테스트", () => {
 			wrapper: createWrapper(),
 		});
 
-		const input = document.querySelector(hiddenInputSelector) as HTMLInputElement;
+		const input = screen.getByLabelText(fieldLabelText, {
+			selector: hiddenFileInputSelector,
+			exact: false,
+		});
 		expect(input).toHaveAttribute("name", name);
 	});
 });

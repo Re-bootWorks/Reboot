@@ -70,7 +70,7 @@ describe("AddressField 컴포넌트 테스트", () => {
 		expect(setIsComboOpened).toHaveBeenCalledWith(true);
 	});
 
-	test("검색 결과가 콤보박스에 표시되어야 함", () => {
+	test("isComboOpened가 true여도 검색어가 없으면 콤보박스가 표시되지 않아야 함", () => {
 		render(
 			<AddressField
 				isComboOpened={true}
@@ -84,7 +84,7 @@ describe("AddressField 컴포넌트 테스트", () => {
 		expect(listbox).not.toBeInTheDocument();
 	});
 
-	test("isComboOpened가 true이고 검색 결과가 있으면 리스트가 표시되어야 함", async () => {
+	test("isComboOpened가 true이고 검색 결과가 있으면 콤보박스가 표시되어야 함", async () => {
 		const setValue = jest.fn();
 		render(
 			<AddressField
