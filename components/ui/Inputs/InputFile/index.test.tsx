@@ -2,7 +2,9 @@ import { render, screen } from "@testing-library/react";
 import InputFile from ".";
 
 const placeholderText = "파일 첨부";
-const hiddenInputSelector = 'input[type="file"]';
+const hiddenFileInputSelector = 'input[type="file"]';
+const thumbnailAltText = "thumbnail";
+const pendingStatusAriaLabel = "파일 업로드 중";
 
 const mockPreviewUrl = "https://example.com/thumb.jpg";
 const mockLabel = "테스트 라벨명";
@@ -35,7 +37,7 @@ describe("InputFile 컴포넌트 테스트", () => {
 	test("커스텀 name이 input에 적용되어야 함", () => {
 		render(<InputFile name={mockName} />);
 
-		const input = document.querySelector(hiddenInputSelector);
+		const input = screen.getByLabelText(placeholderText, { selector: hiddenFileInputSelector });
 		expect(input).toHaveAttribute("name", mockName);
 	});
 
@@ -43,14 +45,14 @@ describe("InputFile 컴포넌트 테스트", () => {
 		render(<InputFile name={mockName} label={mockLabel} />);
 
 		expect(screen.getByText(mockLabel)).toBeInTheDocument();
-		expect(document.querySelector(hiddenInputSelector)).toBeInTheDocument();
+
+		expect(screen.getByLabelText(mockLabel, { selector: hiddenFileInputSelector })).toBeInTheDocument();
 	});
 
 	test("isPending이 true이면 로딩 오버레이가 표시되어야 함", () => {
-		const { container } = render(<InputFile name={mockName} isPending />);
-		const overlay = container.querySelector("svg");
+		render(<InputFile name={mockName} isPending />);
 
-		expect(overlay).toBeInTheDocument();
+		expect(screen.getByRole("status", { name: pendingStatusAriaLabel })).toBeInTheDocument();
 	});
 
 	test("미리보기 이미지가 있으면 삭제 버튼이 보이고 플레이스홀더는 숨겨져야 함", () => {
@@ -59,6 +61,6 @@ describe("InputFile 컴포넌트 테스트", () => {
 
 		expect(screen.queryByText(placeholderText)).not.toBeInTheDocument();
 		expect(screen.getByRole("button")).toBeInTheDocument();
-		expect(screen.getByAltText("thumbnail")).toBeInTheDocument();
+		expect(screen.getByAltText(thumbnailAltText)).toBeInTheDocument();
 	});
 });
