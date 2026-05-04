@@ -11,7 +11,7 @@ const baseMeeting: MeetupItemResponse = {
 	latitude: 37.5,
 	longitude: 127.0,
 	dateTime: "2026-05-01T14:00:00.000Z",
-	registrationEnd: "2026-04-30T14:00:00.000Z",
+	registrationEnd: "2099-12-31T14:00:00.000Z",
 	capacity: 10,
 	participantCount: 5,
 	image: "/img.svg",
