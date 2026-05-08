@@ -13,12 +13,12 @@ export const QUERY_KEYS = {
 	 * 클라이언트 기본값 createdAt
 	 * 서버 기본값 dateTime
 	 */
-	SORT_BY: "sort",
+	SORT_BY: "sortBy",
 	/** 정렬 순서 (오름차, 내림차)
 	 * 클라이언트 기본값 desc, 서버 기본값 asc
 	 * sortBy=createAt의 경우 서버 기본값 desc
 	 */
-	SORT_ORDER: "order",
+	SORT_ORDER: "sortOrder",
 };
 
 /** 정렬 기준 항목 */

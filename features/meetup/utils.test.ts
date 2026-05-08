@@ -1,11 +1,8 @@
-import dayjs from "dayjs";
 import {
 	getAddress,
 	getRegion,
 	splitAddress,
 	validateCapacity,
-	validateDateTime,
-	validateDateTimeOrder,
 	validatePlaceSearch,
 	validateText,
 } from "./utils";
@@ -25,48 +22,28 @@ describe("모임 생성 데이터 유효성 검사 테스트", () => {
 		});
 	});
 
-	describe("모임 일시, 모집 마감 일시 유효성 검사 테스트", () => {
-		const after1Today = dayjs().add(1, "day").format("YYYY-MM-DD");
-		const before1Today = dayjs().subtract(1, "day").format("YYYY-MM-DD");
-		const after2Today = dayjs().add(2, "day").format("YYYY-MM-DD");
-		const time = "14:00";
-
-		test("날짜가 오늘보다 이후이면 true를 반환", () => {
-			const result = validateDateTime(after1Today, time);
-			expect(result).toBe(true);
-		});
-
-		test("날짜가 오늘보다 이전이면 false를 반환", () => {
-			const invalidDateResult = validateDateTime(before1Today, time);
-			expect(invalidDateResult).toBe(false);
-		});
-
-		test("모집 마감 일시 이후 모임 일시이면 true를 반환", () => {
-			const result = validateDateTimeOrder({
-				dateTime: { date: after2Today, time },
-				registrationEnd: { date: after1Today, time },
-			});
-			expect(result).toBe(true);
-		});
-
-		test("모임 마감 일시 이전 모임 일시이면 false를 반환", () => {
-			const result = validateDateTimeOrder({
-				dateTime: { date: after1Today, time },
-				registrationEnd: { date: after2Today, time },
-			});
-			expect(result).toBe(false);
-		});
-	});
-
 	describe("모임 정원 유효성 검사 테스트", () => {
-		test("모임 정원이 3명 이상이면 true를 반환", () => {
-			const result = validateCapacity(3);
-			expect(result).toBe(true);
+		test("유한한 양의 정수면 true를 반환", () => {
+			expect(validateCapacity(1)).toBe(true);
+			expect(validateCapacity(2)).toBe(true);
+			expect(validateCapacity(100)).toBe(true);
+			expect(validateCapacity("12")).toBe(true);
 		});
 
-		test("모임 정원이 3명 미만이면 false를 반환", () => {
-			const result = validateCapacity(2);
-			expect(result).toBe(false);
+		test("0·음수·소수·비유한·null·undefined면 false를 반환", () => {
+			expect(validateCapacity(0)).toBe(false);
+			expect(validateCapacity(-1)).toBe(false);
+			expect(validateCapacity(2.5)).toBe(false);
+			expect(validateCapacity(Number.NaN)).toBe(false);
+			expect(validateCapacity(Number.POSITIVE_INFINITY)).toBe(false);
+			expect(validateCapacity(null)).toBe(false);
+			expect(validateCapacity(undefined)).toBe(false);
+		});
+
+		test("빈 문자열·숫자가 아닌 문자열·소수 문자열이면 false를 반환", () => {
+			expect(validateCapacity("")).toBe(false);
+			expect(validateCapacity("abc")).toBe(false);
+			expect(validateCapacity("2.5")).toBe(false);
 		});
 	});
 

@@ -7,6 +7,7 @@ import {
 	GetUsersMeMeetingsParams,
 	getUsersMeReviews,
 } from "./apis";
+import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
 
 const DEFAULT_PARAMS = {
 	sortBy: "dateTime",
@@ -14,50 +15,12 @@ const DEFAULT_PARAMS = {
 	size: 10,
 } as const;
 
-const MYPAGE_QUERY_BASE_KEY = ["mypage"] as const;
-
-export const mypageQueryKeys = {
-	all: MYPAGE_QUERY_BASE_KEY,
-
-	meetup: {
-		all: [...MYPAGE_QUERY_BASE_KEY, "meetups"] as const,
-		joined: [...MYPAGE_QUERY_BASE_KEY, "meetups", "joined"] as const,
-		joinedList: (params: GetUsersMeMeetingsParams = {}) =>
-			[...MYPAGE_QUERY_BASE_KEY, "meetups", "joined", params] as const,
-
-		created: [...MYPAGE_QUERY_BASE_KEY, "meetups", "created"] as const,
-		createdList: (params: GetUsersMeMeetingsParams = {}) =>
-			[...MYPAGE_QUERY_BASE_KEY, "meetups", "created", params] as const,
-	},
-
-	review: {
-		all: [...MYPAGE_QUERY_BASE_KEY, "reviews"] as const,
-		available: [...MYPAGE_QUERY_BASE_KEY, "reviews", "available"] as const,
-		availableList: (params: GetMeetingsJoinedParams = {}) =>
-			[...MYPAGE_QUERY_BASE_KEY, "reviews", "available", params] as const,
-
-		written: [...MYPAGE_QUERY_BASE_KEY, "reviews", "written"] as const,
-		writtenList: (params: BaseListParams = {}) =>
-			[...MYPAGE_QUERY_BASE_KEY, "reviews", "written", params] as const,
-	},
-
-	// @TODO 삭제예정 legacy
-	meetups: ["mypage", "meetups"] as const,
-	meetupsList: (params: GetMeetingsJoinedParams = {}) => ["mypage", "meetups", params] as const,
-
-	reviews: ["mypage", "reviews"] as const,
-	reviewsList: (params: BaseListParams = {}) => ["mypage", "reviews", params] as const,
-
-	created: ["mypage", "created"] as const,
-	createdList: (params: GetUsersMeMeetingsParams = {}) => ["mypage", "created", params] as const,
-} as const;
-
 // 내가 참여한 모임 목록
 export function useMyJoinedInfinite(params: Omit<GetUsersMeMeetingsParams, "cursor"> = {}) {
 	const mergedParams = { ...DEFAULT_PARAMS, ...params, type: "joined" as const };
 
 	return useSuspenseInfiniteQuery({
-		queryKey: mypageQueryKeys.meetup.joinedList(mergedParams),
+		queryKey: mypageQueryKeys.meetups.joinedList(mergedParams),
 		queryFn: ({ pageParam }) =>
 			getUsersMeMeetings({
 				...mergedParams,
@@ -80,7 +43,7 @@ export function useMyCreatedInfinite(params: Omit<GetUsersMeMeetingsParams, "cur
 	};
 
 	return useSuspenseInfiniteQuery({
-		queryKey: mypageQueryKeys.meetup.createdList(mergedParams),
+		queryKey: mypageQueryKeys.meetups.createdList(mergedParams),
 		queryFn: ({ pageParam }) =>
 			getUsersMeMeetings({
 				...mergedParams,
@@ -99,7 +62,7 @@ export function useMyMeetupInfinite(params: Omit<GetMeetingsJoinedParams, "curso
 	const mergedParams = { ...DEFAULT_PARAMS, ...params };
 
 	return useSuspenseInfiniteQuery({
-		queryKey: mypageQueryKeys.review.availableList(mergedParams),
+		queryKey: mypageQueryKeys.reviews.availableList(mergedParams),
 		queryFn: ({ pageParam }) =>
 			getMeetingsJoined({
 				...mergedParams,
@@ -121,7 +84,7 @@ export function useMyReviewInfinite(params: Omit<BaseListParams, "cursor"> = {})
 	const mergedParams = { ...DEFAULT_PARAMS, sortBy: "createdAt" as const, ...params };
 
 	return useSuspenseInfiniteQuery({
-		queryKey: mypageQueryKeys.review.writtenList(mergedParams),
+		queryKey: mypageQueryKeys.reviews.writtenList(mergedParams),
 		queryFn: ({ pageParam }) =>
 			getUsersMeReviews({
 				...mergedParams,

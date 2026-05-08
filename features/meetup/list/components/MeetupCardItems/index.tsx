@@ -13,6 +13,7 @@ import Empty from "@/components/ui/Empty";
 import JoinModal from "../JoinModal";
 
 interface MeetupCardItemsProps {
+	/** 모임 목록 쿼리 */
 	query: UseInfiniteQueryResult<InfiniteData<MeetupListResponse>>;
 }
 
@@ -59,15 +60,18 @@ interface MeetupCardLoadedItemsProps {
 	data: MeetupItem[] | undefined;
 	setSelectedData: (data: MeetupItemSelected) => void;
 	openModalFn: () => void;
+	className?: string;
 }
 function MeetupCardLoadedItems({ data, setSelectedData, openModalFn }: MeetupCardLoadedItemsProps) {
 	if (data?.length === 0) {
 		return (
-			<Empty section className="col-span-full">
-				아직 모임이 없어요
-				<br />
-				지금 바로 모임을 만들어보세요!
-			</Empty>
+			<li className="col-span-full">
+				<Empty section>
+					아직 모임이 없어요
+					<br />
+					지금 바로 모임을 만들어보세요!
+				</Empty>
+			</li>
 		);
 	}
 	return (

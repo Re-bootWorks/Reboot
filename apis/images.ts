@@ -1,4 +1,5 @@
 import { clientFetch } from "@/libs/clientFetch";
+import { throwApiError } from "@/utils/api";
 
 export interface ErrorResponse {
 	code: string;
@@ -35,7 +36,7 @@ export async function uploadImage(file: File): Promise<string> {
 }
 
 /** 이미지 업로드 Step1: presigned URL 발급 */
-const ROUTE_IMAGES = "/images/presigned";
+export const ROUTE_IMAGES = "/images/presigned";
 async function getPresignedUrl(fileName: string, contentType: string, folder: string = "meetings") {
 	const res = await clientFetch(ROUTE_IMAGES, {
 		method: "POST",
@@ -43,18 +44,12 @@ async function getPresignedUrl(fileName: string, contentType: string, folder: st
 		body: JSON.stringify({ fileName, contentType, folder }),
 	});
 
-	if (!res.ok) {
-		const error: ErrorResponse = await res.json().catch(() => ({
-			code: "UNKNOWN_ERROR",
-			message: "업로드 주소 생성 중 알 수 없는 에러가 발생했습니다.",
-		}));
-		throw new Error(error.message);
-	}
+	await throwApiError(res, "업로드 주소 생성 중 알 수 없는 에러가 발생했습니다.");
 	return res.json();
 }
 
 /** 이미지 업로드 Step2: S3에 이미지 업로드 */
-const ROUTE_IMAGES_UPLOAD = "/images/upload";
+export const ROUTE_IMAGES_UPLOAD = "/images/upload";
 async function uploadToS3(presignedUrl: string, file: File) {
 	const res = await clientFetch(ROUTE_IMAGES_UPLOAD, {
 		method: "PUT",
@@ -62,13 +57,7 @@ async function uploadToS3(presignedUrl: string, file: File) {
 		body: file,
 	});
 
-	if (!res.ok) {
-		const error: ErrorResponse = await res.json().catch(() => ({
-			code: "UNKNOWN_ERROR",
-			message: "업로드 중 알 수 없는 에러가 발생했습니다.",
-		}));
-		throw new Error(error.message);
-	}
+	await throwApiError(res, "업로드 중 알 수 없는 에러가 발생했습니다.");
 
 	return res.json();
 }

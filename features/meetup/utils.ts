@@ -1,8 +1,7 @@
-import dayjs from "dayjs";
+import { MAX_ADDRESS_LENGTH, MAX_NAME_LENGTH, MIN_CONFIRMED_COUNT } from "./constants";
+export { MAX_ADDRESS_LENGTH, MAX_NAME_LENGTH, MIN_CONFIRMED_COUNT };
 
-export const MAX_NAME_LENGTH = 20;
-export const MAX_ADDRESS_LENGTH = 50;
-export const MIN_CONFIRMED_COUNT = 3;
+// meetupDetail/edit/utils: validateDateTimeIsFuture, validateDateTimeOrder, validateMaxCapacity
 
 /** 텍스트 유효성 검사 */
 export function validateText(value: string) {
@@ -19,32 +18,13 @@ export function validateAddressDetail(value: string) {
 	return validateText(value) && value.length <= MAX_ADDRESS_LENGTH;
 }
 
-/** 모임 일시, 모집 마감 일시 유효성 검사
- * date: YYYY-MM-DD
- * time: HH:mm
- */
-export function validateDateTime(date: string, time: string) {
-	if (!date || !time) return false;
-	const dt = dayjs(date + " " + time);
-	return dt.isValid() && dt.isAfter(dayjs());
-}
+/** 모집 정원 유효성 검사(최소 인원 검증 제외) */
+export function validateCapacity(capacity: number | string | null | undefined): boolean {
+	if (capacity === null || capacity === undefined) return false;
 
-/** 모집 마감 일시 이후 모임 일시인지 유효성 검사
- * YYYY-MM-DD HH:mm
- */
-type ValidateDateTimeOrderProps = {
-	dateTime: { date: string; time: string };
-	registrationEnd: { date: string; time: string };
-};
-export function validateDateTimeOrder({ dateTime, registrationEnd }: ValidateDateTimeOrderProps) {
-	const dateTimeValue = dayjs(`${dateTime.date} ${dateTime.time}`);
-	const registrationEndValue = dayjs(`${registrationEnd.date} ${registrationEnd.time}`);
-	return dateTimeValue.isAfter(registrationEndValue);
-}
-
-/** 모집 정원 유효성 검사 */
-export function validateCapacity(capacity: number) {
-	return capacity >= MIN_CONFIRMED_COUNT;
+	const n = Number(capacity);
+	if (n <= 0 || !Number.isInteger(n) || !Number.isFinite(n)) return false;
+	return true;
 }
 
 /** 장소 검색 시 입력 값 유효성 검사 */

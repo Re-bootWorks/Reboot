@@ -29,7 +29,7 @@ export default function NameField({
 		<InputField
 			name={name}
 			label="모임 이름"
-			placeholder="모임 이름을 입력해 주세요"
+			placeholder="모임 이름을 입력해주세요"
 			className={className}
 			isRequired={isRequired}
 			value={value}

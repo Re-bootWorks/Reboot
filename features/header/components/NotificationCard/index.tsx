@@ -5,11 +5,12 @@ import Thumbnail from "@/components/ui/Thumbnail";
 import RelativeTime from "@/components/ui/RelativeTime";
 
 const NOTIFICATION_STYLE = {
-	card: "px-5 py-3 w-full block text-left hover:bg-purple-50 cursor-pointer",
+	card: "block w-full cursor-pointer px-5 py-3 text-left hover:bg-purple-50",
 	cardContent: "flex items-start gap-4",
 	cardDot: "size-1 shrink-0 rounded-full bg-linear-to-r from-purple-400 to-purple-700",
 	cardType: "flex items-center text-xs font-semibold text-gray-800",
-	cardDeleteBtn: "flex size-4 cursor-pointer items-center justify-center rounded-full bg-gray-700",
+	cardDeleteBtn:
+		"absolute top-3 right-5 z-1 flex size-4 cursor-pointer items-center justify-center rounded-full bg-gray-700",
 	cardMessage: "pt-1 text-sm text-gray-600 break-keep",
 	cardDate: "flex items-center justify-end gap-1 text-xs text-gray-400",
 };
@@ -50,58 +51,48 @@ export default function NotificationCard({
 	const typeUi =
 		NOTIFICATION_TYPE_UI[item.type as keyof typeof NOTIFICATION_TYPE_UI] ??
 		DEFAULT_NOTIFICATION_TYPE_UI;
-	// 알림 클릭 시
-	function handleCardClick() {
-		handleReadAction();
-	}
-	// 알림 키보드 활성화
-	function handleKeyDown(event: React.KeyboardEvent<HTMLElement>) {
-		if (event.key === "Enter" || event.key === " ") {
-			event.preventDefault();
-			handleReadAction();
-		}
-	}
-	function handleDeleteClick(event: React.MouseEvent<HTMLButtonElement>) {
-		event.stopPropagation();
-		handleDeleteAction();
-	}
 
 	return (
-		<article
-			role="button"
-			className={cn(NOTIFICATION_STYLE.card, !item.isRead && "bg-purple-50/30")}
-			onClick={handleCardClick}
-			onKeyDown={handleKeyDown}>
-			<div className={NOTIFICATION_STYLE.cardContent}>
-				<Thumbnail
-					src={item.image}
-					width={40}
-					height={40}
-					className={cn(
-						!!item.image ? "border border-gray-200" : "",
-						"size-10 shrink-0 rounded-lg",
-					)}
-				/>
-				<div className="grow">
-					<div className="flex items-center justify-between">
+		<article className="relative">
+			<button
+				type="button"
+				aria-label={item.isRead ? "읽은 알림" : "읽지 않은 알림"}
+				className={cn(NOTIFICATION_STYLE.card, !item.isRead && "bg-purple-50/30")}
+				onClick={handleReadAction}>
+				<div className={NOTIFICATION_STYLE.cardContent}>
+					<Thumbnail
+						src={item.image}
+						width={40}
+						height={40}
+						className={cn(!!item.image && "border border-gray-200", "size-10 shrink-0 rounded-lg")}
+					/>
+					<div className="grow">
 						<span className={cn(NOTIFICATION_STYLE.cardType)}>
 							{typeUi.label}
 							{typeUi.icon}
 						</span>
-						<button
-							type="button"
-							className={NOTIFICATION_STYLE.cardDeleteBtn}
-							onClick={handleDeleteClick}>
-							<IcDelete color="white" size="10px" />
-						</button>
-					</div>
-					<p className={NOTIFICATION_STYLE.cardMessage}>{item.message}</p>
-					<div className={NOTIFICATION_STYLE.cardDate}>
-						{!item.isRead && <span className={NOTIFICATION_STYLE.cardDot} aria-hidden="true" />}
-						<RelativeTime date={item.createdAt} />
+						<p className={NOTIFICATION_STYLE.cardMessage}>{item.message}</p>
+						<div className={NOTIFICATION_STYLE.cardDate}>
+							{!item.isRead && (
+								<span
+									className={NOTIFICATION_STYLE.cardDot}
+									aria-hidden="true"
+									data-testid="unread-indicator"
+								/>
+							)}
+							<RelativeTime date={item.createdAt} />
+						</div>
 					</div>
 				</div>
-			</div>
+			</button>
+
+			<button
+				type="button"
+				className={NOTIFICATION_STYLE.cardDeleteBtn}
+				onClick={handleDeleteAction}
+				aria-label="알림 삭제">
+				<IcDelete color="white" size="10px" />
+			</button>
 		</article>
 	);
 }

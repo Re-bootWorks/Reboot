@@ -7,14 +7,17 @@ import {
 	patchReviews,
 	patchUsersMe,
 	postMeetingsReviews,
-	uploadProfileImage,
 } from "./apis";
 import { useToast } from "@/providers/toast-provider";
-import { mypageQueryKeys } from "./queries";
-import { meetupDetailQueryKeys } from "../meetupDetail/queries";
-import { headerQueryKeys } from "../header/queries";
-import { meetupQueryKeys } from "../meetup/queries";
-import { reviewsQueryKeys } from "../reviews/queries/queryKeys";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
+import { authQueryKeys } from "@/features/shared/queryKeys/auth";
+import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
+import { headerQueryKeys } from "@/features/shared/queryKeys/header";
+import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
+import { reviewsQueryKeys } from "@/features/shared/queryKeys/reviews";
+import { uploadImage } from "@/apis/images";
+import { getUserErrorMessage } from "@/utils/api";
+import { MYPAGE_MESSAGES } from "@/features/mypage/message";
 
 interface UsePatchUsersMeOptions {
 	onSuccessBeforeSync?: () => void;
@@ -23,18 +26,18 @@ interface UsePatchUsersMeOptions {
 export function useUploadProfileImage() {
 	const { handleShowToast } = useToast();
 	return useMutation({
-		mutationFn: uploadProfileImage,
+		mutationFn: uploadImage,
 
 		onSuccess: () => {
 			handleShowToast({
-				message: "이미지가 업로드되었습니다.",
+				message: MYPAGE_MESSAGES.uploadProfileImageSuccess,
 				status: "success",
 			});
 		},
 
-		onError: () => {
+		onError: (error) => {
 			handleShowToast({
-				message: "이미지 업로드에 실패했습니다.\n잠시 후 다시 시도해주세요.",
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.uploadProfileImageError),
 				status: "error",
 			});
 		},
@@ -51,15 +54,15 @@ export function usePatchUsersMe(options?: UsePatchUsersMeOptions) {
 		onSuccess: () => {
 			options?.onSuccessBeforeSync?.();
 			handleShowToast({
-				message: "프로필이 수정되었습니다.",
+				message: MYPAGE_MESSAGES.updateProfileSuccess,
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: ["me"] });
+			queryClient.invalidateQueries({ queryKey: authQueryKeys.me });
 		},
 
-		onError: () => {
+		onError: (error) => {
 			handleShowToast({
-				message: "프로필 수정에 실패했습니다.\n잠시 후 다시 시도해주세요.",
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.updateProfileError),
 				status: "error",
 			});
 		},
@@ -75,25 +78,21 @@ export function usePatchMeetingsStatus() {
 		mutationFn: patchMeetingsStatus,
 
 		onSuccess: (_data, variables) => {
-			const isConfirmed = variables.status === "CONFIRMED";
-
 			handleShowToast({
-				message: `모임이 ${isConfirmed ? "확정" : "취소"}되었습니다.`,
+				message: MYPAGE_MESSAGES.patchMeetingStatusSuccess(variables.status),
 				status: "success",
 			});
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
+				queryKey: meetupDetailQueryKeys.meeting.detail(variables.meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 		},
 
-		onError: (_error, variables) => {
-			const isConfirmed = variables.status === "CONFIRMED";
-
+		onError: (error) => {
 			handleShowToast({
-				message: `모임 ${isConfirmed ? "확정" : "취소"}에 실패했습니다.\n잠시 후 다시 시도해주세요.`,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.patchMeetingStatusError),
 				status: "error",
 			});
 		},
@@ -109,20 +108,20 @@ export function useDeleteMeetings() {
 
 		onSuccess: (_data, variables) => {
 			handleShowToast({
-				message: "모임이 삭제 되었습니다.",
+				message: MYPAGE_MESSAGES.deleteMeetingSuccess,
 				status: "success",
 			});
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
+				queryKey: meetupDetailQueryKeys.meeting.detail(variables.meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 		},
 
-		onError: () => {
+		onError: (error) => {
 			handleShowToast({
-				message: "모임 삭제에 실패했습니다.\n잠시 후 다시 시도해주세요.",
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.deleteMeetingError),
 				status: "error",
 			});
 		},
@@ -139,23 +138,23 @@ export function useDeleteMeetingsJoin() {
 
 		onSuccess: (_data, variables) => {
 			handleShowToast({
-				message: "모임 예약이 취소 되었습니다.",
+				message: MYPAGE_MESSAGES.deleteMeetingJoinSuccess,
 				status: "success",
 			});
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.all });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetups.all });
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
+				queryKey: meetupDetailQueryKeys.meeting.detail(variables.meetingId),
 			});
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.participants(variables.meetingId),
+				queryKey: meetupDetailQueryKeys.participants.detail(variables.meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 		},
 
-		onError: () => {
+		onError: (error) => {
 			handleShowToast({
-				message: "모임 참여 취소에 실패했습니다.\n잠시 후 다시 시도해주세요.",
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.deleteMeetingJoinError),
 				status: "error",
 			});
 		},
@@ -172,17 +171,16 @@ export function usePostMeetingsReviews() {
 
 		onSuccess: () => {
 			handleShowToast({
-				message: `리뷰가 작성 되었습니다.`,
+				message: MYPAGE_MESSAGES.createReviewSuccess,
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.review.all });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.all });
 			queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.reviews.all });
 		},
 
-		onError: () => {
+		onError: (error) => {
 			handleShowToast({
-				message: `리뷰 작성에 실패했습니다.\n잠시 후 다시 시도해주세요.`,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.createReviewError),
 				status: "error",
 			});
 		},
@@ -199,17 +197,16 @@ export function usePatchReviews() {
 
 		onSuccess: () => {
 			handleShowToast({
-				message: `리뷰가 수정 되었습니다.`,
+				message: MYPAGE_MESSAGES.updateReviewSuccess,
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.review.all });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.all });
 			queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.reviews.all });
 		},
 
-		onError: () => {
+		onError: (error) => {
 			handleShowToast({
-				message: `리뷰 수정에 실패했습니다.\n잠시 후 다시 시도해주세요.`,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.updateReviewError),
 				status: "error",
 			});
 		},
@@ -226,17 +223,16 @@ export function useDeleteReviews() {
 
 		onSuccess: () => {
 			handleShowToast({
-				message: `리뷰가 삭제 되었습니다.`,
+				message: MYPAGE_MESSAGES.deleteReviewSuccess,
 				status: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.meetup.all });
-			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.review.all });
+			queryClient.invalidateQueries({ queryKey: mypageQueryKeys.all });
 			queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.reviews.all });
 		},
 
-		onError: () => {
+		onError: (error) => {
 			handleShowToast({
-				message: `리뷰 삭제에 실패했습니다.\n잠시 후 다시 시도해주세요.`,
+				message: getUserErrorMessage(error, MYPAGE_MESSAGES.deleteReviewError),
 				status: "error",
 			});
 		},

@@ -112,7 +112,10 @@ export default function InputFile({
 							isPending ? "pointer-events-none" : !previewUrl ? "cursor-pointer" : "cursor-initial",
 						)}>
 						{isPending && (
-							<div className="absolute inset-0 z-20 flex items-center justify-center rounded-xl bg-black/40">
+							<div
+								role="status"
+								aria-label="파일 업로드 중"
+								className="absolute inset-0 z-20 flex items-center justify-center rounded-xl bg-black/40">
 								<LoaderDots size="xs" className="fill-white" />
 							</div>
 						)}

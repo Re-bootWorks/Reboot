@@ -2,11 +2,16 @@
 
 import { CursorPageResponse, MeetupList } from "@/features/mypage/types";
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
-import { headerQueryKeys } from "@/features/header/queries";
-import { deleteMeetingsFavorites, postMeetingsFavorites } from "@/features/mypage/apis";
-import { meetupDetailQueryKeys } from "@/features/meetupDetail/queries";
-import { meetupQueryKeys } from "@/features/meetup/queries";
-import { mypageQueryKeys } from "@/features/mypage/queries";
+import { meetupDetailQueryKeys } from "@/features/shared/queryKeys/meetupDetail";
+import { mypageQueryKeys } from "@/features/shared/queryKeys/mypage";
+import { headerQueryKeys } from "@/features/shared/queryKeys/header";
+import { meetupQueryKeys } from "@/features/shared/queryKeys/meetup";
+import { deleteMeetingsFavorite, postMeetingsFavorite } from "@/apis/meetings";
+
+const favoriteQueryPrefixes = [
+	mypageQueryKeys.meetups.all,
+	mypageQueryKeys.reviews.available,
+] as const;
 
 /**
  * 찜 추가 시 낙관적 업데이트 및 롤백 하는 훅
@@ -16,17 +21,12 @@ import { mypageQueryKeys } from "@/features/mypage/queries";
  * handleWishToggle(item.id, item.isFavorited)
  */
 
-const favoriteQueryPrefixes = [
-	mypageQueryKeys.meetup.all,
-	mypageQueryKeys.review.available,
-] as const;
-
 export default function useMeetingFavorite() {
 	const queryClient = useQueryClient();
 
 	const { mutate } = useMutation({
 		mutationFn: ({ meetingId, currentState }: { meetingId: number; currentState: boolean }) =>
-			currentState ? deleteMeetingsFavorites(meetingId) : postMeetingsFavorites(meetingId),
+			currentState ? deleteMeetingsFavorite({ meetingId }) : postMeetingsFavorite({ meetingId }),
 
 		// API 호출 전에 실행
 		onMutate: async ({ meetingId }) => {
@@ -67,7 +67,7 @@ export default function useMeetingFavorite() {
 			queryClient.invalidateQueries({ queryKey: headerQueryKeys.favorites });
 			queryClient.invalidateQueries({ queryKey: meetupQueryKeys.list });
 			queryClient.invalidateQueries({
-				queryKey: meetupDetailQueryKeys.meeting(variables.meetingId),
+				queryKey: meetupDetailQueryKeys.meeting.detail(variables.meetingId),
 			});
 			queryClient.invalidateQueries({ queryKey: ["favorites"] });
 		},

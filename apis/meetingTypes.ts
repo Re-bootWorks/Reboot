@@ -1,4 +1,5 @@
 import type { Category } from "@/store/category.store";
+import { throwApiError } from "@/utils/api";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -7,7 +8,7 @@ if (!BASE_URL) {
 }
 
 /** 모임 카테고리 목록 조회(빌드에서 실행) */
-const ROUTE_MEETING_TYPES = "/meeting-types";
+export const ROUTE_MEETING_TYPES = "/meeting-types";
 export async function getMeetingTypes() {
 	const res = await fetch(`${BASE_URL}${ROUTE_MEETING_TYPES}`, {
 		method: "GET",
@@ -15,13 +16,7 @@ export async function getMeetingTypes() {
 		cache: "force-cache",
 	});
 
-	if (!res.ok) {
-		const error = await res.json().catch(() => ({
-			code: "UNKNOWN_ERROR",
-			message: "모임 카테고리 조회에 실패했습니다.",
-		}));
-		throw new Error(error.message);
-	}
+	await throwApiError(res, "모임 카테고리 조회에 실패했습니다.");
 	return res.json();
 }
 

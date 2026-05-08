@@ -8,7 +8,6 @@ export interface HostMeetupActionHandlers {
 	/** 모임 취소 */
 	onCancelMeetup: () => void;
 	/** 모임 리뷰 작성 */
-
 	onWriteReview: () => void;
 }
 

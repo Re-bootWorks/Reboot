@@ -22,7 +22,7 @@ jest.mock("..", () => ({
 }));
 
 describe("AlertModal", () => {
-	describe("isOpen 상태에 따라 모달이 열리고 닫히는지 확인", () => {
+	describe("모달이 열리고 닫히는지 확인한다", () => {
 		test("isOpen이 true면 모달이 열리고 메세지가 보인다", () => {
 			render(
 				<Alert isOpen={true} onClose={() => {}} handleConfirmButton={() => {}}>
@@ -32,7 +32,7 @@ describe("AlertModal", () => {
 
 			expect(screen.getByText("Alert 메세지")).toBeInTheDocument();
 		});
-		test("isOpen이 false면 모달이 렌더링되지 않는다.", () => {
+		test("isOpen이 false면 메세지가 보이지 않는다.", () => {
 			render(
 				<Alert isOpen={false} onClose={() => {}} handleConfirmButton={() => {}}>
 					Alert 메세지
@@ -43,8 +43,8 @@ describe("AlertModal", () => {
 		});
 	});
 
-	describe("onClose 확인", () => {
-		test("취소 버튼 클릭 시 onClose가 호출되는지 확인", async () => {
+	describe("취소 버튼으로 모달을 닫을 수 있는지 확인한다", () => {
+		test("취소 버튼 클릭 시 onClose가 호출되며 모달이 닫긴다.", async () => {
 			const handleClose = jest.fn();
 
 			render(
@@ -62,7 +62,7 @@ describe("AlertModal", () => {
 		});
 	});
 
-	describe("handleConfirmButton 확인", () => {
+	describe("확인 버튼으로 동작을 실행할 수 있는지 확인한다", () => {
 		test("확인 버튼 클릭 시 handleConfirm이 호출되는지 확인", async () => {
 			const handleConfirm = jest.fn();
 			render(
@@ -79,7 +79,7 @@ describe("AlertModal", () => {
 		});
 	});
 
-	describe("confirmLabel 확인", () => {
+	describe("버튼 문구가 올바르게 보이는지 확인한다", () => {
 		test("confirmLabel='삭제'면 버튼에 삭제가 보이는지 확인", async () => {
 			render(
 				<Alert isOpen={true} confirmLabel="삭제" onClose={() => {}} handleConfirmButton={() => {}}>

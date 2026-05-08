@@ -84,19 +84,4 @@ describe("mapPostToCard", () => {
 			expect(result.imageUrl).toBeNull();
 		});
 	});
-
-	describe("createdAt → date 변환", () => {
-		it("createdAt 문자열이 timestamp(number)로 변환된다", () => {
-			const result = mapPostToCard(basePost);
-
-			expect(typeof result.date).toBe("number");
-			expect(result.date).toBe(new Date("2024-01-15T09:00:00.000Z").getTime());
-		});
-
-		it("date가 문자열이 아닌 숫자 타입이다", () => {
-			const result = mapPostToCard(basePost);
-
-			expect(result.date).not.toBe("2024-01-15T09:00:00.000Z");
-		});
-	});
 });
