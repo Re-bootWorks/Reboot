@@ -5,7 +5,7 @@ import { MIN_CONFIRMED_COUNT } from "@/features/meetupDetail/components/Personne
 
 interface CapacityFieldProps {
 	/** 필드 이름 @default "capacity" */
-	name: string;
+	name?: string;
 	/** 필드 값 */
 	value?: number;
 	/** 필드 값 변경 함수 */

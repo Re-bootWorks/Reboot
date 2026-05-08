@@ -1,7 +1,7 @@
 import { clientFetch } from "@/libs/clientFetch";
 
-const ROUTE_MEETINGS_FAVORITES = (meetingId: number) => `/meetings/${meetingId}/favorites`;
-const ROUTE_MEETINGS_JOIN = (meetingId: number) => `/meetings/${meetingId}/join`;
+export const ROUTE_MEETINGS_FAVORITES = (meetingId: number) => `/meetings/${meetingId}/favorites`;
+export const ROUTE_MEETINGS_JOIN = (meetingId: number) => `/meetings/${meetingId}/join`;
 
 /** 모임 찜 추가 */
 export async function postMeetingsFavorite({ meetingId }: { meetingId: number }): Promise<void> {

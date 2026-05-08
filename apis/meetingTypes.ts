@@ -7,7 +7,7 @@ if (!BASE_URL) {
 }
 
 /** 모임 카테고리 목록 조회(빌드에서 실행) */
-const ROUTE_MEETING_TYPES = "/meeting-types";
+export const ROUTE_MEETING_TYPES = "/meeting-types";
 export async function getMeetingTypes() {
 	const res = await fetch(`${BASE_URL}${ROUTE_MEETING_TYPES}`, {
 		method: "GET",
