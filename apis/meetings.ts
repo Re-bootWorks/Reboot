@@ -1,4 +1,5 @@
 import { clientFetch } from "@/libs/clientFetch";
+import { throwApiError } from "@/utils/api";
 
 export const ROUTE_MEETINGS_FAVORITES = (meetingId: number) => `/meetings/${meetingId}/favorites`;
 export const ROUTE_MEETINGS_JOIN = (meetingId: number) => `/meetings/${meetingId}/join`;
@@ -10,12 +11,7 @@ export async function postMeetingsFavorite({ meetingId }: { meetingId: number })
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 	});
-	if (!res.ok) {
-		const error: ErrorResponse = await res
-			.json()
-			.catch(() => ({ code: "UNKNOWN_ERROR", message: "모임 찜 추가에 실패했습니다." }));
-		throw new Error(error.message);
-	}
+	await throwApiError(res, "모임 찜 추가에 실패했습니다.");
 	return res.json();
 }
 
@@ -26,12 +22,7 @@ export async function deleteMeetingsFavorite({ meetingId }: { meetingId: number 
 		method: "DELETE",
 		headers: { "Content-Type": "application/json" },
 	});
-	if (!res.ok) {
-		const error: ErrorResponse = await res
-			.json()
-			.catch(() => ({ code: "UNKNOWN_ERROR", message: "모임 찜 해제에 실패했습니다." }));
-		throw new Error(error.message);
-	}
+	await throwApiError(res, "모임 찜 해제에 실패했습니다.");
 	return res.json();
 }
 
@@ -42,12 +33,7 @@ export async function postMeetingsJoin({ meetingId }: { meetingId: number }): Pr
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 	});
-	if (!res.ok) {
-		const error: ErrorResponse = await res
-			.json()
-			.catch(() => ({ code: "UNKNOWN_ERROR", message: "모임 참여에 실패했습니다." }));
-		throw new Error(error.message);
-	}
+	await throwApiError(res, "모임 참여에 실패했습니다.");
 	return res.json();
 }
 
@@ -58,12 +44,7 @@ export async function deleteMeetingsJoin({ meetingId }: { meetingId: number }): 
 		method: "DELETE",
 		headers: { "Content-Type": "application/json" },
 	});
-	if (!res.ok) {
-		const error: ErrorResponse = await res
-			.json()
-			.catch(() => ({ code: "UNKNOWN_ERROR", message: "모임 참여 취소에 실패했습니다." }));
-		throw new Error(error.message);
-	}
+	await throwApiError(res, "모임 참여 취소에 실패했습니다.");
 	return res.json();
 }
 

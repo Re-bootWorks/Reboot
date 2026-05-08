@@ -1,3 +1,5 @@
+import { Option } from "@/components/ui/Filter/RegionFilter/option";
+
 export interface KakaoPlaceItem {
 	address_name: string;
 	category_group_code: string;
@@ -100,6 +102,8 @@ export type SortOrder = "asc" | "desc";
 export interface MeetupListRequest {
 	/** 모임 ID */
 	id?: number;
+	/** 검색 키워드 */
+	keyword?: string;
 	/** 모임 종류 */
 	type?: string;
 	/** 모임 지역 */
@@ -126,6 +130,15 @@ export interface MeetupListRequest {
 	/** 페이지 크기 @default 10 */
 	size?: number;
 }
+
+/** 목록 검색 쿼리 필드 키 */
+type MeetupListSearchKeys = Exclude<
+	keyof MeetupListRequest,
+	"id" | "createdBy" | "cursor" | "size"
+>;
+export type MeetupListSearchInput = Partial<
+	Record<MeetupListSearchKeys, string | null | undefined>
+>;
 
 /** 모임 목록 조회 항목 데이터 */
 export interface MeetupItem {
@@ -203,3 +216,9 @@ export type MeetupItemSelected =
 			time: string;
 	  })
 	| null;
+
+/** 지역 필터 값 */
+export type RegionFilterValue = {
+	region: Option | null;
+	district: Option | null;
+};

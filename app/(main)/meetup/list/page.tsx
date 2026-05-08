@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 	},
 };
 
-const size = 10;
-
+const defaultPageSize = 10;
+const ListFiltersStyle = "mx-0 bg-gray-50 px-6 py-2 md:-mx-4 md:px-6";
 export default function MeetupListPage() {
 	return (
 		<MeetupListScrollProvider>
@@ -33,7 +33,7 @@ export default function MeetupListPage() {
 					<ListFilters className={ListFiltersStyle} />
 				</Suspense>
 				<QueryErrorBoundary prefix="모임 목록을 ">
-					<MeetupCardList size={size} />
+					<MeetupCardList size={defaultPageSize} />
 				</QueryErrorBoundary>
 				<Suspense fallback={null}>
 					<CreateOpenButton className="fixed right-6 bottom-6 z-10" />
@@ -42,5 +42,3 @@ export default function MeetupListPage() {
 		</MeetupListScrollProvider>
 	);
 }
-
-const ListFiltersStyle = "mx-0 bg-gray-50 px-6 py-2 md:-mx-4 md:px-6";

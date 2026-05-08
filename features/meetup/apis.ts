@@ -1,10 +1,12 @@
 import { clientFetch } from "@/libs/clientFetch";
+import { throwApiError } from "@/utils/api";
 import {
 	MeetupCreateRequest,
 	MeetupItemResponse,
 	MeetupListRequest,
 	MeetupListResponse,
 } from "./types";
+import { buildMeetupListQuery } from "./list/utils";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,10 +21,7 @@ export type getKakaoPlaceFn = typeof getKakaoPlace;
 const ROUTE_KAKAO_PLACE = "/kakao/place";
 export async function getKakaoPlace(query: string) {
 	const res = await clientFetch(`${ROUTE_KAKAO_PLACE}?query=${query}`);
-	if (!res.ok) {
-		const error = await res.json().catch(() => null);
-		throw new Error(error?.message ?? "카카오 장소 검색 API 호출에 실패했습니다.");
-	}
+	await throwApiError(res, "카카오 장소 검색 API 호출에 실패했습니다.");
 
 	const data = await res.json();
 	const { documents } = data;
@@ -33,23 +32,13 @@ const ROUTE_MEETINGS = "/meetings";
 
 /** 모임 찾기 */
 export async function getMeetups(params: MeetupListRequest): Promise<MeetupListResponse> {
-	// encodeURIComponent 자동 적용
-	const queryParams = new URLSearchParams();
-	for (const [key, value] of Object.entries(params)) {
-		if (value != null) {
-			queryParams.append(key, String(value));
-		}
-	}
-
-	const res = await clientFetch(`${ROUTE_MEETINGS}?${queryParams}`, {
+	const qs = buildMeetupListQuery(params);
+	const res = await clientFetch(qs ? `${ROUTE_MEETINGS}?${qs}` : ROUTE_MEETINGS, {
 		method: "GET",
 		headers: { "Content-Type": "application/json" },
 	});
 
-	if (!res.ok) {
-		const error = await res.json().catch(() => null);
-		throw new Error(error?.message ?? "모임 목록을 불러오는데 실패했습니다.");
-	}
+	await throwApiError(res, "모임 목록을 불러오는데 실패했습니다.");
 	return res.json();
 }
 
@@ -61,9 +50,6 @@ export async function postMeetup(data: MeetupCreateRequest): Promise<MeetupItemR
 		body: JSON.stringify(data),
 	});
 
-	if (!res.ok) {
-		const error = await res.json().catch(() => null);
-		throw new Error(error?.message ?? "모임 생성에 실패했습니다.");
-	}
+	await throwApiError(res, "모임 생성에 실패했습니다.");
 	return res.json();
 }
