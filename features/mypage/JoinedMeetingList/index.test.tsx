@@ -169,11 +169,11 @@ describe("JoinedMeetingList", () => {
 
 	test("찜 버튼을 클릭하면 찜 토글 핸들러를 호출한다", async () => {
 		const { user } = renderJoinedMeetingList();
-
+		setJoinedMeetings([{ ...mockMeMeetingApiRes, isFavorited: false }]);
 		const wishButton = screen.getByRole("button", { name: "찜 토글" });
 		await user.click(wishButton);
 
-		expect(handleWishToggle).toHaveBeenCalledWith(1000, false);
+		expect(handleWishToggle).toHaveBeenCalledWith(mockMeMeetingApiRes.id, false);
 	});
 
 	test("데이터 조회 중 에러가 발생하면 ErrorBoundary fallback UI를 렌더링한다", () => {
@@ -184,6 +184,9 @@ describe("JoinedMeetingList", () => {
 		renderJoinedMeetingList();
 
 		const errorMessage = screen.getByText("나의 모임을 불러오지 못했습니다.");
+		const retryButton = screen.getByRole("button", { name: "다시 시도" });
+
 		expect(errorMessage).toBeInTheDocument();
+		expect(retryButton).toBeInTheDocument();
 	});
 });

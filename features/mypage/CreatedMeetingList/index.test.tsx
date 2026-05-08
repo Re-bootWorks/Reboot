@@ -5,6 +5,7 @@ import { mockMeMeetingApiRes } from "../mockData";
 
 const patchMeetingsStatus = jest.fn();
 const postMeetingReview = jest.fn();
+const handleWishToggle = jest.fn();
 const reviewFormValues = { score: 5, comment: "좋은 모임이었어요" };
 
 jest.mock("@/components/ui/Empty", () => {
@@ -87,7 +88,7 @@ jest.mock("@/features/shared/components/ReviewModal", () => ({
 
 jest.mock("@/hooks/useMeetingFavorite", () => ({
 	__esModule: true,
-	default: () => ({ handleWishToggle: jest.fn() }),
+	default: () => ({ handleWishToggle }),
 }));
 
 jest.mock("../queries", () => ({
@@ -196,6 +197,17 @@ describe("CreatedMeetingList", () => {
 		);
 	});
 
+	test("찜 버튼을 클릭하면 찜 토글 핸들러를 호출한다", async () => {
+		setCreatedMeetings([{ ...mockMeMeetingApiRes, isFavorited: false }]);
+
+		const { user } = renderCreatedMeetingList();
+
+		const wishButton = screen.getByRole("button", { name: "찜 토글" });
+		await user.click(wishButton);
+
+		expect(handleWishToggle).toHaveBeenCalledWith(mockMeMeetingApiRes.id, false);
+	});
+
 	test("데이터 조회 중 에러가 발생하면 ErrorBoundary fallback UI를 렌더링한다", () => {
 		useMyCreatedInfinite.mockImplementation(() => {
 			throw new Error("query error");
@@ -204,6 +216,9 @@ describe("CreatedMeetingList", () => {
 		renderCreatedMeetingList();
 
 		const errorMessage = screen.getByText("내가 만든 모임을 불러오지 못했습니다.");
+		const retryButton = screen.getByRole("button", { name: "다시 시도" });
+
 		expect(errorMessage).toBeInTheDocument();
+		expect(retryButton).toBeInTheDocument();
 	});
 });

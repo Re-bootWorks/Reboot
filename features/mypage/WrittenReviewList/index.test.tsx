@@ -229,6 +229,9 @@ describe("WrittenReviewList", () => {
 		renderWrittenReviewList();
 
 		const errorMessage = screen.getByText("작성한 리뷰를 불러오지 못했습니다.");
+		const retryButton = screen.getByRole("button", { name: "다시 시도" });
+
 		expect(errorMessage).toBeInTheDocument();
+		expect(retryButton).toBeInTheDocument();
 	});
 });

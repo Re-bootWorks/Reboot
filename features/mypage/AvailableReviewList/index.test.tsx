@@ -138,12 +138,13 @@ describe("AvailableReviewList", () => {
 	});
 
 	test("찜 버튼을 클릭하면 찜 토글 핸들러를 호출한다", async () => {
-		const { user } = renderAvailableReviewList();
+		setAvailableReviews([{ ...mockMeMeetingApiRes, isFavorited: false }]);
 
+		const { user } = renderAvailableReviewList();
 		const wishButton = screen.getByRole("button", { name: "찜 토글" });
 		await user.click(wishButton);
 
-		expect(handleWishToggle).toHaveBeenCalledWith(1000, false);
+		expect(handleWishToggle).toHaveBeenCalledWith(mockMeMeetingApiRes.id, false);
 	});
 
 	test("리뷰 작성 모달에서 제출하면 리뷰 작성 mutation을 호출한다", async () => {
